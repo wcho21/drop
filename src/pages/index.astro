@@ -13,13 +13,10 @@ const collection = await getCollection("blog");
         collection.map(entry => (
           <li class="block border-t border-zinc-50">
             <a href={`post/${entry.slug}`} class="block py-3">
-              <div class="flex items-center gap-3">
-                <div class="w-20 h-12 rounded-md border border-zinc-100 md:w-32 md:h-20"></div>
-                <div>
-                  <p class="text-lg font-bold">{entry.data.title}</p>
-                  <p class="text-zinc-900">{entry.data.summary}</p>
-                  <p class="text-sm text-zinc-400">{(new Date(entry.data.date)).toLocaleDateString("ko-KR")}</p>
-                </div>
+              <div>
+                <p class="text-lg font-bold">{entry.data.title}</p>
+                {/* <p class="text-zinc-900">{entry.data.summary}</p> */}
+                <p class="text-sm text-zinc-400">{(new Date(entry.data.date)).toLocaleDateString("ko-KR")}</p>
               </div>
             </a>
           </li>
