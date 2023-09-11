@@ -1,15 +1,21 @@
 ---
+import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
   const entries = await getCollection("blog");
-  return entries.map(entry => ({
-    params: { slug: entry.slug }, props: { entry },
+  const staticPaths = entries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
   }));
+
+  return staticPaths;
 }
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 ---
-<h1>{entry.data.title}</h1>
-<Content />
+<Base pageTitle={entry.data.title}>
+  <h1>{entry.data.title}</h1>
+  <Content />
+</Base>

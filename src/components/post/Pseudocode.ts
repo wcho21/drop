@@ -2,11 +2,12 @@ type StylizeFunction = (s: string) => string;
 
 const stylizeKeywordInLine = (line: string, keywords: string[], stylize: StylizeFunction): string => {
   for (const keyword of keywords) {
-    const keywordWithIndent = RegExp(`(^\\s*)${keyword}`);
+    const keywordWithIndent = RegExp(`(^\\s*)${keyword}(.*$)`);
     const matched = line.match(keywordWithIndent);
     if (matched !== null) {
       const indent = matched[1];
-      return `${indent}${stylize(keyword)}`;
+      const rest = matched[2];
+      return `${indent}${stylize(keyword)}${rest}`;
     }
   }
 
