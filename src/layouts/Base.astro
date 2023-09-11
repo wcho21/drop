@@ -1,4 +1,6 @@
 ---
+import { makeTitle } from "./Base";
+
 interface Props {
   pageTitle: string;
 }
@@ -6,7 +8,7 @@ interface Props {
 const { pageTitle } = Astro.props;
 const siteTitle = import.meta.env.APP_TITLE;
 const titleSep = import.meta.env.APP_TITLE_SEP;
-const title = [pageTitle, siteTitle].join(titleSep);
+const title = makeTitle(pageTitle, siteTitle, titleSep);
 ---
 
 <!doctype html>
@@ -20,6 +22,8 @@ const title = [pageTitle, siteTitle].join(titleSep);
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <div class="max-w-screen-md md:mx-auto">
+      <slot />
+    </div>
   </body>
 </html>
