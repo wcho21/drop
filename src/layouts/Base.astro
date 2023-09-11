@@ -1,14 +1,15 @@
 ---
 import { makeTitle } from "./Base";
 import FontLinks from "../components/FontLinks.astro";
+import config from "../config";
 
 interface Props {
   pageTitle: string;
 }
 
 const { pageTitle } = Astro.props;
-const siteTitle = import.meta.env.APP_TITLE;
-const titleSep = import.meta.env.APP_TITLE_SEP;
+const siteTitle = config.app.title;
+const titleSep = config.app.titleSep;
 const title = makeTitle(pageTitle, siteTitle, titleSep);
 ---
 
