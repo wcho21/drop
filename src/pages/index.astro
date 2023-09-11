@@ -1,63 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
+import { getCollection } from "astro:content";
 
-// mock data
-const articles = [
-  {
-    date: "2022-01-09T01:23:45.678Z",
-    title: "Article 9",
-    summary: "Summary for article 9",
-    href: "#",
-  },
-  {
-    date: "2022-01-08T01:23:45.678Z",
-    title: "Article 8",
-    summary: "Summary for article 8",
-    href: "#",
-  },
-  {
-    date: "2022-01-07T01:23:45.678Z",
-    title: "Article 7",
-    summary: "Summary for article 7",
-    href: "#",
-  },
-  {
-    date: "2022-01-06T01:23:45.678Z",
-    title: "Article 6",
-    summary: "Summary for article 6",
-    href: "#",
-  },
-  {
-    date: "2022-01-05T01:23:45.678Z",
-    title: "Article 5",
-    summary: "Summary for article 5",
-    href: "#",
-  },
-  {
-    date: "2022-01-04T01:23:45.678Z",
-    title: "Article 4",
-    summary: "Summary for article 4",
-    href: "#",
-  },
-  {
-    date: "2022-01-03T01:23:45.678Z",
-    title: "Article 3",
-    summary: "Summary for article 3",
-    href: "#",
-  },
-  {
-    date: "2022-01-02T01:23:45.678Z",
-    title: "Article 2",
-    summary: "Summary for article 2",
-    href: "#",
-  },
-  {
-    date: "2022-01-01T01:23:45.678Z",
-    title: "Article 1",
-    summary: "Summary for article 1",
-    href: "#",
-  },
-];
+const collection = await getCollection("blog");
 ---
 
 <Base pageTitle="Home">
@@ -65,21 +10,21 @@ const articles = [
     <h1 class="m-3 font-bold text-2xl font-display">Articles.</h1>
     <ul class="block m-3">
       {
-        articles.map(({ date, title, summary, href }) => (
+        collection.map(entry => (
           <li class="block border-t border-zinc-50">
-            <a href={href} class="block py-3">
+            <a href={`post/${entry.slug}`} class="block py-3">
               <div class="flex items-center gap-3">
                 <div class="w-20 h-12 rounded-md border border-zinc-100 md:w-32 md:h-20"></div>
                 <div>
-                  <p class="text-lg font-bold">{title}</p>
-                  <p class="text-zinc-900">{summary}</p>
-                  <p class="text-sm text-zinc-400">{(new Date(date)).toLocaleDateString("ko-KR")}</p>
+                  <p class="text-lg font-bold">{entry.data.title}</p>
+                  <p class="text-zinc-900">{entry.data.summary}</p>
+                  <p class="text-sm text-zinc-400">{(new Date(entry.data.date)).toLocaleDateString("ko-KR")}</p>
                 </div>
               </div>
             </a>
           </li>
         ))
-        }
+      }
     </ul>
   </main>
 </Base>
