@@ -1,0 +1,25 @@
+---
+import { stylizeText } from "./Pseudocode";
+
+interface Props {
+  content: string;
+}
+const { content } = Astro.props;
+
+const keywords = [
+  "function",
+  "for",
+  "do",
+  "while",
+  "until",
+  "if",
+  "else if",
+  "else",
+  "return",
+];
+const makeBold = (s: string) => `<span style="font-weight: bold;">${s}</span>`;
+
+const stylized = stylizeText(content, keywords, makeBold);
+---
+
+<pre class="pseudocode"><code set:html={stylized}></code></pre>
