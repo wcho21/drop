@@ -7,6 +7,8 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['"Noto Sans KR"', ...defaultTheme.fontFamily.sans],
+        serif: ['"Noto Serif"', ...defaultTheme.fontFamily.serif],
+        mono: ['"Noto Sans Mono"', ...defaultTheme.fontFamily.mono],
         display: ['"Secular One"', ...defaultTheme.fontFamily.sans],
       },
     },
