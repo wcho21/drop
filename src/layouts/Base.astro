@@ -1,0 +1,25 @@
+---
+interface Props {
+  pageTitle: string;
+}
+
+const { pageTitle } = Astro.props;
+const siteTitle = import.meta.env.APP_TITLE;
+const titleSep = import.meta.env.APP_TITLE_SEP;
+const title = [pageTitle, siteTitle].join(titleSep);
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
