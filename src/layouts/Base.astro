@@ -1,5 +1,6 @@
 ---
 import { makeTitle } from "./Base";
+import FontLinks from "../components/FontLinks.astro";
 
 interface Props {
   pageTitle: string;
@@ -17,6 +18,7 @@ const title = makeTitle(pageTitle, siteTitle, titleSep);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
 
+    <FontLinks />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <title>{title}</title>
