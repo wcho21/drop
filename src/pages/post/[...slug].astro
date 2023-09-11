@@ -15,7 +15,22 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 ---
+
 <Base pageTitle={entry.data.title}>
-  <h1>{entry.data.title}</h1>
-  <Content />
+  <div class="space-y-5 p-3">
+    <h1 class="text-xl font-bold">{entry.data.title}</h1>
+    <div class="space-y-2" id="article-body">
+      <Content />
+    </div>
+  </div>
 </Base>
+
+<style lang="scss" is:global>
+  #article-body {
+    h1 {
+      margin-top: 3rem;
+
+      font-weight: bold;
+    }
+  }
+</style>
