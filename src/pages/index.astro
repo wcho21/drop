@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import Card from "@components/articles/Card.astro";
 import { getCollection } from "astro:content";
 
 const collection = await getCollection("blog");
@@ -10,17 +11,23 @@ const collection = await getCollection("blog");
     <h1 class="m-3 font-bold text-2xl font-display">Articles.</h1>
     <ul class="block m-3">
       {
-        collection.map(entry => (
-          <li class="block border-t border-zinc-50">
-            <a href={`post/${entry.slug}`} class="block py-3">
-              <div>
-                <p class="text-lg font-bold">{entry.data.title}</p>
-                {/* <p class="text-zinc-900">{entry.data.summary}</p> */}
-                <p class="text-sm text-zinc-400">{(new Date(entry.data.date)).toLocaleDateString("ko-KR")}</p>
-              </div>
-            </a>
-          </li>
-        ))
+        collection.map(entry => {
+          const { slug, data } = entry;
+          const { title, date, summary, thumbnail } = data;
+
+          return (
+            <li class="block border-t border-zinc-50">
+              <a href={`post/${slug}`} class="block py-3">
+                <Card
+                  title={title}
+                  date={new Date(date)}
+                  summary={summary}
+                  thumbnail={thumbnail}
+                />
+              </a>
+            </li>
+          );
+        })
       }
     </ul>
   </main>
