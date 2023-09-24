@@ -11,13 +11,13 @@ const { title, date, summary, thumbnail } = Astro.props;
 <div class="flex items-center gap-3">
   {
     thumbnail !== undefined && (
-      <div class="w-1/4 md:w-36">
+      <div class="flex-0 w-1/4 md:w-36">
         <Image
           src={thumbnail}
           alt="Thumbnail"
-          quality="100"
-          width="150"
-          height="100"
+          quality="70"
+          width="240"
+          height="160"
           class="border border-zinc-50 rounded-md w-full object-cover"
         />
       </div>
@@ -27,9 +27,11 @@ const { title, date, summary, thumbnail } = Astro.props;
     <p class="text-lg font-bold">{title}</p>
     {
       summary !== undefined && (
-        <p class="text-zinc-700">{summary}</p>
+        <div>
+        <p class="text-zinc-700 font-regular">{summary}</p>
+        </div>
       )
     }
-    <p class="text-sm text-zinc-400">{date.toLocaleDateString("ko-KR")}</p>
+    <p class="text-sm text-zinc-400 font-light">{date.toLocaleDateString("ko-KR")}</p>
   </div>
 </div>

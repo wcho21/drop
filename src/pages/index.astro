@@ -10,7 +10,7 @@ const sorted = reverse(sortBy(collection, item => item.data.date));
 
 <Base pageTitle="Home">
   <main class="text-zinc-950">
-    <h1 class="m-3 font-bold text-2xl font-display">Articles.</h1>
+    <h1 class="m-3 text-3xl font-display">Articles.</h1>
     <ul class="block m-3">
       {
         sorted.map(entry => {
@@ -18,7 +18,7 @@ const sorted = reverse(sortBy(collection, item => item.data.date));
           const { title, date, summary, thumbnail } = data;
 
           return (
-            <li class="block border-t border-zinc-50">
+            <li class="block border-t border-zinc-100">
               <a href={`post/${slug}`} class="block py-3">
                 <Card
                   title={title}
