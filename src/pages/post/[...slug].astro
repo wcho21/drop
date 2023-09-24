@@ -1,6 +1,8 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
+import { formatDate } from "../../scripts/utils/formatters";
+import type { CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
   const entries = await getCollection("blog");
@@ -12,25 +14,34 @@ export async function getStaticPaths() {
   return staticPaths;
 }
 
+type BlogEntry = CollectionEntry<"blog">;
+interface Entry extends Pick<BlogEntry, "body" | "collection" | "data" | "render"> {
+  id: string,
+  slug: string,
+}
+interface Props {
+  entry: Entry,
+}
+
 const { entry } = Astro.props;
+const { title, date } = entry.data;
 const { Content } = await entry.render();
 ---
 
-<Base pageTitle={entry.data.title}>
-  <div class="space-y-5 p-3">
-    <h1 class="text-xl font-bold">{entry.data.title}</h1>
-    <div class="space-y-2" id="article-body">
+<Base pageTitle={title}>
+  <div class="space-y-8 p-3">
+    <header class="space-y-1.5">
+      <h1 class="text-lg font-semibold md:text-2xl">{title}</h1>
+      <p class="text-sm text-zinc-500">{formatDate(date)}</p>
+    </header>
+
+    <main class="
+        space-y-2 font-regular text-justify text-sm
+        md:text-base
+        [&>h1]:font-semibold [&>h1]:text-lg [&>h1]:before:mt-10 [&>h1]:before:block
+        [&>img]:w-full
+      " id="article-body">
       <Content />
-    </div>
+    </main>
   </div>
 </Base>
-
-<style lang="scss" is:global>
-  #article-body {
-    h1 {
-      margin-top: 3rem;
-
-      font-weight: bold;
-    }
-  }
-</style>
