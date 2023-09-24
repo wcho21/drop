@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Card from "@components/articles/Card.astro";
 import { getCollection } from "astro:content";
-import { reverse, sortBy } from "lodash";
+import { reverse, sortBy } from "lodash-es";
 
 const collection = await getCollection("blog");
 const sorted = reverse(sortBy(collection, item => item.data.date));
