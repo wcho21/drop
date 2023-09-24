@@ -2,8 +2,10 @@
 import Base from "../layouts/Base.astro";
 import Card from "@components/articles/Card.astro";
 import { getCollection } from "astro:content";
+import { reverse, sortBy } from "lodash";
 
 const collection = await getCollection("blog");
+const sorted = reverse(sortBy(collection, item => item.data.date));
 ---
 
 <Base pageTitle="Home">
@@ -11,7 +13,7 @@ const collection = await getCollection("blog");
     <h1 class="m-3 font-bold text-2xl font-display">Articles.</h1>
     <ul class="block m-3">
       {
-        collection.map(entry => {
+        sorted.map(entry => {
           const { slug, data } = entry;
           const { title, date, summary, thumbnail } = data;
 
