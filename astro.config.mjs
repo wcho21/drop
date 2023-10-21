@@ -1,4 +1,6 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import tailwind from "@astrojs/tailwind";
 
 import mdx from "@astrojs/mdx";
@@ -8,7 +10,9 @@ export default defineConfig({
   integrations: [tailwind(), mdx()],
   markdown: {
     shikiConfig: {
-      theme: "dracula",
+      theme: "github-light",
     },
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [rehypeKatex],
   },
 });

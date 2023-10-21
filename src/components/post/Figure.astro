@@ -4,15 +4,23 @@ import { Image } from "astro:assets";
 interface Props {
   src: ImageMetadata,
   alt: string,
+  caption?: string,
 }
-const { src, alt } = Astro.props;
+
+const { src, alt, caption } = Astro.props;
 ---
 
-<figure class="w-full">
+<figure class="w-full block py-3">
   <Image
     src={src}
     alt={alt}
-    quality={80}
-    class="w-full md:object-scale-down md:w-fit md:mx-auto"
+    format="webp"
+    quality={30}
+    class="w-fit mx-auto rounded"
   />
+  {caption !== undefined && (
+    <figcaption
+      class="my-1 text-sm text-gray-500 text-center"
+    >{caption}</figcaption>
+  )}
 </figure>
