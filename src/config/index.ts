@@ -1,6 +1,6 @@
 const config = {
   app: {
-    title: "Omag",
+    title: "Drop",
     titleSep: " | ",
   },
 };
