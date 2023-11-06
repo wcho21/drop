@@ -1,0 +1,32 @@
+\documentclass[tikz,border=5mm,12pt]{standalone}
+\usetikzlibrary{calc}
+\usepackage{stackdrawingtool}
+
+\begin{document}
+  \begin{tikzpicture}
+    \def\mytextwidth{28mm}
+
+    \begin{scope}
+      \SDTDrawPushArrow{0}{0}{1}
+      \SDTDrawNode{0}{0}{}
+      \SDTDrawNode{0}{-1}{1}
+      \SDTAsideText{\textbf{Input}: \fbox{1}\,2\,$+$}{\mytextwidth}
+    \end{scope}
+
+    \begin{scope}[yshift=-4*\SDTnodeheight]
+      \SDTDrawPushArrow{0}{0}{2}
+      \SDTDrawNode{0}{0}{}
+      \SDTDrawNode{0}{-1}{2}
+      \SDTDrawNode{0}{-2}{1}
+      \SDTAsideText{\textbf{Input}: 1\,\fbox{2}\,$+$}{\mytextwidth}
+    \end{scope}
+
+    \begin{scope}[yshift=-9*\SDTnodeheight]
+      \SDTDrawPushArrow{0}{0}{3}
+      \SDTDrawPopArrow{0}{0}{2, 1}
+      \SDTDrawNode{0}{0}{}
+      \SDTDrawNode{0}{-1}{3}
+      \SDTAsideText{\textbf{Input}: 1\,2\,\fbox{$+$}}{\mytextwidth}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

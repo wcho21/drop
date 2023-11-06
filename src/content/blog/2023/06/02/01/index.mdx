@@ -1,0 +1,192 @@
+---
+title: "카탈란 넘버 훑어보기"
+date: 2023-06-02T21:00:00+09:00
+summary: "트리 카운팅에서 시작하는 카탈란 넘버"
+thumbnail: "./_figs/thumbnail.webp"
+---
+
+import AltLang from "@components/post/AltLang.astro";
+import Figure from "@components/post/Figure.astro";
+import Fleuron from "@components/post/Fleuron.astro";
+
+import fig1 from "./_figs/fig1.svg";
+import fig2 from "./_figs/fig2.svg";
+import fig3 from "./_figs/fig3.svg";
+import fig4 from "./_figs/fig4.svg";
+
+무언가를 세는 문제에서 광범위하게 나타나는 숫자가 있는데요.
+카탈란 넘버<AltLang>Catalan Number</AltLang>라고 불리는 숫자들은 다음과 같은 [시퀀스][wp-seq]<AltLang>Sequence</AltLang>입니다.
+
+[wp-seq]: https://ko.wikipedia.org/wiki/%EC%88%98%EC%97%B4
+$$
+1, 1, 2, 5, 14, 42, 132, 429, 1430, \dots
+$$
+이 숫자들이 무엇이 특별할까요?
+
+[바이너리 트리][wiki-bin-tree]의 개수를 세다보면 카탈란 넘버를 마주치게 됩니다.
+노드가 하나인 바이너리 트리는 한 가지만 있습니다.
+루트 노드가 있는 트리만 있으니까요.
+노드가 두 개라면 두 가지가 있을 텐데요.
+노드가 세 개 있다면 몇 가지의 바이너리 트리가 있을까요?
+
+[wiki-bin-tree]: https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%A7%84_%ED%8A%B8%EB%A6%AC
+
+<Figure
+  src={fig1}
+  alt="Five kinds of binary trees with three nodes"
+  caption="세 노드를 가진 트리들" />
+
+확인해보면 다섯 가지가 존재하는데요.
+노드가 네 개라면 열 네 종류, 다섯 개라면 마흔 두 종류가 있습니다.
+여기서 카탈란 넘버가 보이시나요?
+
+(관련이 없어보이는) 다른 문제에서도 나타나는데요.
+다각형을 삼각형으로 쪼개는 방법은 몇 가지가 있을까요?
+괄호를 짝을 맞춰 나열하는 방법은 몇 가지가 있을까요?
+두 후보가 있을 때 한 쪽의 추월 없이 개표가 동점으로 끝나는 ([투표 문제][wolfram-ballot-prob]라고도 불리는) 경우의 수는 몇 가지일까요?
+
+[wolfram-ballot-prob]: https://mathworld.wolfram.com/BallotProblem.html
+
+답은 모두 카탈란 넘버가 됩니다.
+즉 이런 문제들은 본질적으로 같은 문제입니다.
+앞으로 살펴보겠지만, 답을 구할 때 같은 패턴이 나타납니다.
+
+사실 카탈란 넘버 $C_n$는 다음과 같은 [점화식][wiki-recur-rel]<AltLang>Recurrent relation</AltLang>으로 정의할 수 있습니다.
+
+[wiki-recur-rel]: https://ko.wikipedia.org/wiki/%EC%A0%90%ED%99%94%EC%8B%9D
+$$
+C_n = C_0 C_{n-1} + C_1 C_{n-2} + C_2 C_{n-3} + \cdots + C_{n-1} C_0
+$$
+이 식이 무엇을 의미하는 지는 바이너리 트리 예시를 통해 알아보겠습니다.
+
+
+<Fleuron />
+
+
+# 일일이 세지 말고 패턴을 세기
+
+노드가 네 개일 땐 바이너리 트리가 몇 가지 있을까요?
+물론 아까 답을 소개했지만요.
+답을 어떻게 직접 구할 수 있을까요?
+
+노드가 세 개일 땐 셀 수 있었는데요.
+카탈란 넘버는 가파르게 커집니다.
+대략 $4^n$을 따라서요. (정말일까요?)
+그래서 노드가 많아지면 이런 식으로는 구하기가 어렵습니다.
+
+하지만 이미 풀었던 문제의 답으로 해결할 수 있는데요.
+루트 노드의 왼쪽 서브 트리를 바라봅시다.
+여기에 오는 노드 개수를 기준으로 케이스를 나눠봅시다.
+
+<Figure
+  src={fig2}
+  alt="Four cases of binary tress with four nodes"
+  caption="네 개의 노드일 때의 패턴" />
+
+노드가 $n$개일 때 트리의 개수를 $C_n$이라고 해봅시다.
+첫 번째 경우, 왼쪽에 $C_0$가지, 오른쪽에 $C_3$가지가 올 수 있기 때문에, 총 $C_0 \times C_3 $가지의 트리를 만들 수 있습니다.
+
+이런 식으로 두 번째 경우는 $C_1 \times C_2$가지가 됩니다.
+나머지도 똑같습니다.
+결국 네 개의 노드로 만들 수 있는 트리의 개수 $C_4$는 다음과 같이 계산할 수 있게 됩니다.
+$$
+C_4 = C_0 C_3 + C_1 C_2 + C_2 C_1 + C_3 C_0 = 14
+$$
+
+그런데 노드가 네 개일 때만 이렇게 계산할 수 있을까요?
+노드가 $n$개일 때, 다음과 같이 구할 수 있을 것입니다.
+$$
+C_n = C_0 C_{n-1} + C_1 C_{n-2} + C_2 C_{n-3} + \cdots + C_{n-1} C_0
+$$
+여기서 앞서 소개했던 카탈란 넘버의 점화식이 나타납니다.
+
+
+## 악수 문제에서 찾아내는 똑같은 패턴
+
+여기 여덟 명의 사람이 둥근 테이블에 있다고 해봅시다.
+그리고 각자 악수를 하려고 합니다.
+하지만 팔이 교차되는 일은 없기를 바라는데요.
+
+<Figure
+  src={fig3}
+  alt="Successful and failed case of handshaking"
+  caption="악수 문제 규칙" />
+
+악수를 하는 방법은 몇 가지일까요?
+
+여기서도 더 작은 문제의 답을 이용해 풀 수 있는데요.
+이번에는 가장 위에 있는 1번 사람이 누구와 악수하는지 기준으로 케이스를 나눠봅시다.
+
+<Figure src={fig4} alt="Handshaking diagram" />
+
+그러면 악수가 만드는 선을 기준으로 두 그룹이 생기는데요.
+팔을 교차해서 악수하는 경우가 없기 때문에, 각 그룹에서 악수하는 경우의 수를 곱하면 됩니다.
+
+$n$명이 악수하는 방법의 수를 $H_n$이라고 해봅시다.
+그러면 우리가 구하는 답 $H_8$은 이렇습니다.
+$$
+H_8 = H_0 H_6 + H_2 H_4 + H_4 H_2 + H_6 H_0
+$$
+
+여기서 $C_n = H_{2n}$으로 정의해봅시다.
+
+$$
+C_4 = C_0 C_3 + C_1 C_2 + C_2 C_1 + C_3 C_0
+$$
+
+그러면 이 경우에도 카탈란 넘버가 답이 됩니다.
+
+
+<Fleuron />
+
+
+# (파이썬으로) 다음 카탈란 넘버 알아내기
+
+그러면 카탈란 넘버를 계산하는 프로그램은 실제로 어떻게 만들어볼 수 있을까요?
+
+단순하게 카탈란 점화식을 이용해볼 수 있을 텐데요.
+파이썬으로 구현하면 다음과 같습니다.
+```python
+def catalan(n)
+  if n == 0:
+    return 1
+
+  ans = 0
+  for k in range(n):
+    ans += catalan_bf(k) * catalan_bf(n-1-k)
+  return ans
+```
+시간 복잡도가 $O(3^n)$인 점은 여기서 언급만 하고, 증명은 연습문제로 남기겠습니다.
+
+그런데 계산 중에 똑같은 카탈란 넘버를 여러번 계산하고 있습니다.
+다이나믹 프로그래밍으로 중복 계산을 피할 수 있을 텐데요.
+```python
+def catalan(n)
+    dp = [0] * (n+1)
+    dp[0] = 1
+
+    for m in range(1, n+1):
+        for k in range(m):
+            dp[m] += dp[k] * dp[m-1-k]
+
+    return dp[n]
+```
+이렇게 시간 복잡도를 $O(n^2)$으로 줄일 수 있습니다.
+완성 코드는 [지스트][gist]를 참고해보시기 바랍니다.
+
+[gist]: https://gist.github.com/wcho21/1ada520f7564620ee0f73527ff0bb3a4
+
+
+# 더 얘기할 만한 것들
+
+사실 카탈란 넘버는 $C_n = \frac{4n-2}{n+1} C_{n-1}$라는 점화식도 가집니다.
+이를 이용하면, 더 나은 시간 복잡도 $O(n)$을 갖도록 개선할 수 있을텐데요.
+구현은 연습문제로 남겨두고, 왜 이런 점화식이 나타나는지는 다음에 기회가 된다면 살펴보겠습니다.
+카탈란 넘버의 클로즈드 폼<AltLang>Closed-form</AltLang> $C_n = \frac{1}{n+1} {2n \choose n}$도 함께요.
+
+그리고 카탈란 넘버가 나타나는 문제는 더 다양한데요.
+그 중에 [딕 패스][wolfram-dyck-path]<AltLang>Dyck path</AltLang> 문제는 따로 살펴볼만 합니다.
+다른 문제들을 딕 패스 문제로 바꿔침으로써 카탈란 넘버라는 답을 쉽게 얻을 수 있거든요.
+이것도 기회가 될 때 살펴보겠습니다.
+
+[wolfram-dyck-path]: https://mathworld.wolfram.com/DyckPath.html

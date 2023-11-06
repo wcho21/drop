@@ -1,0 +1,21 @@
+\documentclass[tikz,border=5mm,12pt]{standalone}
+
+\newcommand\sidelen{35mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \draw (0,0)
+      -- ++(\sidelen,0)
+      -- ++(0,\sidelen)
+      -- ++(-\sidelen,0) node[above right] {BMP}
+      -- cycle;
+
+    \draw (\sidelen,3*0.0625*\sidelen)
+      -- ++(-0.5*\sidelen,0)
+      -- ++(0,0.0625*\sidelen)
+      -- ++(0.5*\sidelen,0) coordinate (A);
+
+    \draw[<-] (A)+(-4pt,-4pt) .. controls +(15:6mm) and +(-165:6mm) .. ++(8mm,0mm)
+      node[right,text width=35mm,align=center,yshift=-2.5mm] {Surrogates Block\\ (\texttt{U+D800}--\texttt{U+DFFF})};
+  \end{tikzpicture}
+\end{document}
