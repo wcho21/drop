@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import Footer from "../../components/common/Footer.astro";
 import { getCollection } from "astro:content";
 import { formatDate } from "../../scripts/utils/formatters";
 import type { CollectionEntry } from "astro:content";
@@ -40,9 +41,14 @@ const { Content } = await entry.render();
         md:text-base
         [&>h1]:font-semibold [&>h1]:text-lg [&>h1]:before:mt-10 [&>h1]:before:block
         [&>h2]:font-semibold [&>h2]:text-md [&>h2]:before:mt-8 [&>h2]:before:block
-        [&>.astro-code]:p-3 [&>.astro-code]:rounded [&>.astro-code]:text-sm
+        [&>.astro-code]:p-2 [&>.astro-code]:rounded [&>.astro-code]:text-sm
+        [&>.katex-display]:overflow-x-auto [&>.katex-display]:overflow-y-hidden
+        [&>p>a]:text-blue-500
       " id="article-body">
       <Content />
     </main>
+  </div>
+  <div class="mt-12">
+    <Footer />
   </div>
 </Base>

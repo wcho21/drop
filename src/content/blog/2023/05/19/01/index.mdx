@@ -1,0 +1,320 @@
+---
+title: "부동소수점 비교 연산 구현해보기"
+date: 2023-05-19T21:00:00+09:00
+summary: "IEEE754 구현을 통해 살펴보는 부동소수점"
+thumbnail: "./_figs/thumbnail.webp"
+---
+
+import AltLang from "@components/post/AltLang.astro";
+import Figure from "@components/post/Figure.astro";
+import Fleuron from "@components/post/Fleuron.astro";
+
+import fig1 from "./_figs/fig1.svg";
+import fig2 from "./_figs/fig2.svg";
+import fig3 from "./_figs/fig3.svg";
+
+왜 `0.1 + 0.2`와 `0.3`은 같지 않을까요?
+
+자바스크립트 런타임 Node.js의 REPL에서 확인해볼 수 있는데요.
+
+```
+$ node
+> 0.1 + 0.2 === 0.3
+false
+```
+
+파이썬에서도 확인해볼 수 있고요.
+
+```
+$ python
+>>> 0.1 + 0.2 == 0.3
+False
+```
+
+아마 유한한 자릿수의 비트로는 `0.1`을 정확히 표현할 수 없어서 그런 것 같습니다.
+
+그러면 `0.2`도 그럴까요? `0.3`은 어떨까요? 모든 숫자는 정확하게 표현할 수 없는 걸까요?
+직접 부동소수점 타입을 구현해봄으로써 이해해봅시다.
+
+여기서는 [IEEE 754][wp-ieee754]라는 표준을 따라서 만들어보겠습니다.
+
+[wp-ieee754]: https://ko.wikipedia.org/wiki/IEEE_754
+
+
+<Fleuron />
+
+
+# 숫자 해부하기
+
+먼저 숫자 $102.3$이 메모리에 담기는 과정을 봅시다.
+실제로 비트로 인코딩하는 방법은 그 다음에 보겠습니다.
+
+## 소수점 옮기기
+
+숫자 $102.3$을 다르게 말해봅시다. $1.023 \times 10^2$로요.
+[과학적 표기법][wp-sci]이라고 불리는 이 방식은 항상 숫자 하나만 소수점 앞에 옵니다.
+
+이를 노말라이즈<AltLang>Normalize</AltLang>한다고 부릅니다.
+이 덕분에 하나의 숫자는 항상 하나의 (노말라이즈된) 표현에 대응합니다.
+
+십진법을 쓰면 맨 앞 숫자는 $9$까지 나올 수 있지만, 이진법을 쓴다면 $1$밖에 올 수 없습니다.
+그렇기 때문에 이진법을 쓰면 맨 앞 숫자를 따로 기억할 필요가 없어집니다.
+(방금 비트를 하나 벌었네요.)
+
+[wp-sci]: https://ko.wikipedia.org/wiki/%EA%B3%BC%ED%95%99%EC%A0%81_%EA%B8%B0%EC%88%98%EB%B2%95
+
+## 세 부분으로 해부하기
+
+32비트 메모리 공간이 주어졌다고 해봅시다.
+세 부분으로 나눠볼건데요.
+부호<AltLang>Sign</AltLang> $S$, 지수<AltLang>Exponent</AltLang> $E$, 그리고 소수<AltLang>Fraction</AltLang> $F$ 입니다.
+
+<Figure
+  src={fig1}
+  alt="Memory diagram"
+  caption="메모리 다이어그램" />
+
+우리의 손님 $1.023 \times 10^2$을 해부해서 여기에 넣어봅시다.
+
+부호는 양수이거나 음수이거나 둘 중 하나기 때문에, 부호 $S$는 비트 하나만 필요하겠네요.
+여기서는 양수라는 뜻으로 $S=0$으로 두고요.
+
+지수는 $10^2$의 지수자리를 담을 건데요.
+여기서는 $E=2$로 하면 되겠네요.
+마지막으로 소수 부분은 $F=1.023$로 넣고요.
+
+정리하면 결과는 이렇습니다.
+
+$$
+S=0, \quad E=2, \quad F=1.023
+$$
+
+이제 저장한 숫자를 알아내고 싶다면, $(-1)^S \times F \times 10^E$를 계산해보면 됩니다.
+그러면 원래 숫자인 $102.3$이 될 것입니다. (확인해보세요.)
+
+
+# 어떻게 소수점을 비트로 표현할 수 있을까
+
+메모리 세 부분으로 기억한다고는 했지만, 그래서 구체적으로 어떻게 비트로 기록하는지는 얘기하지 않았는데요.
+부호 $S$는 숫자대로 비트에 기록하면 되기 때문에 간단합니다.
+나머지는 어떻게 기록하는지 봅시다.
+
+## 이진법으로 바꾸기
+
+십진법 숫자를 비트로 담으려면 이진법으로 고쳐야하는데요.
+이는 이진법의 정의를 단순히 따르면 되는 일입니다.
+
+그런데 이진법의 정의를 보세요.
+
+$$
+(\dots b_1 b_0 . b_{-1} \dots)_{(2)} = \sum_n b_n 2^n \quad (b_n = 0, 1)
+$$
+
+즉 $2^n$ 꼴 숫자의 유한한 합으로 표현할 수 없다면, 자릿수도 무한히 많이 필요하게 됩니다.
+따라서 $0.5_{(10)}$는 부동소수점으로 정확하게 표현할 수 있겠지만, $0.1_{(10)}$은 그렇지 않게 됩니다.
+(확인해보세요. 답: $0.1_{(10)} = 0.0001\overline{1001}_{(2)}$와 같이 순환소수가 됩니다.)
+
+## 소수 인코딩하기
+
+메모리의 소수 부분 $F$는 23비트를 갖고 있는데요.
+
+<Figure
+  src={fig2}
+  alt="Fraction part"
+  caption="메모리 소수 부분" />
+
+맨 앞 숫자는 항상 $1$이라고 했던 것을 기억하시나요?
+따라서 24자리의 이진수를 기록할 수 있게 됩니다.
+그런데 모든 십진수를 24자리의 이진수로 정확하게 바꿀 수 없으니, 적당한 근사값을 여기에 담게 됩니다.
+
+예를 들어 $0.1_{(10)}$은 $1.\overline{1001}_{(2)} \times 2^{-4}$인데요. (확인해보셨나요?)
+맨 앞자리의 $1$은 버리고, 순환하는 부분을 23비트 메모리에 `10011001...`처럼 담게 될 것입니다.
+
+
+## 지수의 바이어스
+
+보통 정수는 [2의 보수][wp-twos-compl]로 인코딩하는 경우가 많은데요.
+여기서는 숫자 $0$을 위해 모든 비트를 `0`으로 둡니다.
+
+[wp-twos-compl]: https://ko.wikipedia.org/wiki/2%EC%9D%98_%EB%B3%B4%EC%88%98
+
+그런데 다른 방법도 있습니다.
+가장 작은 숫자을 위해 모든 비트를 `0`으로 둘 수 있습니다.
+
+우리의 지수 부분은 8비트이므로, $-127$이 그 가장 작은 숫자에 해당하는데요.
+지수가 $127$만큼 바이어스<AltLang>Biased</AltLang> 되어있다고 부릅니다.
+
+$$
+\begin{align*}
+-127: \quad &\texttt{0 ... 000} \quad (E=0) \\
+-126: \quad &\texttt{0 ... 001} \quad (E=1) \\
+&\vdots \\
+128: \quad &\texttt{1 ... 111} \quad (E=255)
+\end{align*}
+$$
+
+여기까지 정리하면, 계산식은 $(-1)^S \times (1+F) \times 10^{(E-127)}$이 될 것입니다.
+
+이렇게 $127$만큼의 차이를 두면 빠른 비교연산을 만들 수 있습니다.
+두 지수부분 비트를 차례대로 읽기만하면, 두 비트가 다를 때 먼저 `1`이 나타나는 쪽이 큰 수가 되니까요.
+
+$$
+\begin{align*}
+\texttt{1 ... 11}&\texttt{\fbox{1}} \\
+& \:\vee \\
+\texttt{1 ... 11}&\texttt{\fbox{0}}
+\end{align*}
+$$
+
+
+## 직접 확인해보기
+
+$-2.75_{(10)}$는 비트로 어떻게 담길까요? (직접 해보세요.)
+
+이진수로 고치고 노말라이즈하면 $-1.011_{(2)} \times 2^{1}$가 됩니다.
+그러면 $E=128_{(10)}$이 되고, $F=.011_{(2)}$이 되겠네요. (지수는 바이어스를 잊지마세요.)
+
+이제 부동소수점을 위한 32비트 메모리는 다음과 같이 채워져 있을 것입니다.
+
+<Figure
+  src={fig3}
+  alt="Memory diagram example"
+  caption="메모리 다이어그램 예시: -2.75" />
+
+정말 그럴까요?
+C++ 코드로 아래처럼 확인해볼 수 있습니다.
+
+```cpp
+float f = -2.75;
+std::cout << std::bitset<32>(*reinterpret_cast<int *>(&f)) << '\n';
+// output: 11000000001100000000000000000000
+```
+
+
+<Fleuron />
+
+
+# 이제 두 수를 비교해봅시다
+
+나눴던 세 부분의 순서를 봅시다.
+
+<Figure
+  src={fig1}
+  alt="Memory diagram"
+  caption="메모리 다이어그램" />
+
+이 순서가 주는 장점이 있습니다.
+이 순서대로만 비교하면 빨리 결과를 낼 수 있기 때문입니다.
+
+왜일까요? 부호가 다르면 나머지는 볼 필요가 없습니다.
+지수가 다르면 소수 부분은 볼 필요가 없습니다.
+소수 부분의 맨 앞 숫자가 항상 1이니까요.
+
+사실 아닙니다.
+$0$은 그런식으로 표현할 수가 없습니다.
+
+그래서 $0$을 위한 특별한 방법으로, 지수와 소수 부분을 모두 `0`으로 채워넣습니다.
+그런데 부호 비트는 여전히 `0`이거나 `1`일 수 있는데요.
+따라서 부동소수점이 $0$을 표현하는 방법은 두 가지가 됩니다.
+
+$$
+\begin{align*}
+  +0: \quad &\texttt{0\,00000000\,000\dots0} \\
+  -0: \quad &\texttt{1\,00000000\,000\dots0}
+\end{align*}
+$$
+
+(이것이 부동소수점을 기본적인 숫자 타입으로 가지는 자바스크립트가 [스펙][ecma-num] 상 두 개의 $0$을 갖는 이유입니다.)
+
+[ecma-num]: https://tc39.es/ecma262/#sec-ecmascript-language-types-number-type
+
+따라서 부호가 다르더라도 나머지 부분이 `0`이라면, 같은 수로 처리해봅시다.
+
+여기 두 수가 같은지 비교하는 수도코드입니다.
+프로그래밍 언어에서 `==` 연산으로 볼 수 있겠네요.
+
+```
+function equal(a, b)
+  if a is zero && b is zero
+    return true
+  if a.sign != b.sign
+    return false
+  if a.exponent != b.exponent
+    return false
+  if a.fraction != b.fraction
+    return false
+  return true
+```
+
+
+## (파이썬으로) 진짜 만들어보기
+
+먼저 부동소수점 타입을 준비해봅시다.
+부호와 지수, 소수 부분 필드를 만들고요.
+
+```python
+class Float:
+    def __init__(self, sign, exp, frac):
+        self.sign = sign
+        self.exp = exp
+        self.frac = frac
+```
+
+그리고 `Float` 클래스에 `==` 연산을 오버로딩 해봅시다.
+이 부분은 수도코드의 구현입니다.
+
+```python
+    def __eq__(self, other):
+        if self.isZero() and other.isZero():
+            return True
+        if self.sign != other.sign:
+            return False
+        if self.exp != other.exp:
+            return False
+        if self.frac != other.frac:
+            return False
+        return True
+```
+
+여기서 쓰인 보조 메소드 `isZero()`는 지수와 소수가 둘 다 `0`인지 검사하는 것으로 만듭니다.
+
+```python
+    def isZero(self):
+        return self.exp == 0 and self.frac == 0
+```
+
+이제 테스트해봅시다.
+
+```python
+positive_zero = Float(0, 0, 0) # +0
+negative_zero = Float(1, 0, 0) # -0
+assert positive_zero == negative_zero
+
+two_point_seven_five = Float(0, 1 << 7, 0b011 << 20) # -2.75
+assert two_point_seven_five != positive_zero
+```
+
+완성 결과는 [지스트][gist]에서 확인할 수 있습니다.
+
+[gist]: https://gist.github.com/wcho21/e216323133a8de85adc6a25c3644a0af
+
+# 마치며
+
+빠진 얘기가 있습니다.
+왜 `0.1 + 0.2`가 `0.3`과 다른지는 다루지 못했는데요.
+
+그러면 두 가지를 얘기해야 합니다.
+하나는 부동소수점 리터럴로부터 읽는 것이고, 또 하나는 덧셈 연산을 구현하는 것입니다.
+
+하지만 둘 다 쉬운 일은 아닌데요.
+근사값을 담기 위해 반올림 규칙이 따로 필요하고요.
+리터럴로부터 읽는 일은 파싱이 필요합니다.
+
+그럼에도 비교 연산으로부터 알 수 있는 게 있습니다.
+아마 `0.1 + 0.2`와 `0.3`은 부호와 지수는 같을 것입니다.
+소수 부분에서 다를 텐데요.
+즉 덧셈을 처리할 때 반올림 과정에서 오차가 발생하기 때문일 것입니다.
+이 부분은 이 정도로 정리하고 글을 마치는 것으로 하겠습니다.
+
+부동소수점 처리는 컴퓨터 하드웨어와 관련이 있는데요.
+Computer Organization and Design (Patterson, Hennessy)와 같은 컴퓨터 구조 책에서 부동소수점 설명을 찾아볼 수 있습니다.

@@ -1,11 +1,13 @@
 ---
 import Base from "../layouts/Base.astro";
+import Footer from "../components/common/Footer.astro";
 import Card from "@components/articles/Card.astro";
 import { getCollection } from "astro:content";
 import { reverse, sortBy } from "lodash-es";
 
 const collection = await getCollection("blog");
 const sorted = reverse(sortBy(collection, item => item.data.date));
+const basePath = "/posts/";
 ---
 
 <Base pageTitle="Home">
@@ -19,7 +21,7 @@ const sorted = reverse(sortBy(collection, item => item.data.date));
 
           return (
             <li class="block border-t border-zinc-100">
-              <a href={`post/${slug}`} class="block py-3">
+              <a href={`${basePath}${slug}`} class="block py-3">
                 <Card
                   title={title}
                   date={new Date(date)}
@@ -33,4 +35,7 @@ const sorted = reverse(sortBy(collection, item => item.data.date));
       }
     </ul>
   </main>
+  <div class="mt-12">
+    <Footer />
+  </div>
 </Base>

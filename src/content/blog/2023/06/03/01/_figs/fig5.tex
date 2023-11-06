@@ -1,0 +1,50 @@
+\documentclass[tikz,border=5mm,12pt]{standalone}
+\usetikzlibrary{arrows.meta}
+
+\newcommand\scopesep{35mm}
+\newcommand\drawpoparr{
+  \draw[arr] (-8pt,12pt) .. controls +(right:6pt) and +(up:8pt) .. ++(12pt,-10pt);
+}
+\newcommand\drawpusharr{
+  \draw[arr] (16pt,2pt) .. controls +(up:8pt) and +(left:6pt) .. ++(12pt,10pt);
+}
+
+\begin{document}
+  \begin{tikzpicture}[
+    arr/.style={{Stealth[length=1.5mm]}-}
+  ]
+    \begin{scope}
+      \draw (0,0) -- ++(0,-40pt) -- ++(20pt,0) -- ++(0,+40pt);
+
+      \node[text width=20pt,align=left] at (42pt,12pt) {132};
+    \end{scope}
+
+    \begin{scope}[xshift=\scopesep]
+      \draw (0,0) -- ++(0,-40pt) -- ++(20pt,0) -- ++(0,+40pt);
+
+      \node[text width=20pt,align=right] at (-22pt,12pt) {1};
+      \node[text width=20pt,align=left] at (42pt,12pt) {32};
+
+      \drawpoparr
+      \drawpusharr
+    \end{scope}
+
+    \begin{scope}[xshift=2*\scopesep]
+      \draw (0,0) -- ++(0,-40pt) -- ++(20pt,0) -- ++(0,+40pt);
+      \node at (10pt,-30pt) {3};
+      \node at (10pt,-18pt) {2};
+
+      \node[text width=20pt,align=right] at (-22pt,12pt) {1};
+
+      \drawpusharr
+    \end{scope}
+
+    \begin{scope}[xshift=3*\scopesep]
+      \draw (0,0) -- ++(0,-40pt) -- ++(20pt,0) -- ++(0,+40pt);
+
+      \node[text width=20pt,align=right] at (-22pt,12pt) {123};
+
+      \drawpoparr
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
