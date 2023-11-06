@@ -2,6 +2,7 @@
 import { makeTitle } from "./Base";
 import FontLinks from "../components/head/FontLinks.astro";
 import GoogleAnalytics from "../components/head/GoogleAnalytics.astro";
+import Favicons from "../components/head/Favicons.astro";
 import config from "../config";
 
 interface Props {
@@ -12,7 +13,6 @@ const { pageTitle } = Astro.props;
 const siteTitle = config.app.title;
 const titleSep = config.app.titleSep;
 const title = makeTitle(pageTitle, siteTitle, titleSep);
-console.log(import.meta.env.PROD);
 ---
 
 <!doctype html>
@@ -21,9 +21,9 @@ console.log(import.meta.env.PROD);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <Favicons />
     <FontLinks />
     <GoogleAnalytics />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- KaTeX -->
     <link
