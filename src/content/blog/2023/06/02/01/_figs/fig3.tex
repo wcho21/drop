@@ -1,6 +1,7 @@
 \documentclass[tikz,border=5mm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
 
-\newcommand\sep{12mm}
+\newcommand\sep{14mm}
 
 \newcommand\setcoordinates{
   \path (0,0) coordinate (P1)
@@ -37,20 +38,20 @@
 
       \drawnodes
 
-      \node at (0,-42mm) {(O)};
+      \node at (0,-54mm) {(O)};
     \end{scope}
 
-    \begin{scope}[xshift=50mm]
+    \begin{scope}[xshift=54mm]
       \setcoordinates;
 
       \draw (P1) -- (P8);
       \draw (P2) -- (P3);
-      \draw[red] (P4) -- (P6);
-      \draw[red] (P5) -- (P7);
+      \draw[red] (P4) to[out=120,in=60] (P6);
+      \draw[red] (P5) to[out=90,in=0] (P7);
 
       \drawnodes
 
-      \node at (0,-42mm) {(X)};
+      \node at (0,-54mm) {(X)};
     \end{scope}
   \end{tikzpicture}
 \end{document}

@@ -1,14 +1,15 @@
 \documentclass[tikz,border=5mm,12pt]{standalone}
-\usetikzlibrary{arrows.meta}
+\usepackage[fontsize=16pt]{fontsize}
 \usepackage{lattice}
+\usetikzlibrary{arrows.meta}
 
-\newcommand\scopesep{40mm}
+\newcommand\scopesep{48mm}
 
 \begin{document}
   \begin{tikzpicture}[
-    circ/.style={circle,fill,inner sep=1.25pt},
+    circ/.style={circle,fill,inner sep=1.5pt},
     dyckpath/.style={line width=0.75pt,line cap=round},
-    dyckpathcurve/.style={dyckpath,dashed,-{Stealth[length=2mm]},shorten >=2.5pt,shorten <=2.5pt},
+    dyckpathcurve/.style={dyckpath,dashed,-{Stealth[scale=1.2]},shorten >=2.5pt,shorten <=2.5pt},
     shade/.style={draw=none,fill=\shadecolor}
   ]
     \begin{scope}

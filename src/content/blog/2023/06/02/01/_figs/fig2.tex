@@ -1,18 +1,19 @@
 \documentclass[tikz,border=5mm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
 \usetikzlibrary{positioning,shapes.geometric}
 
 \begin{document}
   \begin{tikzpicture}[
     treenode/.style={
-      circle,draw,inner sep=1.5mm
+      circle,draw,inner sep=2mm
     },
     emptynode/.style={
       treenode,
       densely dashed
     },
     tree/.style={
-      level distance=10mm,
-      level 1/.style={sibling distance=16mm,align=center},
+      level distance=12mm,
+      level 1/.style={sibling distance=18mm,align=center},
       every node/.style={
         anchor=center
       }
@@ -23,37 +24,38 @@
       isosceles triangle apex angle=60,
       shape border rotate=90
     }]
+      \def\scopexsep{40mm}
 
       \begin{scope}[tree]
         \node[treenode] {}
-          child {node[emptynode,label=below:{0 node}] {} edge from parent[draw=none]}
+          child {node[emptynode,label=below:{\small 0 node}] {} edge from parent[draw=none]}
           child {node {}
-            {node[subtree,label=below:{3 nodes},xshift=-4pt,yshift=-14pt] {\huge$\strut$}}
+            {node[subtree,label=below:{\small 3 nodes},xshift=4pt,yshift=-6pt] {\large$\strut$}}
           };
       \end{scope}
 
-      \begin{scope}[tree,xshift=35mm]
+      \begin{scope}[tree,xshift=\scopexsep]
         \node[treenode] {}
-          child {node[treenode,label=below:{1 node}] {}}
+          child {node[treenode,label=below:{\small 1 node}] {}}
           child {node {}
-            {node[subtree,label=below:{2 nodes},xshift=-2pt,yshift=-10pt] {$\strut$}}
+            {node[subtree,label=below:{\small 2 nodes},xshift=2pt,yshift=-2pt] {\tiny$\strut$}}
           };
       \end{scope}
 
-      \begin{scope}[tree,xshift=70mm]
+      \begin{scope}[tree,xshift=2*\scopexsep]
         \node[treenode] {}
           child {node {}
-            {node[subtree,label=below:{2 nodes},xshift=2pt,yshift=-10pt] {$\strut$}}
+            {node[subtree,label=below:{\small 2 nodes},xshift=-2pt,yshift=-2pt] {\tiny$\strut$}}
           }
-          child {node[treenode,label=below:{1 node}] {}};
+          child {node[treenode,label=below:{\small 1 node}] {}};
       \end{scope}
 
-      \begin{scope}[tree,xshift=105mm]
+      \begin{scope}[tree,xshift=3*\scopexsep]
         \node[treenode] {}
           child {node {}
-            {node[subtree,label=below:{3 nodes},xshift=4pt,yshift=-14pt] {\huge$\strut$}}
+            {node[subtree,label=below:{\small 3 nodes},xshift=-4pt,yshift=-6pt] {\large$\strut$}}
           }
-          child {node[emptynode,label=below:{0 node}] {} edge from parent[draw=none]};
+          child {node[emptynode,label=below:{\small 0 node}] {} edge from parent[draw=none]};
       \end{scope}
   \end{tikzpicture}
 \end{document}

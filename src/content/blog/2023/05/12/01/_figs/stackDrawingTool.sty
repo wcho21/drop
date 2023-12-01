@@ -3,8 +3,9 @@
 
 \usetikzlibrary{arrows.meta}
 
-\newcommand\SDTnodewidth{10mm}
-\newcommand\SDTnodeheight{8mm}
+\newcommand\SDTnodewidth{12mm}
+\newcommand\SDTnodeheight{9mm}
+\newcommand\SDTarrowtipscale{1.2}
 
 \newcommand\SDTDrawNode[3]{
   \def\xoffset{#1}
@@ -38,7 +39,7 @@
   \def\xradius{5mm}
   \def\yradius{5mm}
 
-  \draw[-Stealth] (\SDTnodewidth*0.8+\xoffset+\xradius, \SDTnodeheight*0.8+\nodeindex*\SDTnodeheight)
+  \draw[-{Stealth[scale=\SDTarrowtipscale]}] (\SDTnodewidth*0.8+\xoffset+\xradius, \SDTnodeheight*0.8+\nodeindex*\SDTnodeheight)
     node[right] {\nodetext}
     arc[start angle=90,end angle=180,x radius=\xradius,y radius=\yradius];
 }
@@ -51,7 +52,7 @@
   \def\xradius{5mm}
   \def\yradius{5mm}
 
-  \draw[-Stealth] (-\SDTnodewidth*0.2+\xoffset+\xradius, \SDTnodeheight*0.8-\yradius+\nodeindex*\SDTnodeheight)
+  \draw[-{Stealth[scale=\SDTarrowtipscale]}] (-\SDTnodewidth*0.2+\xoffset+\xradius, \SDTnodeheight*0.8-\yradius+\nodeindex*\SDTnodeheight)
     arc[start angle=0,end angle=90,x radius=\xradius,y radius=\yradius]
     node[left] {\nodetext};
 }
