@@ -7,7 +7,6 @@ thumbnail: "./_figs/thumbnail.webp"
 
 import AltLang from "@components/post/AltLang.astro";
 import Figure from "@components/post/Figure.astro";
-import Fleuron from "@components/post/Fleuron.astro";
 
 import fig1 from "./_figs/fig1.svg";
 import fig2 from "./_figs/fig2.svg";
@@ -39,9 +38,6 @@ False
 여기서는 [IEEE 754][wp-ieee754]라는 표준을 따라서 만들어보겠습니다.
 
 [wp-ieee754]: https://ko.wikipedia.org/wiki/IEEE_754
-
-
-<Fleuron />
 
 
 # 숫자 해부하기
@@ -189,9 +185,6 @@ float f = -2.75;
 std::cout << std::bitset<32>(*reinterpret_cast<int *>(&f)) << '\n';
 // output: 11000000001100000000000000000000
 ```
-
-
-<Fleuron />
 
 
 # 이제 두 수를 비교해봅시다
