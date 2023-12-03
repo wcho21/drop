@@ -9,30 +9,31 @@ interface Props extends BlogEntryData { }
 const { title, date, summary, thumbnail } = Astro.props;
 ---
 
-<div class="flex items-center gap-3">
+<div class="flex items-center gap-4">
   {
     thumbnail !== undefined && (
-      <div class="flex-0 w-1/4 md:w-36">
+      <div class="flex-0 w-36">
         <Image
           src={thumbnail}
           alt="Thumbnail"
           quality="80"
           width="240"
           height="160"
-          class="border border-zinc-50 rounded-md w-full object-cover"
+          class="border border-gray-50 w-full object-cover"
         />
       </div>
     )
   }
-  <div class="flex-1 text-zinc-900">
-    <p class="text-lg font-bold">{title}</p>
+
+  <div class="flex-1 h-full">
+    <p class="text-gray-800 text-lg font-bold">{title}</p>
     {
       summary !== undefined && (
         <div>
-        <p class="text-zinc-700 font-regular">{summary}</p>
+        <p class="text-gray-600 font-regular font-light">{summary}</p>
         </div>
       )
     }
-    <p class="text-sm text-zinc-400 font-light">{formatDate(date)}</p>
+    <p class="text-sm text-gray-400 font-serif font-[14px] mt-2 font-light">{formatDate(date)}</p>
   </div>
 </div>
