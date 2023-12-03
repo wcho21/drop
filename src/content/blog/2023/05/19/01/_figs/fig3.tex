@@ -1,7 +1,8 @@
 \documentclass[tikz,border=0.5cm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
+\usepackage{util}
 \usetikzlibrary{shapes.multipart}
 \usetikzlibrary{decorations.pathreplacing,calligraphy}
-\usepackage{util}
 
 \begin{document}
   \begin{tikzpicture}[boxes/.style={
@@ -23,10 +24,10 @@
     \draw[curlybrace]
       (diagram.one split south) -- (diagram.five split south)
       node[midway, below=3mm] {\small (8 bits)}
-      node[midway, below=9mm] {$E = 128$};
+      node[midway, below=12mm] {$E = 128$};
     \draw[curlybrace]
       (diagram.five split south) -- (diagram.south east)
       node[midway, below=3mm] {\small (23 bits)}
-      node[midway, below=9mm] {$F = .011$};
+      node[midway, below=12mm] {$F = .011$};
   \end{tikzpicture}
 \end{document}

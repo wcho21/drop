@@ -1,9 +1,10 @@
 \documentclass[tikz,border=5mm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
 \usepackage{lattice}
 
 \begin{document}
   \begin{tikzpicture}[
-    circ/.style={circle,fill,inner sep=1.25pt},
+    circ/.style={circle,fill,inner sep=1.5pt},
     dyckpath/.style={line width=0.75pt,line cap=round},
     shade/.style={draw=none,fill=\shadecolor}
   ]
@@ -24,7 +25,7 @@
       \node at (2*\step,-8mm) {(O)};
     \end{scope}
 
-    \begin{scope}[xshift=40mm]
+    \begin{scope}[xshift=48mm]
       \drawgrid
 
       \node[circ] at (0,0) {};

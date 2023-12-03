@@ -6,8 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 ---
 
 import AltLang from "@components/post/AltLang.astro";
-import Figure from "@components/post/Figure.astro";
-import Fleuron from "@components/post/Fleuron.astro";
+import FigureV2 from "@components/post/FigureV2.astro";
+import FigureCaption from "@components/post/FigureCaption.astro";
 
 import fig1 from "./_figs/fig1.svg";
 import fig2 from "./_figs/fig2.svg";
@@ -28,9 +28,6 @@ import fig5 from "./_figs/fig5.svg";
 [w3tech-utf-8]: https://w3techs.com/technologies/history_overview/character_encoding/ms/y
 
 
-<Fleuron />
-
-
 # 매핑으로서 바라보는 유니코드와 UTF 인코딩
 
 문자 'A'가 있다고 생각해봅시다.
@@ -43,10 +40,9 @@ import fig5 from "./_figs/fig5.svg";
 
 [utr-17-model]: https://unicode.org/reports/tr17/#CharacterEncodingModel
 
-<Figure
-  src={fig1}
-  alt="unicode-utf mapping"
-  caption="유니코드와 UTF-8 매핑" />
+<FigureV2 src={fig1} alt="unicode-utf mapping">
+  <FigureCaption slot="caption">그림 1. 유니코드와 UTF-8 매핑. 유니코드는 문자마다 하나의 코드 포인트를, UTF-8 인코딩은 코드 포인트마다 하나의 비트 표현을 매깁니다.</FigureCaption>
+</FigureV2>
 
 하나는 문자를 숫자에 대응시키는 매핑입니다.
 그 숫자는 코드 포인트<AltLang>Code point</AltLang>라고 부릅니다.
@@ -65,9 +61,6 @@ UTF-8이 이러한 매핑 중 하나입니다.
 즉 유니코드는 문자와 코드 포인트 사이의 매핑이고, UTF 인코딩은 코드 포인트와 비트 표현 사이의 매핑입니다.
 
 
-<Fleuron />
-
-
 # 직접 구현해보는 UTF-8 인코딩
 
 문자와 코드 포인트 간의 관계는 이미 유니코드에 정해져있습니다.
@@ -80,20 +73,18 @@ UTF-8이 이러한 매핑 중 하나입니다.
 
 코드 포인트의 이진 표현<AltLang>Binary representation</AltLang>이 몇 비트를 차지하느냐에 따라 케이스를 나누는데요.
 7비트, 11비트, 16비트, 그리고 21비트가 기준점이 됩니다.
-<Figure
-  src={fig2}
-  alt="Utf-8 encoding"
-  caption="UTF-8 인코딩" />
+<FigureV2 src={fig2} alt="Utf-8 encoding">
+  <FigureCaption slot="caption">그림 2. UTF-8 인코딩. 코드 포인트의 이진 표현 길이에 따라 UTF-8의 비트 표현이 달라집니다.</FigureCaption>
+</FigureV2>
 즉 필요한 비트가 많을수록 더 많은 바이트에 나눠 담습니다.
 
 각 바이트의 앞자리에는 정해진 비트 패턴이 있는데요.
 이것 덕분에 어느 바이트에서 읽기를 시작하든지 의미를 분명하게 알 수 있습니다.
 즉 인코딩의 시작인지 중간인지 바로 알 수 있게 만들어 줍니다. ([셀프 싱크로나이징 코드][wiki-self-sync]<AltLang>Self-synchronizing code</AltLang>라고도 부릅니다.)
 
-<Figure
-  src={fig3}
-  alt="prefixes in utf-8"
-  caption="UTF-8 바이트 비트 패턴" />
+<FigureV2 src={fig3} alt="prefixes in utf-8">
+  <FigureCaption slot="caption">그림 3. UTF-8 바이트 비트 패턴. 앞에 붙은 비트 패턴이 그 바이트의 의미를 정합니다.</FigureCaption>
+</FigureV2>
 
 [wiki-self-sync]: https://en.wikipedia.org/wiki/Self-synchronizing_code
 
@@ -234,9 +225,6 @@ int main() {
 ```
 
 
-<Fleuron />
-
-
 # 반대로 동작하는 디코딩 함수 구현하기
 
 이번에는 바이트 시퀀스에서 코드 포인트를 얻는 `decodeUtf8()` 함수를 만들어 봅시다.
@@ -327,9 +315,6 @@ int main() {
 ```
 
 
-<Fleuron />
-
-
 # 유니코드의 코드 스페이스와 플레인
 
 유니코드는 `U+0000`부터 `U+10FFFF`까지, 즉 $2^{21}$개의 코드 포인트를 사용합니다.
@@ -341,10 +326,9 @@ int main() {
 따라서 코드 포인트 `U+XXYYYY`가 있으면, `XX`는 `0`부터 `10`까지 있을 수 있는데요. 플레인의 숫자를 가리키게 됩니다.
 예를 들어, `U+2345`는 `0`번째 플레인에 있는 코드 포인트가 되겠네요.
 
-<Figure
-  src={fig4}
-  alt="code space and planes"
-  caption="유니코드의 코드 스페이스와 플레인" />
+<FigureV2 src={fig4} alt="code space and planes">
+  <FigureCaption slot="caption">그림 4. 유니코드의 코드 스페이스와 플레인. 코드 스페이스는 총 17개의 플레인으로 구성되어 있습니다. 그리고 각 플레인은 블록이라는 이름으로 구역을 나누고 있습니다.</FigureCaption>
+</FigureV2>
 
 원래 유니코드를 만들었을 때, 16비트로도 충분히 모든 문자를 표현할 수 있을거라고 예상했었는데요.
 따라서 자주 사용되는 문자는 코드 포인트 `0+0000`와 `0+FFFF` 사이에 할당되어있습니다.
@@ -377,10 +361,9 @@ UTF-8은 그 방법 중 하나입니다.
 즉 UTF-8 인코딩은 8비트 코드 유닛을 때에 따라 하나에서 네 개까지 사용하는데요.
 문자마다 코드 유닛의 개수, 즉 바이트의 개수가 달라지므로, 가변 폭 인코딩<AltLang>Variable-width encoding</AltLang>이라고 부릅니다.
 
-<Figure
-  src={fig5}
-  alt="various utf encoding examples"
-  caption="같은 문자의 세 UTF 인코딩" />
+<FigureV2 src={fig5} alt="various utf encoding examples">
+  <FigureCaption slot="caption">그림 5. 같은 문자의 세 UTF 인코딩. 뒤에 붙은 숫자, 즉 8, 16, 32는 기본 단위로서 사용할 비트 길이를 의미합니다.</FigureCaption>
+</FigureV2>
 
 그러면 16비트의 코드 유닛을 사용하면 어떨까요?
 UTF-16이 그 방법 중 하나가 됩니다.
@@ -397,9 +380,6 @@ $2^{21}$개의 모든 코드 포인트를 항상 32비트 안에 담을 수 있�
 각각 다른 개수의 코드 유닛으로 나누어 인코딩 됩니다.
 
 [wiki-ascii]: https://ko.wikipedia.org/wiki/ASCII
-
-
-<Fleuron />
 
 
 # 그 외의 것들

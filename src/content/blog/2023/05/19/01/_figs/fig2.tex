@@ -1,6 +1,7 @@
 \documentclass[tikz,border=0.5cm,12pt]{standalone}
-\usetikzlibrary{shapes.multipart}
+\usepackage[fontsize=16pt]{fontsize}
 \usepackage{util}
+\usetikzlibrary{shapes.multipart}
 
 \begin{document}
   \begin{tikzpicture}[boxes/.style={draw,rectangle split,rectangle split parts=#1,anchor=center}]
@@ -15,6 +16,6 @@
     \draw[shift=(diagram.south)]
       node[below=1mm] {\small (23 bits)};
     \draw[shift=(diagram.south)]
-      node[below=(10pt + 4mm)] {$F$ = .$f_1 f_2 f_3 \dots f_{23}$};
+      node[below=(14pt + 6mm)] {$F$ = .$f_1 f_2 f_3 \dots f_{23}$};
   \end{tikzpicture}
 \end{document}

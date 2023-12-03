@@ -1,40 +1,47 @@
 \documentclass[tikz,border=5mm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
+\usetikzlibrary{arrows.meta}
 \usetikzlibrary{backgrounds}
 
 \begin{document}
   \begin{tikzpicture}
-    \draw[step=10mm] (0,0) grid (40mm,40mm);
-    \draw (0,40mm) -- ++(-10mm,0) -- ++(0,-10mm) -- ++(10mm,0);
+    \def\side{14mm}
+    \def\altside{10mm}
+    \def\altxoffset{66mm}
+    \def\altyoffset{44mm}
 
-    \node[above] at (9mm,41mm) {Code space};
+    \draw[step=\side] (0,0) grid (4*\side,4*\side);
+    \draw (0,4*\side) -- ++(-\side,0) -- ++(0,-\side) -- ++(\side,0);
 
-    \node at (-5mm,35mm) {BMP};
-    \node at (5mm,35mm) {SMP};
-    \node at (15mm,35mm) {SIP};
-    \node at (25mm,35mm) {TIP};
-    \node at (15mm,5mm) {SSP};
-    \node at (25mm,5mm) {PUA};
-    \node at (35mm,5mm) {PUA};
+    \node[above] at (2*\side,4*\side) {Code space};
+
+    \node at (-0.5*\side,3.5*\side) {\small BMP};
+    \node at (0.5*\side,3.5*\side) {\small SMP};
+    \node at (1.5*\side,3.5*\side) {\small SIP};
+    \node at (2.5*\side,3.5*\side) {\small TIP};
+    \node at (1.5*\side,0.5*\side) {\small SSP};
+    \node at (2.5*\side,0.5*\side) {\small PUA};
+    \node at (3.5*\side,0.5*\side) {\small PUA};
 
     \begin{scope}[on background layer]
       \path[fill=lightgray!50]
         (0,0)
-        -- ++(10mm,0)
-        -- ++(0,10mm)
-        -- ++(30mm,0)
-        -- ++(0,30mm)
-        -- ++(-10mm,0)
-        -- ++(0,-10mm)
-        -- ++(-30mm,0)
+        -- ++(\side,0)
+        -- ++(0,\side)
+        -- ++(3*\side,0)
+        -- ++(0,3*\side)
+        -- ++(-\side,0)
+        -- ++(0,-\side)
+        -- ++(-3*\side,0)
         -- cycle;
     \end{scope}
 
-    \draw[<-] (28mm,38mm) .. controls +(60:8mm) and +(120:8mm) .. ++(30mm,0) node[below] {Plane};
+    \draw[{Stealth[scale=1.2]}-] (2.75*\side,3.75*\side) .. controls +(60:8mm) and +(120:8mm) .. ++(\altxoffset-2.75*\side+\altside,0) node[below] {Plane};
 
-    \draw (54mm,32.5mm) -- ++(16mm,0) -- ++(0,-16mm) -- ++(-16mm,0) -- cycle;
-    \draw (54mm+8mm,32.5mm) -- ++(0,-16mm);
-    \draw (54mm+16mm,32.5mm-8mm) -- ++(-16mm,0);
+    \draw (\altxoffset,\altyoffset) -- ++(2*\altside,0) -- ++(0,-2*\altside) -- ++(-2*\altside,0) -- cycle;
+    \draw (\altxoffset+\altside,\altyoffset) -- ++(0,-2*\altside);
+    \draw (\altxoffset+2*\altside,\altyoffset-\altside) -- ++(-2*\altside,0);
 
-    \draw[<-] (56mm,18mm) .. controls +(-120:3mm) and +(120:2mm) .. ++(-2mm,-8mm) node[below] {Block};
+    \draw[{Stealth[scale=1.2]}-] (\altxoffset+0.5*\altside,\altyoffset-2*\altside+0.25*\altside) .. controls +(-120:3mm) and +(120:2mm) .. ++(-2mm,-8mm) node[below] {Block};
   \end{tikzpicture}
 \end{document}

@@ -6,8 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 ---
 
 import AltLang from "@components/post/AltLang.astro";
-import Figure from "@components/post/Figure.astro";
-import Fleuron from "@components/post/Fleuron.astro";
+import FigureV2 from "@components/post/FigureV2.astro";
+import FigureCaption from "@components/post/FigureCaption.astro";
 
 import fig1 from "./_figs/fig1.svg";
 import fig2 from "./_figs/fig2.svg";
@@ -25,9 +25,6 @@ import fig5 from "./_figs/fig5.svg";
 여기서는 파이썬으로 만들지만, 좋아하는 아무 언어나 골라도 상관없습니다.
 
 [wp-stack]: https://ko.wikipedia.org/wiki/%EC%8A%A4%ED%83%9D
-
-
-<Fleuron />
 
 
 # 연산 기호를 뒤에 놓는 트릭
@@ -103,11 +100,9 @@ function evaluateInfix(infix)
 
 그렇다면 스택에 마지막으로 남은 숫자가 연산 결과가 됩니다.
 
-<Figure
-  src={fig1}
-  alt="Calculating postfix expression 12+ with stack"
-  caption="스택으로 후위 표기식 계산하기"
-/>
+<FigureV2 src={fig1} alt="Calculating postfix expression 12+ with stack">
+  <FigureCaption slot="caption">그림 1. 스택으로 후위 표기식 계산하기. 더하기 기호를 만났을 때 계산 결과인 3을 스택에 넣습니다.</FigureCaption>
+</FigureV2>
 
 여태까지 숫자<AltLang>Number</AltLang>와 연산 기호<AltLang>Operator</AltLang>를 구분해서 불렀는데요.
 이제부터 둘 다 함께 토큰<AltLang>Token</AltLang>이라고 부르기로 합시다.
@@ -199,9 +194,6 @@ def applyOperator(operator, num1, num2):
 이제 반이 끝났습니다. (차라도 한 잔 하고 오세요.)
 
 
-<Fleuron />
-
-
 # 그래서 어떻게 입력받을 건가요
 
 입력은 중위 표기식으로 받기로 했기 때문에, 이를 후위 표기식으로 바꾸는 방법이 필요한데요.
@@ -216,11 +208,9 @@ def applyOperator(operator, num1, num2):
 가장 간단한 경우를 생각해볼까요? `1+2`를 입력 받았다고 해봅시다.
 입력이 끝날 때 스택에 있던 연산 기호를 출력으로 내보내면, 원하는 결과인 `12+`를 얻게 됩니다.
 
-<Figure
-  src={fig2}
-  alt="Converting to postfix expression with stack"
-  caption="스택으로 표기식 변환하기"
-/>
+<FigureV2 src={fig2} alt="Converting to postfix expression with stack">
+  <FigureCaption slot="caption">그림 2. 스택으로 표기식 변환하기. 스택에 들어간 더하기 기호를 마지막에 꺼냅니다.</FigureCaption>
+</FigureV2>
 
 그렇지만 연산 기호가 더 많으면 어떻게 할까요?
 
@@ -246,11 +236,9 @@ def applyOperator(operator, num1, num2):
 
 더하기를 먼저해야 하기 때문에, 스택에 있는 `+` 기호를 꺼내야 할 것입니다.
 
-<Figure
-  src={fig3}
-  alt="Handling operators having the same priority"
-  caption='우선순위가 "같은" 연산 기호 처리하기'
-/>
+<FigureV2 src={fig3} alt="Handling operators having the same priority">
+  <FigureCaption slot="caption">그림 3. 우선순위가 '같은' 연산 기호 처리하기. 빼기 기호를 만났을 때 더하기 기호를 꺼냅니다.</FigureCaption>
+</FigureV2>
 
 `+`와 `-` 기호는 먼저온 기호를 더 우선해야 합니다.
 마찬가지로 `*`와 `/` 기호도 그렇습니다.
@@ -269,11 +257,9 @@ def applyOperator(operator, num1, num2):
 
 두 번째 경우는 아래 그림처럼 풀어볼 수 있겠네요.
 
-<Figure
-  src={fig4}
-  alt="Answer to the second exercise"
-  caption='두 번째 연습문제: 우선순위가 "다른" 경우 처리하기'
-/>
+<FigureV2 src={fig4} alt="Answer to the second exercise">
+  <FigureCaption slot="caption">그림 4. 두 번째 연습문제: 우선순위가 다른 경우 처리하기. '급한' 기호를 먼저 꺼내야 한다는 것을 잊지 마세요.</FigureCaption>
+</FigureV2>
 
 입력이 끝났을 때 연산 기호를 차례대로 꺼낸다는 것을 잊지마세요.
 
@@ -293,11 +279,9 @@ def applyOperator(operator, num1, num2):
 
 대신 후위 표기식에서 괄호는 없어야 하므로, 모든 괄호는 스택에서 꺼낼 때 버리도록 합시다.
 
-<Figure
-  src={fig5}
-  alt="Handling parentheses"
-  caption="괄호를 만난 경우 처리하기"
-/>
+<FigureV2 src={fig5} alt="Handling parentheses">
+  <FigureCaption slot="caption">그림 5. 괄호를 만난 경우 처리하기. 괄호는 출력에 내보내지 않고 버립니다.</FigureCaption>
+</FigureV2>
 
 이를 통해 괄호 안의 식을 먼저 작성합니다.
 이는 곧 계산 순서를 적절하게 처리했다는 뜻입니다.
@@ -403,9 +387,6 @@ def evaluateInfix(infix):
 완성한 프로그램은 [지스트][gist-1]에서 볼 수 있습니다.
 
 [gist-1]: https://gist.github.com/wcho21/e335728564a82e60fb2d2c6e1d09e843
-
-
-<Fleuron />
 
 
 # 더 해볼 수 있는 것들

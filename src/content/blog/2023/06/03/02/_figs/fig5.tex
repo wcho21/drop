@@ -1,8 +1,9 @@
 \documentclass[tikz,border=5mm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{decorations.pathreplacing,calligraphy}
 
-\newcommand\edge{9mm}
+\newcommand\edge{10.5mm}
 \newcommand\drawpentagon{
   \draw (0,0) coordinate (P1)
     -- ++(360-36:\edge) coordinate (P2)
@@ -11,12 +12,12 @@
     -- ++(180-72:\edge) coordinate (P5)
     -- cycle;
 }
-\newcommand\scopexsep{24mm}
-\newcommand\scopeysep{18mm}
+\newcommand\scopexsep{28mm}
+\newcommand\scopeysep{20mm}
 
 \begin{document}
   \begin{tikzpicture}[
-    arr/.style={-{Stealth[length=2mm]},shorten >=1pt},
+    arr/.style={-{Stealth[scale=1.2]},shorten >=1pt},
     cbrace/.style={
       decorate,
       decoration={calligraphic brace,mirror,amplitude=5pt}}

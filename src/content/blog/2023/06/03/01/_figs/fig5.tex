@@ -1,48 +1,65 @@
 \documentclass[tikz,border=5mm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
 \usetikzlibrary{arrows.meta}
 
-\newcommand\scopesep{35mm}
+\newcommand\scopesep{46mm}
+\newcommand\stackwidth{28pt}
+\newcommand\stackheight{56pt}
+\newcommand\arrowwidth{12pt}
+\newcommand\arrowheight{14pt}
+\newcommand\labelnodewidth{32pt}
+
+\newcommand\drawstack{
+  \draw (0,0) -- ++(0,-\stackheight) -- ++(\stackwidth,0) -- ++(0,\stackheight);
+}
 \newcommand\drawpoparr{
-  \draw[arr] (-8pt,12pt) .. controls +(right:6pt) and +(up:8pt) .. ++(12pt,-10pt);
+  \draw[arr] (-\arrowwidth/2,\arrowheight) .. controls +(right:6pt) and +(up:8pt) .. ++(\arrowwidth,-\arrowheight);
 }
 \newcommand\drawpusharr{
-  \draw[arr] (16pt,2pt) .. controls +(up:8pt) and +(left:6pt) .. ++(12pt,10pt);
+  \draw[arr] (\stackwidth-\arrowwidth/2,0pt) .. controls +(up:8pt) and +(left:6pt) .. ++(\arrowwidth,\arrowheight);
+}
+\newcommand\drawpoplabel[1]{
+  \node[text width=\labelnodewidth,align=right] at (-\labelnodewidth,12pt) {#1};
+}
+\newcommand\drawpushlabel[1]{
+  \node[text width=\labelnodewidth,align=left] at (\stackwidth+\labelnodewidth,12pt) {#1};
 }
 
 \begin{document}
   \begin{tikzpicture}[
-    arr/.style={{Stealth[length=1.5mm]}-}
+    arr/.style={{Stealth[scale=1.2]}-}
   ]
     \begin{scope}
-      \draw (0,0) -- ++(0,-40pt) -- ++(20pt,0) -- ++(0,+40pt);
+      \drawstack
 
-      \node[text width=20pt,align=left] at (42pt,12pt) {132};
+      \drawpushlabel{\fbox{1}\,32}
     \end{scope}
 
     \begin{scope}[xshift=\scopesep]
-      \draw (0,0) -- ++(0,-40pt) -- ++(20pt,0) -- ++(0,+40pt);
+      \drawstack
 
-      \node[text width=20pt,align=right] at (-22pt,12pt) {1};
-      \node[text width=20pt,align=left] at (42pt,12pt) {32};
+      \drawpoplabel{\fbox{1}}
+      \drawpushlabel{\fbox{32}}
 
       \drawpoparr
       \drawpusharr
     \end{scope}
 
     \begin{scope}[xshift=2*\scopesep]
-      \draw (0,0) -- ++(0,-40pt) -- ++(20pt,0) -- ++(0,+40pt);
-      \node at (10pt,-30pt) {3};
-      \node at (10pt,-18pt) {2};
+      \drawstack
 
-      \node[text width=20pt,align=right] at (-22pt,12pt) {1};
+      \node at (\stackwidth/2,-44pt) {3};
+      \node at (\stackwidth/2,-24pt) {2};
+
+      \drawpoplabel{1}
 
       \drawpusharr
     \end{scope}
 
     \begin{scope}[xshift=3*\scopesep]
-      \draw (0,0) -- ++(0,-40pt) -- ++(20pt,0) -- ++(0,+40pt);
+      \drawstack
 
-      \node[text width=20pt,align=right] at (-22pt,12pt) {123};
+      \drawpoplabel{1\,\fbox{23}}
 
       \drawpoparr
     \end{scope}
