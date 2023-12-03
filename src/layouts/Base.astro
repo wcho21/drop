@@ -23,7 +23,9 @@ const title = makeTitle(pageTitle, siteTitle, titleSep);
 
     <Favicons />
     <FontLinks />
-    <GoogleAnalytics />
+    {import.meta.env.PROD && (
+      <GoogleAnalytics />
+    )}
 
     <link rel="sitemap" href="/sitemap-index.xml" />
 
