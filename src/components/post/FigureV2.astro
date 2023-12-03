@@ -4,10 +4,9 @@ import { Image } from "astro:assets";
 interface Props {
   src: ImageMetadata,
   alt: string,
-  caption?: string,
 }
 
-const { src, alt, caption } = Astro.props;
+const { src, alt } = Astro.props;
 ---
 
 <figure class="w-full block py-3">
@@ -18,9 +17,5 @@ const { src, alt, caption } = Astro.props;
     quality={85}
     class="w-fit mx-auto"
   />
-  {caption !== undefined && (
-    <figcaption
-      class="my-1 text-[14px] text-zinc-800 text-center font-light"
-    >{caption}</figcaption>
-  )}
+  <slot name="caption" />
 </figure>
