@@ -42,7 +42,7 @@ import fig5 from "./_figs/fig5.svg";
 그런데 자세히보면 괄호를 쓸 필요가 없는 것 같습니다.
 사실 `123+*`라고 고쳐도 헷갈릴 이유가 없습니다.
 
-이런식으로 쓴 것을 후위 표기식<AltLang>Postfix expression</AltLang>이라고 부릅니다.
+이런식으로 쓴 것을 후위 표기식<AltLang>postfix expression</AltLang>이라고 부릅니다.
 연산자가 나중에 나타나니까요.
 
 ## 계산 순서에 따라 나타나는 연산 기호
@@ -57,7 +57,7 @@ import fig5 from "./_figs/fig5.svg";
 그래서 괄호가 따로 필요하지 않고요.
 그래서 괄호에 있던 연산 기호가 뭐였는지 기억할 필요도 없습니다.
 
-괄호란 연산자를 가운데 쓰는 중위 표기식<AltLang>Infix expression</AltLang>이 갖는 특징이라는 것을 알 수 있습니다.
+괄호란 연산자를 가운데 쓰는 중위 표기식<AltLang>infix expression</AltLang>이 갖는 특징이라는 것을 알 수 있습니다.
 
 
 # 계산기 프로그램 레이아웃 내려다보기
@@ -104,8 +104,8 @@ function evaluateInfix(infix)
   <FigureCaption slot="caption">그림 1. 스택으로 후위 표기식 계산하기. 더하기 기호를 만났을 때 계산 결과인 3을 스택에 넣습니다.</FigureCaption>
 </FigureV2>
 
-여태까지 숫자<AltLang>Number</AltLang>와 연산 기호<AltLang>Operator</AltLang>를 구분해서 불렀는데요.
-이제부터 둘 다 함께 토큰<AltLang>Token</AltLang>이라고 부르기로 합시다.
+여태까지 숫자<AltLang>number</AltLang>와 연산 기호<AltLang>operator</AltLang>를 구분해서 불렀는데요.
+이제부터 둘 다 함께 토큰<AltLang>token</AltLang>이라고 부르기로 합시다.
 
 그리고 여기까지의 아이디어를 수도코드로 정리해봅시다.
 
@@ -154,7 +154,7 @@ def evaluatePostfix(postfix):
 
 보조적으로 `Stack` 클래스와 `applyOperator()` 함수가 필요한데요.
 
-`Stack` 클래스는 말 그대로 LIFO<AltLang>Last In First Out</AltLang> 규칙을 지키도록 만듭니다.
+`Stack` 클래스는 말 그대로 LIFO<AltLang>last-in first-out</AltLang> 규칙을 지키도록 만듭니다.
 
 ```python
 class Stack():
@@ -407,7 +407,7 @@ def evaluateInfix(infix):
 이 또한 스택으로 쉽게 해결할 수 있습니다.
 이 두 가지는 간단한 연습문제로 해보면 좋을 것입니다.
 
-사실은 `+12`와 같이 연산자를 앞에 쓰는 전위 표기식<AltLang>Prefix expression</AltLang>도 존재합니다.
+사실은 `+12`와 같이 연산자를 앞에 쓰는 전위 표기식<AltLang>prefix expression</AltLang>도 존재합니다.
 그러면 이 표기법을 활용해서는 위와 같은 계산기를 구현할 수는 없었을까요?
 이것이 후위 표기식을 쓰는 방법보다 더 쉬울까요?
 이 부분을 생각해보는 것 또한 좋은 연습문제가 될 것입니다.

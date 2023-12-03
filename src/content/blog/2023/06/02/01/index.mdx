@@ -16,7 +16,7 @@ import fig3 from "./_figs/fig3.svg";
 import fig4 from "./_figs/fig4.svg";
 
 무언가를 세는 문제에서 광범위하게 나타나는 숫자가 있는데요.
-카탈란 넘버<AltLang>Catalan Number</AltLang>라고 불리는 숫자들은 다음과 같은 [시퀀스][wp-seq]<AltLang>Sequence</AltLang>입니다.
+카탈란 넘버<AltLang>Catalan number</AltLang>라고 불리는 숫자들은 다음과 같은 [시퀀스][wp-seq]<AltLang>sequence</AltLang>입니다.
 
 [wp-seq]: https://ko.wikipedia.org/wiki/%EC%88%98%EC%97%B4
 $$
@@ -51,7 +51,7 @@ $$
 즉 이런 문제들은 본질적으로 같은 문제입니다.
 앞으로 살펴보겠지만, 답을 구할 때 같은 패턴이 나타납니다.
 
-사실 카탈란 넘버 $C_n$는 다음과 같은 [점화식][wiki-recur-rel]<AltLang>Recurrent relation</AltLang>으로 정의할 수 있습니다.
+사실 카탈란 넘버 $C_n$는 다음과 같은 [점화식][wiki-recur-rel]<AltLang>recurrence relation</AltLang>으로 정의할 수 있습니다.
 
 [wiki-recur-rel]: https://ko.wikipedia.org/wiki/%EC%A0%90%ED%99%94%EC%8B%9D
 $$
@@ -176,7 +176,7 @@ def catalan(n)
 사실 카탈란 넘버는 $C_n = \frac{4n-2}{n+1} C_{n-1}$라는 점화식도 가집니다.
 이를 이용하면, 더 나은 시간 복잡도 $O(n)$을 갖도록 개선할 수 있을텐데요.
 구현은 연습문제로 남겨두고, 왜 이런 점화식이 나타나는지는 다음에 기회가 된다면 살펴보겠습니다.
-카탈란 넘버의 클로즈드 폼<AltLang>Closed-form</AltLang> $C_n = \frac{1}{n+1} {2n \choose n}$도 함께요.
+카탈란 넘버의 클로즈드 폼<AltLang>closed-form</AltLang> $C_n = \frac{1}{n+1} {2n \choose n}$도 함께요.
 
 그리고 카탈란 넘버가 나타나는 문제는 더 다양한데요.
 그 중에 [딕 패스][wolfram-dyck-path]<AltLang>Dyck path</AltLang> 문제는 따로 살펴볼만 합니다.

@@ -17,7 +17,8 @@ import fig4 from "./_figs/fig4.svg";
 import fig5 from "./_figs/fig5.svg";
 
 카탈란 넘버의 역사적 배경에 중요한 문제가 있는데요.
-[다각형 트라이앵귤레이션][wp-poly-tri]<AltLang>Polygon triangulation</AltLang>이라고 불리는 이 문제는 다각형을 삼각형으로 나누는 방법을 세는 것이었습니다.
+[다각형 트라이앵귤레이션][wp-poly-tri]<AltLang>polygon triangulation</AltLang>이라고 불리는 이 문제는 다각형을 삼각형으로 나누는 방법을 세는 것이었습니다.
+여기서는 볼록 다각형<AltLang>convex polygon</AltLang>에 집중할 건데요.
 예를 들어 오각형은 다음과 같이 다섯 가지 방법이 있습니다.
 <FigureV2 src={fig1} alt="Pentagon triangulation">
   <FigureCaption slot="caption">그림 1. 오각형 트라이앵귤레이션. 다섯 가지 방법이 존재합니다.</FigureCaption>
@@ -30,7 +31,7 @@ import fig5 from "./_figs/fig5.svg";
 $$
 C_n = \frac{4n-2}{n+1} C_{n-1}
 $$
-그리고 이를 이용해 클로즈드 폼<AltLang>Closed-form</AltLang>을 얻을 수 있습니다.
+그리고 이를 이용해 클로즈드 폼<AltLang>closed-form</AltLang>을 얻을 수 있습니다.
 $$
 C_n = \frac{1}{n+1} {2n \choose n}
 $$
@@ -144,7 +145,7 @@ $$
 위의 증명은 트라이앵귤레이션, 즉 기하학적인 해석으로부터 카탈란 넘버를 유도하고 있는데요.
 미적분을 이용해 같은 결론을 이끌어 낼 수 있습니다.
 
-먼저, 계수가 카탈란 넘버 $C_n$인 ([제너레이팅 함수][wp-gen]<AltLang>Generating function</AltLang>라고도 불리는) 함수 $C(x) = \sum_{n=0}^{\infty} C_n x^n$를 생각해봅시다.
+먼저, 계수가 카탈란 넘버 $C_n$인 ([제너레이팅 함수][wp-gen]<AltLang>generating function</AltLang>라고도 불리는) 함수 $C(x) = \sum_{n=0}^{\infty} C_n x^n$를 생각해봅시다.
 그러면 다음과 같이 이차방정식으로부터 이 함수의 다른 표현을 얻게 됩니다.
 
 [wp-gen]: https://ko.wikipedia.org/wiki/%EC%83%9D%EC%84%B1%ED%95%A8%EC%88%98_(%EC%88%98%ED%95%99)
@@ -163,7 +164,7 @@ $$
 $$
 
 여기서 근의 공식에서 양의 부호는 버립니다.
-[테일러 전개][wp-taylor]를 이용할 때, $\sqrt{1-4x} = 1 - 2x + \cdots$ 로부터, $\frac{1 + \sqrt{1 - 4x}}{2x} = \frac{1}{x} - 1 + \cdots$ 이므로 $\frac{1}{x}$이 나와 맞지 않기 때문입니다.
+[테일러 전개][wp-taylor]<AltLang>Taylor expansion</AltLang>를 이용할 때, $\sqrt{1-4x} = 1 - 2x + \cdots$ 로부터, $\frac{1 + \sqrt{1 - 4x}}{2x} = \frac{1}{x} - 1 + \cdots$ 이므로 $\frac{1}{x}$이 나와 맞지 않기 때문입니다.
 
 [wp-taylor]: https://ko.wikipedia.org/wiki/%ED%85%8C%EC%9D%BC%EB%9F%AC_%EA%B8%89%EC%88%98
 
@@ -221,7 +222,7 @@ $$
 $$
 C_n = \frac{1}{n+1} \frac{(2n)!}{(n!)^2} \approx \frac{4^n}{n \sqrt{\pi n}} = O(4^n n^{-3/2})
 $$
-이로부터 [빅오 표기법][wp-big-o]으로 어퍼 바운드<AltLang>Upper bound</AltLang>를 알아낼 수 있었습니다.
+이로부터 [빅오 표기법][wp-big-o]으로 어퍼 바운드<AltLang>upper bound</AltLang>를 알아낼 수 있었습니다.
 
 [wp-big-o]: https://en.wikipedia.org/wiki/Big_O_notation
 

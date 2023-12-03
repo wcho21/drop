@@ -26,7 +26,7 @@ UTF-8는 8비트의 코드 유닛으로 인코딩 하고, 필요에 따라 하�
 # BMP에 예약된 서로게이트 블록
 
 UTF-16 구현에 앞서, 인코딩 방법을 설명하기 전에 살펴봐야할 것이 있습니다.
-UTF-16 인코딩은 첫 번째 플레인인 BMP의 서로게이트<AltLang>Surrogates</AltLang> 블록을 사용하는데요.
+UTF-16 인코딩은 첫 번째 플레인인 BMP의 서로게이트<AltLang>surrogate</AltLang> 블록을 사용하는데요.
 
 <FigureV2 src={fig1} alt="Surrogate block in BMP">
   <FigureCaption slot="caption">그림 1. BMP 내 서로게이트 블록. 특수한 용도로 예약되어 있습니다.</FigureCaption>
@@ -50,7 +50,7 @@ BMP는 `U+0000`와 `U+FFFF` 사이의 코드 포인트를 갖고 있습니다.
 그러면 UTF-16는 어떻게 코드 포인트를 인코딩할까요?
 
 코드 포인트는 16비트로 표현할 수 있는 것과 그것을 넘어가서 21비트 안에서 표현할 수 있는 것으로 나눌 수 있는데요.
-16비트로 표현할 수 있다면, 그 코드 포인트의 이진 표현<AltLang>Binary representation</AltLang>을 그대로 16비트의 코드 유닛 하나로 인코딩합니다.
+16비트로 표현할 수 있다면, 그 코드 포인트의 이진 표현<AltLang>binary representation</AltLang>을 그대로 16비트의 코드 유닛 하나로 인코딩합니다.
 
 <FigureV2 src={fig2} alt="utf-16 encoding">
   <FigureCaption slot="caption">그림 2. UTF 16 인코딩. 16비트로 표현할 수 있다면, 그 이진 표현을 그대로 사용합니다. 더 많은 비트가 필요하다면, 두 16비트 공간에 나누어 담습니다. 이 두 공간을 서로게이트라고 부릅니다.</FigureCaption>
@@ -59,8 +59,8 @@ BMP는 `U+0000`와 `U+FFFF` 사이의 코드 포인트를 갖고 있습니다.
 그렇지 않고 16비트를 넘어간다면, 마치 UTF-8에서 비트를 나누어 여러 코드 유닛에 담았던 것과 같은 방식으로 이루어집니다.
 
 코드 포인트의 21비트를 적절히 세 부분으로 나누어 두 개의 코드 유닛에 담아 인코딩하는데요.
-이 두 코드 유닛을 서로게이트 페어<AltLang>Surrogate pair</AltLang>라고도 부릅니다.
-여기서 첫 번째 코드 유닛을 하이 서로게이트<AltLang>High surrogate</AltLang>, 두 번째 것을 로우 서로게이트<AltLang>Low surrogate</AltLang>라고 합니다.
+이 두 코드 유닛을 서로게이트 페어<AltLang>surrogate pair</AltLang>라고도 부릅니다.
+여기서 첫 번째 코드 유닛을 하이 서로게이트<AltLang>high surrogate</AltLang>, 두 번째 것을 로우 서로게이트<AltLang>low surrogate</AltLang>라고 합니다.
 
 하이 서로게이트를 인코딩할 때, 코드 포인트의 다섯 비트에서 하나를 뺄셈해 네 비트로 바꾸는데요.
 코드 포인트가 16비트보다 크기 때문에 가능합니다.
@@ -189,7 +189,7 @@ void encodeUtf32(const Codepoint cp, char32_t *buf) {
 그러면 $n$번째 문자에 바로 접근이 가능할까요?
 
 하나의 코드 포인트가 하나의 문자에 대부분 대응이 되지만, 그렇지 않은 경우도 있는데요.
-이는 <PostLink href="/2023/06/09/01">이전 글</PostLink>에서 정규화<AltLang>Normalization</AltLang>를 설명했을 때처럼, 여러 개의 코드 포인트로 하나의 문자를 표현할 수도 있기 때문입니다.
+이는 <PostLink href="/2023/06/09/01">이전 글</PostLink>에서 정규화<AltLang>normalization</AltLang>를 설명했을 때처럼, 여러 개의 코드 포인트로 하나의 문자를 표현할 수도 있기 때문입니다.
 따라서 UTF-32가 다른 UTF 인코딩에 비해 정말 장점이 있는지는 생각해봐야할 문제입니다.
 
 
@@ -203,9 +203,9 @@ void encodeUtf32(const Codepoint cp, char32_t *buf) {
 
 [gist]: https://gist.github.com/wcho21/5bb039c1312cfe2aa0dc3c913d8dee75
 
-그런데 두 바이트를 사용하는 UTF-16 인코딩은 [엔디안][wp-endian]<AltLang>Endianness</AltLang> 문제가 있는데요.
+그런데 두 바이트를 사용하는 UTF-16 인코딩은 [엔디안][wp-endian]<AltLang>endianness</AltLang> 문제가 있는데요.
 그래서 각 엔디안을 위한 UTF-16LE, UTF-16BE 인코딩이 있습니다.
-아니면 [BOM][wp-bom] (바이트 오더 마크<AltLang>Byte order mark</AltLang>) 문자를 맨 앞에 둬서 바이트 순서를 나타내는 방법도 있습니다.
+아니면 [BOM][wp-bom] (바이트 오더 마크<AltLang>byte order mark</AltLang>) 문자를 맨 앞에 둬서 바이트 순서를 나타내는 방법도 있습니다.
 
 이 모든 얘기는 UTF-32 인코딩도 마찬가지고요.
 따라서 실제로 UTF 인코딩을 처리하는 일은 이런 케이스를 고려할 필요가 있습니다.
