@@ -6,7 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 ---
 
 import AltLang from "@components/post/AltLang.astro";
-import Figure from "@components/post/Figure.astro";
+import FigureV2 from "@components/post/FigureV2.astro";
+import FigureCaption from "@components/post/FigureCaption.astro";
 import PostLink from "@components/post/PostLink.astro";
 
 import fig1 from "./_figs/fig1.svg";
@@ -39,20 +40,18 @@ $$
 # 격자에서 최소 경로 세기
 
 딕 패스란 격자 위에서 대각선 위를 넘지 않고 반대편에 도달하는 최소 경로를 말하는데요.
-<Figure
-  src={fig1}
-  alt="Dyck path"
-  caption="딕 패스인 경우와 아닌 경우" />
+<FigureV2 src={fig1} alt="Dyck path">
+  <FigureCaption slot="caption">그림 1. 딕 패스 규칙. 대각선을 넘어가면 안 됩니다.</FigureCaption>
+</FigureV2>
 그러면 가로 세로가 네 칸인 격자에서 딕 패스는 몇 개가 있을까요?
 물론 $C_4 = 14$가지가 될텐데요. 하지만 직접 계산해봅시다.
 
 더 작은 문제로 나눠봅시다.
 출발 이후에 대각선과 처음으로 닿는 점을 봅시다.
 그 점을 B라고 하고, 이 기준으로 두 개의 구역이 생기는데요.
-<Figure
-  src={fig2}
-  alt="Dyck path with cases"
-  caption="딕 패스의 네 가지 경우" />
+<FigureV2 src={fig2} alt="Dyck path with cases">
+  <FigureCaption slot="caption">그림 2. 딕 패스의 네 가지 패턴. 첫 번째로 대각선에 닿는 순간이 언제인지에 따라 나눕니다. 회색 삼각형은 더 작은 문제에 해당합니다.</FigureCaption>
+</FigureV2>
 이 작은 구역에 대해서 답을 구한다면, 총 개수를 구할 수 있게 됩니다.
 
 가로와 세로의 길이가 $n$인 격자에 존재하는 딕 패스의 개수를 $C_n$이라고 해봅시다.
@@ -77,10 +76,9 @@ $$
 개표를 하려고 합니다.
 
 표를 셀 때, B가 A를 추월하지 않고 동점으로 끝나는 경우의 수는 몇 가지일까요?
-<Figure
-  src={fig3}
-  alt="Ballot problem rule"
-  caption="추월이 없는 개표 진행" />
+<FigureV2 src={fig3} alt="Ballot problem rule">
+  <FigureCaption slot="caption">그림 3. 추월이 없는 개표 진행. B는 더 많은 표를 가질 수 없습니다.</FigureCaption>
+</FigureV2>
 
 ## 딕 패스 문제에 대응시키기
 
@@ -90,10 +88,9 @@ B의 표가 나오면 위로 움직이고요.
 
 예를 들어 ABB 순으로 개표했을 때를 봅시다.
 그러면 딕 패스 그리기는 실패하는데요.
-<Figure
-  src={fig4}
-  alt="Ballot as Dyck path"
-  caption="개표와 대응시킨 경로" />
+<FigureV2 src={fig4} alt="Ballot as Dyck path">
+  <FigureCaption slot="caption">그림 4. 개표와 대응시킨 경로. A가 표를 받을 때마다 오른쪽으로, B가 받을 때마다 위로 이동합니다. 투표에서 추월이 생기는 경우와 딕 패스에서 대각선을 넘는 경우가 대응됩니다.</FigureCaption>
+</FigureV2>
 
 이런 식으로 투표 문제에서 실패하는 경우는 딕 패스에서 실패하는 경우와 각각 대응됩니다.
 성공하는 경우도 마찬가지고요.
@@ -146,10 +143,9 @@ $$
 이유는 이렇습니다.
 첫 번째 숫자는 푸시한뒤 바로 팝해서 꺼냅니다.
 그리고 나머지 두 숫자를 스택에 두 번 푸시하고 두 번 팝하면 $123$으로 정렬됩니다.
-<Figure
-  src={fig5}
-  alt="Stack sortable permutation"
-  caption="스택으로 정렬하는 퍼뮤테이션" />
+<FigureV2 src={fig5} alt="Stack sortable permutation">
+  <FigureCaption slot="caption">그림 5. 스택으로 정렬하는 퍼뮤테이션. '32'를 스택으로 정렬할 수 있으므로, '132'는 '123'으로 정렬이 가능합니다.</FigureCaption>
+</FigureV2>
 이런식으로 정렬할 수 있는 퍼뮤테이션을 스택 소터블 퍼뮤테이션 이라고 합니다.
 그러면 일반적인 $n$에 대해 몇 개의 퍼뮤테이션이 있을까요?
 (힌트: 스택에 푸시할 때와 팝할 때를 각각 여는 괄호와 닫는 괄호에 대응시켜보세요.)

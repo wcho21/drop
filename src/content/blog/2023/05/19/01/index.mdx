@@ -6,7 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 ---
 
 import AltLang from "@components/post/AltLang.astro";
-import Figure from "@components/post/Figure.astro";
+import FigureV2 from "@components/post/FigureV2.astro";
+import FigureCaption from "@components/post/FigureCaption.astro";
 
 import fig1 from "./_figs/fig1.svg";
 import fig2 from "./_figs/fig2.svg";
@@ -65,10 +66,9 @@ False
 세 부분으로 나눠볼건데요.
 부호<AltLang>Sign</AltLang> $S$, 지수<AltLang>Exponent</AltLang> $E$, 그리고 소수<AltLang>Fraction</AltLang> $F$ 입니다.
 
-<Figure
-  src={fig1}
-  alt="Memory diagram"
-  caption="메모리 다이어그램" />
+<FigureV2 src={fig1} alt="Memory diagram">
+  <FigureCaption slot="caption">그림 1. 메모리 다이어그램. 32비트를 세 부분으로 나누어 부호, 지수, 소수를 기록합니다.</FigureCaption>
+</FigureV2>
 
 우리의 손님 $1.023 \times 10^2$을 해부해서 여기에 넣어봅시다.
 
@@ -114,10 +114,9 @@ $$
 
 메모리의 소수 부분 $F$는 23비트를 갖고 있는데요.
 
-<Figure
-  src={fig2}
-  alt="Fraction part"
-  caption="메모리 소수 부분" />
+<FigureV2 src={fig2} alt="Fraction part">
+  <FigureCaption slot="caption">그림 2. 메모리 소수 부분. 23자리의 이진법 소수를 기록합니다.</FigureCaption>
+</FigureV2>
 
 맨 앞 숫자는 항상 $1$이라고 했던 것을 기억하시나요?
 따라서 24자리의 이진수를 기록할 수 있게 됩니다.
@@ -172,10 +171,9 @@ $-2.75_{(10)}$는 비트로 어떻게 담길까요? (직접 해보세요.)
 
 이제 부동소수점을 위한 32비트 메모리는 다음과 같이 채워져 있을 것입니다.
 
-<Figure
-  src={fig3}
-  alt="Memory diagram example"
-  caption="메모리 다이어그램 예시: -2.75" />
+<FigureV2 src={fig3} alt="Memory diagram example">
+  <FigureCaption slot="caption">그림 3. '-2.75'를 기록한 메모리 다이어그램. 맨 앞 1비트 부호 부분에는 음수의 의미로 1을, 8비트 지수 부분에는 바이어스된 값을, 23비트 소수 부분에는 소수를 이진법으로 기록합니다.</FigureCaption>
+</FigureV2>
 
 정말 그럴까요?
 C++ 코드로 아래처럼 확인해볼 수 있습니다.
@@ -189,12 +187,11 @@ std::cout << std::bitset<32>(*reinterpret_cast<int *>(&f)) << '\n';
 
 # 이제 두 수를 비교해봅시다
 
-나눴던 세 부분의 순서를 봅시다.
+나눴던 세 부분의 순서를 보기 위해 다시 그림 1을 가져와봅시다.
 
-<Figure
-  src={fig1}
-  alt="Memory diagram"
-  caption="메모리 다이어그램" />
+<FigureV2 src={fig1} alt="Memory diagram">
+  <FigureCaption slot="caption">그림 1. 메모리 다이어그램</FigureCaption>
+</FigureV2>
 
 이 순서가 주는 장점이 있습니다.
 이 순서대로만 비교하면 빨리 결과를 낼 수 있기 때문입니다.
@@ -309,5 +306,13 @@ assert two_point_seven_five != positive_zero
 즉 덧셈을 처리할 때 반올림 과정에서 오차가 발생하기 때문일 것입니다.
 이 부분은 이 정도로 정리하고 글을 마치는 것으로 하겠습니다.
 
-부동소수점 처리는 컴퓨터 하드웨어와 관련이 있는데요.
-Computer Organization and Design (Patterson, Hennessy)와 같은 컴퓨터 구조 책에서 부동소수점 설명을 찾아볼 수 있습니다.
+## 참고할 만한 것들
+
+- *Computer Organization and Design* (Patterson, Hennessy)
+
+  부동소수점 처리는 오늘날 컴퓨터의 하드웨어와도 관련이 있는데요.
+  컴퓨터 구조를 다루는 책에서 부동소수점 설명을 찾아볼 수 있습니다.
+
+- *Write Great Code, Volume 1* (2nd edition, Randall Hyde, 2020) (또는, 'Great Code Vol.1: 위대한 코드의 시작' (2022))
+
+  (본문에서는 다루지 않았던) 부동소수점 덧셈과 같은 연산을 구현하는 내용을 찾아볼 수 있습니다.

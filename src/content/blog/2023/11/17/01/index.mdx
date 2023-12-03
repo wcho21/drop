@@ -7,21 +7,21 @@ thumbnail: "./_figs/thumbnail.webp"
 
 import AltLang from "@components/post/AltLang.astro";
 import Figure from "@components/post/Figure.astro";
+import FigureV2 from "@components/post/FigureV2.astro";
+import FigureCaption from "@components/post/FigureCaption.astro";
 import Quote from "@components/post/Quote.astro";
 import FigureDisplay from "@components/post/FigureDisplay.astro";
 
+import fig1 from "./_figs/fig1.webp";
 import fig2 from "./_figs/fig2.webp";
 import fig3 from "./_figs/fig3.webp";
 import fig4 from "./_figs/fig4.webp";
 import fig5 from "./_figs/fig5.webp";
-import fig6 from "./_figs/fig6.webp";
 
 <Quote>
-  수학이란 우리가 무엇에 대해 말하고 있는지, 우리가 말하는 것이 맞는지 절대 알 수 없는 분야라고 할 수 있다.
-  -- 버트런드 러셀
+  수학이란 우리가 무엇에 대해 말하고 있는지, 말하는 것이 맞는지 절대 알 수 없는 분야라고 할 수 있다.
 
-  Mathematics may be defined as the subject in which we never know what we are talking about, nor whether what we are saying is true.
-  -- Bertrand Russell
+  <p slot="name">-- 버트런드 러셀<AltLang>Bertrand Ressell</AltLang> (1901)</p>
 </Quote>
 
 컴퓨터 과학의 역사를 거슬러 올라가다보면 수학이 근본적인 위기를 맞이했던 시대를 만나게 됩니다.
@@ -53,13 +53,6 @@ import fig6 from "./_figs/fig6.webp";
 힐베르트는 구체적으로 무엇을 요구했고, 왜 그랬던 것일까요?
 그리고 이로부터 어떻게 컴퓨터가 나올 수 있었을까요?
 어려운 디테일은 좀 빼놓고 그 역사를 훑어보겠습니다.
-
-
-<FigureDisplay>
-  <Figure
-    src={fig2}
-    alt="Mirror reflection" />
-</FigureDisplay>
 
 
 # 자기 자신을 언급하는 문제
@@ -97,10 +90,11 @@ $A \in A$라고 해봅시다.
 당시 [러셀][wp-russell]<AltLang>Bertrand Russell</AltLang>과 [화이트헤드][wp-whitehead]<AltLang>Alfred Whitehead</AltLang>는 수학을 바닥부터 다시 만들어냈습니다.
 우리가 사용하는 논리적인 규칙을 분명하게 적어놓으면서요.
 
-<Figure
-  src={fig3}
-  alt="Logical axioms"
-  caption="수학 원리 책에서 쓰인 논리 규칙 일부" />
+<FigureV2 src={fig2} alt="Logical axioms">
+  <FigureCaption slot="caption">그림 1. 수학 원리 책에서 쓰인 논리 규칙 일부. 예를 들어 2번 규칙은, 'p 또는 p라면, p이다.' 라는 것을 정당화합니다. 나머지도 이처럼 겉보기에 당연해 보이는 것을 규칙으로 나열한 것입니다. -- 출처: [University of Michigan Historical Math Collection][univ-michigan]</FigureCaption>
+</FigureV2>
+
+[univ-michigan]: https://quod.lib.umich.edu/u/umhistmath/aat3201.0001.001/35?rgn=full+text;view=pdf;q1=primitive+propositions
 
 예를 들어, ``'A이다'가 맞는 문장이라면, 'A가 아니다'라는 문장은 틀린 문장이다.'' 라는 식으로요.
 당연해 보이지만, 그 당연이라는 모습 뒤에 모순이 어쩌다가 숨어서 들어갈지도 모르니까요.
@@ -134,10 +128,12 @@ $A \in A$라고 해봅시다.
 
 
 <FigureDisplay>
-  <Figure
-    src={fig4}
-    alt="Building lego" />
+  <FigureV2 src={fig1} alt="Mirror reflection">
+    <FigureCaption slot="caption">괴델은 자기 자신 언급을 피할 수 없음을 보였습니다. 그리고 그것은 수학 자체가 가진 성질이었습니다. 이것은 인류에게 재앙일까요, 선물일까요. 아니면 둘 다일까요. -- 사진:  [Jametlene Reskp][unsplash-jr]</FigureCaption>
+  </FigureV2>
 </FigureDisplay>
+
+[unsplash-jr]: https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EB%B0%94%EB%8B%A5%EC%97%90-%EB%88%84%EC%9B%8C-%EC%9E%88%EB%8A%94-%ED%9D%91%EC%9D%B8%EA%B3%BC-%EB%B0%B1%EC%9D%B8-%EA%B3%A0%EC%96%91%EC%9D%B4-2P11hAY6D9g
 
 
 # 존재의 의미
@@ -173,6 +169,15 @@ $A \in A$라고 해봅시다.
 이후 힐베르트가 직관주의 없이도 이상적인 수학을 건설해내기 위해 힐베르트 프로그램<AltLang>Hilbert's program</AltLang>이라는 이름으로 그 과제를 시작했을 때, 직관주의자들 또한 승복할 수 있도록 만들어야 했습니다.
 즉 증명은 구성적이어야 하고, (힐베르트가 말하길) &lsquo;유한한 방법<AltLang>Finitary method</AltLang>&rsquo;만을 써야 했습니다.
 그리고 그런 결과 중 하나가 괴델의 작업이었습니다.
+
+
+<FigureDisplay>
+  <FigureV2 src={fig3} alt="Building lego">
+    <FigureCaption slot="caption">존재한다고 아는 것과 구체적으로 만들어내는 일은 정말로 다릅니다. 당시 직관주의가 요구한 구성적인 방법은 오늘날 프로그래밍에도 이어지고 있는 것이 아닐까요. -- 사진: [Sebastien Bonneval][unsplash-sb]</FigureCaption>
+  </FigureV2>
+</FigureDisplay>
+
+[unsplash-sb]: https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EC%9E%A5%EB%82%9C%EA%B0%90-%EA%B1%B4%EB%AC%BC%EC%9D%84-%EB%93%A4%EA%B3%A0-%EC%9E%88%EB%8A%94-%EC%86%90-rRlC4RyHxYw
 
 
 # 이상적인 수학의 모습
@@ -241,10 +246,11 @@ $A \in A$라고 해봅시다.
 
 # 숫자로서의 컴퓨터
 
-<Figure
-  src={fig6}
-  alt="ENIAC"
-  caption="에니악과 배선판의 모습" />
+<FigureV2 src={fig5} alt="ENIAC">
+  <FigureCaption slot="caption">그림 2. 에니악과 배선판의 모습. -- 사진: [Wikipedia][wp-eniac-source]</FigureCaption>
+</FigureV2>
+
+[wp-eniac-source]: https://commons.wikimedia.org/wiki/File:Glen_Beck_and_Betty_Snyder_program_the_ENIAC_in_building_328_at_the_Ballistic_Research_Laboratory.jpg
 
 1940년대에 최초의 컴퓨터라고 알려진 [에니악][wp-eniac]<AltLang>ENIAC</AltLang>이 만들어졌을 때에도, 프로그램과 데이터는 별개의 것으로 디자인 됐는데요.
 명령들, 즉 프로그램은 외부에서 배선판의 수많은 선을 다시 꽂는 것으로 준비해야 했습니다.
@@ -291,13 +297,6 @@ $A \in A$라고 해봅시다.
 [wp-von-neumann-arch]: https://ko.wikipedia.org/wiki/%ED%8F%B0_%EB%85%B8%EC%9D%B4%EB%A7%8C_%EA%B5%AC%EC%A1%B0
 
 
-<FigureDisplay>
-  <Figure
-    src={fig5}
-    alt="Building lego" />
-</FigureDisplay>
-
-
 # 무의미한 기호 조작
 
 다시 시간을 되돌려 덧붙일 이야기가 있습니다.
@@ -339,7 +338,14 @@ $A \in A$라고 해봅시다.
 예를 들어 유한 상태 기계는 정규 표현식을 처리하는 데 쓸 수 있고요.
 푸시다운 오토마타는 컴파일러가 프로그래밍 언어를 파싱하는 데 쓸 수 있습니다.
 
-마치 자신이 무엇을 하는지 그 의미를 알지 못하면서 계산을 해내는 지금의 컴퓨터가 떠오르진 않으신가요.
+
+<FigureDisplay>
+  <FigureV2 src={fig4} alt="Building lego">
+    <FigureCaption slot="caption">무의미한 기호를 규칙에 따라 '기계적으로' 조작하는 일로서 수학을 바라볼 수 있습니다. 마치 무엇을 하는지 의미를 모르면서 계산을 해내는 지금의 컴퓨터가 떠오르진 않으신가요. -- 사진: [Robert Gareth][unsplash-rg]</FigureCaption>
+  </FigureV2>
+</FigureDisplay>
+
+[unsplash-rg]: https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EB%B0%94%EB%8B%A5%EC%97%90%EC%84%9C-%EC%8A%A4%ED%81%AC%EB%9E%98%EB%B8%94-%EA%B2%8C%EC%9E%84%EC%9D%84-%ED%95%98%EB%8A%94-%EC%97%AC%EC%9E%90-w3SozzL-Ovw
 
 
 # 마치며
@@ -375,49 +381,36 @@ $A \in A$라고 해봅시다.
 여기서 설명하는 논리학은 ZF 집합론과 같이 다른 이론에서 쓸 수 있는 논리 체계를 제공하고요.
 여기에서 또한 괴델의 불완전성 정리를 이끌어낼 수 있습니다.
 
-## 참고 문헌
+## 참고할 만한 것들
 
-- The Universal Computer (Martin Davis, 2000) (또는, '수학자, 컴퓨터를 만들다' (2005))
+- *The Universal Computer* (Martin Davis, 2000) (또는, '수학자, 컴퓨터를 만들다' (2005))
 
   논리학에서 출발해 컴퓨터까지 다룹니다.
   힐베르트 프로그램을 비롯해 튜링 머신과 폰 노이만의 구현까지 소개하고 있습니다.
 
-- Alan Turing (Douglas Hofstadter, 2014) (또는, '앨런 튜링의 이미테이션 게임' (2015))
+- *Alan Turing* (Douglas Hofstadter, 2014) (또는, '앨런 튜링의 이미테이션 게임' (2015))
 
   앨런 튜링의 생애를 비롯해, 그가 괴델과 처치로부터 받은 영향과, 튜링 머신의 수학적인 설명을 담고 있습니다.
 
-- Godel: A Life of Logic (Werner DePauli, John Casti, 2000) (또는 '괴델' (2002))
+- *Godel: A Life of Logic* (Werner DePauli, John Casti, 2000) (또는 '괴델' (2002))
 
   주로 괴델의 성과를 소개하지만, 여기서도 힐베르트를 비롯해 계산가능성과 같은 튜링과 성과 또한 담고 있습니다.
 
-- On Formally Undecidable Propositions of Principia Mathematica and Related Systems I (Kurt Gödel, 1931)
+- *On Formally Undecidable Propositions of Principia Mathematica and Related Systems I* (Kurt Gödel, 1931)
 
   괴델이 구체적으로 어떻게 불완전성 정리를 이끌어냈는지는 이 논문에 담겨있습니다.
 
-- Gödel's Proof (Ernest Nagel, James Newman, Douglas R. Hofstadter 2008) (또는 '괴델의 증명' (2010))
+- *Gödel's Proof* (Ernest Nagel, James Newman, Douglas R. Hofstadter 2008) (또는 '괴델의 증명' (2010))
 
   위의 것 대신 쉬운 설명으로 이 책을 참고할 수 있습니다.
   사실 위의 논문은 46개의 보조 정리가 담겨있지만, 이 책은 괴델이 증명하고자 하는 바를 그런 보조 정리 없이 설명합니다.
 
-- On Computable Numbers, with an Application to the Entscheidungsproblem (Alan Turing, 1936)
+- *On Computable Numbers, with an Application to the Entscheidungsproblem* (Alan Turing, 1936)
 
   튜링이 튜링 머신, 또는 그가 '머신' 이라고 부른 것과, 계산 가능한<AltLang>Computable</AltLang> 것의 설명이 이 논문에 담겨있습니다.
   앞서 말한 괴델의 논문을 본문에서 언급하고 있기 때문에, 괴델의 작업을 알고 있다면 이해에 도움이 될 수 있습니다.
 
-- An Unsolvable Problem of Elementary Number Theory (Alonzo Church, 1936)
+- *An Unsolvable Problem of Elementary Number Theory* (Alonzo Church, 1936)
 
   알론조 처치가 람다 대수를 만들어 결정문제를 해결했던 논문입니다.
   위 튜링의 논문 처럼, 여기서도 괴델의 논문을 언급하고 있습니다.
-
-## 자료 출처
-
-수학 원리의 내용 일부는 [University of Michigan Historical Math Collection][univ-michigan]에서 가져왔습니다.
-에니악 사진은 [위키피디아][wp-eniac-source]의 퍼블릭 도메인 이미지에서 가져왔습니다.
-문단 간 사진은 [Unsplash][unsplash]의 [Jametlene Reskp][unsplash-jr], [Sebastien Bonneval][unsplash-sb], [Robert Gareth][unsplash-rg]의 사진입니다.
-
-[univ-michigan]: https://quod.lib.umich.edu/u/umhistmath/aat3201.0001.001/35?rgn=full+text;view=pdf;q1=primitive+propositions
-[wp-eniac-source]: https://commons.wikimedia.org/wiki/File:Glen_Beck_and_Betty_Snyder_program_the_ENIAC_in_building_328_at_the_Ballistic_Research_Laboratory.jpg
-[unsplash]: https://unsplash.com/
-[unsplash-jr]: https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EB%B0%94%EB%8B%A5%EC%97%90-%EB%88%84%EC%9B%8C-%EC%9E%88%EB%8A%94-%ED%9D%91%EC%9D%B8%EA%B3%BC-%EB%B0%B1%EC%9D%B8-%EA%B3%A0%EC%96%91%EC%9D%B4-2P11hAY6D9g
-[unsplash-sb]: https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EC%9E%A5%EB%82%9C%EA%B0%90-%EA%B1%B4%EB%AC%BC%EC%9D%84-%EB%93%A4%EA%B3%A0-%EC%9E%88%EB%8A%94-%EC%86%90-rRlC4RyHxYw
-[unsplash-rg]: https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EB%B0%94%EB%8B%A5%EC%97%90%EC%84%9C-%EC%8A%A4%ED%81%AC%EB%9E%98%EB%B8%94-%EA%B2%8C%EC%9E%84%EC%9D%84-%ED%95%98%EB%8A%94-%EC%97%AC%EC%9E%90-w3SozzL-Ovw

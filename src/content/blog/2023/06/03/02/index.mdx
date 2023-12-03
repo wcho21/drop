@@ -6,7 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 ---
 
 import AltLang from "@components/post/AltLang.astro";
-import Figure from "@components/post/Figure.astro";
+import FigureV2 from "@components/post/FigureV2.astro";
+import FigureCaption from "@components/post/FigureCaption.astro";
 import PostLink from "@components/post/PostLink.astro";
 
 import fig1 from "./_figs/fig1.svg";
@@ -18,10 +19,9 @@ import fig5 from "./_figs/fig5.svg";
 카탈란 넘버의 역사적 배경에 중요한 문제가 있는데요.
 [다각형 트라이앵귤레이션][wp-poly-tri]<AltLang>Polygon triangulation</AltLang>이라고 불리는 이 문제는 다각형을 삼각형으로 나누는 방법을 세는 것이었습니다.
 예를 들어 오각형은 다음과 같이 다섯 가지 방법이 있습니다.
-<Figure
-  src={fig1}
-  alt="Pentagon triangulation"
-  caption="오각형 트라이앵귤레이션" />
+<FigureV2 src={fig1} alt="Pentagon triangulation">
+  <FigureCaption slot="caption">그림 1. 오각형 트라이앵귤레이션. 다섯 가지 방법이 존재합니다.</FigureCaption>
+</FigureV2>
 
 [wp-poly-tri]: https://en.wikipedia.org/wiki/Polygon_triangulation
 
@@ -53,10 +53,9 @@ $$
 여기서는 첫 번째 꼭지점과 다섯 번째 꼭지점을 잇는 모서리를 골라볼게요.
 그러면 다른 꼭지점을 골라서 삼각형을 만들 수 있는데요.
 이 경우에는 세 가지 방법이 있겠네요.
-<Figure
-  src={fig2}
-  alt="Three cases for a given vertex"
-  caption="한 모서리에 대한 세 가지 케이스" />
+<FigureV2 src={fig2} alt="Three cases for a given vertex">
+  <FigureCaption slot="caption">그림 2. 한 모서리에 대한 세 가지 케이스. 1번과 5번 꼭지점이 어디와 삼각형을 이루는 지에 따라 나눕니다.</FigureCaption>
+</FigureV2>
 
 $n$각형을 삼각형으로 나눌 수 있는 방법의 개수를 $T_n$이라고 해봅시다.
 이 삼각형이 두 다각형으로 나눈다는 점에 주목해본다면, 원하는 답인 $T_5$는 다음과 같이 구할 수 있게 됩니다.
@@ -69,10 +68,9 @@ $n$각형에서 첫 번째 꼭지점과 $n$번째 꼭지점을 잇는 모서리�
 $k$번째 꼭지점과 삼각형을 만들어볼게요.
 그러면 이 삼각형은 다각형을 두 부분으로 나누는데요.
 $k$각형과 $(n-k+1)$각형이 됩니다.
-<Figure
-  src={fig3}
-  alt="General cases for a given vertex"
-  caption="다각형을 나누는 삼각형" />
+<FigureV2 src={fig3} alt="General cases for a given vertex">
+  <FigureCaption slot="caption">그림 3. 다각형을 나누는 삼각형. 오각형의 경우에서 일반적인 경우로 확장할 수 있습니다.</FigureCaption>
+</FigureV2>
 
 이제 꼭지점의 범위 $2 \le k \le (n-1)$에 따라서 전부 더하게 되면, 트라이앵귤레이션의 답을 구할 수 있는데요.
 $$
@@ -90,10 +88,9 @@ $$
 
 다른 방법으로 케이스를 나눈다면 또다른 카탈란 점화식인 $C_n = \frac{4n-2}{n+1} C_{n-1}$을 얻을 수 있는데요.
 첫 번째 꼭지점에서 $k$번째 꼭지점까지 대각선을 긋는다고 생각해봅시다.
-<Figure
-  src={fig4}
-  alt="Polygon divided"
-  caption="대각선으로 나눠진 다각형" />
+<FigureV2 src={fig4} alt="Polygon divided">
+  <FigureCaption slot="caption">그림 4. 대각선으로 나눠진 다각형. 1번 꼭지점에서 어디로 대각선을 긋는지에 따라 나눕니다. 이 대각선은 삼각형의 한 변으로 쓸 것입니다.</FigureCaption>
+</FigureV2>
 
 그러면 두 개의 다각형으로 나뉘게 되는데요.
 이때 $k$는 범위를 $3 \le k \le (n-1)$으로 가지고요.
@@ -105,10 +102,9 @@ $$
 이 카운팅에는 중복이 있는데요.
 하나의 트라이앵귤레이션에 대해서 $2(n-3)$번 센 셈이 됩니다.
 왜일까요?
-<Figure
-  src={fig5}
-  alt="Duplicate cases"
-  caption="하나의 트라이앵귤레이션에 대한 중복 케이스들" />
+<FigureV2 src={fig5} alt="Duplicate cases">
+  <FigureCaption slot="caption">그림 5. 하나의 트라이앵귤레이션에 대한 중복 케이스들. 오각형의 경우 하나의 트라이앵귤레이션마다 네 가지의 중복된 경우가 존재합니다.</FigureCaption>
+</FigureV2>
 먼저, 삼각형을 이루는 두 대각선 중 하나를 고른 경우에 대해 중복이 생기기 때문에, 대각선의 개수인 $(n-3)$으로 나눠야 하고요.
 한 대각선은 반대쪽 꼭지점에서 시작해 그을 수 있기 때문에, 여기에 둘로 나눠야하기 때문입니다.
 중복을 없애면 결국 원하는 답은 이렇습니다.
@@ -246,5 +242,12 @@ $$
 그리고 카탈란 넘버의 또다른 점화식과 클로즈드 폼 공식을 수학적으로 유도했습니다.
 이 증명이 수학적인 확신(?)이 되었길 바라며 카탈란 넘버에 관한 글 마치겠습니다.
 
-카탈란 넘버가 나타나는 다양한 문제는 *Catalan Numbers* (Richard Stanley, 2015)에서 찾아볼 수 있습니다.
-카탈란 넘버의 점화식과 클로즈드 폼의 증명은 *Catalan Numbers with Application* (Thomas Koshy, 2008)에서 참고할 수 있습니다.
+## 참고할 만한 것들
+
+- *Catalan Numbers* (Richard Stanley, 2015)
+
+  카탈란 넘버가 나타나는 다양한 문제를 찾아볼 수 있습니다.
+
+- *Catalan Numbers with Application* (Thomas Koshy, 2008)
+
+  카탈란 넘버의 점화식과 클로즈드 폼의 증명을 찾아볼 수 있습니다.

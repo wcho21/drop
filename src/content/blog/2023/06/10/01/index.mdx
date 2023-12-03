@@ -6,7 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 ---
 
 import AltLang from "@components/post/AltLang.astro";
-import Figure from "@components/post/Figure.astro";
+import FigureV2 from "@components/post/FigureV2.astro";
+import FigureCaption from "@components/post/FigureCaption.astro";
 import PostLink from "@components/post/PostLink.astro";
 
 import fig1 from "./_figs/fig1.svg";
@@ -27,10 +28,9 @@ UTF-8는 8비트의 코드 유닛으로 인코딩 하고, 필요에 따라 하�
 UTF-16 구현에 앞서, 인코딩 방법을 설명하기 전에 살펴봐야할 것이 있습니다.
 UTF-16 인코딩은 첫 번째 플레인인 BMP의 서로게이트<AltLang>Surrogates</AltLang> 블록을 사용하는데요.
 
-<Figure
-  src={fig1}
-  alt="Surrogate block in BMP"
-  caption="BMP 내 서로게이트 블록" />
+<FigureV2 src={fig1} alt="Surrogate block in BMP">
+  <FigureCaption slot="caption">그림 1. BMP 내 서로게이트 블록. 특수한 용도로 예약되어 있습니다.</FigureCaption>
+</FigureV2>
 
 BMP는 `U+0000`와 `U+FFFF` 사이의 코드 포인트를 갖고 있습니다.
 이 플레인에는 알파벳과 한글을 비롯한 많은 문자가 있는데요.
@@ -52,10 +52,9 @@ BMP는 `U+0000`와 `U+FFFF` 사이의 코드 포인트를 갖고 있습니다.
 코드 포인트는 16비트로 표현할 수 있는 것과 그것을 넘어가서 21비트 안에서 표현할 수 있는 것으로 나눌 수 있는데요.
 16비트로 표현할 수 있다면, 그 코드 포인트의 이진 표현<AltLang>Binary representation</AltLang>을 그대로 16비트의 코드 유닛 하나로 인코딩합니다.
 
-<Figure
-  src={fig2}
-  alt="utf-16 encoding"
-  caption="UTF 16 인코딩" />
+<FigureV2 src={fig2} alt="utf-16 encoding">
+  <FigureCaption slot="caption">그림 2. UTF 16 인코딩. 16비트로 표현할 수 있다면, 그 이진 표현을 그대로 사용합니다. 더 많은 비트가 필요하다면, 두 16비트 공간에 나누어 담습니다. 이 두 공간을 서로게이트라고 부릅니다.</FigureCaption>
+</FigureV2>
 
 그렇지 않고 16비트를 넘어간다면, 마치 UTF-8에서 비트를 나누어 여러 코드 유닛에 담았던 것과 같은 방식으로 이루어집니다.
 

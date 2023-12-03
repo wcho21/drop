@@ -7,6 +7,8 @@ thumbnail: "./_figs/thumbnail.webp"
 
 import AltLang from "@components/post/AltLang.astro";
 import Figure from "@components/post/Figure.astro";
+import FigureV2 from "@components/post/FigureV2.astro";
+import FigureCaption from "@components/post/FigureCaption.astro";
 
 import fig1 from "./_figs/fig1.svg";
 import fig2 from "./_figs/fig2.svg";
@@ -30,10 +32,9 @@ $$
 
 [wiki-bin-tree]: https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%A7%84_%ED%8A%B8%EB%A6%AC
 
-<Figure
-  src={fig1}
-  alt="Five kinds of binary trees with three nodes"
-  caption="세 노드를 가진 트리들" />
+<FigureV2 src={fig1} alt="Five kinds of binary trees with three nodes">
+  <FigureCaption slot="caption">그림 1. 세 노드를 가진 트리들. 총 다섯 가지가 존재합니다.</FigureCaption>
+</FigureV2>
 
 확인해보면 다섯 가지가 존재하는데요.
 노드가 네 개라면 열 네 종류, 다섯 개라면 마흔 두 종류가 있습니다.
@@ -74,10 +75,9 @@ $$
 루트 노드의 왼쪽 서브 트리를 바라봅시다.
 여기에 오는 노드 개수를 기준으로 케이스를 나눠봅시다.
 
-<Figure
-  src={fig2}
-  alt="Four cases of binary tress with four nodes"
-  caption="네 개의 노드일 때의 패턴" />
+<FigureV2 src={fig2} alt="Four cases of binary tress with four nodes">
+  <FigureCaption slot="caption">그림 2. 노드가 네 개일 때의 패턴. 왼쪽 서브 트리에 몇 개의 노드가 있는 지에 따라 나눕니다.</FigureCaption>
+</FigureV2>
 
 노드가 $n$개일 때 트리의 개수를 $C_n$이라고 해봅시다.
 첫 번째 경우, 왼쪽에 $C_0$가지, 오른쪽에 $C_3$가지가 올 수 있기 때문에, 총 $C_0 \times C_3 $가지의 트리를 만들 수 있습니다.
@@ -103,17 +103,18 @@ $$
 그리고 각자 악수를 하려고 합니다.
 하지만 팔이 교차되는 일은 없기를 바라는데요.
 
-<Figure
-  src={fig3}
-  alt="Successful and failed case of handshaking"
-  caption="악수 문제 규칙" />
+<FigureV2 src={fig3} alt="Successful and failed case of handshaking">
+  <FigureCaption slot="caption">그림 3. 악수 문제 규칙. 팔이 교차되서는 안 됩니다.</FigureCaption>
+</FigureV2>
 
 악수를 하는 방법은 몇 가지일까요?
 
 여기서도 더 작은 문제의 답을 이용해 풀 수 있는데요.
 이번에는 가장 위에 있는 1번 사람이 누구와 악수하는지 기준으로 케이스를 나눠봅시다.
 
-<Figure src={fig4} alt="Handshaking diagram" />
+<FigureV2 src={fig4} alt="Handshaking diagram">
+  <FigureCaption slot="caption">그림 4. 악수의 네 가지 패턴. 1번 사람이 누구와 악수를 하는 지에 따라 나눕니다. 3번 사람과 악수한다면, 2번 사람은 악수할 사람이 없게 됩니다. 이와 비슷한 이유로, 홀수의 사람과 악수하는 경우는 제외합니다.</FigureCaption>
+</FigureV2>
 
 그러면 악수가 만드는 선을 기준으로 두 그룹이 생기는데요.
 팔을 교차해서 악수하는 경우가 없기 때문에, 각 그룹에서 악수하는 경우의 수를 곱하면 됩니다.
