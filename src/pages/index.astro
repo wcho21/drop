@@ -11,17 +11,17 @@ const basePath = "/posts/";
 ---
 
 <Base pageTitle="Home">
-  <main class="text-zinc-950">
-    <h1 class="m-3 text-3xl font-display">Articles.</h1>
-    <ul class="block m-3">
+  <main class="text-gray-800 border-t-8 border-gray-800">
+    <h1 class="my-4 text-[32px] font-display">Articles.</h1>
+    <ul class="block my-4">
       {
         sorted.map(entry => {
           const { slug, data } = entry;
           const { title, date, summary, thumbnail } = data;
 
           return (
-            <li class="block border-t border-zinc-100">
-              <a href={`${basePath}${slug}`} class="block py-3">
+            <li class="block border-t border-gray-100">
+              <a href={`${basePath}${slug}`} class="block py-4">
                 <Card
                   title={title}
                   date={date}
