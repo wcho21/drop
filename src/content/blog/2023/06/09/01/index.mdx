@@ -21,8 +21,8 @@ import fig5 from "./_figs/fig5.svg";
 그리고 이 인코딩은 2023년에 이르러 웹에서 [약 98%의 점유율][w3tech-utf-8]을 가질 정도로 퍼지게 되었습니다.
 
 이 글에서는 유니코드와 UTF-8 간의 관계를 간략하게 정리하고, UTF-8를 직접 구현해보며 자세히 살펴보겠습니다.
-이를 통해 유니코드의 $2^{21}$개에 달하는 코드 포인트<AltLang>Code point</AltLang>를 UTF-8로 완전하게 커버할 수 있음을 알 수 있게 됩니다.
-그리고 유니코드의 플레인<AltLang>Plane</AltLang>을 소개하는 것으로 유니코드를 간단히 이해해보겠습니다.
+이를 통해 유니코드의 $2^{21}$개에 달하는 코드 포인트<AltLang>code point</AltLang>를 UTF-8로 완전하게 커버할 수 있음을 알 수 있게 됩니다.
+그리고 유니코드의 플레인<AltLang>plane</AltLang>을 소개하는 것으로 유니코드를 간단히 이해해보겠습니다.
 
 [wiki-plan-9]: https://en.wikipedia.org/wiki/Plan_9_from_Bell_Labs
 [w3tech-utf-8]: https://w3techs.com/technologies/history_overview/character_encoding/ms/y
@@ -32,11 +32,11 @@ import fig5 from "./_figs/fig5.svg";
 
 문자 'A'가 있다고 생각해봅시다.
 이것이 비트로 어떻게 표현되는지는 일단 머릿속에서 지우고요.
-다시 말해 온전히 추상적인 심볼<AltLang>Symbol</AltLang>로서 A를 떠올려봅시다.
+다시 말해 온전히 추상적인 심볼<AltLang>symbol</AltLang>로서 A를 떠올려봅시다.
 
 유니코드는 이런 추상적인 심볼에서 비트 표현에 이르기까지 여러 단계로 구분하고 있는데요.
 [Unicode Technical Report][utr-17-model]에서 볼 수 있듯이 네 단계의 레이어로 나누고 있습니다.
-여기서는 대신 두 가지의 매핑<AltLang>Mapping</AltLang>만 언급하려는데요.
+여기서는 대신 두 가지의 매핑<AltLang>mapping</AltLang>만 언급하려는데요.
 
 [utr-17-model]: https://unicode.org/reports/tr17/#CharacterEncodingModel
 
@@ -45,7 +45,7 @@ import fig5 from "./_figs/fig5.svg";
 </FigureV2>
 
 하나는 문자를 숫자에 대응시키는 매핑입니다.
-그 숫자는 코드 포인트<AltLang>Code point</AltLang>라고 부릅니다.
+그 숫자는 코드 포인트<AltLang>code point</AltLang>라고 부릅니다.
 유니코드는 이러한 매핑 중 하나인데요.
 
 예를 들어, 유니코드는 그리스 문자 'α'에 945번이라는 코드 포인트를 매겨놓았습니다.
@@ -53,7 +53,7 @@ import fig5 from "./_figs/fig5.svg";
 이는 16진수로 3B1번이 되는데요.
 따라서 `U+03B1`로도 표기합니다.
 
-또 다른 하나는 이 코드 포인트에서 구체적인 메모리 상의 비트 표현으로 (달리 말하면 코드 유닛 시퀀스<AltLang>Code unit sequence</AltLang>로) 대응시키는 매핑이 있습니다.
+또 다른 하나는 이 코드 포인트에서 구체적인 메모리 상의 비트 표현으로 (달리 말하면 코드 유닛 시퀀스<AltLang>code unit sequence</AltLang>로) 대응시키는 매핑이 있습니다.
 UTF-8이 이러한 매핑 중 하나입니다.
 (UTF-16과 UTF-32도 그런 매핑이고요.)
 구체적인 매핑 방법은 직접 구현할 때 보도록 하겠습니다.
@@ -65,13 +65,13 @@ UTF-8이 이러한 매핑 중 하나입니다.
 
 문자와 코드 포인트 간의 관계는 이미 유니코드에 정해져있습니다.
 
-따라서 코드 포인트가 주어졌을 때 그것을 바이트 시퀀스<AltLang>Byte sequence</AltLang>, 즉 바이트의 나열로 바꾸는 함수를 구현하면 됩니다.
-이를 인코딩<AltLang>Encoding</AltLang>이라고 부르도록 합시다.
+따라서 코드 포인트가 주어졌을 때 그것을 바이트 시퀀스<AltLang>byte sequence</AltLang>, 즉 바이트의 나열로 바꾸는 함수를 구현하면 됩니다.
+이를 인코딩<AltLang>encoding</AltLang>이라고 부르도록 합시다.
 그러면 UTF-8로 인코딩하는 방법 또한 이미 정해져있기 때문에 그것을 구현하기만 하면 됩니다.
 
 그 인코딩 방법은 무엇일까요?
 
-코드 포인트의 이진 표현<AltLang>Binary representation</AltLang>이 몇 비트를 차지하느냐에 따라 케이스를 나누는데요.
+코드 포인트의 이진 표현<AltLang>binary representation</AltLang>이 몇 비트를 차지하느냐에 따라 케이스를 나누는데요.
 7비트, 11비트, 16비트, 그리고 21비트가 기준점이 됩니다.
 <FigureV2 src={fig2} alt="Utf-8 encoding">
   <FigureCaption slot="caption">그림 2. UTF-8 인코딩. 코드 포인트의 이진 표현 길이에 따라 UTF-8의 비트 표현이 달라집니다.</FigureCaption>
@@ -80,7 +80,7 @@ UTF-8이 이러한 매핑 중 하나입니다.
 
 각 바이트의 앞자리에는 정해진 비트 패턴이 있는데요.
 이것 덕분에 어느 바이트에서 읽기를 시작하든지 의미를 분명하게 알 수 있습니다.
-즉 인코딩의 시작인지 중간인지 바로 알 수 있게 만들어 줍니다. ([셀프 싱크로나이징 코드][wiki-self-sync]<AltLang>Self-synchronizing code</AltLang>라고도 부릅니다.)
+즉 인코딩의 시작인지 중간인지 바로 알 수 있게 만들어 줍니다. ([셀프 싱크로나이징 코드][wiki-self-sync]<AltLang>self-synchronizing code</AltLang>라고도 부릅니다.)
 
 <FigureV2 src={fig3} alt="prefixes in utf-8">
   <FigureCaption slot="caption">그림 3. UTF-8 바이트 비트 패턴. 앞에 붙은 비트 패턴이 그 바이트의 의미를 정합니다.</FigureCaption>
@@ -92,7 +92,7 @@ UTF-8는 네 개의 바이트까지 사용하면 $2^{21}$개의 문자를 표현
 마침 유니코드 또한 그만큼, 즉 $2^{21}$개의 코드 포인트를 명시하고 있습니다.
 따라서 유니코드의 모든 코드 포인트, 다시 말해 모든 문자를 UTF-8로 표현할 수 있게 됩니다.
 
-아래 수도코드<AltLang>Pseudocode</AltLang>의 `encodeUtf8()` 함수는 코드 포인트를 나타내는 숫자를 입력받고 그것을 UTF-8로 인코딩한 바이트 시퀀스를 리턴합니다.
+아래 수도코드<AltLang>pseudocode</AltLang>의 `encodeUtf8()` 함수는 코드 포인트를 나타내는 숫자를 입력받고 그것을 UTF-8로 인코딩한 바이트 시퀀스를 리턴합니다.
 
 ```
 function encodeUtf8(codepoint)
@@ -117,7 +117,7 @@ function encodeUtf8(codepoint)
 
 맨 아래에서는 21비트를 넘어가는 코드 포인트를 만나는 예외적인 경우를 처리하는데요.
 이때는 특별한 문자인 ‘&#65533;’를 리턴합니다.
-`U+FFFD`로 정의된 이 문자는 [대체 문자][wiki-repl-char]<AltLang>Replacement character</AltLang>라고 부르는데요.
+`U+FFFD`로 정의된 이 문자는 [대체 문자][wiki-repl-char]<AltLang>replacement character</AltLang>라고 부르는데요.
 표현할 수 없는 문자를 만나면 대신 사용하도록 만들어졌습니다.
 
 [wiki-repl-char]: https://ko.wikipedia.org/wiki/%EB%8C%80%EC%B2%B4_%EB%AC%B8%EC%9E%90
@@ -191,7 +191,7 @@ void encodeUtf8(const Codepoint cp, char8_t *buf) {
 ```
 
 간단한 비트 조작을 통해 구현할 수 있는데요.
-수도코드는 바이트 시퀀스를 리턴했지만, 여기서는 매개변수로 받은 `buf`에 사이드 이펙트<AltLang>Side effect</AltLang>로 리턴값을 담습니다.
+수도코드는 바이트 시퀀스를 리턴했지만, 여기서는 매개변수로 받은 `buf`에 사이드 이펙트<AltLang>side effect</AltLang>로 리턴값을 담습니다.
 
 마지막에 널 문자 `\0`을 붙인 것은 나중에 출력의 편의를 위해 임의로 붙인 것입니다.
 
@@ -318,9 +318,9 @@ int main() {
 # 유니코드의 코드 스페이스와 플레인
 
 유니코드는 `U+0000`부터 `U+10FFFF`까지, 즉 $2^{21}$개의 코드 포인트를 사용합니다.
-이런 코드 포인트의 범위를 코드 스페이스<AltLang>Code space</AltLang>라고 부릅니다.
+이런 코드 포인트의 범위를 코드 스페이스<AltLang>code space</AltLang>라고 부릅니다.
 
-유니코드는 코드 스페이스를 열일곱개의 영역으로 나눴는데요. 이를 각각 [플레인][wiki-unicode-plane]<AltLang>Plane</AltLang>이라고 부릅니다.
+유니코드는 코드 스페이스를 열일곱개의 영역으로 나눴는데요. 이를 각각 [플레인][wiki-unicode-plane]<AltLang>plane</AltLang>이라고 부릅니다.
 하나의 플레인은 $2^{16}$개, 즉 65536개의 코드포인트를 가지게 됩니다.
 
 따라서 코드 포인트 `U+XXYYYY`가 있으면, `XX`는 `0`부터 `10`까지 있을 수 있는데요. 플레인의 숫자를 가리키게 됩니다.
@@ -339,6 +339,7 @@ int main() {
 이후 한자를 비롯한 여러 다른 문자를 포함하기 위해 별도의 플레인을 사용하기 시작했습니다.
 이모지는 1번 플레인인 다국어 보충 평면<AltLang>Supplementary Multilingual Plane (SMP)</AltLang>을 사용하고 있습니다.
 한자는 2번과 3번 플레인인 상형 문자 보충 평면<AltLang>Supplementary Ideographic Plane (SIP)</AltLang>, 상형 문자 제삼평면<AltLang>Tertiary Ideographic Plane (TIP)</AltLang>이라고 불리는 플레인을 쓰고 있습니다.
+(여기서 이름이 중요한 건 아니지만요.)
 
 유니코드 버전 15 기준으로 4번 플레인부터 13번 플레인까지는 비어있는 상태입니다.
 그리고 나머지 플레인은 이 글의 주제를 벗어나므로 건너뛰도록 하겠습니다.
@@ -352,14 +353,14 @@ int main() {
 
 그런데 UTF-8의 뒤에 붙은 숫자 8은 무엇일까요?
 코드 포인트를 비트 표현으로 매핑할 때, 기본 단위로서 사용할 비트 길이가 있는데요.
-이를 코드 유닛<AltLang>Code unit</AltLang>이라고 부릅니다.
+이를 코드 유닛<AltLang>code unit</AltLang>이라고 부릅니다.
 
-예를 들어 8비트를 기본 단위로 사용한다면, 코드 포인트를 8비트의 코드 유닛 시퀀스<AltLang>Code unit sequence</AltLang>로 인코딩한다고 부릅니다.
+예를 들어 8비트를 기본 단위로 사용한다면, 코드 포인트를 8비트의 코드 유닛 시퀀스<AltLang>code unit sequence</AltLang>로 인코딩한다고 부릅니다.
 UTF-8은 그 방법 중 하나입니다.
 앞서 살펴보았듯이, 7비트까지는 하나의 코드 유닛을, 11비트까지는 두 개의 코드 유닛을 사용하고 이런식으로 나아갑니다.
 
 즉 UTF-8 인코딩은 8비트 코드 유닛을 때에 따라 하나에서 네 개까지 사용하는데요.
-문자마다 코드 유닛의 개수, 즉 바이트의 개수가 달라지므로, 가변 폭 인코딩<AltLang>Variable-width encoding</AltLang>이라고 부릅니다.
+문자마다 코드 유닛의 개수, 즉 바이트의 개수가 달라지므로, 가변 폭 인코딩<AltLang>variable-width encoding</AltLang>이라고 부릅니다.
 
 <FigureV2 src={fig5} alt="various utf encoding examples">
   <FigureCaption slot="caption">그림 5. 같은 문자의 세 UTF 인코딩. 뒤에 붙은 숫자, 즉 8, 16, 32는 기본 단위로서 사용할 비트 길이를 의미합니다.</FigureCaption>
@@ -373,7 +374,7 @@ UTF-16도 때에 따라 하나에서 두 개의 코드 유닛을 쓰기 때문�
 예상할 수 있듯이 32비트의 코드 유닛을 쓰는 인코딩 방식입니다.
 하지만 UTF-32는 오직 하나의 코드 유닛만 사용하는데요.
 $2^{21}$개의 모든 코드 포인트를 항상 32비트 안에 담을 수 있기 때문입니다.
-그래서 고정 폭 인코딩<AltLang>Fixed-width encoding</AltLang>이라고 부릅니다.
+그래서 고정 폭 인코딩<AltLang>fixed-width encoding</AltLang>이라고 부릅니다.
 [ASCII][wiki-ascii]처럼요.
 
 결론적으로 이모지 문자 ‘😂’는 세 가지 인코딩에서 모두 네 바이트를 사용하는데요.
@@ -401,14 +402,14 @@ URL에 '가'와 같은 문자를 사용하고 싶다면 그 UTF-8 인코딩 결�
 코드 포인트가 반드시 문자의 순서라고 말할 수는 없습니다.
 (문자 '0'이 문자 'A'보다 먼저일 필요가 있을까요?)
 따라서 순서를 별도로 정의할 필요가 있는데요.
-이를 콜레이션<AltLang>Collation</AltLang>이라고 부릅니다.
+이를 콜레이션<AltLang>collation</AltLang>이라고 부릅니다.
 
 (불행히도) 유니코드 상에서 어떤 문자는 나타내는 방법이 반드시 하나만 있는 것은 아닌데요.
 예를 들어 악센트가 있는 A 문자 '&#192;' (`U+00C0`)를 봅시다.
 이 문자는 두 문자를 조합해서 만들 수 있습니다.
 문자 'A' (`U+0041`)에 악센트 조합 문자인 '◌̀' (`U+0300`)를 더해서 '&#65;&#768;'로요. (방금 실제로 두 문자를 조합했습니다. 똑같이 보이시나요?)
 
-정규화<AltLang>Normalization</AltLang>는 이런 문제를 위해 문자를 하나로 통일시키는 작업을 일컫습니다.
+정규화<AltLang>normalization</AltLang>는 이런 문제를 위해 문자를 하나로 통일시키는 작업을 일컫습니다.
 대표적으로 예를 들면 자바스크립트의 스트링 메소드인 `normalize()`가 그 정규화를 맡고 있습니다.
 
 UTF-8을 비롯해 UTF-16과 UTF-32 방식도 있는데요.
