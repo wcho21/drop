@@ -389,7 +389,15 @@ def evaluateInfix(infix):
 [gist-1]: https://gist.github.com/wcho21/e335728564a82e60fb2d2c6e1d09e843
 
 
-# 더 해볼 수 있는 것들
+# 마치며
+
+여기까지 간단한 계산기를 만들어 보았습니다.
+사실 여기서 소개한 알고리즘은 다익스트라<AltLang>Edsger Dijkstra</AltLang>의 션팅 야드 알고리즘<AltLang>shunting yard algorithm</AltLang>을 구현한 것입니다.
+
+각 입력 문자는 기껏해야 두 번의 처리, 즉 스택에 넣고 빼는 처리만 필요한데요. 
+따라서 시간 복잡도는 입력 문자의 개수 $n$에 대해 $O(n)$이 되는 것을 확인할 수 있습니다.
+
+## 더 해볼 수 있는 것들
 
 사실 이 계산기에는 한 자리 수의 숫자밖에 받을 수 없다는 단점이 있습니다.
 왜 그럴 수 밖에 없었을까요?
