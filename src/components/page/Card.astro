@@ -1,0 +1,39 @@
+---
+import { Image } from "astro:assets";
+import { formatDate } from "@/scripts/utils/formatters";
+
+interface Props {
+  title: string;
+  date: Date;
+  summary: string;
+  thumbnail: {
+    src: string;
+    width: number;
+    height: number;
+    format: "png" | "jpg" | "jpeg" | "tiff" | "webp" | "gif" | "svg" | "avif";
+  };
+}
+
+const { title, date, summary, thumbnail } = Astro.props;
+---
+
+<div class="flex items-center gap-4">
+  <div class="flex-0 w-[100px] mb-auto sm:w-[150px]">
+    <Image
+      src={thumbnail}
+      alt="Thumbnail"
+      quality="80"
+      width="300"
+      height="200"
+      class="w-full h-full object-contain"
+    />
+  </div>
+
+  <div class="flex-1 w-full h-full text-gray-800">
+    <p class="text-gray-800 text-base font-bold sm:text-lg">{title}</p>
+      <div>
+        <p class="text-gray-600 font-regular font-light text-sm sm:text-base">{summary}</p>
+      </div>
+    <p class="text-xs text-gray-400 font-serif mt-2 font-light sm:text-sm">{formatDate(date)}</p>
+  </div>
+</div>

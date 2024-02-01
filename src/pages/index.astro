@@ -1,7 +1,8 @@
 ---
-import Base from "../layouts/Base.astro";
-import Footer from "../components/common/Footer.astro";
-import Card from "@components/articles/Card.astro";
+import Base from "@/layouts/Base.astro";
+import Card from "@/components/page/Card.astro";
+import Footer from "@/components/layout/Footer.astro";
+import Heading1 from "@/components/core/Heading1.astro";
 import { getCollection } from "astro:content";
 import { reverse, sortBy } from "lodash-es";
 
@@ -11,8 +12,8 @@ const basePath = "/posts/";
 ---
 
 <Base pageTitle="Home">
-  <main class="text-gray-800 border-t-8 border-gray-800">
-    <h1 class="my-4 text-[32px] font-display">Articles.</h1>
+  <main class="text-gray-800 border-t-8 border-gray-800 pt-4">
+    <Heading1><span class="font-display">Articles.</span></Heading1>
     <ul class="block my-4">
       {
         sorted.map(entry => {
@@ -35,7 +36,8 @@ const basePath = "/posts/";
       }
     </ul>
   </main>
-  <div class="mt-12">
+
+  <div class="mt-4">
     <Footer />
   </div>
 </Base>

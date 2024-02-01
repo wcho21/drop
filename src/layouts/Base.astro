@@ -1,15 +1,16 @@
 ---
 import { makeTitle } from "./Base";
-import FontLinks from "../components/head/FontLinks.astro";
-import GoogleAnalytics from "../components/head/GoogleAnalytics.astro";
-import Favicons from "../components/head/Favicons.astro";
-import config from "../config";
+import Fonts from "@/components/layout/head/Fonts.astro";
+import GoogleAnalytics from "@/components/layout/head/GoogleAnalytics.astro";
+import Favicons from "@/components/layout/head/Favicons.astro";
+import Katex from "@/components/layout/head/Katex.astro";
+import config from "@/config";
 
 interface Props {
   pageTitle: string;
 }
-
 const { pageTitle } = Astro.props;
+
 const siteTitle = config.app.title;
 const titleSep = config.app.titleSep;
 const title = makeTitle(pageTitle, siteTitle, titleSep);
@@ -22,25 +23,18 @@ const title = makeTitle(pageTitle, siteTitle, titleSep);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <Favicons />
-    <FontLinks />
+    <Fonts />
+    <Katex />
     {import.meta.env.PROD && (
       <GoogleAnalytics />
     )}
 
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <!-- KaTeX -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.css"
-      integrity="sha384-WsHMgfkABRyG494OmuiNmkAOk8nhO1qE+Y6wns6v+EoNoTNxrWxYpl5ZYWFOLPCM"
-      crossorigin="anonymous"
-    />
-
     <title>{title}</title>
   </head>
   <body>
-    <div class="max-w-screen-md md:mx-auto">
+    <div class="max-w-screen-md px-4 md:mx-auto">
       <slot />
     </div>
   </body>
