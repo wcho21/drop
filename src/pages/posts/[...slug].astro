@@ -1,38 +1,39 @@
 ---
 import Base from "@/layouts/Base.astro";
+import ArticleCard from "@/components/page/ArticleCard.astro";
 import Footer from "@/components/layout/Footer.astro";
 import Heading1 from "@/components/core/Heading1.astro";
+import Heading2 from "@/components/core/Heading2.astro";
 import { getCollection } from "astro:content";
 import { formatDate } from "@/scripts/utils/formatters";
 import type { CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
   const entries = await getCollection("blog");
-  const staticPaths = entries.map(entry => ({
+  const staticPaths = entries.map((entry, i) => ({
     params: { slug: entry.slug },
-    props: { entry },
+    props: {
+      prevEntry: (i > 0) ? entries[i-1] : undefined,
+      nextEntry: (i < entries.length-1) ? entries[i+1] : undefined,
+      entry,
+    },
   }));
 
   return staticPaths;
 }
 
-type BlogEntry = CollectionEntry<"blog">;
-interface Entry extends Pick<BlogEntry, "body" | "collection" | "data" | "render"> {
-  id: string,
-  slug: string,
-}
 interface Props {
-  entry: Entry,
+  entry: CollectionEntry<"blog">,
 }
 
-const { entry } = Astro.props;
+const { entry, prevEntry, nextEntry } = Astro.props;
 const { title, date } = entry.data;
 const { Content } = await entry.render();
 ---
 
 <Base pageTitle={title}>
   <div class="text-gray-800">
-    <div class="border-t-8 border-b-4 pt-4 pb-8 border-gray-800">
+    <div class="border-t-8 pt-4 pb-8 border-gray-800">
       <header class="mb-16 pb-6 font-serif border-b border-gray-800">
         <Heading1>{title}</Heading1>
         <p class="mt-2 text-[14px] font-light"><time>{formatDate(date)}</time></p>
@@ -43,10 +44,19 @@ const { Content } = await entry.render();
       </main>
     </div>
 
-    <div class="my-12">
-      <a href="/">
-        <div class="rounded-md bg-gray-100 p-2 w-1/2">돌아가기</div>
-      </a>
+    <div class="my-12 py-12 border-t border-gray-800">
+      <Heading2><span class="font-serif">다른 글</span></Heading2>
+      {
+        nextEntry && <ArticleCard article={nextEntry} />
+      }
+      {
+        prevEntry && <ArticleCard article={prevEntry} />
+      }
+      <div class="mt-4">
+        <a href="/">
+          <div class="rounded-md bg-gray-50 p-2">« 🏠 Home</div>
+        </a>
+      </div>
     </div>
 
     <div class="mt-2">
@@ -57,15 +67,15 @@ const { Content } = await entry.render();
 
 <style is:global>
   #post-main {
-    @apply text-[16px] text-gray-800 text-justify;
+    @apply text-[14px] md:text-[16px] text-gray-800 text-justify;
   }
 
   #post-main > h1 {
-    @apply text-[24px] font-bold mt-16 mb-2 font-serif;
+    @apply text-[20px] md:text-[24px] font-bold mt-16 mb-2 font-serif;
   }
 
   #post-main > h2 {
-    @apply text-[18px] font-bold mt-8 mb-2 font-serif;
+    @apply text-[16px] md:text-[18px] font-bold mt-8 mb-2 font-serif;
   }
 
   #post-main > p {
