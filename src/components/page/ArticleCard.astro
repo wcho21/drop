@@ -1,0 +1,25 @@
+---
+// wrapper component for article to use Card
+
+import type { CollectionEntry } from "astro:content";
+import Card from "./Card.astro";
+
+interface Props {
+  article: CollectionEntry<"blog">,
+}
+
+const basePath = "/posts/";
+
+const { article } = Astro.props;
+const { slug, data } = article;
+const { title, date, summary, thumbnail } = data;
+---
+
+<a href={`${basePath}${slug}`} class="block py-4">
+  <Card
+    title={title}
+    date={date}
+    summary={summary}
+    thumbnail={thumbnail}
+  />
+</a>
