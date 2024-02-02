@@ -6,8 +6,6 @@ import Heading1 from "@/components/core/Heading1.astro";
 import { getCollection } from "astro:content";
 import * as pages from "@/scripts/utils/pages";
 
-const basePath = "/posts/";
-
 const collection = await getCollection("blog");
 const articles = pages.sortCollection(collection);
 ---
