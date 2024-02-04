@@ -4,18 +4,21 @@ import { Image } from "astro:assets";
 interface Props {
   src: ImageMetadata,
   alt: string,
+  shrink?: boolean,
 }
 
-const { src, alt } = Astro.props;
+const { src, alt, shrink = false } = Astro.props;
 ---
 
 <figure class="w-full block py-3">
-  <Image
-    src={src}
-    alt={alt}
-    format="webp"
-    quality={85}
-    class="w-fit mx-auto"
-  />
+  <div class="overflow-x-auto">
+    <Image
+      src={src}
+      alt={alt}
+      format="webp"
+      quality={85}
+      class={`${shrink ? "max-w-full" : "max-w-none"} mx-auto block`}
+    />
+  </div>
   <slot name="caption" />
 </figure>
