@@ -3,11 +3,7 @@ import Base from "@/layouts/Base.astro";
 import ArticleCard from "@/components/page/ArticleCard.astro";
 import Footer from "@/components/layout/Footer.astro";
 import Heading1 from "@/components/core/Heading1.astro";
-import { getCollection } from "astro:content";
-import * as pages from "@/scripts/utils/pages";
-
-const collection = await getCollection("blog");
-const articles = pages.sortCollection(collection);
+import { articles } from "@/scripts/collections";
 ---
 
 <Base pageTitle="Home">
