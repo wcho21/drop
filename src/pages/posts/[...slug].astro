@@ -35,19 +35,19 @@ const { Content } = await entry.render();
 
 <Base pageTitle={title}>
   <div class="text-gray-800">
-    <div class="border-t-8 pt-4 pb-20 border-gray-800">
-      <header class="mb-16 pb-6 font-serif border-b border-gray-800">
+    <div>
+      <header class="mb-12 pt-12 font-serif border-t-8 border-gray-800">
         <Heading1>{title}</Heading1>
         <p>{summary}</p>
         <p class="mt-2 text-[14px] font-light"><time>{formatDate(date)}</time></p>
       </header>
 
-      <main id="post-main">
+      <main id="post-main" class="my-12 pt-12 border-t border-gray-800">
         <Content />
       </main>
     </div>
 
-    <nav id="post-nav" class="py-8 border-t border-gray-800">
+    <nav id="post-nav" class="my-12 pt-12 border-t border-gray-800">
       {
         nextEntry && <ArticleCard article={nextEntry} />
       }
@@ -55,11 +55,11 @@ const { Content } = await entry.render();
         prevEntry && <ArticleCard article={prevEntry} />
       }
       <div class="mt-4">
-        <a href="/" class="block py-1.5 px-3 rounded-sm font-light mx-auto w-fit border border-gray-500">Home</a>
+        <a href="/" class="block py-1.5 px-3 rounded-sm font-light mx-auto w-fit border border-gray-800">Home</a>
       </div>
     </nav>
 
-    <div class="mt-2 border-t">
+    <div class="my-12 pt-12 border-t border-gray-800">
       <Footer />
     </div>
   </div>
