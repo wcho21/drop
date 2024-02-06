@@ -6,4 +6,20 @@ import Heading1 from "@/components/core/Heading1.astro";
 <footer class="text-gray-800">
   <Heading1><span class="font-display"><a href="/">{config.app.title}.</a></span></Heading1>
   <p class="text-[12px] font-light md:text-[14px]">{config.app.subtitle}</p>
+  <nav class="mt-4 text-[12px] md:text-[14px] font-light list-none">
+    <li><a href="https://github.com/wcho21">GITHUB</a></li>
+    <li><a href="mailto:wcho.dev@gmail.com">EMAIL</a></li>
+  </nav>
 </footer>
+
+<style>
+nav li {
+  @apply inline pr-4 mr-4 border-r border-gray-500;
+}
+nav li a {
+  @apply py-1.5;
+}
+nav li:last-child {
+  @apply pr-0 mr-0 border-none;
+}
+</style>
