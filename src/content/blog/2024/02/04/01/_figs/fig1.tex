@@ -1,0 +1,14 @@
+\documentclass[tikz,border=5mm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
+\usepackage{memorydrawingtool}
+
+\def\memWidth{160pt}
+\def\memHeight{80pt}
+
+\begin{document}
+  \begin{tikzpicture}
+    \MEMDrawCells{3}{{1, 2, 3}}{16}{0}{0}
+
+    \node at (\MEMCellWidth, -\MEMCellHeight-16pt) { \small\texttt{arr} };
+  \end{tikzpicture}
+\end{document}

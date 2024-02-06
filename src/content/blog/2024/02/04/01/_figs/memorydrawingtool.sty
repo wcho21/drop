@@ -1,0 +1,46 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{memorydrawingtool}
+
+\newcommand\MEMCellWidth{16.5mm}
+\newcommand\MEMCellHeight{14mm}
+
+\newcommand\MEMDrawCells[5]{
+  \def\numCells{#1}
+  \def\cellTexts{#2}
+  \def\labelStart{#3}
+  \def\topLeftX{#4}
+  \def\topLeftY{#5}
+
+  \def\cellsStartX{\topLeftX + 0.5*\MEMCellWidth}
+
+  % sides
+  \draw (\topLeftX,\topLeftY) -- ++(0.5*\MEMCellWidth,0) -- ++(0,-\MEMCellHeight) -- ++(-0.5*\MEMCellWidth,0);
+  \draw (\cellsStartX + \numCells*\MEMCellWidth,\topLeftY) -- ++(0.5*\MEMCellWidth,0);
+  \draw (\cellsStartX + \numCells*\MEMCellWidth,\topLeftY - \MEMCellHeight) -- ++(0.5*\MEMCellWidth,0);
+
+  % cells
+  \pgfmathsetmacro{\xLim}{\numCells-1}
+  \foreach \x in {0,...,\xLim} {
+    \pgfmathsetmacro{\label}{hex(\labelStart+4*\x)}
+    \pgfmathsetmacro{\cellText}{int(\cellTexts[\x])}
+
+    \def\cellStartX{\cellsStartX + \x*\MEMCellWidth}
+
+    \draw (\cellStartX,\topLeftY) -- ++(\MEMCellWidth,0) -- ++(0,-\MEMCellHeight) -- ++(-\MEMCellWidth,0);
+
+    % label and text
+    \node at (\cellStartX + 0.5*\MEMCellWidth,\topLeftY + 12pt) { \small\texttt{0x\label} };
+    \node at (\cellStartX + 0.5*\MEMCellWidth,\topLeftY - 0.5*\MEMCellHeight) { \texttt{\cellText} };
+  }
+}
+
+\newcommand\MEMLabel[4]{
+  \def\label{#1}
+  \def\topLeftX{#2}
+  \def\topLeftY{#3}
+  \def\textWidth{#4}
+
+  \def\sepWidth{12pt}
+
+  \node[align=right,text width=\textWidth] at (\topLeftX-0.5*\textWidth-\sepWidth,\topLeftY-0.5*\MEMCellHeight) { \small\label };
+}

@@ -8,13 +8,13 @@ import { articles } from "@/scripts/collections";
 
 <Base pageTitle="Home">
   <main class="text-gray-800">
-    <div class="pt-4 border-t-8 border-gray-800">
+    <div class="mb-12 pt-12 border-t-8 border-gray-800">
       <Heading1><span class="font-display">Articles.</span></Heading1>
       <ul class="block my-4">
         {
           articles.map(article => {
             return (
-              <li class="block border-t border-gray-100">
+              <li class="block article-card">
                 <ArticleCard article={article} />
               </li>
             );
@@ -24,7 +24,16 @@ import { articles } from "@/scripts/collections";
     </div>
   </main>
 
-  <div class="mt-4">
+  <div class="my-12 pt-12 border-t border-gray-800">
     <Footer />
   </div>
 </Base>
+
+<style>
+.article-card {
+  @apply border-t border-gray-100;
+}
+.article-card:first-child {
+  @apply border-none;
+}
+</style>
