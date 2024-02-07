@@ -4,7 +4,10 @@
 
 \def\ysep{6mm}
 \def\xsep{18mm}
-\def\textYsep{24pt}
+\def\textYsep{22pt}
+\def\labelXsep{24mm}
+\def\vertEquiv{\rotatebox{90}{$\equiv$}}
+\def\lgray{gray!50!lightgray}
 
 \begin{document}
   \begin{tikzpicture}[
@@ -12,60 +15,41 @@
       -{Stealth[scale=1.2]}
     }
   ]
-    \node at (0*\xsep,0) { \texttt{0000} };
-    \node at (1*\xsep,0) { \texttt{0001} };
-    \node at (2*\xsep,0) { \texttt{0010} };
-    \node at (3*\xsep,0) { $\cdots$ };
-    \node at (4*\xsep,0) { \texttt{0111} };
-    \node at (5*\xsep,0) { \texttt{1000} };
-    \node at (6*\xsep,0) { \texttt{1001} };
-    \node at (7*\xsep,0) { $\cdots$ };
-    \node at (8*\xsep,0) { \texttt{1111} };
+    \def\columns{
+      0/0000/-16/\lgray/0/black/16/\lgray,
+      1/0001/-15/\lgray/1/black/17/\lgray,
+      2/0010/-14/\lgray/2/black/18/\lgray,
+      4/0111/-9/\lgray/7/black/19/\lgray,
+      5/1000/-8/black/8/\lgray/20/\lgray,
+      6/1001/-7/black/9/\lgray/21/\lgray,
+      8/1111/-1/black/15/\lgray/22/\lgray
+    }
 
-    \draw[arrowtip] (0*\xsep,-12pt) -- ++(0,-\ysep);
-    \draw[arrowtip] (1*\xsep,-12pt) -- ++(0,-\ysep);
-    \draw[arrowtip] (2*\xsep,-12pt) -- ++(0,-\ysep);
-    \draw[arrowtip] (4*\xsep,-12pt) -- ++(0,-\ysep);
-    \draw[arrowtip] (5*\xsep,-12pt) -- ++(0,-\ysep);
-    \draw[arrowtip] (6*\xsep,-12pt) -- ++(0,-\ysep);
-    \draw[arrowtip] (8*\xsep,-12pt) -- ++(0,-\ysep);
+    \foreach \x / \label / \numA / \colorA / \numB / \colorB / \numC / \colorC in \columns {
+      \node at (\x*\xsep,0pt) {\texttt{\label}};
+      \draw[arrowtip] (\x*\xsep,-16pt) -- ++(0,-\ysep);
+      \node[color=\colorA]   at (\x*\xsep,-\ysep-10pt-1*\textYsep) { $\numA$ };
+      \node[color=\lgray] at (\x*\xsep,-\ysep-10pt-2*\textYsep) { \vertEquiv };
+      \node[color=\colorB]   at (\x*\xsep,-\ysep-10pt-3*\textYsep) { $\numB$ };
+      \node[color=\lgray] at (\x*\xsep,-\ysep-10pt-4*\textYsep) { \vertEquiv };
+      \node[color=\colorC]   at (\x*\xsep,-\ysep-10pt-5*\textYsep) { $\numC$ };
+      \node[color=\lgray] at (\x*\xsep,-\ysep-10pt-6*\textYsep) { \vertEquiv };
+      \node[color=\lgray] at (\x*\xsep,-\ysep-10pt-7*\textYsep) { $\vdots$ };
+    }
 
-    \node[color=lightgray] at (0*\xsep,-\ysep-28pt) { $-16$ };
-    \node[color=lightgray] at (1*\xsep,-\ysep-28pt) { $-15$ };
-    \node[color=lightgray] at (2*\xsep,-\ysep-28pt) { $-14$ };
-    \node at (3*\xsep,-\ysep-4pt-\textYsep) { $\cdots$ };
-    \node[color=lightgray] at (4*\xsep,-\ysep-28pt) { $-9$ };
-    \node at (5*\xsep,-\ysep-4pt-\textYsep) { $-8$ };
-    \node at (6*\xsep,-\ysep-4pt-\textYsep) { $-7$ };
-    \node at (7*\xsep,-\ysep-4pt-\textYsep) { $\cdots$ };
-    \node at (8*\xsep,-\ysep-4pt-\textYsep) { $-1$ };
+    \def\dotsColumns{3,7}
 
-    \node at (0*\xsep,-\ysep-4pt-2*\textYsep) { $0$ };
-    \node at (1*\xsep,-\ysep-4pt-2*\textYsep) { $1$ };
-    \node at (2*\xsep,-\ysep-4pt-2*\textYsep) { $2$ };
-    \node at (3*\xsep,-\ysep-4pt-2*\textYsep) { $\cdots$ };
-    \node at (4*\xsep,-\ysep-4pt-2*\textYsep) { $7$ };
-    \node[color=lightgray] at (5*\xsep,-\ysep-4pt-2*\textYsep) { $8$ };
-    \node[color=lightgray] at (6*\xsep,-\ysep-4pt-2*\textYsep) { $9$ };
-    \node at (7*\xsep,-\ysep-4pt-2*\textYsep) { $\cdots$ };
-    \node[color=lightgray] at (8*\xsep,-\ysep-4pt-2*\textYsep) { $15$ };
+    \foreach \x in \dotsColumns {
+      \node at (\x*\xsep,0) { $\cdots$ };
+      \node[color=\lgray] at (\x*\xsep,-\ysep-10pt-1*\textYsep) { $\cdots$ };
+      \node[color=\lgray] at (\x*\xsep,-\ysep-10pt-3*\textYsep) { $\cdots$ };
+      \node[color=\lgray] at (\x*\xsep,-\ysep-10pt-5*\textYsep) { $\cdots$ };
+    }
 
-    \node[color=lightgray] at (0*\xsep,-\ysep-4pt-3*\textYsep) { $16$ };
-    \node[color=lightgray] at (1*\xsep,-\ysep-4pt-3*\textYsep) { $17$ };
-    \node[color=lightgray] at (2*\xsep,-\ysep-4pt-3*\textYsep) { $18$ };
-    \node at (3*\xsep,-\ysep-4pt-3*\textYsep) { $\cdots$ };
-    \node[color=lightgray] at (4*\xsep,-\ysep-4pt-3*\textYsep) { $24$ };
-    \node[color=lightgray] at (5*\xsep,-\ysep-4pt-3*\textYsep) { $25$ };
-    \node[color=lightgray] at (6*\xsep,-\ysep-4pt-3*\textYsep) { $26$ };
-    \node at (7*\xsep,-\ysep-4pt-3*\textYsep) { $\cdots$ };
-    \node[color=lightgray] at (8*\xsep,-\ysep-4pt-3*\textYsep) { $31$ };
+    \def\leftLabels{-1,0,1}
 
-    \node at (0*\xsep,-\ysep-4pt-4*\textYsep) { $\vdots$ };
-    \node at (1*\xsep,-\ysep-4pt-4*\textYsep) { $\vdots$ };
-    \node at (2*\xsep,-\ysep-4pt-4*\textYsep) { $\vdots$ };
-    \node at (4*\xsep,-\ysep-4pt-4*\textYsep) { $\vdots$ };
-    \node at (5*\xsep,-\ysep-4pt-4*\textYsep) { $\vdots$ };
-    \node at (6*\xsep,-\ysep-4pt-4*\textYsep) { $\vdots$ };
-    \node at (8*\xsep,-\ysep-4pt-4*\textYsep) { $\vdots$ };
+    \foreach \label [count=\i] in \leftLabels {
+      \node at (-1.5*\xsep,-\ysep-10pt+\textYsep-2*\i*\textYsep) { ($n=\label$) };
+    }
   \end{tikzpicture}
 \end{document}
