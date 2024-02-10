@@ -2,6 +2,7 @@
 import { makeTitle } from "./Base";
 import Fonts from "@/components/layout/head/Fonts.astro";
 import GoogleAnalytics from "@/components/layout/head/GoogleAnalytics.astro";
+import OpenGraph from "@/components/layout/head/OpenGraph.astro";
 import Favicons from "@/components/layout/head/Favicons.astro";
 import Katex from "@/components/layout/head/Katex.astro";
 import config from "@/config";
@@ -21,7 +22,7 @@ const title = makeTitle(pageTitle, siteTitle, titleSep);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <OpenGraph />
     <Favicons />
     <Fonts />
     <Katex />
