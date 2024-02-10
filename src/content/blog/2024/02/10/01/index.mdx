@@ -1,0 +1,631 @@
+---
+title: "인터프리터가 소스 코드를 해석하는 방법"
+date: 2024-02-10T18:00:00+09:00
+summary: "프랫 파서로 생성하는 추상 문법 트리"
+thumbnail: "./_figs/thumbnail.webp"
+---
+
+import AltLang from "@/components/post/AltLang.astro";
+import FigureV2 from "@/components/post/FigureV2.astro";
+import FigureCaption from "@/components/post/FigureCaption.astro";
+import PostLink from "@/components/post/PostLink.astro"
+import CalloutKal from "@/components/post/CalloutKal.astro";
+
+import fig1 from "./_figs/fig1.svg";
+import fig2 from "./_figs/fig2.svg";
+import fig3 from "./_figs/fig3.svg";
+import fig4 from "./_figs/fig4.svg";
+
+
+
+간단한 프로그래밍 언어를 구현하기 위해, <PostLink href="/2024/02/09/01">이전 글</PostLink>에서 소스 코드<AltLang>source code</AltLang>를 토큰<AltLang>token</AltLang>으로 만들었습니다.
+이 토큰으로 소스 코드를 파싱<AltLang>parsing</AltLang>, 즉 정해진 문법에 따라 해석할 수 있고, 그런 일을 하는 것을 파서<AltLang>parser</AltLang>라고 부릅니다.
+보통 프로그래밍에서 문법 오류로 실행이 안 된다면, 파서가 그런 사실을 파악했기 때문입니다.
+
+파서는 소스 코드를 해석한 결과로 추상 문법 트리<AltLang>abstract syntax tree</AltLang>를 만듭니다.
+인터프리터<AltLang>interpreter</AltLang>는 이 트리를 바로 어떤 값으로 평가<AltLang>evaluate</AltLang>할 수 있고요.
+컴파일러<AltLang>compiler</AltLang>는 기계가 이해할 수 있는 코드로 생성<AltLang>code generation</AltLang>할 수 있습니다.
+이렇게 문법 트리는 파서 다음 단계를 위한 인터페이스가 됩니다.
+
+파싱 자체는 이론적으로 거대한 주제이고 다양한 방법이 있습니다.
+여기서는 간단하지만 확장성이 높은 방법인 프랫 파서<AltLang>Pratt parser</AltLang>를 구현해보겠습니다.
+
+
+
+# 바인딩 파워
+
+파서를 만들기 전에 구체적인 문법을 결정해야 합니다.
+그 중에 대표적인 문제로, 연산자<AltLang>operator</AltLang>의 우선 순위<AltLang>priority</AltLang>를 정해야 하는데요.
+사람은 `1+2*3` 같은 식을 볼 때, 곱셈부터 먼저 해야한다고 생각합니다.
+이를 곱셈이 더 높은 우선 순위를 가진다고 합니다.
+
+또한 연산자의 결합성<AltLang>associativity</AltLang>도 정해야 하는데요.
+예를 들어 사람은 `1-2-3` 같은 식이 있을 때 왼쪽 뺄셈부터 먼저 합니다.
+즉 암묵적으로 `(1-2)-3` 처럼 해석합니다.
+이런 연산자를 왼쪽 결합<AltLang>left-associative</AltLang> 연산이라고 부르고요.
+반대로 오른쪽부터 계산하면 오른쪽 결합<AltLang>right-associative</AltLang> 연산이라고 합니다.
+
+## 왼쪽 결합 연산
+
+예를 들어 식 `1+2+3`이 `(1+2)+3`로 해석된다고 합시다.
+그러면 가운데 숫자 2가 왼쪽 덧셈에 '붙는다'고 볼 수 있는데요.
+덧셈 기호 `+`가 왼쪽과 오른쪽에 그런 '붙는 힘'을 가진다고 상상해봅시다.
+구체적으로 예를 들어 각각 `30`과 `31`로요.
+
+<FigureV2 src={fig1} alt="binding power for plus">
+  <FigureCaption slot="caption">그림 1. 덧셈 기호의 바인딩 파워. 숫자 2는 왼쪽으로 붙어서 숫자 1과 덧셈을 이룹니다.</FigureCaption>
+</FigureV2>
+
+그렇다면 숫자 `2`는 단순히 '붙는 힘'이 높은 쪽에 붙으면 됩니다.
+그 힘을 프랫 파서에서는 바인딩 파워<AltLang>binding power</AltLang>라고 부릅니다.
+
+## 우선 순위
+
+한편 `1+2*3` 같은 식은 `1+(2*3)` 처럼 곱셈을 먼저 하게끔 만들어야 하는데요.
+따라서 곱셈 기호 `*`의 바인딩 파워를 더 높게 만들어야 합니다.
+여기선 왼쪽과 오른쪽에 각각 `40`과 `41` 정도면 될 것입니다.
+바인딩 파워는 값 자체보다 상대적인 차이에 의미가 있다는 점을 참고하세요.
+
+<FigureV2 src={fig2} alt="binding powers for plus and asterisk">
+  <FigureCaption slot="caption">그림 2. 덧셈과 곱셈 기호의 바인딩 파워. 숫자 2는 오른쪽으로 붙어서 곱셈을 이룹니다.</FigureCaption>
+</FigureV2>
+
+숫자 `2`는 여전히 더 높은 바인딩 파워에 붙었을 뿐입니다.
+
+이런 식으로 바인딩 파워만 잘 정하면 프랫 파서의 문법을 결정할 수 있습니다.
+숫자를 바인딩 파워가 더 높은 쪽에 붙인다는 규칙만 그대로 두면서요.
+
+## 오른쪽 결합 연산
+
+앞서 덧셈 기호 `+`의 경우처럼, 연산자 오른쪽의 바인딩 파워가 더 높으면 왼쪽 결합 연산이 됩니다.
+반대로 왼쪽이 더 높으면 오른쪽 결합 연산이 되는데요.
+
+대표적인 예시로 대입 연산자 `=`을 그렇게 만들어야 합니다.
+왜냐면 `a = b = 1` 같은 코드를 `a = (b = 1)` 처럼 보고 싶기 때문입니다.
+
+바인딩 파워를 결정하기 위해 다른 연산과의 관계를 생각해봐야 합니다.
+예를 들어, `a = 1 + 2` 같은 코드에서는 덧셈한 결과를 대입하고 싶을 것입니다.
+즉 대입 연산은 사칙 연산보다 바인딩 파워가 낮아야 합니다.
+따라서 여기서는 왼쪽과 오른쪽에 각각 `11`과 `10`을 주겠습니다.
+
+<FigureV2 src={fig3} alt="binding powers for equal sign">
+  <FigureCaption slot="caption">그림 3. 대입 연산 기호의 바인딩 파워. 식별자 b는 오른쪽으로 붙어서 숫자 1과 대입 연산을 이룹니다.</FigureCaption>
+</FigureV2>
+
+다른 예시로, 함수를 정의하는 화살표 연산 `->` 또한 오른쪽 결합 연산이어야 합니다.
+`a -> b -> a+b`와 같은 코드는 `a -> (b -> a+b)` 처럼 해석해야 하니까요.
+이 경우에도 왼쪽 바인딩 파워를 더 높게 주면 됩니다.
+
+## 구현하기
+
+바인딩 파워는 단순히 왼쪽과 오른쪽 값을 가집니다.
+이는 파이썬으로 다음과 같이 구현할 수 있습니다.
+
+```python
+class BindingPower:
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
+
+    def __repr__(self):
+        return f"[BindingPower: {self.left}, {self.right}]"
+```
+
+여기서 스트링 표현 함수 `__repr__()`는 단순히 `print()` 함수에 쓸 용도로 만든 것입니다.
+앞으로의 경우 또한 그렇습니다.
+
+이번엔 연산자마다 바인딩 파워를 매길 차례인데요.
+아래처럼 새로운 클래스의 `get()` 메소드에 그 역할을 맡깁니다.
+
+```python
+class BindingPowers:
+    def __init__(self):
+        self.lowest = BindingPower(0, 1)
+        self.assignment = BindingPower(11, 10)
+        self.arrow = BindingPower(21, 20)
+        self.summative = BindingPower(30, 31)
+        self.productive = BindingPower(40, 41)
+
+    def get(self, operator: str) -> BindingPower:
+        if operator == "=":
+            return self.assignment
+        if operator == "->":
+            return self.arrow
+        if operator in "+-":
+            return self.summative
+        if operator in "*/":
+            return self.productive
+
+        return self.lowest
+```
+
+연산자를 찾을 수 없으면 가장 낮은 바인딩 파워를 리턴하는데요.
+그 이유는 나중에 파서를 완성할 때쯤 만날 것입니다.
+
+이제 다음과 같이 덧셈 연산의 바인딩 파워를 구할 수 있습니다.
+
+```python
+bindingPowers = BindingPowers()
+plus = bindingPowers.get("+")
+print(plus)
+```
+
+실행 결과는 다음과 같습니다.
+
+```
+[BindingPower: 30, 31]
+```
+
+
+# 덧셈 표현식 파서 만들기
+
+이제 `1+2+3` 와 같은 식을 파싱하려는데요.
+이렇게 파싱할 단위를 표현식<AltLang>expression</AltLang>이라고 부르겠습니다.
+일단 하나의 표현식을 파싱해봅시다.
+그러면 이후 여러 개의 표현식으로 간단히 확장할 수 있습니다.
+
+표현식 파싱은 첫 토큰과 나머지 토큰을 처리하는 부분으로 나눌 것입니다.
+첫 토큰에서는 숫자 토큰 `1` 같은 것이 오기를 기대할 수 있지만, 이후는 덧셈 토큰 `+` 같이 다른 종류를 기대하기 때문입니다.
+
+앞서 토큰을 처리한 뒤 `+`와 같은 연산자 토큰을 만나면, 표현식에 파싱할 부분이 남았다는 뜻입니다.
+파서는 여태까지 해석한 결과인 문법 트리를 유지할 것이고, 그 루트 노드를 `top` 노드라고 부르겠습니다.
+그러면 `+` 같은 연산자 토큰을 새로운 `top` 노드로 파싱하고, 이전 결과를 그 자식으로 갖다 붙입니다.
+
+<FigureV2 src={fig4} alt="parsing additions">
+  <FigureCaption slot="caption">그림 4. 표현식 파싱. 첫 부분으로 숫자 1을 읽고 숫자 노드를 생성합니다. 이후 덧셈 기호 +를 읽을 때마다 탑 노드를 새로 만들고, 이전 결과를 자식으로 합니다.</FigureCaption>
+</FigureV2>
+
+## 준비하기
+
+파싱 결과를 표현할 트리 타입을 다음과 같이 준비합시다.
+
+```python
+class Node:
+    def __init__(self, kind: str, children: list[Any]):
+        self.kind = kind
+        self.children = children
+
+    def __repr__(self) -> str:
+        return f"[Node: {self.kind}, {self.children}]"
+```
+
+한편, 파서는 토큰을 하나씩 읽을 것인데요.
+다음 토큰을 미리 봐야할 필요도 있습니다.
+이는 파싱에서 반복적으로 나타나므로 토큰 리더 클래스를 따로 만들어봅시다.
+
+이전 글에서 문자 리더 클래스 `CharReader`를 만들었던 것과 비슷하게 만들 수 있습니다.
+`read()` 메소드로 토큰을 읽고, `advance()` 메소드로 다음 토큰으로 이동합니다.
+
+```python
+from tokenizer import Token
+
+class TokenReader:
+    def __init__(self, tokens: list[Token]):
+        self.__tokens = tokens
+        self.__pos = 0 # index to read next
+
+    def read(self) -> Token:
+        if self.__pos == len(self.__tokens):
+            return self.__tokens[-1]
+
+        return self.__tokens[self.__pos]
+
+    def advance(self) -> None:
+        if self.__pos == len(self.__tokens):
+            return
+
+        self.__pos += 1
+```
+
+## 표현식 첫 부분 파싱
+
+이렇게 만든 토큰 리더와 바인딩 파워로 파서를 만들어 봅시다.
+
+```python
+class Parser:
+    def __init__(self, tokens: list[Token]):
+        self.reader = TokenReader(tokens)
+        self.bindingPowers = BindingPowers()
+```
+
+이 클래스에 표현식 파싱을 맡을 메소드를 추가합시다.
+
+```python
+    def parseExpression(self, leftBindingPower: BindingPower) -> Node:
+        top = self.parseExpressionFirst()
+
+        return top
+```
+
+이 메소드는 앞으로 재귀적으로 쓰게 되는데요.
+여기서 매개변수로 받는 `leftBindingPower`는 이전에 파싱했던 부분에서 올 것입니다.
+곧 이 부분의 필요성을 볼 것입니다.
+
+표현식의 첫 토큰을 파싱하는 메소드를 이렇게 구현할 수 있습니다.
+
+```python
+    def parseExpressionFirst(self) -> Node:
+        token = self.reader.read()
+        self.reader.advance()
+
+        if token.kind == "number":
+            return Node("number", [int(token.value)])
+
+        raise Exception(f"bad token '{token.kind}' for the first part of expression")
+```
+
+일단 숫자 토큰만 처리해 노드를 생성하도록 합시다.
+
+앞으로 사용할 파서의 인터페이스로 `parse()` 메소드를 쓸 것입니다.
+지금은 일단 하나의 표현식만 맡도록 둡시다.
+
+```python
+    def parse(self) -> Node:
+        return self.parseExpression(self.bindingPowers.lowest)
+```
+
+`parseExpression()` 메소드는 이전에 파싱한 토큰의 바인딩 파워를 받습니다.
+그런데 이전에 처리한 부분이 없기 때문에, 가장 낮은 바인딩 파워를 넘깁니다.
+즉 이쪽에 토큰이 붙지 말라는 뜻입니다.
+
+이렇게 만든 파서는 이전에 만든 토크나이저<AltLang>tokenizer</AltLang>와 함께 다음과 같이 사용할 수 있습니다.
+
+```python
+input = "1"
+tokens = Tokenizer(input).getTokens()
+node = Parser(tokens).parse()
+print(node)
+```
+
+결과는 다음과 같이 간단한 숫자 노드가 됩니다.
+
+```
+[Node: number, [1]]
+```
+
+## 표현식 나머지 부분 파싱
+
+위에서 만든 `parseExpression()` 메소드를 확장해봅시다.
+
+표현식에 파싱할 부분이 남았다면, 토큰을 파싱해 `top` 노드로 하고, 이전 노드를 그 자식으로 만듭니다.
+하지만 다음 토큰이 이전 토큰보다 바인딩 파워가 더 낮다면 이 반복을 멈춰야 합니다.
+현재 토큰이 다음 토큰에 붙으면 안되니까요.
+그리고 지금까지 만든 트리인 `top` 노드를 리턴합니다.
+
+```python
+    def parseExpression(self, leftBindingPower: BindingPower) -> Node:
+        top = self.parseExpressionFirst()
+
+        while True:
+            token = self.reader.read()
+
+            rightBindingPower = self.bindingPowers.get(token.kind)
+            if leftBindingPower.right >= rightBindingPower.left:
+                break
+
+            parsedRest = self.parseExpressionRest(top)
+            top = parsedRest
+
+        return top
+```
+
+이제 표현식 나머지 부분을 파싱할 차례입니다.
+매개변수 `left`에 왼쪽 자식으로 할 노드를 받고, 현재 토큰을 읽은 다음, 오른쪽 자식 `right`에 재귀적으로 파싱한 결과를 가져옵니다.
+
+```python
+    def parseExpressionRest(self, left: Node) -> Node:
+        token = self.reader.read()
+        self.reader.advance()
+
+        if token.kind == "+":
+            infix = token.kind
+            right = self.parseExpression(self.bindingPowers.get(infix))
+
+            return Node("infix", [infix, left, right])
+
+        raise Exception(f"bad token '{token.kind}' for the rest part of expression")
+```
+
+이 오른쪽 자식 `right`를 파싱할 때, 현재 토큰의 바인딩 파워를 알려줍니다.
+이는 다음 표현식을 파싱하는 `parseExpression()` 메소드에서 왼쪽 바인딩 파워로 쓰이게 됩니다.
+
+이제 다음과 같이 덧셈 표현식을 해석할 수 있습니다.
+
+```python
+input = "1+2+3"
+tokens = Tokenizer(input).getTokens()
+node = Parser(tokens).parse()
+print(node)
+```
+
+결과를 보기 좋게 정리하면 다음과 같습니다.
+
+```
+[Node: infix, [
+  '+',
+  [Node: infix, [
+    +',
+    [Node: number, [1]],
+    [Node: number, [2]]
+  ]],
+  [Node: number, [3]]
+]]
+```
+
+이는 앞서 '그림 4'에서 봤던 트리와 일치합니다.
+
+
+
+# 파서 완성하기
+
+여기까지 만든 파서를 쉽게 확장할 수 있는데요.
+미완성인 부분을 채워봅시다.
+
+## 사칙 연산과 대입 연산 파싱
+
+사칙연산과 대입 연산을 처리하는 것은 간단한 일입니다.
+`parseExpressionRest()` 메소드에서 사칙 연산과 대입 연산을 추가하면 되는데요.
+
+```python
+    def parseExpressionRest(self, left: Node) -> Node:
+        # ...
+
+        if token.kind in "+-*/=":
+            # ...
+```
+
+여기에 `a = 1`과 같이 대입 연산을 쓸 수 있도록 식별자 토큰을 파싱합시다.
+식별자 토큰은 표현식 첫 부분에 오기 때문에, `parseExpressionFirst()` 메소드가 처리를 맡습니다.
+
+```python
+    def __parseExpressionLeft(self) -> Node:
+        # ...
+
+        if token.kind == "number":
+            return Node("number", [int(token.value)])
+        if token.kind == "identifier":
+            return Node("identifier", [token.value])
+
+        # ...
+```
+
+벌써 수정이 끝났습니다.
+이제 `a = b = 1+2*3` 같은 표현식을 해석할 수 있게 됩니다.
+
+```python
+    input = "a = b = 1+2*3"
+    tokens = Tokenizer(input).getTokens()
+    node = Parser(tokens).parse()
+    print(node)
+```
+
+결과를 보기 좋게 정리하면 이렇게 됩니다.
+
+```
+[Node: infix, [
+  '=',
+  [Node: identifier, ['a']],
+  [Node: infix, [
+    '=',
+    [Node: identifier, ['b']],
+    [Node: infix, [
+      '+',
+      [Node: number, [1]],
+      [Node: infix, [
+        '*',
+        [Node: number, [2]],
+        [Node: number, [3]]
+      ]]
+    ]]
+  ]]
+]]
+```
+
+먼저 계산할 부분이 자식 노드에 위치한다는 점을 참고하세요.
+즉 곱셈, 덧셈, 대입 순으로 처리 순서가 나타납니다.
+대입 또한 `b` 식별자에 먼저 이루어집니다.
+
+## 함수 정의 파싱
+
+함수 정의는 `a -> b` 처럼 화살표 토큰 `->`으로 할 것입니다.
+지금까지 했던대로 파서를 확장하면 되는데요.
+사칙 연산 토큰을 처리하는 부분에 화살표 토큰도 더합니다.
+
+```python
+    def parseExpressionRest(self, left: Node) -> Node:
+        # ...
+
+        if token.kind == "->" or token.kind in "+-*/=":
+          # ...
+```
+
+이게 전부입니다.
+이제 함수 정의를 파싱할 수 있게 됩니다.
+
+```python
+    input = "a -> b -> c"
+    tokens = Tokenizer(input).getTokens()
+    node = Parser(tokens).parse()
+    print(node)
+```
+
+출력 결과를 정리하면 이렇습니다.
+```
+[Node: infix, [
+  '->',
+  [Node: identifier, ['a']],
+  [Node: infix, [
+    '->',
+    [Node: identifier, ['b']],
+    [Node: identifier, ['c']]
+  ]]
+]]
+```
+
+## 함수 호출 파싱
+
+마지막으로 `f(1)`과 같은 함수 호출만 남았는데요.
+여기서 `(` 토큰을 호출 연산자라고 생각해볼 수 있습니다.
+
+함수 호출은 다른 것들보다 우선 순위가 높아야 합니다.
+이에 따라 바인딩 파워를 새로 추가합시다.
+
+```python
+class BindingPowers:
+    def __init__(self):
+        # ...
+        self.productive = BindingPower(40, 41)
+        self.call = BindingPower(50, 51)
+
+    def get(self, operator: str) -> BindingPower:
+        # ...
+        if operator in "*/":
+            return self.productive
+        if operator == "(":
+            return self.call
+
+        # ...
+```
+
+앞서 언급한 대로, 여는 괄호를 하나의 연산자로 처리합시다.
+뒤에 오는 호출 인자<AltLang>argument</AltLang>는 어떤 표현식이든 될 수 있습니다.
+예를 들어 `f(1+2)`에서 나타나는 덧셈처럼요.
+그리고 닫는 괄호가 오기를 기대한 뒤, 호출 노드를 생성해 리턴합니다.
+
+```python
+    def parseExpressionRest(self, left: Node) -> Node:
+        # ...
+
+        if token.kind == "->" or token.kind in "+-*/=":
+            # ...
+
+        if token.kind == "(":
+            arg = self.parseExpression(self.bindingPowers.lowest)
+
+            token = self.reader.read()
+            if token.kind != ")":
+                raise Exception(f"expected ')' but received '{token.kind}'")
+            self.reader.advance()
+
+            return Node("call", [left, arg])
+
+        # ...
+```
+
+이제 다음과 같이 함수 호출을 파싱할 수 있습니다.
+
+```python
+input = "a(1)"
+tokens = Tokenizer(input).getTokens()
+node = Parser(tokens).parse()
+print(node)
+```
+
+결과는 다음과 같습니다.
+
+```
+[Node: call, [[Node: identifier, ['f']], [Node: number, [1]]]]
+```
+
+## 소스 코드 파싱
+
+표현식 파싱은 끝났습니다.
+그런데 실제 소스 코드는 보통 여러 개의 표현식이 있는데요.
+이를 파싱할 수 있게 확장하는 것으로 파서 구현을 마치겠습니다.
+
+```python
+    def parse(self) -> Node:
+        nodes: list[Node] = []
+        while self.reader.read().kind != "END":
+            nodes.append(self.parseExpression(self.bindingPowers.lowest))
+        return nodes
+```
+
+이제 다음과 같은 소스 코드를 파싱할 수 있습니다.
+
+```python
+input = "a+b c*d"
+tokens = Tokenizer(input).getTokens()
+node = Parser(tokens).parse()
+print(node)
+```
+
+결과는 정리하면 다음과 같습니다.
+
+```
+[
+  [Node: infix, [
+    '+',
+    [Node: identifier, ['a']],
+    [Node: identifier, ['b']]
+  ]],
+  [Node: infix, [
+    '*',
+    [Node: identifier, ['c']],
+    [Node: identifier, ['d']]
+  ]]
+]
+```
+
+왜 이것이 가능했을까요?
+표현식을 파싱할 때, 그 다음 표현식의 시작은 가장 낮은 바인딩 파워를 가진다고 가정했기 때문입니다.
+
+```python
+    def parseExpression(self, leftBindingPower: BindingPower) -> Node:
+        # ...
+
+        while True:
+            token = self.reader.read()
+
+            rightBindingPower = self.bindingPowers.get(token.kind)
+            if leftBindingPower.right >= rightBindingPower.left:
+                break
+
+            # ...
+```
+
+다시 말해 현재 표현식이 끝나고 다음 표현식이 시작되면, 다음 토큰은 연산자가 아닐 텐데요.
+따라서 바인딩 파워 클래스의 `get()` 메소드는 가장 낮은 바인딩 파워인 `lowest`를 주게 되고, `while` 문은 중단되어 표현식 파싱이 끝나게 됩니다.
+이것이 처음에 바인딩 파워 클래스 `BindingPowers`를 구현할 때, 연산자가 아니면 `lowest`를 리턴했던 이유입니다.
+
+
+# 마치며
+
+여기까지 토큰을 통해 파싱하는 부분을 구현해보았습니다.
+파싱 결과인 트리는 앞으로 만들 값 평가에 사용됩니다.
+이를 통해 예를 들어 `1+2`은 `3`으로 평가해 간단한 인터프리터를 완성하게 됩니다.
+
+이 글에서 '표현식 첫 부분'과 '표현식 나머지'라는 표현을 썼는데요.
+사실 프랫 파서는 각각을 'nud'<AltLang>null denotation</AltLang>와 'led'<AltLang>left denotation</AltLang>라는 이름으로 부릅니다.
+이는 왼쪽에 다른 표현식이 올 수 있는지를 기준으로 나눕니다.
+본문에서는 쉬운 이해를 위해 다른 이름으로 바꾼 부분입니다.
+
+앞에서 언급했던 것처럼, 파싱은 다양한 방법이 있습니다.
+대표적으로는 LL(k) 문법이라고 부르는 문맥 자유 문법<AltLang>context-free grammar</AltLang>을 만들어 파서를 구현할 수 있습니다.
+그런 문법을 파싱하는 것을 LL 파서라고 부르는데요.
+이 문법은 흔히 BNF<AltLang>Backus–Naur form</AltLang>라는 형식으로 기술할 수 있고, 이를 바탕으로 최대 k번의 토큰 미리보기를 통해 백트래킹 없이 재귀적으로 파서를 구현하게 됩니다.
+프랫 파서와는 다른 접근 방식으로서 이정도의 언급으로 정리하겠습니다.
+
+여기까지 생략된 부분을 포함한 코드는 [지스트][gist]에서 볼 수 있습니다.
+
+[gist]: https://gist.github.com/wcho21/1e344fdb9497e6e1bd6e4e20c4f23c66
+
+## 레퍼런스
+
+- _Writing An Interpreter In Go_ (Thorsten Ball, 2020), 또는 _밑바닥부터 만드는 인터프리터 in Go_ (2021)
+
+- _Beautiful Code_ (Andy Oram, Greg Wilson, 2007):
+  자바스크립트<AltLang>JavaScript</AltLang>로 구현한 프랫 파서가 아홉번째 챕터에 소개되어 있습니다.
+
+- _Top Down Operator Precedence_ (Vaughan R. Pratt, 1973)
+
+- [crockford.com][crockford]: 위 Beautiful Code 책의 내용과 같습니다.
+
+- [matklad.github.io][matklad]: 러스트<AltLang>Rust</AltLang>로 구현한 프랫 파서가 소개되어 있습니다.
+
+
+
+<CalloutKal />
+
+[crockford]: https://www.crockford.com/javascript/tdop/tdop.html
+[matklad]: https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html
