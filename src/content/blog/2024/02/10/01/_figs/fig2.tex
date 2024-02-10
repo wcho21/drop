@@ -1,0 +1,37 @@
+\documentclass[tikz,border=5mm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
+\usepackage{drawutil}
+\usetikzlibrary{arrows.meta}
+
+\def\xsep{15mm}
+\begin{document}
+  \begin{tikzpicture}[
+    arrowtip/.style={
+      -{Stealth[scale=1.2]}
+    },
+    level distance=20pt,
+    sibling distance=32pt
+  ]
+    \def\plusY{0}
+    \def\numberY{-22mm}
+
+    \drawOpWithPowers{+}{1*\xsep}{\plusY}{30}{PlusChild1}{31}{PlusChild2}
+    \drawOpWithPowers{*}{3*\xsep}{\plusY}{40}{AsteriskChild1}{41}{AsteriskChild2}
+
+    \node (Number1) at (0*\xsep,\numberY) { \texttt{1} };
+    \node (Number2) at (2*\xsep,\numberY) { \texttt{2} };
+    \node (Number3) at (4*\xsep,\numberY) { \texttt{3} };
+
+    \draw[arrowtip] (Number1) -- (PlusChild1);
+    \draw[arrowtip] (Number2) -- (AsteriskChild1);
+    \draw[arrowtip] (Number3) -- (AsteriskChild2);
+
+    \def\eqY{\numberY-14mm}
+    \def\parenSep{12pt}
+    \foreach \x / \text in {0/1,1/+,2/2,3/*,4/3} {
+      \node at (\x*\xsep,\eqY) { \texttt{\text} };
+    }
+    \node at (2*\xsep-\parenSep,\eqY) { \texttt{(} };
+    \node at (4*\xsep+\parenSep,\eqY) { \texttt{)} };
+  \end{tikzpicture}
+\end{document}
