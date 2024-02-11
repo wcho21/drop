@@ -1,26 +1,31 @@
 ---
 import Base from "@/layouts/Base.astro";
-import ArticleCard from "@/components/page/ArticleCard.astro";
+import ArticleList from "@/components/page/ArticleList.astro";
+import SeriesList from "@/components/page/SeriesList.astro";
 import Footer from "@/components/layout/Footer.astro";
-import Heading1 from "@/components/core/Heading1.astro";
 import { articles } from "@/scripts/collections";
+import { getSeries } from "@/scripts/utils/pages";
+
+const featuredArticles = articles.filter(article => article.data.featured);
+const nonfeaturedArticles = articles.filter(article => article.data.featured !== true);
 ---
 
 <Base pageTitle="Home">
   <main class="text-gray-800">
     <div class="mb-12 pt-12 border-t-8 border-gray-800">
-      <Heading1><span class="font-display">Articles.</span></Heading1>
-      <ul class="block my-4">
-        {
-          articles.map(article => {
-            return (
-              <li class="block article-card">
-                <ArticleCard article={article} />
-              </li>
-            );
-          })
-        }
-      </ul>
+      {
+        featuredArticles.length > 0 && (
+          <ArticleList heading="Featured." articles={featuredArticles} />
+        )
+      }
+
+      <div class="mt-12">
+        <ArticleList heading="Articles." articles={nonfeaturedArticles} />
+      </div>
+
+      <div class="mt-12">
+        <SeriesList heading="Series." series={getSeries(articles).filter(series => series.name !== "Single articles")} />
+      </div>
     </div>
   </main>
 
