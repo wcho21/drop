@@ -18,7 +18,7 @@ import fig4 from "./_figs/fig4.svg";
 
 
 
-간단한 프로그래밍 언어를 구현하기 위해, <PostLink href="/2024/02/09/01">이전 글</PostLink>에서 소스 코드<AltLang>source code</AltLang>를 토큰<AltLang>token</AltLang>으로 만들었습니다.
+간단한 프로그래밍 언어를 구현하기 위해, <PostLink href="/2024/02/08/01">이전 글</PostLink>에서 소스 코드<AltLang>source code</AltLang>를 토큰<AltLang>token</AltLang>으로 만들었습니다.
 이 토큰으로 소스 코드를 파싱<AltLang>parsing</AltLang>, 즉 정해진 문법에 따라 해석할 수 있고, 그런 일을 하는 것을 파서<AltLang>parser</AltLang>라고 부릅니다.
 보통 프로그래밍에서 문법 오류로 실행이 안 된다면, 파서가 그런 사실을 파악했기 때문입니다.
 
@@ -201,20 +201,20 @@ from tokenizer import Token
 
 class TokenReader:
     def __init__(self, tokens: list[Token]):
-        self.__tokens = tokens
-        self.__pos = 0 # index to read next
+        self.tokens = tokens
+        self.pos = 0 # index to read next
 
     def read(self) -> Token:
-        if self.__pos == len(self.__tokens):
-            return self.__tokens[-1]
+        if self.pos == len(self.tokens):
+            return self.tokens[-1]
 
-        return self.__tokens[self.__pos]
+        return self.tokens[self.pos]
 
     def advance(self) -> None:
-        if self.__pos == len(self.__tokens):
+        if self.pos == len(self.tokens):
             return
 
-        self.__pos += 1
+        self.pos += 1
 ```
 
 ## 표현식 첫 부분 파싱
@@ -378,7 +378,7 @@ print(node)
 식별자 토큰은 표현식 첫 부분에 오기 때문에, `parseExpressionFirst()` 메소드가 처리를 맡습니다.
 
 ```python
-    def __parseExpressionLeft(self) -> Node:
+    def parseExpressionFirst(self) -> Node:
         # ...
 
         if token.kind == "number":
@@ -393,10 +393,10 @@ print(node)
 이제 `a = b = 1+2*3` 같은 표현식을 해석할 수 있게 됩니다.
 
 ```python
-    input = "a = b = 1+2*3"
-    tokens = Tokenizer(input).getTokens()
-    node = Parser(tokens).parse()
-    print(node)
+input = "a = b = 1+2*3"
+tokens = Tokenizer(input).getTokens()
+node = Parser(tokens).parse()
+print(node)
 ```
 
 결과를 보기 좋게 정리하면 이렇게 됩니다.
@@ -443,10 +443,10 @@ print(node)
 이제 함수 정의를 파싱할 수 있게 됩니다.
 
 ```python
-    input = "a -> b -> c"
-    tokens = Tokenizer(input).getTokens()
-    node = Parser(tokens).parse()
-    print(node)
+input = "a -> b -> c"
+tokens = Tokenizer(input).getTokens()
+node = Parser(tokens).parse()
+print(node)
 ```
 
 출력 결과를 정리하면 이렇습니다.
