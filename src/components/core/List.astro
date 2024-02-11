@@ -1,0 +1,14 @@
+---
+import Heading1 from "./Heading1.astro";
+
+interface Props {
+  heading: string,
+}
+
+const { heading } = Astro.props;
+---
+
+<Heading1><span class="font-display">{heading}</span></Heading1>
+<ul class="block my-4">
+  <slot />
+</ul>

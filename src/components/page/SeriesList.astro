@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArticleCard from "./ArticleCard.astro";
+import List from "../core/List.astro";
+import ListItem from "../core/ListItem.astro";
+import DropDown from "../core/DropDown.astro";
+
+interface Series {
+  name: string,
+  articles: CollectionEntry<"blog">[],
+}
+
+interface Props {
+  heading: string,
+  series: Series[],
+}
+
+const { heading, series } = Astro.props;
+---
+
+<List heading={heading}>
+  {
+    series.map(({ name, articles }) => {
+      return (
+        <ListItem>
+          <div class="my-4">
+            <DropDown>
+              <p slot="button" class="font-light text-[14pt] cursor-pointer" list-heading>{name}<span class="text-[12pt] ml-1.5">({articles.length})</span></p>
+              <ul class="block series-drop-down-list" list-body>
+                {
+                  articles.map(article => (
+                    <ListItem><ArticleCard article={article} /></ListItem>
+                  ))
+                }
+              </ul>
+            </DropDown>
+          </div>
+        </ListItem>
+      )
+    })
+  }
+</List>

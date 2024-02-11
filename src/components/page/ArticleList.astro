@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArticleCard from "./ArticleCard.astro";
+import List from "../core/List.astro";
+import ListItem from "../core/ListItem.astro";
+
+interface Props {
+  heading: string,
+  articles: CollectionEntry<"blog">[],
+}
+
+const { heading, articles } = Astro.props;
+---
+
+<List heading={heading}>
+  <ul class="block my-4">
+    {
+      articles.map(article => (
+        <ListItem><ArticleCard article={article} /></ListItem>
+      ))
+    }
+  </ul>
+</List>

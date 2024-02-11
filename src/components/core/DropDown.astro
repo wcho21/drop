@@ -1,0 +1,39 @@
+---
+---
+
+<div class="drop-down-component-button">
+  <slot name="button" />
+</div>
+<div class="drop-down-component-body">
+  <slot />
+</div>
+
+<script>
+  const buttons = document.querySelectorAll(".drop-down-component-button");
+  const bodies = document.querySelectorAll(".drop-down-component-body");
+  buttons.forEach((button, i) => {
+    button.addEventListener("click", () => {
+      bodies[i].classList.toggle("drop-down-component-body-open");
+    });
+  });
+</script>
+
+<style>
+  .drop-down-component-body {
+    max-height: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    opacity: 0;
+    transition-property: opacity, max-height, transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
+ .drop-down-component-body-open {
+    max-height: 100vh;
+    transform: scaleY(1);
+    opacity: 1;
+    transition-property: opacity, max-height, transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
+</style>
