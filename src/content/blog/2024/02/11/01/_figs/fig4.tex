@@ -1,7 +1,6 @@
 \documentclass[tikz,border=5mm,12pt]{standalone}
 \usepackage[fontsize=16pt]{fontsize}
 \usetikzlibrary{arrows.meta}
-\usetikzlibrary{calc}
 
 \newcommand\myfbox[1]{\fbox{#1\strut}}
 
@@ -30,15 +29,15 @@
   ]
     % left codes
     \node[code]           at (0*\xsep, 0*\ysep) { \texttt{a\ =\ 1} };
-    \node[code]    (OpB)  at (0*\xsep,-1*\ysep) { \texttt{f\ =\ b\ ->\ a+b} };
+    \node[code]    (OpB)  at (0*\xsep,-1*\ysep) { \texttt{f\ =\ a\ ->\ a+1} };
     \node[code]    (OpC)  at (0*\xsep,-2*\ysep) { \texttt{f(2)} };
-    \node[subcode] (OpCA) at (OpC.south east)   { \texttt{a+b} };
+    \node[subcode] (OpCA) at (OpC.south east)   { \texttt{a+1} };
 
     % right environments
     \node at (1*\xsep, \labelYsep) { \small\texttt{environment} };
 
     \node (EnvA) at (1*\xsep, 0*\ysep) { \myfbox{\texttt{a:\ 1}} };
-    \node (EnvC) at (1*\xsep,-2*\ysep) { \myfbox{\texttt{b:\ 2}} };
+    \node (EnvC) at (1*\xsep,-2*\ysep) { \myfbox{\texttt{a:\ 2}} };
 
     % arrows
     \draw[downcurved,arrowtip] (OpC.south) to (OpCA.west);
