@@ -6,17 +6,17 @@ thumbnail: "./_figs/thumbnail.webp"
 series: "UTF 인코딩 구현하기"
 ---
 
-import AltLang from "@/components/post/AltLang.astro";
-import FigureV2 from "@/components/post/FigureV2.astro";
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro";
 
 import fig1 from "./_figs/fig1.svg";
 import fig2 from "./_figs/fig2.svg";
 
-<PostLink href="/2023/06/09/01">이전 글</PostLink>에서 유니코드<AltLang>Unicode</AltLang>와 UTF-8을 살펴봤습니다.
-유니코드는 추상적인 문자와 코드 포인트<AltLang>code point</AltLang> 사이의 매핑으로, UTF-8는 코드 포인트와 코드 유닛 시퀀스<AltLang>code unit sequence</AltLang> 사이의 매핑으로 볼 수 있었습니다.
-또한 유니코드는 내부적으로 플레인<AltLang>plane</AltLang> 단위로 코드 포인트를 관리합니다.
+<PostLink href="/2023/06/09/01">이전 글</PostLink>에서 유니코드<L>Unicode</L>와 UTF-8을 살펴봤습니다.
+유니코드는 추상적인 문자와 코드 포인트<L>code point</L> 사이의 매핑으로, UTF-8는 코드 포인트와 코드 유닛 시퀀스<L>code unit sequence</L> 사이의 매핑으로 볼 수 있었습니다.
+또한 유니코드는 내부적으로 플레인<L>plane</L> 단위로 코드 포인트를 관리합니다.
 
 코드 유닛이란 인코딩 시 기본적인 길이로 삼는 비트 길이인데요.
 UTF-8는 8비트의 코드 유닛으로 인코딩 하고, 필요에 따라 하나에서 네 개까지의 코드 유닛을 사용했었습니다.
@@ -31,15 +31,15 @@ UTF-32 또한 그렇고요.
 
 UTF-16 구현에 앞서 언급할 것이 있습니다.
 
-첫 번째 플레인 BMP에는 서로게이트<AltLang>surrogate</AltLang> 블록이라고 불리는 코드 포인트가 있는데요.
+첫 번째 플레인 BMP에는 서로게이트<L>surrogate</L> 블록이라고 불리는 코드 포인트가 있는데요.
 사실 여기에는 문자가 할당되어 있지 않고, 16비트 코드 유닛을 두 개 사용할 것이라는 신호로 사용됩니다.
 
 UTF-16 인코딩은 이를 이용합니다.
 16비트를 넘어가는, 즉 `U+FFFF`를 넘어가는 코드 포인트를 인코딩하기 위해서요.
 
-<FigureV2 src={fig1} alt="Surrogate block in BMP">
+<Figure src={fig1} alt="Surrogate block in BMP">
   <FigureCaption slot="caption">그림 1. BMP 내 서로게이트 블록. 특수한 용도로 예약되어 있습니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 구체적으로 어떻게 사용되는 지는 직접 구현을 통해 살펴보겠습니다.
 
@@ -51,16 +51,16 @@ UTF-16 인코딩은 이를 이용합니다.
 
 그러면 UTF-16는 어떻게 코드 포인트를 인코딩할까요?
 
-코드 포인트를 16비트로 표현할 수 있다면, 그 코드 포인트의 이진 표현<AltLang>binary representation</AltLang>을 그대로 하나의 코드 유닛으로 인코딩합니다.
+코드 포인트를 16비트로 표현할 수 있다면, 그 코드 포인트의 이진 표현<L>binary representation</L>을 그대로 하나의 코드 유닛으로 인코딩합니다.
 그렇지 않고 16비트를 넘어간다면, UTF-8에서 여러 개의 코드 유닛에 담았던 것과 같은 방식으로 이루어집니다.
 
-<FigureV2 src={fig2} alt="utf-16 encoding">
+<Figure src={fig2} alt="utf-16 encoding">
   <FigureCaption slot="caption">그림 2. UTF 16 인코딩. 16비트로 표현할 수 있다면, 그 이진 표현을 그대로 사용합니다. 더 많은 비트가 필요하다면, 두 16비트 공간에 나누어 담습니다. 이 두 공간을 서로게이트라고 부릅니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 두 번째 경우, 코드 포인트의 21비트를 적절히 세 부분으로 나누어 두 개의 코드 유닛에 담아 인코딩하는데요.
-이 두 코드 유닛을 서로게이트 페어<AltLang>surrogate pair</AltLang>라고도 부릅니다.
-그리고 첫 번째 코드 유닛을 하이 서로게이트<AltLang>high surrogate</AltLang>, 두 번째 것을 로우 서로게이트<AltLang>low surrogate</AltLang>라고 합니다.
+이 두 코드 유닛을 서로게이트 페어<L>surrogate pair</L>라고도 부릅니다.
+그리고 첫 번째 코드 유닛을 하이 서로게이트<L>high surrogate</L>, 두 번째 것을 로우 서로게이트<L>low surrogate</L>라고 합니다.
 
 UTF-16 인코딩을 수도코드로 정리하면 다음과 같습니다.
 
@@ -121,7 +121,7 @@ UTF-8 인코딩에서 구현했던 것처럼, 리턴값은 `buf` 매개변수로
 
 # UTF-16의 사용
 
-UTF-16은 대표적으로 자바스크립트<AltLang>JavaScript</AltLang>와 같은 언어에서 사용하고 있습니다.
+UTF-16은 대표적으로 자바스크립트<L>JavaScript</L>와 같은 언어에서 사용하고 있습니다.
 실제로 하나의 코드 유닛으로 표현할 수 있는 한글 문자는 `length` 값이 `1`이 되는데요.
 두 개의 코드 유닛이 필요한 이모지는 그 값이 `2`가 됩니다.
 
@@ -186,7 +186,7 @@ void encodeUtf32(const Codepoint cp, char32_t *buf) {
 그러면 $n$번째 문자에 바로 접근이 가능할까요?
 문자의 개수가 코드 유닛의 개수와 일치하지 않는 현상은 앞서 본 적이 있는데요.
 UTF-32 인코딩 또한 그렇습니다.
-이전 글에서 봤던 노말라이즈<AltLang>normalize</AltLang> 문제처럼, 하나의 문자가 두 개의 코드 포인트로 표현될 수 있는 경우가 그 원인이 될 수 있습니다.
+이전 글에서 봤던 노말라이즈<L>normalize</L> 문제처럼, 하나의 문자가 두 개의 코드 포인트로 표현될 수 있는 경우가 그 원인이 될 수 있습니다.
 
 
 
@@ -195,9 +195,9 @@ UTF-32 인코딩 또한 그렇습니다.
 여기까지 UTF 인코딩과 유니코드를 알아보았습니다.
 특히 UTF-16 인코딩에서 서로게이트 블록의 역할을 포함해서요.
 
-한편 인코딩에서 바이트 오더<AltLang>byte order</AltLang>, 즉 [엔디안][wp-endian]<AltLang>endianness</AltLang> 문제가 있는데요.
+한편 인코딩에서 바이트 오더<L>byte order</L>, 즉 [엔디안][wp-endian]<L>endianness</L> 문제가 있는데요.
 사실 UTF-16 인코딩은 각 엔디안을 위한 UTF-16LE, UTF-16BE 인코딩이 따로 존재합니다.
-아니면 [바이트 오더 마크][wp-bom]<AltLang>byte order mark</AltLang>, 즉 BOM 문자를 맨 앞에 둬서 바이트 순서를 나타내는 방법도 있습니다.
+아니면 [바이트 오더 마크][wp-bom]<L>byte order mark</L>, 즉 BOM 문자를 맨 앞에 둬서 바이트 순서를 나타내는 방법도 있습니다.
 이 모든 얘기는 UTF-32 인코딩도 마찬가지고요.
 따라서 실제로 UTF 인코딩을 처리하는 일은 이런 케이스를 고려할 필요가 있습니다.
 

@@ -5,8 +5,8 @@ summary: "스택을 이용해 만들어보는 계산기"
 thumbnail: "./_figs/thumbnail.webp"
 ---
 
-import AltLang from "@/components/post/AltLang.astro";
-import FigureV2 from "@/components/post/FigureV2.astro";
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 
 import fig1 from "./_figs/fig1.svg";
@@ -23,7 +23,7 @@ import fig5 from "./_figs/fig5.svg";
 이런 건 어떻게 계산하는 것일까요?
 사칙연산으로 확장했을 뿐인데, 두 숫자의 덧셈보다 훨씬 어려운 문제가 됩니다.
 
-이를 구현하는 한 가지 방법으로 스택<AltLang>Stack</AltLang>을 이용해 계산기를 만들 수 있습니다.
+이를 구현하는 한 가지 방법으로 스택<L>Stack</L>을 이용해 계산기를 만들 수 있습니다.
 
 
 
@@ -35,7 +35,7 @@ import fig5 from "./_figs/fig5.svg";
 그런데 이 괄호가 정말 필요할까요?
 
 `2+3` 대신 `23+`을 쓰는 식으로, 연산자를 뒤에 놓아봅시다.
-후위 표기식<AltLang>postfix expression</AltLang>이라고 불리는 이것은 복잡해 보일 수 있지만, 곧 만나볼 이유 때문에 계산하기가 쉬워집니다.
+후위 표기식<L>postfix expression</L>이라고 불리는 이것은 복잡해 보일 수 있지만, 곧 만나볼 이유 때문에 계산하기가 쉬워집니다.
 
 문제: `1*(2+3)`은 어떻게 바뀌게 될까요?
 
@@ -58,7 +58,7 @@ import fig5 from "./_figs/fig5.svg";
 
 이런 후위 표기식을 계산하는 계산기를 만들어 봅시다.
 
-그런데 사람은 `1+2` 같은 식, 즉 중위 표기식<AltLang>infix expression</AltLang>을 쓰는 것이 익숙할 텐데요.
+그런데 사람은 `1+2` 같은 식, 즉 중위 표기식<L>infix expression</L>을 쓰는 것이 익숙할 텐데요.
 따라서 이것을 후위 표기식으로 바꾸는 작업도 필요합니다.
 
 이 모든 작업은 스택만 가지고 처리할 수 있습니다.
@@ -90,12 +90,12 @@ function evaluateInfix(infix)
 
 예를 들어 `12+`로 확인해볼 수 있습니다.
 
-<FigureV2 src={fig1} alt="Calculating postfix expression 12+ with stack">
+<Figure src={fig1} alt="Calculating postfix expression 12+ with stack">
   <FigureCaption slot="caption">그림 1. 숫자를 스택에 넣고, 더하기 기호를 만났을 때 꺼내서 덧셈 결과인 3을 넣습니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
-여태까지 숫자<AltLang>number</AltLang>와 연산자<AltLang>operator</AltLang>를 구분해서 불렀는데요.
-이제부터 둘 다 토큰<AltLang>token</AltLang>이라고 부르기로 합시다.
+여태까지 숫자<L>number</L>와 연산자<L>operator</L>를 구분해서 불렀는데요.
+이제부터 둘 다 토큰<L>token</L>이라고 부르기로 합시다.
 그러면 계산기는 토큰을 읽으면서 스택을 조작하는 기계에 불과하게 됩니다.
 
 여기까지의 아이디어를 수도코드로 정리하면 이렇게 됩니다.
@@ -180,9 +180,9 @@ def applyOperator(operator, num1, num2):
 
 `1+2`를 예로 들면, 원하는 결과인 `12+`를 얻게 됩니다.
 
-<FigureV2 src={fig2} alt="Converting to postfix expression with stack">
+<Figure src={fig2} alt="Converting to postfix expression with stack">
   <FigureCaption slot="caption">그림 2. 연산자를 읽을 때마다 스택에 넣고, 식을 끝까지 읽었을 때 꺼냅니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 그렇지만 연산자가 더 많으면 어떻게 할까요?
 
@@ -213,9 +213,9 @@ def applyOperator(operator, num1, num2):
 
 `1+2-3`에서 더하기를 먼저해야 하기 때문에, `+` 기호를 먼저 꺼내서 출력으로 내보내 숫자 `2` 옆에 둬야 합니다.
 
-<FigureV2 src={fig3} alt="Handling operators having the same priority">
+<Figure src={fig3} alt="Handling operators having the same priority">
   <FigureCaption slot="caption">그림 3. 우선순위가 '같은' 연산자 처리하기. 뺄셈 기호를 만났을 때 덧셈 기호를 꺼냅니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 이처럼 덧셈 기호 `+`와 뺄셈 기호 `-`는 먼저온 기호를 더 우선해야 합니다.
 마찬가지로 곱셈과 나눗셈 기호도 그렇고요.
@@ -234,9 +234,9 @@ def applyOperator(operator, num1, num2):
 덧셈 기호는 꺼내지 않고 그 위에 곱셈 기호를 둡니다.
 그래야 다 읽고나서 전부 꺼낼 때 곱셈 기호가 먼저 나오니까요.
 
-<FigureV2 src={fig4} alt="Answer to the second exercise">
+<Figure src={fig4} alt="Answer to the second exercise">
   <FigureCaption slot="caption">그림 4. 우선순위가 다른 경우 처리하기. '급한' 기호를 먼저 꺼냅니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 ## 괄호를 만났을 때
 
@@ -255,9 +255,9 @@ def applyOperator(operator, num1, num2):
 예를 들어 `1*(2+3)`를 봅시다.
 닫는 괄호를 만나면, 덧셈 기호만 먼저 꺼내 숫자 옆에 붙이게 됩니다.
 
-<FigureV2 src={fig5} alt="Handling parentheses">
+<Figure src={fig5} alt="Handling parentheses">
   <FigureCaption slot="caption">그림 5. 괄호를 만난 경우 처리하기. 괄호는 출력에 내보내지 않고 버립니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 이러면 괄호 안의 식을 먼저 변환합니다.
 이는 적절하게 바꿨다는 뜻입니다.
@@ -368,7 +368,7 @@ def evaluateInfix(infix):
 # 마치며
 
 여기까지 간단한 계산기를 만들어 보았습니다.
-사실 이것은 다익스트라<AltLang>Edsger Dijkstra</AltLang>의 션팅 야드 알고리즘<AltLang>shunting yard algorithm</AltLang>을 구현한 것입니다.
+사실 이것은 다익스트라<L>Edsger Dijkstra</L>의 션팅 야드 알고리즘<L>shunting yard algorithm</L>을 구현한 것입니다.
 
 각 입력 문자는 기껏해야 두 번, 즉 스택에 넣고 뺄 때 처리되는데요.
 따라서 시간 복잡도는 입력 문자의 개수 $n$에 대해 $O(n)$이 되는 것을 확인할 수 있습니다.
@@ -377,7 +377,7 @@ def evaluateInfix(infix):
 
 사실 이 계산기에는 한 자리 수의 숫자밖에 받을 수 없다는 단점이 있습니다.
 왜 그럴 수 밖에 없었을까요?
-은연중에 숫자와 연산자를 토큰화<AltLang>tokenize</AltLang>하고 있었기 때문입니다.
+은연중에 숫자와 연산자를 토큰화<L>tokenize</L>하고 있었기 때문입니다.
 
 그러면 어떻게 그럴 수 있었을까요?
 문자 하나하나가 그 자체로 의미가 온전했기 때문에 따로 처리가 필요없었던 것입니다.

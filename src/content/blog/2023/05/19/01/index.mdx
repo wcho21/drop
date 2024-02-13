@@ -5,8 +5,8 @@ summary: "IEEE754 구현을 통해 살펴보는 부동소수점"
 thumbnail: "./_figs/thumbnail.webp"
 ---
 
-import AltLang from "@/components/post/AltLang.astro";
-import FigureV2 from "@/components/post/FigureV2.astro";
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 
 import fig1 from "./_figs/fig1.svg";
@@ -14,7 +14,7 @@ import fig2 from "./_figs/fig2.svg";
 import fig3 from "./_figs/fig3.svg";
 
 프로그래밍을 하다보면 `0.1 + 0.2`와 `0.3`이 같지 않다는 얘기를 들어보게 됩니다.
-자바스크립트 런타임인 노드<AltLang>Node.js</AltLang>에서 확인해볼 수 있는데요.
+자바스크립트 런타임인 노드<L>Node.js</L>에서 확인해볼 수 있는데요.
 
 ```
 $ node
@@ -22,7 +22,7 @@ $ node
 false
 ```
 
-파이썬<AltLang>Python</AltLang>에서도 확인해볼 수 있고요.
+파이썬<L>Python</L>에서도 확인해볼 수 있고요.
 
 ```
 $ python
@@ -46,7 +46,7 @@ False
 
 # 숫자 해부하기
 
-`0.1`과 같은 숫자를 비트<AltLang>bit</AltLang>로 표현하기 위해, 우리가 흔히 쓰는 하드웨어나 프로그래밍 언어는 [IEEE 754][wp-ieee754]라는 표준을 참고해서 부동소수점<AltLang>floating-point</AltLang>이라는 것을 구현하고 있습니다.
+`0.1`과 같은 숫자를 비트<L>bit</L>로 표현하기 위해, 우리가 흔히 쓰는 하드웨어나 프로그래밍 언어는 [IEEE 754][wp-ieee754]라는 표준을 참고해서 부동소수점<L>floating-point</L>이라는 것을 구현하고 있습니다.
 
 [wp-ieee754]: https://ko.wikipedia.org/wiki/IEEE_754
 
@@ -56,14 +56,14 @@ False
 
 숫자 $102.3$을 예로 들어봅시다.
 그런데 그 전에, 이 숫자를 다르게 말해봅시다. $1.023 \times 10^2$로요.
-[과학적 표기법][wp-sci]<AltLang>scientific notation</AltLang>이라고 불리는 이 방식은 숫자 하나를 항상 소수점 앞에 둡니다.
+[과학적 표기법][wp-sci]<L>scientific notation</L>이라고 불리는 이 방식은 숫자 하나를 항상 소수점 앞에 둡니다.
 
 [wp-sci]: https://ko.wikipedia.org/wiki/%EA%B3%BC%ED%95%99%EC%A0%81_%EA%B8%B0%EC%88%98%EB%B2%95
 
 부동소수점 비트 표현에선 이 10의 지수가 얼마인지가 중요한데요.
 여기서는 2가 됩니다.
 이렇게 과학적 표기법을 기준으로 말하면 이 지수가 유일하게 결정됩니다.
-이를 나중에 노말라이즈<AltLang>normalize</AltLang>한다고 부릅니다.
+이를 나중에 노말라이즈<L>normalize</L>한다고 부릅니다.
 
 십진법을 쓰면 맨 앞 숫자는 $9$까지 나올 수 있지만, 이진법을 쓴다면 $1$밖에 올 수 없습니다.
 그렇기 때문에 이진법을 쓰면 맨 앞 숫자를 따로 기억할 필요가 없어집니다.
@@ -73,11 +73,11 @@ False
 
 32비트 공간이 주어졌다고 해봅시다.
 세 부분으로 나눠볼건데요.
-부호<AltLang>sign</AltLang> $S$, 지수<AltLang>exponent</AltLang> $E$, 그리고 소수<AltLang>fraction</AltLang> $F$ 입니다.
+부호<L>sign</L> $S$, 지수<L>exponent</L> $E$, 그리고 소수<L>fraction</L> $F$ 입니다.
 
-<FigureV2 src={fig1} alt="Memory diagram">
+<Figure src={fig1} alt="Memory diagram">
   <FigureCaption slot="caption">그림 1. 메모리 다이어그램. 32비트를 세 부분으로 나누어 부호, 지수, 소수를 기록합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 방금의 예시 $1.023 \times 10^2$을 해부해서 여기에 넣어봅시다.
 
@@ -129,20 +129,20 @@ $0.0001\overline{1001}_{(2)}$와 같이 순환소수가 되니까요.
 
 메모리의 소수 부분 $F$는 23비트를 갖고 있는데요.
 
-<FigureV2 src={fig2} alt="Fraction part">
+<Figure src={fig2} alt="Fraction part">
   <FigureCaption slot="caption">그림 2. 메모리 소수 부분. 23자리의 이진법 소수를 기록합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 맨 앞 숫자는 항상 $1$이라고 했던 것을 기억하시나요?
 따라서 24자리의 이진수를 기록할 수 있게 됩니다.
 그런데 모든 십진수를 24자리의 이진수로 정확하게 바꿀 수 없으니, 적당한 근사값을 여기에 담게 됩니다.
 
 그런 근사값은 올리기를 할 수도, 버리기를 할 수도 있습니다.
-사실 라운딩 룰<AltLang>rounding rules</AltLang>이라는 이름으로 다양한 방법이 존재합니다.
+사실 라운딩 룰<L>rounding rules</L>이라는 이름으로 다양한 방법이 존재합니다.
 
 ## 지수의 바이어스
 
-보통 정수는 [2의 보수][wp-twos-compl]<AltLang>two's complement</AltLang>로 인코딩하는 경우가 많은데요.
+보통 정수는 [2의 보수][wp-twos-compl]<L>two's complement</L>로 인코딩하는 경우가 많은데요.
 여기서는 숫자 $0$을 위해 모든 비트를 `0`으로 둡니다.
 
 [wp-twos-compl]: https://ko.wikipedia.org/wiki/2%EC%9D%98_%EB%B3%B4%EC%88%98
@@ -151,7 +151,7 @@ $0.0001\overline{1001}_{(2)}$와 같이 순환소수가 되니까요.
 가장 작은 숫자을 위해 모든 비트를 `0`으로 둘 수 있습니다.
 우리의 지수 부분은 8비트이므로, $-127$이 그 가장 작은 숫자에 해당하는데요.
 이를 모든 비트가 `0`인 것에 대응시킬 수 있습니다.
-이때 지수가 $127$만큼 바이어스<AltLang>biased</AltLang> 되어있다고 부릅니다.
+이때 지수가 $127$만큼 바이어스<L>biased</L> 되어있다고 부릅니다.
 
 $$
 \begin{align*}
@@ -185,9 +185,9 @@ $$
 
 이제 부동소수점을 위한 32비트 메모리는 다음과 같이 채워져 있을 것입니다.
 
-<FigureV2 src={fig3} alt="Memory diagram example">
+<Figure src={fig3} alt="Memory diagram example">
   <FigureCaption slot="caption">그림 3. '-2.75'를 기록한 메모리 다이어그램. 맨 앞 1비트 부호 부분에는 음수의 의미로 1을, 8비트 지수 부분에는 바이어스된 값을, 23비트 소수 부분에는 이진법으로 기록합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 정말 그럴까요?
 C++ 코드로 아래처럼 확인해볼 수 있습니다.
@@ -203,9 +203,9 @@ std::cout << std::bitset<32>(*reinterpret_cast<int *>(&f)) << '\n';
 
 나눴던 세 부분의 순서를 보기 위해 다시 그림 1을 가져와봅시다.
 
-<FigureV2 src={fig1} alt="Memory diagram">
+<Figure src={fig1} alt="Memory diagram">
   <FigureCaption slot="caption">그림 1. 메모리 다이어그램</FigureCaption>
-</FigureV2>
+</Figure>
 
 이 순서가 주는 장점이 있습니다.
 이 순서대로만 비교하면 빨리 결과를 낼 수 있기 때문입니다.
