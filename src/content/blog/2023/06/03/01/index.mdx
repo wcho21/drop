@@ -6,8 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 series: "카탈란 넘버 계산과 패턴"
 ---
 
-import AltLang from "@/components/post/AltLang.astro";
-import FigureV2 from "@/components/post/FigureV2.astro";
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro";
 
@@ -25,12 +25,12 @@ $$
 대표적으로 바이너리 트리의 개수를 세는 문제를 살펴봤습니다.
 
 이것 말고도 다른 문제도 많은데요.
-여기서는 문제를 직접 해결하는 대신, 이미 해결한 문제로 환원<AltLang>reduce</AltLang>하는 방법으로 풀어볼 것입니다.
-어렵게 말하면 두 문제 사이에 일대일 대응, 즉 [바이젝션][wiki-bijection]<AltLang>bijection</AltLang>을 찾는 것입니다.
+여기서는 문제를 직접 해결하는 대신, 이미 해결한 문제로 환원<L>reduce</L>하는 방법으로 풀어볼 것입니다.
+어렵게 말하면 두 문제 사이에 일대일 대응, 즉 [바이젝션][wiki-bijection]<L>bijection</L>을 찾는 것입니다.
 
 [wiki-bijection]: https://en.wikipedia.org/wiki/Bijection
 
-우선 카탈란 넘버가 나타나는 또 다른 대표적인 문제인 [딕 패스][wolfram-dyck-path]<AltLang>Dyck path</AltLang> 문제를 보겠습니다.
+우선 카탈란 넘버가 나타나는 또 다른 대표적인 문제인 [딕 패스][wolfram-dyck-path]<L>Dyck path</L> 문제를 보겠습니다.
 그리고 이 문제로 쉽게 바꿔칠 수 있는 다른 문제들도 보겠습니다.
 
 [wolfram-dyck-path]: https://mathworld.wolfram.com/DyckPath.html
@@ -40,9 +40,9 @@ $$
 # 격자에서 최소 경로 세기
 
 딕 패스란 격자 위에서 대각선 위를 넘지 않고 반대편에 도달하는 최소 경로를 말하는데요.
-<FigureV2 src={fig1} alt="Dyck path">
+<Figure src={fig1} alt="Dyck path">
   <FigureCaption slot="caption">그림 1. 딕 패스 규칙. 경로가 대각선을 넘어가면 안 됩니다.</FigureCaption>
-</FigureV2>
+</Figure>
 그러면 가로 세로가 네 칸인 격자에서 딕 패스는 몇 개가 있을까요?
 물론 네 번째 카탈란 넘버인 $C_4 = 14$가 답이 될텐데요.
 하지만 직접 계산해봅시다.
@@ -50,9 +50,9 @@ $$
 출발 이후에 대각선과 처음으로 닿는 점 $B$를 주목해봅시다.
 그러면 이 점을 기준으로 두 개의 구역이 생깁니다.
 그리고 총 경로의 개수는 그 두 구역에서 만들 수 있는 경로의 개수를 곱한 것이 됩니다.
-<FigureV2 src={fig2} alt="Dyck path with cases">
+<Figure src={fig2} alt="Dyck path with cases">
   <FigureCaption slot="caption">그림 2. 딕 패스의 네 가지 패턴. 첫 번째로 대각선에 닿는 순간이 언제인지에 따라 나눕니다. 회색 삼각형은 더 작은 문제에 해당합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 가로와 세로의 길이가 $n$인 격자에 존재하는 딕 패스의 개수를 $C_n$이라고 해봅시다.
 그러면 원하는 답인 $C_4$는 다음과 같이 계산할 수 있는데요.
@@ -67,13 +67,13 @@ $$
 
 # 다른 문제로 바꿔치기
 
-여기 [투표 문제][wolfram-ballot-prob]<AltLang>ballot problem</AltLang>가 있습니다.
+여기 [투표 문제][wolfram-ballot-prob]<L>ballot problem</L>가 있습니다.
 두 후보 A, B를 둔 투표가 있고, 투표함에는 짝수 개, 즉 $2n$개의 표가 들어있는데요.
 
 개표를 진행할 때, B가 A를 추월하지 않고 동점으로 끝나는 경우의 수는 몇 가지일까요?
-<FigureV2 src={fig3} alt="Ballot problem rule">
+<Figure src={fig3} alt="Ballot problem rule">
   <FigureCaption slot="caption">그림 3. 추월이 없는 개표 진행. 오른쪽처럼 B는 A보다 더 많은 표를 가질 수 없습니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 ## 딕 패스 문제에 대응시키기
 
@@ -82,9 +82,9 @@ A의 표가 나올 때마다 오른쪽으로, B의 표는 위로 한 칸 움직�
 
 예를 들어 개표가 AAB까지 진행됐다고 해봅시다.
 그러면 딕 패스 그리기는 실패하는데요.
-<FigureV2 src={fig4} alt="Ballot as Dyck path">
+<Figure src={fig4} alt="Ballot as Dyck path">
   <FigureCaption slot="caption">그림 4. 개표가 AAB까지 진행됐을 때 그린 경로.</FigureCaption>
-</FigureV2>
+</Figure>
 
 이런 식으로 투표 문제에서 실패하는 경우는 딕 패스에서 실패하는 경우와 각각 대응됩니다.
 성공하는 경우도 마찬가지고요.
@@ -130,7 +130,7 @@ $i$번째 숫자는 $i$보다 크면 안됩니다.
 하지만 여태 했던 방법 그대로 해결할 수 있습니다.
 (힌트: $i$번째 숫자 $n$을 격자 위 점 $x=i$, $y=n$에 대응시켜서 딕 패스 문제로 바꿔보세요.)
 
-다른 문제로, [스택 소터블 퍼뮤테이션][wiki-ssp]<AltLang>stack-sortable permutation</AltLang>이 있습니다.
+다른 문제로, [스택 소터블 퍼뮤테이션][wiki-ssp]<L>stack-sortable permutation</L>이 있습니다.
 즉 스택 하나를 이용해 정렬할 수 있는 퍼뮤테이션, 즉 순열의 개수를 구하는 문제인데요.
 
 예를 들어 $n=3$인 경우, 퍼뮤테이션은 $123$을 섞은 $3!=6$개의 숫자들이 있습니다.
@@ -143,9 +143,9 @@ $$
 왜냐면 다음과 같이 $123$으로 정렬할 수 있기 때문입니다.
 첫 번째 숫자는 스택에 넣자마자 뺍니다.
 그리고 나머지 두 숫자를 차례로 스택에 넣은뒤 모두 빼면 $123$이 완성됩니다.
-<FigureV2 src={fig5} alt="Stack sortable permutation">
+<Figure src={fig5} alt="Stack sortable permutation">
   <FigureCaption slot="caption">그림 5. 스택으로 정렬하는 퍼뮤테이션 '132'. '32'를 스택으로 정렬할 수 있으므로, '132'는 '123'으로 정렬이 가능합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 이런식으로 정렬할 수 있는 퍼뮤테이션을 스택 소터블 퍼뮤테이션 이라고 합니다.
 
 그러면 $1$부터 $n$까지의 숫자로 만든 퍼뮤테이션 중에 몇 개가 스택 소터블 퍼뮤테이션일까요?
@@ -159,8 +159,8 @@ $$
 여태까지 살펴본 문제는 모두 카탈란 넘버가 답이었는데요.
 이상하리만큼 다양한 곳에서 등장하는 숫자였습니다.
 
-사실 역사를 거슬러 올라가보면 오일러<AltLang>Leonhard Euler</AltLang>와 함께 트라이앵귤레이션<AltLang>triangulation</AltLang>이라는, 다각형을 삼각형으로 나누는 방법의 개수를 구하는 문제가 등장하는데요.
-여기서 카탈란 넘버의 점화식 대신 클로즈드 폼<AltLang>closed-form</AltLang> 공식인 $C_n = \frac{1}{n+1}{2n \choose n}$을 얻을 수 있습니다.
+사실 역사를 거슬러 올라가보면 오일러<L>Leonhard Euler</L>와 함께 트라이앵귤레이션<L>triangulation</L>이라는, 다각형을 삼각형으로 나누는 방법의 개수를 구하는 문제가 등장하는데요.
+여기서 카탈란 넘버의 점화식 대신 클로즈드 폼<L>closed-form</L> 공식인 $C_n = \frac{1}{n+1}{2n \choose n}$을 얻을 수 있습니다.
 이는 다음에 기회가 되면 살펴보는 것으로 정리하겠습니다.
 
 ## 레퍼런스

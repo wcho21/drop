@@ -6,8 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 series: "카탈란 넘버 계산과 패턴"
 ---
 
-import AltLang from "@/components/post/AltLang.astro";
-import FigureV2 from "@/components/post/FigureV2.astro";
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 
 import fig1 from "./_figs/fig1.svg";
@@ -16,7 +16,7 @@ import fig3 from "./_figs/fig3.svg";
 import fig4 from "./_figs/fig4.svg";
 
 무언가를 세는 문제에서 광범위하게 나타나는 숫자가 있습니다.
-카탈란 넘버<AltLang>Catalan number</AltLang>라고 불리는 이 숫자들은 다음과 같은 수열, 즉 [시퀀스][wp-seq]<AltLang>sequence</AltLang>입니다.
+카탈란 넘버<L>Catalan number</L>라고 불리는 이 숫자들은 다음과 같은 수열, 즉 [시퀀스][wp-seq]<L>sequence</L>입니다.
 
 [wp-seq]: https://ko.wikipedia.org/wiki/%EC%88%98%EC%97%B4
 $$
@@ -24,14 +24,14 @@ $$
 $$
 이 숫자들이 무엇이 특별할까요?
 
-[바이너리 트리][wiki-bin-tree]<AltLang>binary tree</AltLang>의 개수를 세다보면 카탈란 넘버를 마주치게 됩니다.
+[바이너리 트리][wiki-bin-tree]<L>binary tree</L>의 개수를 세다보면 카탈란 넘버를 마주치게 됩니다.
 노드가 하나인 바이너리 트리는 한 가지, 두 개는 두 가지, 세 개는 다섯 가지가 있습니다.
 
 [wiki-bin-tree]: https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%A7%84_%ED%8A%B8%EB%A6%AC
 
-<FigureV2 src={fig1} alt="Five kinds of binary trees with three nodes">
+<Figure src={fig1} alt="Five kinds of binary trees with three nodes">
   <FigureCaption slot="caption">그림 1. 세 노드를 가진 트리들. 총 다섯 가지가 존재합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 나아가서 노드가 네 개라면 열 네 가지, 다섯 개라면 마흔 두 가지가 있습니다.
 여기서 카탈란 넘버가 나타납니다.
@@ -40,7 +40,7 @@ $$
 다각형을 삼각형으로 쪼개는 방법, 괄호를 짝을 맞춰 나열하는 방법, 두 후보가 있을 때 추월 없이 개표가 동점으로 끝나는 경우의 수 같은 것들이 있습니다.
 즉 이런 문제들은 본질적으로 같은 문제입니다.
 
-사실 카탈란 넘버 $C_n$는 다음과 같은 [점화식][wiki-recur-rel]<AltLang>recurrence relation</AltLang>으로 정의할 수 있습니다.
+사실 카탈란 넘버 $C_n$는 다음과 같은 [점화식][wiki-recur-rel]<L>recurrence relation</L>으로 정의할 수 있습니다.
 
 [wiki-recur-rel]: https://ko.wikipedia.org/wiki/%EC%A0%90%ED%99%94%EC%8B%9D
 $$
@@ -60,9 +60,9 @@ $$
 왼쪽 서브 트리를 주목해보세요.
 여기에 오는 노드 개수를 기준으로 케이스를 나눠봅시다.
 
-<FigureV2 src={fig2} alt="Four cases of binary tress with four nodes">
+<Figure src={fig2} alt="Four cases of binary tress with four nodes">
   <FigureCaption slot="caption">그림 2. 노드가 네 개일 때의 패턴. 왼쪽 서브 트리에 몇 개의 노드가 있는 지에 따라 나눕니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 노드가 $n$개일 때 트리의 개수를 $C_n$이라고 해봅시다.
 첫 번째 경우, 왼쪽에 $C_0$가지, 오른쪽에 $C_3$가지가 올 수 있기 때문에, 총 $C_0 \times C_3 $가지의 트리를 만들 수 있습니다.
@@ -89,16 +89,16 @@ $$
 하지만 팔이 교차되는 일은 없기를 바라는데요.
 그렇게 악수를 하는 방법은 몇 가지일까요?
 
-<FigureV2 src={fig3} alt="Successful and failed case of handshaking">
+<Figure src={fig3} alt="Successful and failed case of handshaking">
   <FigureCaption slot="caption">그림 3. 악수 문제. 오른쪽처럼 4번과 6번이 악수하면, 5번과 7번이 악수할 때 팔이 교차되므로 이런 경우는 답에서 제외됩니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 여기서도 더 작은 문제의 답을 이용해 풀 수 있는데요.
 이번에는 1번 사람이 누구와 악수하는지 기준으로 케이스를 나눠봅시다.
 
-<FigureV2 src={fig4} alt="Handshaking diagram">
+<Figure src={fig4} alt="Handshaking diagram">
   <FigureCaption slot="caption">그림 4. 악수의 네 가지 패턴. 1번 사람이 누구와 악수를 하는 지에 따라 나눕니다. 3번 사람과 악수한다면, 2번 사람은 악수할 사람이 없게 됩니다. 이런 이유로 홀수 번의 사람과 악수하는 경우는 제외합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 그러면 악수한 팔이 사람들을 두 그룹으로 나누는데요.
 따라서 악수하는 방법의 수는 각 그룹에서 악수하는 방법의 수를 곱한 것이 됩니다.
@@ -123,7 +123,7 @@ $$
 
 실제로 카탈란 넘버를 구해봅시다.
 간단한 방법으로, 카탈란 점화식을 이용해볼 수 있는데요.
-파이썬<AltLang>Python</AltLang>으로 구현하면 다음과 같습니다.
+파이썬<L>Python</L>으로 구현하면 다음과 같습니다.
 
 ```python
 def catalan(n)
@@ -138,7 +138,7 @@ def catalan(n)
 시간 복잡도가 $O(3^n)$인 점은 언급만 하고, 증명은 직접 해보는 문제로 남기겠습니다.
 
 그런데 위 코드는 똑같은 카탈란 넘버를 자꾸 계산하는데요.
-다이나믹 프로그래밍<AltLang>dynamic programming</AltLang>으로 중복 계산을 피할 수 있습니다.
+다이나믹 프로그래밍<L>dynamic programming</L>으로 중복 계산을 피할 수 있습니다.
 
 ```python
 def catalan(n)
@@ -162,10 +162,10 @@ def catalan(n)
 사실 카탈란 넘버는 $C_n = \frac{4n-2}{n+1} C_{n-1}$라는 점화식도 가집니다.
 이를 이용하면, 카탈란 넘버를 구하는 프로그램이 더 나은 시간 복잡도 $O(n)$을 갖도록 개선할 수 있는데요.
 구현은 직접 해보는 문제로 남겨두고, 왜 이런 점화식이 나타나는지는 다음에 기회가 된다면 살펴보겠습니다.
-카탈란 넘버의 클로즈드 폼<AltLang>closed-form</AltLang> 공식 $C_n = \frac{1}{n+1} {2n \choose n}$도 함께요.
+카탈란 넘버의 클로즈드 폼<L>closed-form</L> 공식 $C_n = \frac{1}{n+1} {2n \choose n}$도 함께요.
 
 카탈란 넘버가 나타나는 문제는 더 다양한데요.
-그 중에 [딕 패스][wolfram-dyck-path]<AltLang>Dyck path</AltLang> 문제는 주목해볼만 합니다.
+그 중에 [딕 패스][wolfram-dyck-path]<L>Dyck path</L> 문제는 주목해볼만 합니다.
 다른 문제들을 딕 패스 문제로 바꿔침으로써 답을 쉽게 얻을 수 있는데요.
 이것도 다음에 기회가 될 때 살펴보겠습니다.
 

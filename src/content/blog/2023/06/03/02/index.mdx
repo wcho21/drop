@@ -6,8 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 series: "카탈란 넘버 계산과 패턴"
 ---
 
-import AltLang from "@/components/post/AltLang.astro";
-import FigureV2 from "@/components/post/FigureV2.astro";
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro";
 
@@ -18,13 +18,14 @@ import fig4 from "./_figs/fig4.svg";
 import fig5 from "./_figs/fig5.svg";
 
 카탈란 넘버의 역사적 배경에 중요한 문제가 있는데요.
-[다각형 트라이앵귤레이션][wp-poly-tri]<AltLang>polygon triangulation</AltLang>이라고 불리는 이 문제는 다각형을 삼각형으로 나누는 방법을 세는 것이었습니다.
+[다각형 트라이앵귤레이션][wp-poly-tri]<L>polygon triangulation</L>이라고 불리는 이 문제는 다각형을 삼각형으로 나누는 방법을 세는 것이었습니다.
 
-여기서는 볼록 다각형<AltLang>convex polygon</AltLang>을 삼각형으로 나눠볼 건데요.
+여기서는 볼록 다각형<L>convex polygon</L>을 삼각형으로 나눠볼 건데요.
 예를 들어 오각형은 다음과 같이 다섯 가지 방법이 있습니다.
-<FigureV2 src={fig1} alt="Pentagon triangulation">
+
+<Figure src={fig1} alt="Pentagon triangulation">
   <FigureCaption slot="caption">그림 1. 오각형 트라이앵귤레이션. 삼각형으로 나누는 방법이 다섯 가지 존재합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 [wp-poly-tri]: https://en.wikipedia.org/wiki/Polygon_triangulation
 
@@ -33,11 +34,11 @@ import fig5 from "./_figs/fig5.svg";
 $$
 C_n = \frac{4n-2}{n+1} C_{n-1}
 $$
-그리고 이를 이용해 클로즈드 폼<AltLang>closed-form</AltLang>을 얻을 수 있습니다.
+그리고 이를 이용해 클로즈드 폼<L>closed-form</L>을 얻을 수 있습니다.
 $$
 C_n = \frac{1}{n+1} {2n \choose n}
 $$
-여기서 ${2n \choose n}$은 [이항 계수][wiki-bin-coeff]<AltLang>binomial coefficient</AltLang>입니다.
+여기서 ${2n \choose n}$은 [이항 계수][wiki-bin-coeff]<L>binomial coefficient</L>입니다.
 
 [wiki-bin-coeff]: https://ko.wikipedia.org/wiki/%EC%9D%B4%ED%95%AD_%EA%B3%84%EC%88%98
 
@@ -55,9 +56,9 @@ $$
 그러면 다른 꼭지점을 골라서 삼각형을 만들 수 있는데요.
 이 경우에는 세 가지 방법이 있습니다.
 
-<FigureV2 src={fig2} alt="Three cases for a given vertex">
+<Figure src={fig2} alt="Three cases for a given vertex">
   <FigureCaption slot="caption">그림 2. 한 모서리에 대한 세 가지 케이스. 1번과 5번 꼭지점이 어디와 삼각형을 이루는 지에 따라 케이스가 나눠집니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 이 삼각형은 양 옆에 두 다각형을 만드는데요.
 따라서 삼각형으로 나누는 방법의 수는 그 두 나뉜 다각형을 삼각형으로 나누는 방법의 수를 곱한 것이 됩니다.
@@ -72,9 +73,10 @@ $$
 $n$각형으로 쉽게 일반화할 수 있는데요.
 첫 번째 꼭지점과 $n$번째 꼭지점을 잇는 모서리를 봅시다.
 $k$번째 꼭지점과 삼각형을 만들면, 양 옆에 $k$각형과 $(n-k+1)$각형이 만들어집니다.
-<FigureV2 src={fig3} alt="General cases for a given vertex">
+
+<Figure src={fig3} alt="General cases for a given vertex">
   <FigureCaption slot="caption">그림 3. 오각형의 경우에서 일반적인 경우로 확장할 수 있습니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 이제 꼭지점의 범위 $2 \le k \le (n-1)$에 따라서 전부 더하게 되면, 트라이앵귤레이션의 답을 구할 수 있는데요.
 $$
@@ -94,9 +96,10 @@ $$
 
 다른 방법으로 케이스를 나눈다면 또다른 카탈란 점화식인 $C_n = \frac{4n-2}{n+1} C_{n-1}$을 얻을 수 있는데요.
 첫 번째 꼭지점에서 $k$번째 꼭지점까지 대각선을 긋는다고 생각해봅시다.
-<FigureV2 src={fig4} alt="Polygon divided">
+
+<Figure src={fig4} alt="Polygon divided">
   <FigureCaption slot="caption">그림 4. 대각선으로 나눠진 다각형. 1번 꼭지점에서 어디로 대각선을 긋는지에 따라 나눕니다. 이 대각선은 삼각형의 한 변으로 쓸 것입니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 그러면 두 개의 다각형으로 나뉘게 되는데요.
 이때 $k$는 범위를 $3 \le k \le (n-1)$으로 가지고요.
@@ -108,9 +111,10 @@ $$
 이 카운팅에는 중복이 있는데요.
 하나의 트라이앵귤레이션에 대해서 $2(n-3)$번 센 셈이 됩니다.
 왜일까요?
-<FigureV2 src={fig5} alt="Duplicate cases">
+
+<Figure src={fig5} alt="Duplicate cases">
   <FigureCaption slot="caption">그림 5. 하나의 트라이앵귤레이션에 대한 중복 케이스들. 오각형의 경우 하나의 트라이앵귤레이션마다 네 가지의 중복된 경우가 존재합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 먼저, 삼각형을 이루는 두 대각선 중 하나를 고른 경우에 대해 중복이 생기기 때문에, 대각선의 개수인 $(n-3)$으로 나눠야 하고요.
 한 대각선은 반대쪽 꼭지점에서 시작해 그을 수 있기 때문에, 여기에 둘로 나눠야하기 때문입니다.
 따라서 $2(n-3)$번 중복이 있게 됩니다.
@@ -154,7 +158,7 @@ $$
 위의 증명은 트라이앵귤레이션, 즉 기하학적인 해석으로부터 카탈란 넘버를 유도하고 있는데요.
 미적분을 이용해 같은 결론을 이끌어 낼 수 있습니다.
 
-먼저, 계수가 카탈란 넘버 $C_n$인, [제너레이팅 함수][wp-gen]<AltLang>generating function</AltLang>라고도 불리는 함수 $C(x) = \sum_{n=0}^{\infty} C_n x^n$를 생각해봅시다.
+먼저, 계수가 카탈란 넘버 $C_n$인, [제너레이팅 함수][wp-gen]<L>generating function</L>라고도 불리는 함수 $C(x) = \sum_{n=0}^{\infty} C_n x^n$를 생각해봅시다.
 그러면 다음과 같이 이차방정식으로부터 이 함수의 다른 표현을 얻게 됩니다.
 
 [wp-gen]: https://ko.wikipedia.org/wiki/%EC%83%9D%EC%84%B1%ED%95%A8%EC%88%98_(%EC%88%98%ED%95%99)
@@ -173,7 +177,7 @@ $$
 $$
 
 여기서 근의 공식에서 양의 부호는 버립니다.
-[테일러 전개][wp-taylor]<AltLang>Taylor expansion</AltLang>를 이용할 때, $\sqrt{1-4x} = 1 - 2x + \cdots$ 로부터, $\frac{1 + \sqrt{1 - 4x}}{2x} = \frac{1}{x} - 1 + \cdots$ 이므로 $\frac{1}{x}$이 나와 맞지 않기 때문입니다.
+[테일러 전개][wp-taylor]<L>Taylor expansion</L>를 이용할 때, $\sqrt{1-4x} = 1 - 2x + \cdots$ 로부터, $\frac{1 + \sqrt{1 - 4x}}{2x} = \frac{1}{x} - 1 + \cdots$ 이므로 $\frac{1}{x}$이 나와 맞지 않기 때문입니다.
 
 [wp-taylor]: https://ko.wikipedia.org/wiki/%ED%85%8C%EC%9D%BC%EB%9F%AC_%EA%B8%89%EC%88%98
 
@@ -229,14 +233,14 @@ $$
 결국 카탈란 넘버는 $C_n = \frac{1}{n+1} {2n \choose n}$이 된다는 결론까지의 여정이었는데요.
 
 여기서 카탈란 넘버의 근사값을 구할 수 있습니다.
-[스털링 근사][wiki-stirling]<AltLang>Stirling's approximation</AltLang>를 이용하면 이렇게 됩니다.
+[스털링 근사][wiki-stirling]<L>Stirling's approximation</L>를 이용하면 이렇게 됩니다.
 
 [wiki-stirling]: https://ko.wikipedia.org/wiki/%EC%8A%A4%ED%84%B8%EB%A7%81_%EA%B7%BC%EC%82%AC
 
 $$
 C_n = \frac{1}{n+1} \frac{(2n)!}{(n!)^2} \approx \frac{4^n}{n \sqrt{\pi n}} = O(4^n n^{-3/2})
 $$
-이렇게 [빅오 표기법][wp-big-o]<AltLang>big-O notation</AltLang>으로 카탈란 넘버의 어퍼 바운드<AltLang>upper bound</AltLang>를 알아낼 수 있었습니다.
+이렇게 [빅오 표기법][wp-big-o]<L>big-O notation</L>으로 카탈란 넘버의 어퍼 바운드<L>upper bound</L>를 알아낼 수 있었습니다.
 
 [wp-big-o]: https://en.wikipedia.org/wiki/Big_O_notation
 

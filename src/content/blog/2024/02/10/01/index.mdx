@@ -6,8 +6,8 @@ thumbnail: "./_figs/thumbnail.webp"
 series: "함수형 프로그래밍 언어 인터프리터 만들기"
 ---
 
-import AltLang from "@/components/post/AltLang.astro";
-import FigureV2 from "@/components/post/FigureV2.astro";
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro"
 import CalloutKal from "@/components/post/CalloutKal.astro";
@@ -19,32 +19,32 @@ import fig4 from "./_figs/fig4.svg";
 
 
 
-간단한 프로그래밍 언어를 구현하기 위해, <PostLink href="/2024/02/08/01">이전 글</PostLink>에서 소스 코드<AltLang>source code</AltLang>를 토큰<AltLang>token</AltLang>으로 만들었습니다.
-이 토큰으로 소스 코드를 파싱<AltLang>parsing</AltLang>, 즉 정해진 문법에 따라 해석할 수 있고, 그런 일을 하는 것을 파서<AltLang>parser</AltLang>라고 부릅니다.
+간단한 프로그래밍 언어를 구현하기 위해, <PostLink href="/2024/02/08/01">이전 글</PostLink>에서 소스 코드<L>source code</L>를 토큰<L>token</L>으로 만들었습니다.
+이 토큰으로 소스 코드를 파싱<L>parsing</L>, 즉 정해진 문법에 따라 해석할 수 있고, 그런 일을 하는 것을 파서<L>parser</L>라고 부릅니다.
 보통 프로그래밍에서 문법 오류로 실행이 안 된다면, 파서가 그런 사실을 파악했기 때문입니다.
 
-파서는 소스 코드를 해석한 결과로 추상 문법 트리<AltLang>abstract syntax tree</AltLang>를 만듭니다.
-인터프리터<AltLang>interpreter</AltLang>는 이 트리를 바로 어떤 값으로 평가<AltLang>evaluate</AltLang>할 수 있고요.
-컴파일러<AltLang>compiler</AltLang>는 기계가 이해할 수 있는 코드로 생성<AltLang>code generation</AltLang>할 수 있습니다.
+파서는 소스 코드를 해석한 결과로 추상 문법 트리<L>abstract syntax tree</L>를 만듭니다.
+인터프리터<L>interpreter</L>는 이 트리를 바로 어떤 값으로 평가<L>evaluate</L>할 수 있고요.
+컴파일러<L>compiler</L>는 기계가 이해할 수 있는 코드로 생성<L>code generation</L>할 수 있습니다.
 이렇게 문법 트리는 파서 다음 단계를 위한 인터페이스가 됩니다.
 
 파싱 자체는 이론적으로 거대한 주제이고 다양한 방법이 있습니다.
-여기서는 간단하지만 확장성이 높은 방법인 프랫 파서<AltLang>Pratt parser</AltLang>를 구현해보겠습니다.
+여기서는 간단하지만 확장성이 높은 방법인 프랫 파서<L>Pratt parser</L>를 구현해보겠습니다.
 
 
 
 # 바인딩 파워
 
 파서를 만들기 전에 구체적인 문법을 결정해야 합니다.
-그 중에 대표적인 문제로, 연산자<AltLang>operator</AltLang>의 우선 순위<AltLang>priority</AltLang>를 정해야 하는데요.
+그 중에 대표적인 문제로, 연산자<L>operator</L>의 우선 순위<L>priority</L>를 정해야 하는데요.
 사람은 `1+2*3` 같은 식을 볼 때, 곱셈부터 먼저 해야한다고 생각합니다.
 이를 곱셈이 더 높은 우선 순위를 가진다고 합니다.
 
-또한 연산자의 결합성<AltLang>associativity</AltLang>도 정해야 하는데요.
+또한 연산자의 결합성<L>associativity</L>도 정해야 하는데요.
 예를 들어 사람은 `1-2-3` 같은 식이 있을 때 왼쪽 뺄셈부터 먼저 합니다.
 즉 암묵적으로 `(1-2)-3` 처럼 해석합니다.
-이런 연산자를 왼쪽 결합<AltLang>left-associative</AltLang> 연산이라고 부르고요.
-반대로 오른쪽부터 계산하면 오른쪽 결합<AltLang>right-associative</AltLang> 연산이라고 합니다.
+이런 연산자를 왼쪽 결합<L>left-associative</L> 연산이라고 부르고요.
+반대로 오른쪽부터 계산하면 오른쪽 결합<L>right-associative</L> 연산이라고 합니다.
 
 ## 왼쪽 결합 연산
 
@@ -53,12 +53,12 @@ import fig4 from "./_figs/fig4.svg";
 덧셈 기호 `+`가 왼쪽과 오른쪽에 그런 '붙는 힘'을 가진다고 상상해봅시다.
 구체적으로 예를 들어 각각 `30`과 `31`로요.
 
-<FigureV2 src={fig1} alt="binding power for plus">
+<Figure src={fig1} alt="binding power for plus">
   <FigureCaption slot="caption">그림 1. 덧셈 기호의 바인딩 파워. 숫자 2는 왼쪽으로 붙어서 숫자 1과 덧셈을 이룹니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 그렇다면 숫자 `2`는 단순히 '붙는 힘'이 높은 쪽에 붙으면 됩니다.
-그 힘을 프랫 파서에서는 바인딩 파워<AltLang>binding power</AltLang>라고 부릅니다.
+그 힘을 프랫 파서에서는 바인딩 파워<L>binding power</L>라고 부릅니다.
 
 ## 우선 순위
 
@@ -67,9 +67,9 @@ import fig4 from "./_figs/fig4.svg";
 여기선 왼쪽과 오른쪽에 각각 `40`과 `41` 정도면 될 것입니다.
 바인딩 파워는 값 자체보다 상대적인 차이에 의미가 있다는 점을 참고하세요.
 
-<FigureV2 src={fig2} alt="binding powers for plus and asterisk">
+<Figure src={fig2} alt="binding powers for plus and asterisk">
   <FigureCaption slot="caption">그림 2. 덧셈과 곱셈 기호의 바인딩 파워. 숫자 2는 오른쪽으로 붙어서 곱셈을 이룹니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 숫자 `2`는 여전히 더 높은 바인딩 파워에 붙었을 뿐입니다.
 
@@ -89,9 +89,9 @@ import fig4 from "./_figs/fig4.svg";
 즉 대입 연산은 사칙 연산보다 바인딩 파워가 낮아야 합니다.
 따라서 여기서는 왼쪽과 오른쪽에 각각 `11`과 `10`을 주겠습니다.
 
-<FigureV2 src={fig3} alt="binding powers for equal sign">
+<Figure src={fig3} alt="binding powers for equal sign">
   <FigureCaption slot="caption">그림 3. 대입 연산 기호의 바인딩 파워. 식별자 b는 오른쪽으로 붙어서 숫자 1과 대입 연산을 이룹니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 다른 예시로, 함수를 정의하는 화살표 연산 `->` 또한 오른쪽 결합 연산이어야 합니다.
 `a -> b -> a+b`와 같은 코드는 `a -> (b -> a+b)` 처럼 해석해야 하니까요.
@@ -161,7 +161,7 @@ print(plus)
 # 덧셈 표현식 파서 만들기
 
 이제 `1+2+3` 와 같은 식을 파싱하려는데요.
-이렇게 파싱할 단위를 표현식<AltLang>expression</AltLang>이라고 부르겠습니다.
+이렇게 파싱할 단위를 표현식<L>expression</L>이라고 부르겠습니다.
 일단 하나의 표현식을 파싱해봅시다.
 그러면 이후 여러 개의 표현식으로 간단히 확장할 수 있습니다.
 
@@ -172,9 +172,9 @@ print(plus)
 파서는 여태까지 해석한 결과인 문법 트리를 유지할 것이고, 그 루트 노드를 `top` 노드라고 부르겠습니다.
 그러면 `+` 같은 연산자 토큰을 새로운 `top` 노드로 파싱하고, 이전 결과를 그 자식으로 갖다 붙입니다.
 
-<FigureV2 src={fig4} alt="parsing additions">
+<Figure src={fig4} alt="parsing additions">
   <FigureCaption slot="caption">그림 4. 표현식 파싱. 첫 부분으로 숫자 1을 읽고 숫자 노드를 생성합니다. 이후 덧셈 기호 +를 읽을 때마다 탑 노드를 새로 만들고, 이전 결과를 자식으로 합니다.</FigureCaption>
-</FigureV2>
+</Figure>
 
 ## 준비하기
 
@@ -269,7 +269,7 @@ class Parser:
 그런데 이전에 처리한 부분이 없기 때문에, 가장 낮은 바인딩 파워를 넘깁니다.
 즉 이쪽에 토큰이 붙지 말라는 뜻입니다.
 
-이렇게 만든 파서는 이전에 만든 토크나이저<AltLang>tokenizer</AltLang>와 함께 다음과 같이 사용할 수 있습니다.
+이렇게 만든 파서는 이전에 만든 토크나이저<L>tokenizer</L>와 함께 다음과 같이 사용할 수 있습니다.
 
 ```python
 input = "1"
@@ -489,7 +489,7 @@ class BindingPowers:
 ```
 
 앞서 언급한 대로, 여는 괄호를 하나의 연산자로 처리합시다.
-뒤에 오는 호출 인자<AltLang>argument</AltLang>는 어떤 표현식이든 될 수 있습니다.
+뒤에 오는 호출 인자<L>argument</L>는 어떤 표현식이든 될 수 있습니다.
 예를 들어 `f(1+2)`에서 나타나는 덧셈처럼요.
 그리고 닫는 괄호가 오기를 기대한 뒤, 호출 노드를 생성해 리턴합니다.
 
@@ -597,17 +597,17 @@ print(node)
 이를 통해 예를 들어 `1+2`은 `3`으로 평가해 간단한 인터프리터를 완성하게 됩니다.
 
 이 글에서 '표현식 첫 부분'과 '표현식 나머지'라는 표현을 썼는데요.
-사실 프랫 파서는 각각을 'nud'<AltLang>null denotation</AltLang>와 'led'<AltLang>left denotation</AltLang>라는 이름으로 부릅니다.
+사실 프랫 파서는 각각을 'nud'<L>null denotation</L>와 'led'<L>left denotation</L>라는 이름으로 부릅니다.
 이는 왼쪽에 다른 표현식이 올 수 있는지를 기준으로 나눕니다.
 본문에서는 쉬운 이해를 위해 다른 이름으로 바꾼 부분입니다.
 
 앞에서 언급했던 것처럼, 파싱은 다양한 방법이 있습니다.
-대표적으로는 LL(k) 문법이라고 부르는 문맥 자유 문법<AltLang>context-free grammar</AltLang>을 만들어 파서를 구현할 수 있습니다.
+대표적으로는 LL(k) 문법이라고 부르는 문맥 자유 문법<L>context-free grammar</L>을 만들어 파서를 구현할 수 있습니다.
 그런 문법을 파싱하는 것을 LL 파서라고 부르는데요.
-이 문법은 흔히 BNF<AltLang>Backus–Naur form</AltLang>라는 형식으로 기술할 수 있고, 이를 바탕으로 최대 k번의 토큰 미리보기를 통해 백트래킹 없이 재귀적으로 파서를 구현하게 됩니다.
+이 문법은 흔히 BNF<L>Backus–Naur form</L>라는 형식으로 기술할 수 있고, 이를 바탕으로 최대 k번의 토큰 미리보기를 통해 백트래킹 없이 재귀적으로 파서를 구현하게 됩니다.
 프랫 파서와는 다른 접근 방식으로서 이정도의 언급으로 정리하겠습니다.
 
-여기까지 생략된 부분을 포함한 코드는 [지스트][gist]에서 볼 수 있습니다.
+여기까지 생략된 부분을 포함한 코드는 [지스트][gist]<L>Gist</L>에서 볼 수 있습니다.
 
 [gist]: https://gist.github.com/wcho21/1e344fdb9497e6e1bd6e4e20c4f23c66
 
@@ -616,13 +616,13 @@ print(node)
 - _Writing An Interpreter In Go_ (Thorsten Ball, 2020), 또는 _밑바닥부터 만드는 인터프리터 in Go_ (2021)
 
 - _Beautiful Code_ (Andy Oram, Greg Wilson, 2007):
-  자바스크립트<AltLang>JavaScript</AltLang>로 구현한 프랫 파서가 아홉번째 챕터에 소개되어 있습니다.
+  자바스크립트<L>JavaScript</L>로 구현한 프랫 파서가 아홉번째 챕터에 소개되어 있습니다.
 
 - _Top Down Operator Precedence_ (Vaughan R. Pratt, 1973)
 
 - [crockford.com][crockford]: 위 Beautiful Code 책의 내용과 같습니다.
 
-- [matklad.github.io][matklad]: 러스트<AltLang>Rust</AltLang>로 구현한 프랫 파서가 소개되어 있습니다.
+- [matklad.github.io][matklad]: 러스트<L>Rust</L>로 구현한 프랫 파서가 소개되어 있습니다.
 
 
 

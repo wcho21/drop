@@ -5,8 +5,8 @@ summary: "모듈러 연산으로 알아보는 2의 보수"
 thumbnail: "./_figs/thumbnail.webp"
 ---
 
-import AltLang from "@/components/post/AltLang.astro";
-import FigureV2 from "@/components/post/FigureV2.astro";
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 
 import fig1 from "./_figs/fig1.svg";
@@ -15,7 +15,7 @@ import fig2 from "./_figs/fig2.svg";
 
 
 컴퓨터가 숫자를 기억할 때 크게 두 가지 방법이 있습니다.
-부호가 있는<AltLang>signed</AltLang> 수와 부호가 없는<AltLang>unsigned</AltLang> 수인데요.
+부호가 있는<L>signed</L> 수와 부호가 없는<L>unsigned</L> 수인데요.
 C 언어와 같은 프로그래밍 언어는 이 둘을 데이터 타입으로서 명시적으로 구분합니다.
 
 ```c
@@ -23,14 +23,14 @@ signed int a = 42; // signed integer
 unsigned int b = 42; // unsigned integer
 ```
 
-컴퓨터는 부호가 있는 수를 위해 2의 보수<AltLang>two's complement</AltLang>를 이용할 수 있습니다.
+컴퓨터는 부호가 있는 수를 위해 2의 보수<L>two's complement</L>를 이용할 수 있습니다.
 구체적으로는 어떤 숫자 $n$의 2의 보수란, 충분히 크도록 선택한 2의 제곱 수 $2^M$에서 $n$을 뺀 수로 정의합니다.
 
 그런데 여기에는 $2^M$를 $0$으로 취급하겠다는 가정이 숨어있습니다.
-왜냐면 그 수 $2^M$은 정수 오버플로우<AltLang>integer overflow</AltLang>때문에 $0$으로 표현할 수 밖에 없도록 고를 테니까요.
+왜냐면 그 수 $2^M$은 정수 오버플로우<L>integer overflow</L>때문에 $0$으로 표현할 수 밖에 없도록 고를 테니까요.
 
-그렇다면 모듈러 연산<AltLang>modular arithmetic</AltLang>이 이 자리에 알맞게 됩니다.
-이것은 모듈로<AltLang>module</AltLang>라고 하는 수를 두고, 그 수로 나눈 나머지 같으면 합동<AltLang>congruent</AltLang>인 수, 즉 같은 종류로 취급합니다.
+그렇다면 모듈러 연산<L>modular arithmetic</L>이 이 자리에 알맞게 됩니다.
+이것은 모듈로<L>module</L>라고 하는 수를 두고, 그 수로 나눈 나머지 같으면 합동<L>congruent</L>인 수, 즉 같은 종류로 취급합니다.
 예를 들어 $2^M$을 모듈로로 선택하면, 이를 숫자 $0$과 합동인 수로 보겠다는 뜻입니다.
 
 이렇게 2의 보수를 바라보면, 부호가 없는 수의 연산도 사실상 똑같은 모듈러 연산 중 하나일 뿐이라는 것을 알게 됩니다.
@@ -110,16 +110,16 @@ $$
 
 예를 들어, 부호가 없는 수는 앞서 언급한대로 $n=0$ 일 때의 합동 수를 선택하고요.
 
-<FigureV2 src={fig1} alt="unsigned number">
+<Figure src={fig1} alt="unsigned number">
   <FigureCaption slot="caption">그림 1. 부호가 없는 수로 해석하는 비트 표현.</FigureCaption>
-</FigureV2>
+</Figure>
 
 부호가 있는 수는 가장 왼쪽 비트가 `1`인 비트 표현에 대해 $n=1$ 일 때의 합동 수를 선택합니다.
 그러면 가장 왼쪽 비트가 마치 부호를 결정하는 것처럼 생각할 수 있습니다.
 
-<FigureV2 src={fig2} alt="signed number">
+<Figure src={fig2} alt="signed number">
   <FigureCaption slot="caption">그림 2. 부호가 있는 수로 해석하는 비트 표현.</FigureCaption>
-</FigureV2>
+</Figure>
 
 이는 비트 표현 `1000`의 값을, 많은 음수 중에 하필 $-8$로 선택한 이유가 됩니다.
 
@@ -210,7 +210,7 @@ $$
 그리고 이 연산을 2의 보수 뿐만 아니라, 부호가 없는 수에도 일반적으로 적용할 수 있었습니다.
 즉 부호가 있거나 없거나 나머지를 구한다고 생각해보면, 항상 똑같은 방법으로 계산이 가능했습니다.
 
-정수<AltLang>integer</AltLang>를 취급하는 컴퓨터는 이런 정수와 관련된 이론, 즉 정수론<AltLang>number theory</AltLang>과 밀접한 관련이 있을 수 밖에 없는데요.
+정수<L>integer</L>를 취급하는 컴퓨터는 이런 정수와 관련된 이론, 즉 정수론<L>number theory</L>과 밀접한 관련이 있을 수 밖에 없는데요.
 모듈러 연산은 정수론에서 흔하게 사용되는 연산이기 때문에, 모듈러 연산에 대한 참고 자료는 정수론을 다루는 자료에서 쉽게 찾아볼 수 있습니다.
 
 ## 레퍼런스
