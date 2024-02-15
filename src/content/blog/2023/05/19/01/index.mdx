@@ -3,6 +3,7 @@ title: "부동소수점 비교 연산 구현해보기"
 date: 2023-05-19T21:00:00+09:00
 summary: "IEEE754 구현을 통해 살펴보는 부동소수점"
 thumbnail: "./_figs/thumbnail.webp"
+series: "부동소수점 구현하기"
 ---
 
 import L from "@/components/post/AltLang.astro";
@@ -123,7 +124,7 @@ $$
 $$
 
 따라서 $0.5_{(10)}$는 부동소수점으로 정확하게 표현할 수 있지만, $0.1_{(10)}$은 그렇지 않게 됩니다.
-$0.0001\overline{1001}_{(2)}$와 같이 순환소수가 되니까요.
+$0.0\overline{0011}_{(2)}$와 같이 순환소수가 되니까요.
 
 ## 비트로 인코딩하기
 
@@ -192,8 +193,8 @@ $$
 이는 다음 C++ 코드처럼 확인해볼 수 있습니다.
 
 ```cpp
-f1 = -2.75;
-string b = bitset<32>(*reinterpret_cast<int *>(&f1)).to_string();
+float f = -2.75;
+string b = bitset<32>(*reinterpret_cast<int *>(&f)).to_string();
 cout << "S: " << b[0] << ", "
      << "E: " << b.substr(1, 8) << ", "
      << "F: " << b.substr(9) << "\n";
@@ -262,7 +263,7 @@ function equal(a, b)
 
 ```python
 class Float:
-    def __init__(self, sign, exp, frac):
+    def __init__(self, sign: int, exp: int, frac: int):
         self.sign = sign
         self.exp = exp
         self.frac = frac
@@ -272,9 +273,10 @@ class Float:
 이 부분은 수도코드의 구현입니다.
 
 ```python
-    def __eq__(self, other):
-        if self.isZero() and other.isZero():
-            return True
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Float):
+            raise Exception("not comparable")
+
         if self.sign != other.sign:
             return False
         if self.exp != other.exp:
@@ -287,7 +289,7 @@ class Float:
 여기서 쓰인 보조 메소드 `isZero()`는 지수와 소수가 둘 다 `0`인지 검사하는 것으로 만듭니다.
 
 ```python
-    def isZero(self):
+    def isZero(self) -> bool:
         return self.exp == 0 and self.frac == 0
 ```
 
