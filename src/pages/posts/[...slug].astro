@@ -36,7 +36,7 @@ const { title, summary, date } = entry.data;
 const { Content } = await entry.render();
 ---
 
-<Base pageTitle={title} image={entry.data.thumbnail}>
+<Base pageTitle={title} desc={summary} image={entry.data.thumbnail} url={href}>
   <div class="text-gray-800">
     <div>
       <header class="mb-12 pt-12 font-serif border-t-8 border-gray-800">
