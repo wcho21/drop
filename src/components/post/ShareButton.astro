@@ -1,0 +1,73 @@
+---
+import Icon from "../icon/Share.astro";
+
+interface Props {
+  url: string,
+  title: string,
+}
+
+const { url, title } = Astro.props;
+---
+
+<div class="relative block">
+  <button class="share-button-component cursor-pointer py-1.5 px-3">
+    <Icon />
+  </button>
+  <div class="share-button-component-tooltip font-light font-[12px] md:font-[14px]">
+    <p>Copied</p>
+  </div>
+</div>
+
+<style>
+  .share-button-component-tooltip {
+    @apply w-max text-center absolute top-full left-1/2 -translate-x-1/2;
+    @apply bg-gray-100 py-1.5 px-3 rounded-md text-gray-600 text-[12px] md:text-[14px];
+    @apply invisible opacity-0;
+    transition: all 0.4s;
+  }
+  .share-button-component-tooltip-show {
+    @apply visible opacity-100;
+  }
+</style>
+
+<script define:vars={{ url, title }}>
+  const invokeShareDialog = async (url, title) => {
+    if (navigator.share === undefined) {
+      return false;
+    }
+
+    await navigator.share({ title, url });
+    return true;
+  };
+
+  const copyToClipboard = async (url) => {
+    await navigator.clipboard.writeText(url);
+  };
+
+  const tooltips = document.querySelectorAll(".share-button-component-tooltip");
+  document.querySelectorAll(".share-button-component").forEach((target, i) => {
+    let timeoutHandler = null;
+
+    target.addEventListener("click", async () => {
+      if (timeoutHandler !== null) {
+        tooltips[i].classList.toggle("share-button-component-tooltip-show");
+        clearTimeout(timeoutHandler);
+      }
+
+      const shared = await invokeShareDialog(url, title);
+      if (shared) {
+        return;
+      }
+
+      // try fallback if dialog not working
+
+      copyToClipboard(url);
+      tooltips[i].classList.toggle("share-button-component-tooltip-show");
+
+      timeoutHandler = setTimeout(() => {
+        tooltips[i].classList.toggle("share-button-component-tooltip-show");
+        timeoutHandler = null;
+      }, 1500);
+    });
+  });
+</script>
