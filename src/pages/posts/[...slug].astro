@@ -2,6 +2,8 @@
 import Base from "@/layouts/Base.astro";
 import ArticleCard from "@/components/page/ArticleCard.astro";
 import Footer from "@/components/layout/Footer.astro";
+import Share from "@/components/post/ShareButton.astro";
+import Home from "@/components/icon/Home.astro";
 import Heading1 from "@/components/core/Heading1.astro";
 import { articles } from "@/scripts/collections";
 import { formatDate } from "@/scripts/utils/formatters";
@@ -29,11 +31,12 @@ interface Props {
 }
 
 const { entry, prevEntry, nextEntry } = Astro.props;
+const { href } = Astro.url;
 const { title, summary, date } = entry.data;
 const { Content } = await entry.render();
 ---
 
-<Base pageTitle={title}>
+<Base pageTitle={title} image={entry.data.thumbnail}>
   <div class="text-gray-800">
     <div>
       <header class="mb-12 pt-12 font-serif border-t-8 border-gray-800">
@@ -47,6 +50,12 @@ const { Content } = await entry.render();
       </main>
     </div>
 
+    <div class="my-12 flex">
+      <div class="mx-auto">
+        <Share url={href} title={title} />
+      </div>
+    </div>
+
     <nav id="post-nav" class="my-12 pt-12 border-t border-gray-800">
       {
         nextEntry && <ArticleCard article={nextEntry} />
@@ -55,10 +64,11 @@ const { Content } = await entry.render();
         prevEntry && <ArticleCard article={prevEntry} />
       }
       <div class="mt-4">
-        <a href="/" class="block py-1.5 px-3 rounded-sm font-light mx-auto w-fit border border-gray-800">Home</a>
+        <a href="/" class="block py-1.5 px-3 mx-auto w-fit">
+          <Home />
+        </a>
       </div>
     </nav>
-
     <div class="my-12 pt-12 border-t border-gray-800">
       <Footer />
     </div>
