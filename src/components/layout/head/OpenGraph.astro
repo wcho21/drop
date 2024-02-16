@@ -1,6 +1,25 @@
-<meta property="og:title" content="Drop" />
-<meta property="og:image" content="/logo.png" />
-<meta property="og:image:width" content="512" />
-<meta property="og:image:height" content="512" />
+---
+interface Image {
+  src: string,
+  width: number,
+  height: number,
+}
+
+interface Props {
+  title?: string,
+  image?: Image,
+}
+
+const { title, image } = Astro.props;
+
+const defaultTitle = "Drop";
+const defaultDescription = "A magazine about computation";
+const defaultImage: Image = { src: "/logo.png", width: 512, height: 512 };
+---
+
+<meta property="og:title" content={title ?? defaultTitle} />
+<meta property="og:image" content={image?.src ?? defaultImage.src} />
+<meta property="og:image:width" content={String(image?.width ?? defaultImage.width)} />
+<meta property="og:image:height" content={String(image?.height ?? defaultImage.height)} />
 <meta property="og:url" content="https://drop.rooi.dev" />
-<meta property="og:description" content="A magazine about computation." />
+<meta property="og:description" content={defaultDescription} />
