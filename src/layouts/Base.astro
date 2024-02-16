@@ -8,7 +8,8 @@ import Katex from "@/components/layout/head/Katex.astro";
 import config from "@/config";
 
 interface Props {
-  pageTitle: string;
+  pageTitle: string,
+  desc?: string,
   image?: {
     src: string,
     width: number,
@@ -16,7 +17,7 @@ interface Props {
   },
   url: string,
 }
-const { pageTitle, image, url } = Astro.props;
+const { pageTitle, desc, image, url } = Astro.props;
 
 const siteTitle = config.app.title;
 const titleSep = config.app.titleSep;
@@ -28,7 +29,7 @@ const title = makeTitle(pageTitle, siteTitle, titleSep);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <OpenGraph title={title} image={image} url={url} />
+    <OpenGraph title={title} desc={desc} image={image} url={url} />
     <Favicons />
     <Fonts />
     <Katex />
