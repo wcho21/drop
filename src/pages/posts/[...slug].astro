@@ -110,11 +110,21 @@ const { Content } = await entry.render();
     @apply text-blue-500;
   }
 
-  #post-main > ul {
+  #post-main > ul,
+  #post-main > ol {
     @apply ml-6;
   }
 
+  #post-main > ul > li,
+  #post-main > ol > li {
+    @apply my-2;
+  }
+
+  #post-main > ol > li {
+    @apply list-decimal;
+  }
+
   #post-main > ul > li {
-    @apply list-disc my-2;
+    @apply list-disc;
   }
 </style>
