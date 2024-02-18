@@ -1,0 +1,43 @@
+\documentclass[tikz,border=5mm,12pt]{standalone}
+\usepackage[fontsize=16pt]{fontsize}
+\usepackage[cjk]{kotex}
+\usetikzlibrary{fit}
+
+\def\nodexsep{13mm}
+\def\nodeysep{13mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \node at (0.5*\nodexsep,0.5*\nodeysep+2mm) { \small 占 };
+    \node at (2.5*\nodexsep,0.5*\nodeysep+2mm) { \small 쏙 };
+    \node at (4.5*\nodexsep,0.5*\nodeysep+2mm) { \small 옙 };
+
+    \node at (-20mm,0*\nodeysep) { \small EUC-KR };
+
+    \node (TA) at (0*\nodexsep,0*\nodeysep) { \texttt{EF} };
+    \node (TB) at (1*\nodexsep,0*\nodeysep) { \texttt{BF} };
+    \node (TC) at (2*\nodexsep,0*\nodeysep) { \texttt{BD} };
+    \node (TD) at (3*\nodexsep,0*\nodeysep) { \texttt{EF} };
+    \node (TE) at (4*\nodexsep,0*\nodeysep) { \texttt{BF} };
+    \node (TF) at (5*\nodexsep,0*\nodeysep) { \texttt{BD} };
+
+    \node [draw,fit=(TA)(TB),inner sep=-1pt] {};
+    \node [draw,fit=(TC)(TD),inner sep=-1pt] {};
+    \node [draw,fit=(TE)(TF),inner sep=-1pt] {};
+
+    \node at (-20mm,-1*\nodeysep) { \small UTF-8 };
+
+    \node (BA) at (0*\nodexsep,-1*\nodeysep) { \texttt{EF} };
+    \node (BB) at (1*\nodexsep,-1*\nodeysep) { \texttt{BF} };
+    \node (BC) at (2*\nodexsep,-1*\nodeysep) { \texttt{BD} };
+    \node (BD) at (3*\nodexsep,-1*\nodeysep) { \texttt{EF} };
+    \node (BE) at (4*\nodexsep,-1*\nodeysep) { \texttt{BF} };
+    \node (BF) at (5*\nodexsep,-1*\nodeysep) { \texttt{BD} };
+
+    \node [draw,fit=(BA)(BC),inner sep=-1pt] {};
+    \node [draw,fit=(BD)(BF),inner sep=-1pt] {};
+
+    \node at (1*\nodexsep,-1.5*\nodeysep-2mm) { \small (Replacement) };
+    \node at (4*\nodexsep,-1.5*\nodeysep-2mm) { \small (Replacement) };
+  \end{tikzpicture}
+\end{document}

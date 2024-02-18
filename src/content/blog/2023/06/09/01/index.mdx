@@ -15,6 +15,8 @@ import fig2 from "./_figs/fig2.svg";
 import fig3 from "./_figs/fig3.svg";
 import fig4 from "./_figs/fig4.svg";
 import fig5 from "./_figs/fig5.svg";
+import fig6 from "./_figs/fig6.png";
+import fig7 from "./_figs/fig7.svg";
 
 UTF-8은 문자 인코딩에서 자주 마주치게 되는 용어인데요.
 벨<L>Bell</L> 연구소에서 유닉스<L>Unix</L>의 성공에 이어 발표한 Plan 9이란 운영체제는 당시 리눅스에 밀리고 말았지만, UTF-8이라는 유명한 유산을 남기고 갔습니다.
@@ -131,7 +133,7 @@ function encodeUtf8(codepoint)
 ```
 
 맨 아래에서는 21비트를 넘어가는 코드 포인트를 만나는 예외적인 경우를 처리하는데요.
-이때는 특별한 문자인 ‘&#65533;’를 리턴합니다.
+이때는 특별한 문자인 &lsquo;&#65533;&rsquo;를 리턴합니다.
 `U+FFFD`로 정의된 이 문자는 [대체 문자][wiki-repl-char]<L>replacement character</L>라고 부르는데요.
 표현할 수 없는 문자를 만나면 대신 사용하도록 만들어졌습니다.
 
@@ -412,11 +414,32 @@ $2^{21}$개의 모든 코드 포인트를 항상 32비트 안에 담을 수 있�
 
 
 
-# 그 외의 것들
+# 占쏙옙
 
-여기까지 유니코드와 UTF-8에 대해 살펴보았습니다.
-유니코드는 문자와 숫자, UTF-8는 그 숫자와 비트 표현간의 매핑이었습니다.
-그리고 UTF-8은 8비트 단위로 길이가 가변적인 인코딩이었습니다.
+오늘날 웹은 대부분 UTF-8 인코딩을 사용하지만, 그렇지 않았던 과도기가 있었습니다.
+그 시절의 한국에서는 웹페이지와 브라우저가 [EUC-KR][euc-kr] 이라고 불리는 인코딩을 많이 사용했는데요.
+이 때 나타났던 대표적인 현상으로 소위 '占쏙옙'이 있었습니다.
+
+[euc-kr]: https://ko.wikipedia.org/wiki/EUC-KR
+
+<Figure src={fig6} shrink={true} alt="wrongly encoded utf-8">
+  <FigureCaption slot="caption">그림 6. [오라클 웹사이트][docs-oracle]의 '占쏙옙' 현상.</FigureCaption>
+</Figure>
+
+[docs-oracle]: https://docs.oracle.com/cd/E19142-01/819-1066/About.html
+
+EUC-KR 에서 '占쏙옙'으로 디코딩 되는 코드 유닛 시퀀스는 16진수로 `EF BF BD EF BF BD` 인데요.
+한글이 2바이트씩 인코딩되기 때문에 총 6바이트의 크기를 가집니다.
+한편 이는 UTF-8 인코딩에서, 앞서 소개한 대체 문자 &lsquo;&#65533;&rsquo;를 연달아 두 개 쓴것과 같은 비트 표현을 가집니다.
+
+<Figure src={fig7} shrink={true} alt="euc-kr vs utf-8">
+  <FigureCaption slot="caption">그림 7. 같은 비트 표현의 다른 디코딩. EUC-KR 상의 '占쏙옙'과 UTF-8 상의 두 개의 대체 문자가 같은 표현을 가집니다.</FigureCaption>
+</Figure>
+
+따라서 UTF-8 인코딩에 실패해 대체 문자로 바뀐 데이터를 EUC-KR로 읽었을 때 나타나는 현상으로 이해할 수 있습니다.
+
+
+# 그 외의 것들
 
 한편 본문에서 다루지 않았던 내용을 짤막하게 언급하고 넘어가자면 이렇습니다.
 
@@ -457,6 +480,18 @@ URL에 '가'와 같은 문자를 사용하고 싶다면 그 UTF-8 인코딩 결�
 그리고 이는 UTF-8 인코딩이 아닌 유니코드가 가진 특징이기 때문에, UTF-16과 UTF-32 또한 똑같은 문제를 가지게 됩니다.
 
 [mdn-normalize]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize
+
+
+
+# 마치며
+여기까지 유니코드와 UTF-8에 대해 살펴보았습니다.
+유니코드는 문자와 숫자, UTF-8는 그 숫자와 비트 표현간의 매핑이었습니다.
+그리고 UTF-8은 8비트 단위로 길이가 가변적인 인코딩이었습니다.
+또한 인코딩과 디코딩을 정해진 규칙에 따라 비트 조작을 통해 간단히 구현해보았습니다.
+
+여기서 알아본 유니코드와 UTF-8 인코딩 간의 관계, 즉 코드 포인트와 코드 유닛 시퀀스의 관계는 다른 방식의 인코딩, UTF-16와 UTF-32에도 그대로 적용됩니다.
+다만 각각 코드 유닛이 16비트와 32비트라는 점이 다른데요.
+이 인코딩은 다음 기회에 알아보도록 하겠습니다.
 
 ## 레퍼런스
 
