@@ -4,6 +4,7 @@ import ArticleCard from "@/components/page/ArticleCard.astro";
 import Footer from "@/components/layout/Footer.astro";
 import Share from "@/components/post/ShareButton.astro";
 import Home from "@/components/icon/Home.astro";
+import Giscus from "@/components/post/Giscus.astro";
 import Heading1 from "@/components/core/Heading1.astro";
 import { articles } from "@/scripts/collections";
 import { formatDate } from "@/scripts/utils/formatters";
@@ -56,6 +57,10 @@ const { Content } = await entry.render();
       </div>
     </div>
 
+    <div class="my-12 pt-12 border-t border-gray-800">
+      <Giscus />
+    </div>
+
     <nav id="post-nav" class="my-12 pt-12 border-t border-gray-800">
       {
         nextEntry && <ArticleCard article={nextEntry} />
@@ -69,6 +74,7 @@ const { Content } = await entry.render();
         </a>
       </div>
     </nav>
+
     <div class="my-12 pt-12 border-t border-gray-800">
       <Footer />
     </div>
