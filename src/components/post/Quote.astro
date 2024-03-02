@@ -1,9 +1,57 @@
 ---
 ---
 
-<div class="space-y-1.5 pl-4 border-l border-l-gray-700 my-10">
-  <slot />
+<div class="pl-4 border-l border-l-gray-700 my-10 quote-component">
+  <div class="mb-1.5">
+    <slot />
+  </div>
+  <div class="text-[13.25px] md:text-[14.5px] font-light shown-on-hover-component">
+    <slot name="detail" />
+  </div>
   <div class="text-[13.25px] md:text-[14.5px] font-light">
     <slot name="name" />
   </div>
 </div>
+
+<script>
+  const quotes = document.querySelectorAll(".quote-component");
+  const shownOnHovers = document.querySelectorAll(".shown-on-hover-component");
+  quotes.forEach((quote, i) => {
+    const shownOnHover = shownOnHovers[i];
+    const hasContent = shownOnHover.textContent.length > 0;
+    if (!hasContent) {
+      return;
+    }
+
+    quote.addEventListener("mouseenter", () => {
+      shownOnHover.classList.add("shown-on-hover-component-shown");
+    });
+    quote.addEventListener("mouseleave", () => {
+      shownOnHover.classList.remove("shown-on-hover-component-shown");
+    });
+  });
+</script>
+
+<style>
+  .shown-on-hover-component {
+    @apply mb-0;
+    max-height: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    opacity: 0;
+    transition-property: opacity, max-height, transform, margin-bottom;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out;
+  }
+
+  .shown-on-hover-component-shown {
+    @apply mb-1.5;
+    max-height: 50vh;
+    transform: scaleY(1);
+    opacity: 1;
+    transition-property: opacity, max-height, transform, margin-bottom;
+    transition-delay: 800ms;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out;
+  }
+</style>
