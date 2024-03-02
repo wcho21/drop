@@ -2,47 +2,36 @@
 \usepackage[fontsize=16pt]{fontsize}
 \usepackage{drawutil}
 \usetikzlibrary{arrows.meta}
-\usetikzlibrary{positioning}
 
 \def\xsep{15mm}
 \begin{document}
   \begin{tikzpicture}[
-    circled/.style={
-      circle,draw,inner sep=3pt
-    },
     arrowtip/.style={
       -{Stealth[scale=1.2]}
     },
-    level distance=16mm,
-    sibling distance=12mm
+    level distance=20pt,
+    sibling distance=32pt
   ]
-    \def\topText{\small\texttt{top}};
+    \def\plusY{0}
+    \def\numberY{-22mm}
 
-    \node (TokensA) at (0*\xsep,0) { \myfbox{1}\myfbox{+}\myfbox{2}\myfbox{+}\myfbox{3} };
+    \drawOpWithPowers{=}{1*\xsep}{\plusY}{11}{Equal1Child1}{10}{Equal1Child2}
+    \drawOpWithPowers{=}{3*\xsep}{\plusY}{11}{Equal2Child1}{10}{Equal2Child2}
 
-    \node[right=18mm of TokensA,circled] (NodeB) { 1 };
-    \node[above=3pt of NodeB] { \topText };
-    \node[right=3mm of NodeB] (TokensB) { \myfbox{+}\myfbox{2}\myfbox{+}\myfbox{3} };
+    \node (Number1) at (0*\xsep,\numberY) { \texttt{a} };
+    \node (Number2) at (2*\xsep,\numberY) { \texttt{b} };
+    \node (Number3) at (4*\xsep,\numberY) { \texttt{1} };
 
-    \node[right=21mm of TokensB,circled,yshift=6mm+6pt] (NodeCTop) { + }
-      child { node[circled] { 1 } }
-      child { node[circled] { 2 } };
-    \coordinate[yshift=-6mm-6pt] (NodeC) at (NodeCTop);
-    \node[above=3pt of NodeCTop] { \topText };
-    \node[right=12mm of NodeC] (TokensC) { \myfbox{+}\myfbox{3} };
+    \draw[arrowtip] (Number1) -- (Equal1Child1);
+    \draw[arrowtip] (Number2) -- (Equal2Child1);
+    \draw[arrowtip] (Number3) -- (Equal2Child2);
 
-    \node[right=27mm of TokensC,circled,yshift=12mm+12pt] (NodeDTop) { + }
-      child {
-        node[circled] { + }
-        child { node[circled] { 1 } }
-        child { node[circled] { 2 } }
-      }
-      child { node[circled] { 3 } };
-    \coordinate[yshift=-12mm-12pt] (NodeD) at (NodeDTop);
-    \node[above=3pt of NodeDTop] { \topText };
-
-    \draw[arrowtip,shorten <=6mm, shorten >=6mm] (TokensA) -- (NodeB);
-    \draw[arrowtip,shorten <=6mm, shorten >=12mm] (TokensB) -- (NodeC);
-    \draw[arrowtip,shorten <=6mm, shorten >=18mm] (TokensC) -- (NodeD);
+    \def\eqY{\numberY-14mm}
+    \def\parenSep{12pt}
+    \foreach \x / \text in {0/a,1/=,2/b,3/=,4/1} {
+      \node at (\x*\xsep,\eqY) { \texttt{\text} };
+    }
+    \node at (2*\xsep-\parenSep,\eqY) { \texttt{(} };
+    \node at (4*\xsep+\parenSep,\eqY) { \texttt{)} };
   \end{tikzpicture}
 \end{document}
