@@ -12,21 +12,26 @@ import FigureCaption from "@/components/post/FigureCaption.astro";
 import CalloutKal from "@/components/post/CalloutKal.astro";
 
 import fig1 from "./_figs/fig1.svg";
+import fig2 from "./_figs/fig2.svg";
 
 
 
 우리는 프로그래밍을 할 때 소스 코드<L>source code</L>를 실행시킵니다.
 예를 들면 파이썬<L>Python</L> 코드를 컴퓨터에서 동작시킬 수 있는데요.
 하지만 컴퓨터는 그런 코드를 이해할 수 없고, 명령어 세트<L>instruction set</L>라는 것을 통해서만 명령을 내릴 수 있습니다.
-비트<L>bit</L>로 표현되는 이런 것을 기계어<L>machine language</L>라고도 부릅니다.
+비트<L>bit</L>로 표현된 이런 것을 머신 코드<L>machine code</L>라고도 부릅니다.
 
 그래서 소스 코드와 기계어 사이를 이어주는 프로그램이 필요한데요.
 그 역할을 맡는 것을 크게 두 종류, 컴파일러<L>compiler</L>와 인터프리터<L>interpreter</L>로 나눌 수 있습니다.
 
+<Figure src={fig1} alt="source code to machine language">
+  <FigureCaption slot="caption">그림 1. 소스 코드부터 머신 코드까지. 컴파일러가 소스 코드를 머신 코드로 만들면 컴퓨터가 이를 읽고 실행합니다, 인터프리터는 소스 코드를 읽고 실행합니다.</FigureCaption>
+</Figure>
+
 컴파일러는 소스 코드를 기계어로 바꾸는 프로그램을 말합니다.
 특정한 명령어 세트를 가지는 기계를 목적지라고 생각하는 데서 소스<L>source</L>라는 표현이 의미를 가지게 됩니다.
 한편 인터프리터는 소스 코드를 이해하는 프로그램을 기계어로 미리 만들어 놓은 것입니다.
-표현은 이렇지만 사실 이미 만든 컴파일러로 그런 인터프리터를 만들 수 있습니다.
+표현은 이렇지만, 사실 이미 만든 컴파일러로 그런 인터프리터를 만들 수 있습니다.
 컴파일러도 그렇고요.
 
 컴파일러와 인터프리터는 방대한 주제이지만, 그럼에도 불구하고 간단한 인터프리터는 만들어 볼만한데요.
@@ -52,14 +57,14 @@ y(10)(5)
 
 숫자 값은 `98` 처럼 정수<L>integer</L>를 쓸 것입니다.
 즉 소수점을 가진 숫자는 구현을 생략하고요.
-`g`나 `y`처럼 알파벳은 변수나 함수 이름이 될 것입니다.
-사실 변수와 함수를 구분하지 않을 것이므로 앞으로 간단히 변수라고 하겠습니다.
+`g`나 `y`처럼 알파벳은 변수<L>variable</L>나 함수<L>function</L> 이름이 될 것입니다.
+사실 변수와 함수를 구분하지 않을 것이므로, 둘 다 변수라고 부르는 일이 많을 것입니다.
 
 이 언어에서는 함수가 단 하나의 매개변수<L>parameter</L>만 갖도록 강제할 것입니다.
 그럼에도 커링<L>currying</L>과 클로저<L>closure</L>를 통해 함수가 여러 개의 매개변수를 가진 것처럼 만들 수 있습니다.
 
 예시 코드의 함수 `y`가 그런 경우인데요.
-함수 호출 시 `y(10)(5)`와 같은 식으로 두 개의 인자<L>argument</L>를 전달합니다.
+함수 호출 시 `y(10)(5)`와 같은 식으로 두 개의 호출 인자<L>call argument</L>를 전달합니다.
 이런 식으로 마치 두 개의 매개변수를 받는 것처럼 다룰 수 있습니다.
 이 부분은 직접적인 관련이 있는 나중에 다시 살펴볼 기회가 있을 것이므로 이 정도로 언급만 하고 넘어가겠습니다.
 
@@ -67,11 +72,12 @@ y(10)(5)
 
 # 프로그래밍 언어 구현 단계
 
-<Figure src={fig1} alt="language implementation steps">
-  <FigureCaption slot="caption">그림 1. 프로그래밍 언어 구현 세 단계. 소스코드에서 평가 값에 이르기까지 토큰화와 파싱을 거칩니다.</FigureCaption>
+프로그래밍 언어의 구현은 크게 세 단계로 나눌 수 있습니다.
+
+<Figure src={fig2} alt="language implementation steps">
+  <FigureCaption slot="caption">그림 2. 프로그래밍 언어 구현 세 단계. 소스코드에서 평가 값에 이르기까지 토큰화와 파싱을 거칩니다.</FigureCaption>
 </Figure>
 
-프로그래밍 언어의 구현은 크게 세 단계로 나눌 수 있습니다.
 먼저 소스 코드의 문자들을 의미 단위로 나눕니다.
 그 단위를 흔히 토큰<L>token</L>으로 부르고, 이렇게 토큰으로 나누는 작업을 토큰화<L>tokenize</L>라고 부릅니다.
 예를 들어 '1+23'이라는 코드를 세 개의 토큰 '1/+/23'으로 나누는 작업입니다.

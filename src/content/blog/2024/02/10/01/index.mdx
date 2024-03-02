@@ -16,21 +16,22 @@ import fig1 from "./_figs/fig1.svg";
 import fig2 from "./_figs/fig2.svg";
 import fig3 from "./_figs/fig3.svg";
 import fig4 from "./_figs/fig4.svg";
+import fig5 from "./_figs/fig5.svg";
 
 
 
 간단한 프로그래밍 언어를 구현하기 위해, <PostLink href="/2024/02/08/01">이전 글</PostLink>에서 소스 코드<L>source code</L>를 토큰<L>token</L>으로 만들었습니다.
 이 토큰으로 소스 코드를 파싱<L>parsing</L>, 즉 정해진 문법에 따라 해석할 수 있고, 그런 일을 하는 것을 파서<L>parser</L>라고 부릅니다.
+
+파서는 소스 코드를 해석한 결과로, 토큰에서 추상 문법 트리<L>abstract syntax tree</L>를 만듭니다.
+
+<Figure src={fig1} alt="parsing tokens into tree">
+  <FigureCaption slot="caption">그림 1. 토큰 파싱. 파서는 토큰을 읽어 문법 트리를 만듭니다.</FigureCaption>
+</Figure>
+
+그러면 파서는 소스 코드가 문법을 잘 지켰는지 확인합니다.
 보통 프로그래밍에서 문법 오류로 실행이 안 된다면, 파서가 그런 사실을 파악했기 때문입니다.
-
-파서는 소스 코드를 해석한 결과로 추상 문법 트리<L>abstract syntax tree</L>를 만듭니다.
-즉 다음과 같은 코드를 문법적으로 분석합니다.
-
-```
-g = 98/10
-```
-
-그러면 파서는 '대입 문법'을 잘 지킨 코드로 확인함과 동시에, 그 문법 구조를 나타내는 트리를 만듭니다.
+만약 문법을 잘 지켰다면, 그 문법 구조를 나타내는 트리를 만듭니다.
 
 파서는 여기까지의 역할만 맡습니다.
 즉 변수를 실제로 대입하거나, `98/10`의 값을 평가하는 동작은 하지 않습니다.
@@ -64,8 +65,8 @@ g = 98/10
 덧셈 기호 `+`가 왼쪽과 오른쪽에 그런 '붙는 힘'을 가진다고 상상해봅시다.
 구체적으로 예를 들어 각각 `30`과 `31`로요.
 
-<Figure src={fig1} alt="binding power for plus">
-  <FigureCaption slot="caption">그림 1. 덧셈 기호의 바인딩 파워. 숫자 2는 왼쪽으로 붙어서 숫자 1과 덧셈을 이룹니다.</FigureCaption>
+<Figure src={fig2} alt="binding power for plus">
+  <FigureCaption slot="caption">그림 2. 덧셈 기호의 바인딩 파워. 숫자 2는 왼쪽으로 붙어서 숫자 1과 덧셈을 이룹니다.</FigureCaption>
 </Figure>
 
 그렇다면 숫자 `2`는 단순히 '붙는 힘'이 높은 쪽에 붙으면 됩니다.
@@ -78,8 +79,8 @@ g = 98/10
 여기선 왼쪽과 오른쪽에 각각 `40`과 `41` 정도면 될 것입니다.
 바인딩 파워는 값 자체보다 상대적인 차이에 의미가 있다는 점을 참고하세요.
 
-<Figure src={fig2} alt="binding powers for plus and asterisk">
-  <FigureCaption slot="caption">그림 2. 덧셈과 곱셈 기호의 바인딩 파워. 숫자 2는 오른쪽으로 붙어서 곱셈을 이룹니다.</FigureCaption>
+<Figure src={fig3} alt="binding powers for plus and asterisk">
+  <FigureCaption slot="caption">그림 3. 덧셈과 곱셈 기호의 바인딩 파워. 숫자 2는 오른쪽으로 붙어서 곱셈을 이룹니다.</FigureCaption>
 </Figure>
 
 숫자 `2`는 여전히 더 높은 바인딩 파워에 붙었을 뿐입니다.
@@ -100,8 +101,8 @@ g = 98/10
 즉 대입 연산은 사칙 연산보다 바인딩 파워가 낮아야 합니다.
 따라서 여기서는 왼쪽과 오른쪽에 각각 `11`과 `10`을 주겠습니다.
 
-<Figure src={fig3} alt="binding powers for equal sign">
-  <FigureCaption slot="caption">그림 3. 대입 연산 기호의 바인딩 파워. 식별자 b는 오른쪽으로 붙어서 숫자 1과 대입 연산을 이룹니다.</FigureCaption>
+<Figure src={fig4} alt="binding powers for equal sign">
+  <FigureCaption slot="caption">그림 4. 대입 연산 기호의 바인딩 파워. 식별자 b는 오른쪽으로 붙어서 숫자 1과 대입 연산을 이룹니다.</FigureCaption>
 </Figure>
 
 다른 예시로, 함수를 정의하는 화살표 연산 `->` 또한 오른쪽 결합 연산이어야 합니다.
@@ -183,8 +184,8 @@ print(plus)
 파서는 여태까지 해석한 결과인 문법 트리를 유지할 것이고, 그 루트 노드를 `top` 노드라고 부르겠습니다.
 그러면 `+` 같은 연산자 토큰을 새로운 `top` 노드로 파싱하고, 이전 결과를 그 자식으로 갖다 붙입니다.
 
-<Figure src={fig4} alt="parsing additions">
-  <FigureCaption slot="caption">그림 4. 표현식 파싱. 첫 부분으로 숫자 1을 읽고 숫자 노드를 생성합니다. 이후 덧셈 기호 +를 읽을 때마다 탑 노드를 새로 만들고, 이전 결과를 자식으로 합니다.</FigureCaption>
+<Figure src={fig5} alt="parsing additions">
+  <FigureCaption slot="caption">그림 5. 표현식 파싱. 첫 부분으로 숫자 1을 읽고 숫자 노드를 생성합니다. 이후 덧셈 기호 +를 읽을 때마다 탑 노드를 새로 만들고, 이전 결과를 자식으로 합니다.</FigureCaption>
 </Figure>
 
 ## 준비하기
@@ -364,7 +365,7 @@ print(node)
 ]]
 ```
 
-이는 앞서 '그림 4'에서 봤던 트리와 일치합니다.
+이는 앞서 '그림 5'에서 봤던 트리와 일치합니다.
 
 
 
