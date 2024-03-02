@@ -6,7 +6,9 @@
     <slot />
   </div>
   <div class="text-[13.25px] md:text-[14.5px] font-light shown-on-hover-component">
-    <slot name="detail" />
+    <div class="pb-1.5">
+      <slot name="detail" />
+    </div>
   </div>
   <div class="text-[13.25px] md:text-[14.5px] font-light">
     <slot name="name" />
@@ -34,24 +36,22 @@
 
 <style>
   .shown-on-hover-component {
-    @apply mb-0;
     max-height: 0;
     transform: scaleY(0);
     transform-origin: top;
     opacity: 0;
-    transition-property: opacity, max-height, transform, margin-bottom;
-    transition-duration: 0.4s;
-    transition-timing-function: ease-in-out;
+    transition-property: opacity, max-height, transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
   }
 
   .shown-on-hover-component-shown {
-    @apply mb-1.5;
-    max-height: 50vh;
+    max-height: 100vh;
     transform: scaleY(1);
     opacity: 1;
-    transition-property: opacity, max-height, transform, margin-bottom;
+    transition-property: opacity, max-height, transform;
     transition-delay: 800ms;
-    transition-duration: 0.4s;
-    transition-timing-function: ease-in-out;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
   }
 </style>
