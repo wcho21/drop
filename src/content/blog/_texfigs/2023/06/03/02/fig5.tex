@@ -1,0 +1,77 @@
+\documentclass{xdvsvgw}
+\usepackage{td-catalan-convex,ts-arrow}
+\usetikzlibrary{decorations.pathreplacing,calligraphy}
+
+\newcommand\scopeXSep{28mm}
+\newcommand\scopeYSep{20mm}
+
+\tikzset{
+  cbrace/.style={
+    decorate,
+    decoration={calligraphic brace,mirror,amplitude=5pt},
+    line width=0.25mm
+  }
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    % left top
+
+    \begin{scope}
+      \drawPentagon{8mm}
+
+      \draw (P1) -- (P3);
+      \draw (P1) -- (P4);
+    \end{scope}
+
+    \node at (0.5*\scopeXSep,0.6*\scopeYSep) {$\times (n-3)$};
+
+    % middle two pentagons
+
+    \draw[cbrace] (0.5*\scopeXSep,0.1*\scopeYSep) -- ++(0,-1.95*\scopeYSep);
+
+    \begin{scope}[xshift=\scopeXSep]
+      \drawPentagon{8mm}
+
+      \draw (P1) -- (P4);
+    \end{scope}
+
+    \begin{scope}[xshift=2*\scopeXSep]
+      \drawPentagon{8mm}
+
+      \draw[Stlth] (P1) -- (P4);
+    \end{scope}
+
+    % right four pentagons
+
+    \node at (1.5*\scopeXSep,0.6*\scopeYSep) {$\times 2$};
+
+    \draw[cbrace] (1.5*\scopeXSep,0.1*\scopeYSep) -- ++(0,-0.95*\scopeYSep);
+
+    \begin{scope}[xshift=2*\scopeXSep,yshift=-\scopeYSep]
+      \drawPentagon{8mm}
+
+      \draw[Stlth] (P4) -- (P1);
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep,yshift=-2*\scopeYSep]
+      \drawPentagon{8mm}
+
+      \draw (P1) -- (P3);
+    \end{scope}
+
+    \draw [cbrace] (1.5*\scopeXSep,-1.9*\scopeYSep) -- ++(0,-0.95*\scopeYSep);
+
+    \begin{scope}[xshift=2*\scopeXSep,yshift=-2*\scopeYSep]
+      \drawPentagon{8mm}
+
+      \draw[Stlth] (P1) -- (P3);
+    \end{scope}
+
+    \begin{scope}[xshift=2*\scopeXSep,yshift=-3*\scopeYSep]
+      \drawPentagon{8mm}
+
+      \draw[Stlth] (P3) -- (P1);
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

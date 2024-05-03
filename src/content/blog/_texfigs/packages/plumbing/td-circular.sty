@@ -1,0 +1,30 @@
+% tikz drawing util for nodes in circular
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-circular}[2024/05/03]
+
+\usetikzlibrary{calc}
+
+\newcommand\setNodeCoords[5]{
+  \def\@Nnum{#1}
+  \def\@Nradius{#2}
+  \def\@Nprefix{#3}
+  \def\@NcenterX{#4}
+  \def\@NcenterY{#5}
+
+  \pgfmathsetmacro{\@NangleSep}{-360/\@Nnum}
+
+  \foreach \i in {1,...,\@Nnum} {
+    \pgfmathsetmacro{\j}{\i-1}
+    \coordinate (\@Nprefix\i) at ($(\@NcenterX,\@NcenterY)+(90+\@NangleSep*\j:\@Nradius)$);
+  }
+}
+
+\newcommand\drawNodeCircle[2]{
+  \def\@Nnum{#1}
+  \def\@Nprefix{#2}
+
+  \foreach \i in {1,...,\@Nnum} {
+    \node[draw,circle,inner sep=1mm,fill=white] at (\@Nprefix\i) {\i};
+  }
+}

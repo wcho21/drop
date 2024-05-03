@@ -1,0 +1,14 @@
+% tikz drawing util for gray grid
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-graygrid}[2024/05/03]
+
+\RequirePackage{td-grid}
+
+\newcommand\GGridCellSize{7mm}
+
+\newcommand\GDrawSmallFourByFour[2]{
+  \def\@GGx{#1}
+  \def\@GGy{#2}
+  \GDrawGrid{\@GGx}{\@GGy}{4}{4}{\GGridCellSize}{lightgray!75}
+}

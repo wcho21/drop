@@ -1,0 +1,25 @@
+\documentclass{xdvsvgw}
+
+\usepackage{fontspec}
+\newfontfamily{\fontNotoEmoji}{Noto Emoji}
+
+\usetikzlibrary{backgrounds}
+\newcommand\ul\fbox
+\newcommand\txtx{84mm}
+\newcommand\txtysep{24pt}
+
+\begin{document}
+  \begin{tikzpicture}[
+    txt/.style={text width=140mm,align=left}
+  ]
+    \node at (0,0) {\Large \fontNotoEmoji 😂};
+    \node at (0,-8mm) {\texttt{U+1F602}};
+
+    \node[txt] at (\txtx,0) {
+      UTF-8\phantom{6}: \texttt{\ul{11110000} \ul{10011111} \ul{10011000} \ul{10000010}}};
+    \node[txt] at (\txtx,-\txtysep) {
+      UTF-16: \texttt{\ul{11011000 \hspace{2.4mm}00111101} \ul{11011110 \hspace{2.4mm}00000010}}};
+    \node[txt] at (\txtx,-2*\txtysep) {
+      UTF-32: \texttt{\ul{00000000 \hspace{2.4mm}00000001 \hspace{2.4mm}11110110 \hspace{2.4mm}00000010}}};
+  \end{tikzpicture}
+\end{document}
