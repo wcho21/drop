@@ -1,8 +1,7 @@
-\documentclass[tikz,border=5mm,12pt]{standalone}
-\usepackage[fontsize=16pt]{fontsize}
-\usetikzlibrary{arrows.meta}
+\documentclass{xdvsvgw}
+\usepackage{ts-arrow}
 
-\newcommand\sidelen{50mm}
+\newcommand\sidelen{40mm}
 \newcommand\surrogatelen{0.0625*\sidelen}
 
 \begin{document}
@@ -18,7 +17,7 @@
       -- ++(0,\surrogatelen)
       -- ++(0.5*\sidelen,0) coordinate (A);
 
-    \draw[{Stealth[scale=1.2]}-] (A)+(0,-0.5*\surrogatelen) .. controls +(0:4mm) and +(180:4mm) .. ++(10mm,6mm)
-      node[right,text width=45mm,align=center,yshift=-2.5mm] {Surrogates Block\\ \small(\texttt{U+D800}--\texttt{U+DFFF})};
+    \draw[StlthRev] (A)+(0,-0.5*\surrogatelen) .. controls +(0:4mm) and +(180:4mm) .. ++(10mm,6mm)
+      node[right,text width=32mm,align=center,yshift=-2.5mm] {Surrogates Block\\ \small(\texttt{U+D800}--\texttt{U+DFFF})};
   \end{tikzpicture}
 \end{document}
