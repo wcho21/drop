@@ -1,14 +1,13 @@
-\documentclass[tikz,border=5mm,12pt]{standalone}
-\usepackage[fontsize=16pt]{fontsize}
-\usetikzlibrary{arrows.meta}
+\documentclass{xdvsvgw}
+\usepackage{ts-arrow}
 \usetikzlibrary{backgrounds}
 
 \begin{document}
   \begin{tikzpicture}
-    \def\side{14mm}
-    \def\altside{10mm}
-    \def\altxoffset{66mm}
-    \def\altyoffset{44mm}
+    \def\side{12mm}
+    \def\altside{8mm}
+    \def\altxoffset{60mm}
+    \def\altyoffset{38mm}
 
     \draw[step=\side] (0,0) grid (4*\side,4*\side);
     \draw (0,4*\side) -- ++(-\side,0) -- ++(0,-\side) -- ++(\side,0);
@@ -36,12 +35,12 @@
         -- cycle;
     \end{scope}
 
-    \draw[{Stealth[scale=1.2]}-] (2.75*\side,3.75*\side) .. controls +(60:8mm) and +(120:8mm) .. ++(\altxoffset-2.75*\side+\altside,0) node[below] {Plane};
+    \draw[StlthRev] (2.75*\side,3.75*\side) .. controls +(60:8mm) and +(120:8mm) .. ++(\altxoffset-2.75*\side+\altside,0) node[below] {Plane};
 
     \draw (\altxoffset,\altyoffset) -- ++(2*\altside,0) -- ++(0,-2*\altside) -- ++(-2*\altside,0) -- cycle;
     \draw (\altxoffset+\altside,\altyoffset) -- ++(0,-2*\altside);
     \draw (\altxoffset+2*\altside,\altyoffset-\altside) -- ++(-2*\altside,0);
 
-    \draw[{Stealth[scale=1.2]}-] (\altxoffset+0.5*\altside,\altyoffset-2*\altside+0.25*\altside) .. controls +(-120:3mm) and +(120:2mm) .. ++(-2mm,-8mm) node[below] {Block};
+    \draw[StlthRev] (\altxoffset+0.5*\altside,\altyoffset-2*\altside+0.25*\altside) .. controls +(-120:3mm) and +(120:2mm) .. ++(-2mm,-8mm) node[below] {Block};
   \end{tikzpicture}
 \end{document}

@@ -1,18 +1,21 @@
-\documentclass[tikz,border=5mm,12pt]{standalone}
-\usepackage[fontsize=16pt]{fontsize}
-\usepackage[cjk]{kotex}
+\documentclass{xdvsvgw}
+
+\usepackage{fontspec}
+\newfontfamily{\fontNotoSerifKR}{Noto Serif KR}
+
 \usetikzlibrary{fit}
 
-\def\nodexsep{13mm}
-\def\nodeysep{13mm}
+\def\nodexsep{10mm}
+\def\nodeysep{9mm}
 
 \begin{document}
   \begin{tikzpicture}
-    \node at (0.5*\nodexsep,0.5*\nodeysep+2mm) { \small 占 };
-    \node at (2.5*\nodexsep,0.5*\nodeysep+2mm) { \small 쏙 };
-    \node at (4.5*\nodexsep,0.5*\nodeysep+2mm) { \small 옙 };
+    \node at (0.5*\nodexsep,0.5*\nodeysep+2mm) { \fontNotoSerifKR\small 占 };
+    \node at (2.5*\nodexsep,0.5*\nodeysep+2mm) { \fontNotoSerifKR\small 쏙 };
+    \node at (4.5*\nodexsep,0.5*\nodeysep+2mm) { \fontNotoSerifKR\small 옙 };
 
-    \node at (-20mm,0*\nodeysep) { \small EUC-KR };
+    \node at (-16mm,0*\nodeysep) { \small EUC-KR };
+    \node at (-16mm,-1*\nodeysep) { \small UTF-8 };
 
     \node (TA) at (0*\nodexsep,0*\nodeysep) { \texttt{EF} };
     \node (TB) at (1*\nodexsep,0*\nodeysep) { \texttt{BF} };
@@ -24,8 +27,6 @@
     \node [draw,fit=(TA)(TB),inner sep=-1pt] {};
     \node [draw,fit=(TC)(TD),inner sep=-1pt] {};
     \node [draw,fit=(TE)(TF),inner sep=-1pt] {};
-
-    \node at (-20mm,-1*\nodeysep) { \small UTF-8 };
 
     \node (BA) at (0*\nodexsep,-1*\nodeysep) { \texttt{EF} };
     \node (BB) at (1*\nodexsep,-1*\nodeysep) { \texttt{BF} };

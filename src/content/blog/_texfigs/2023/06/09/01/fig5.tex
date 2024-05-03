@@ -1,17 +1,19 @@
-\documentclass[tikz,border=5mm,12pt]{standalone}
-\usepackage[fontsize=16pt]{fontsize}
-\usetikzlibrary{backgrounds}
+\documentclass{xdvsvgw}
 
+\usepackage{fontspec}
+\newfontfamily{\fontNotoEmoji}{Noto Emoji}
+
+\usetikzlibrary{backgrounds}
 \newcommand\ul\fbox
-\newcommand\txtx{90mm}
-\newcommand\txtysep{28pt}
+\newcommand\txtx{84mm}
+\newcommand\txtysep{24pt}
 
 \begin{document}
   \begin{tikzpicture}[
     txt/.style={text width=140mm,align=left}
   ]
-    \node at (0,0) {\includegraphics[height=22pt]{1f602.png}};
-    \node at (0,-22pt) {\texttt{U+1F602}};
+    \node at (0,0) {\Large \fontNotoEmoji 😂};
+    \node at (0,-8mm) {\texttt{U+1F602}};
 
     \node[txt] at (\txtx,0) {
       UTF-8\phantom{6}: \texttt{\ul{11110000} \ul{10011111} \ul{10011000} \ul{10000010}}};

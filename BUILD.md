@@ -15,6 +15,8 @@ The macro uses [dvisvgm][dvisvgm] to convert xdv file (output of XeTeX) to svg f
 - `dvisvgm`: 3.2.2
 - `svgo`: 3.2.0
 
+Some tex files use locally installed fonts such as `Noto Emoji` (for emoji) or `Noto Serif KR` (for Hangul)
+
 [LaTeX]: https://www.latex-project.org/
 [XeTeX]: https://tug.org/xetex/
 [make]: https://www.gnu.org/software/make/
