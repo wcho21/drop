@@ -1,0 +1,42 @@
+\documentclass{xdvsvgw}
+\usepackage{td-simplestack}
+\usetikzlibrary{calc}
+
+\begin{document}
+  \begin{tikzpicture}
+    \def\mytextwidth{50mm}
+
+    \begin{scope}
+      \SDrawNode{0}{0}{}
+      \SDrawNode{0}{-1}{$+$}
+      \SDrawNode{0}{-2}{(}
+      \SDrawNode{0}{-3}{$*$}
+
+      \SAsideText{
+        \textbf{Input}: 1\,$*$\,(\,2\,$+$\,\fbox{3} ) \\
+        \textbf{Output}: 1\,2\,\fbox{3}
+      }{\mytextwidth}
+    \end{scope}
+
+    \begin{scope}[yshift=-6*\SNodeHeight]
+      \SDrawPopArrow{0}{0}{$+$, (}
+      \SDrawNode{0}{0}{}
+      \SDrawNode{0}{-1}{$*$}
+
+      \SAsideText{
+        \textbf{Input}: 1\,$*$\,(\,2\,$+$\,3\,\fbox{)} \\
+        \textbf{Output}: 1\,2\,3\,\fbox{$+$}
+      }{\mytextwidth}
+    \end{scope}
+
+    \begin{scope}[yshift=-10*\SNodeHeight]
+      \SDrawPopArrow{0}{0}{$*$}
+      \SDrawNode{0}{0}{}
+
+      \SAsideText{
+        \textbf{Input}: 1\,$*$\,(\,2\,$+$\,3\,) \\
+        \textbf{Output}: 1\,2\,3\,$+$\,\fbox{$*$}
+      }{\mytextwidth}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

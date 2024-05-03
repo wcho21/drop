@@ -1,0 +1,84 @@
+\documentclass{xdvsvgw}
+\usepackage{td-8nodes}
+\usetikzlibrary{backgrounds}
+
+\def\scopeXSep{42.5mm}
+
+\tikzset{
+  shadecolor/.style={lightgray!50},
+  shade/.style={shadecolor,line width=7.75mm,line cap=round}
+}
+
+\begin{document}
+  \begin{tikzpicture}[
+    person/.style={draw,circle,fill=white},
+  ]
+    \begin{scope}
+      \setNodeCoordinates
+      \drawNodes
+
+      % line and shade
+      \begin{scope}[on background layer]
+        \draw (P1) -- (P2);
+
+        \foreach \i/\j in {3/4,4/5,5/6,6/7,7/8,8/3} {
+          \draw[shade] (P\i) -- (P\j);
+        }
+        \draw[fill,shadecolor] (P3) -- (P4) -- (P5) -- (P6) -- (P7) -- (P8) -- cycle;
+      \end{scope}
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep]
+      \setNodeCoordinates
+      \drawNodes
+
+      % line and shade
+      \begin{scope}[on background layer]
+        \draw (P1) -- (P4);
+
+        % left shade
+        \foreach \i/\j in {5/6,6/7,7/8,8/5} {
+          \draw[shade] (P\i) -- (P\j);
+        }
+        \draw[fill,shadecolor] (P5) -- (P6) -- (P7) -- (P8) -- cycle;
+
+        % right shade
+        \draw[shade] (P2) -- (P3);
+      \end{scope}
+    \end{scope}
+
+    \begin{scope}[xshift=2*\scopeXSep]
+      \setNodeCoordinates
+      \drawNodes
+
+      % line and shade
+      \begin{scope}[on background layer]
+        \draw (P1) -- (P6);
+
+        % left shade
+        \draw[shade] (P7) -- (P8);
+
+        % right shade
+        \foreach \i/\j in {2/3,3/4,4/5,5/2} {
+          \draw[shade] (P\i) -- (P\j);
+        }
+        \draw[fill,shadecolor] (P2) -- (P3) -- (P4) -- (P5) -- cycle;
+      \end{scope}
+    \end{scope}
+
+    \begin{scope}[xshift=3*\scopeXSep]
+      \setNodeCoordinates
+      \drawNodes
+
+      % line and shade
+      \begin{scope}[on background layer]
+        \draw (P1) -- (P8);
+
+        \foreach \i/\j in {2/3,3/4,4/5,5/6,6/7,7/2} {
+          \draw[shade] (P\i) -- (P\j);
+        }
+        \draw[fill,shadecolor] (P2) -- (P3) -- (P4) -- (P5) -- (P6) -- (P7) -- cycle;
+      \end{scope}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

@@ -9,11 +9,11 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 
-import fig1 from "./_figs/fig1.svg";
-import fig2 from "./_figs/fig2.svg";
-import fig3 from "./_figs/fig3.svg";
-import fig4 from "./_figs/fig4.svg";
-import fig5 from "./_figs/fig5.svg";
+import texfig1 from "@texfigs/2023/05/12/01/fig1.svg";
+import texfig2 from "@texfigs/2023/05/12/01/fig2.svg";
+import texfig3 from "@texfigs/2023/05/12/01/fig3.svg";
+import texfig4 from "@texfigs/2023/05/12/01/fig4.svg";
+import texfig5 from "@texfigs/2023/05/12/01/fig5.svg";
 
 
 
@@ -108,7 +108,7 @@ function evaluateInfix(infix)
 
 예를 들어 `12+`로 확인해볼 수 있습니다.
 
-<Figure src={fig1} alt="Calculating postfix expression 12+ with stack">
+<Figure src={texfig1} alt="Calculating postfix expression 12+ with stack">
   <FigureCaption slot="caption">그림 1. 숫자를 스택에 넣고, 더하기 기호를 만났을 때 꺼내서 덧셈 결과인 3을 넣습니다. 그러면 마지막으로 남은 3이 결과가 됩니다.</FigureCaption>
 </Figure>
 
@@ -197,7 +197,7 @@ def applyOperator(operator, num1, num2):
 
 이대로 하면, 예시로 든 `1+2`는 원하는 결과인 `12+`를 얻게 됩니다.
 
-<Figure src={fig2} alt="Converting to postfix expression with stack">
+<Figure src={texfig2} alt="Converting to postfix expression with stack">
   <FigureCaption slot="caption">그림 2. 연산자를 읽으면 스택에 넣어두고, 식을 다 읽었을 때 꺼냅니다.</FigureCaption>
 </Figure>
 
@@ -226,7 +226,7 @@ def applyOperator(operator, num1, num2):
 왜냐면 덧셈을 먼저 해야 하기 때문입니다.
 이후 `-`를 꺼내므로, 변환한 후위 표기식에서 뺄셈은 나중에 나타나게 됩니다.
 
-<Figure src={fig3} alt="Handling operators having the same priority">
+<Figure src={texfig3} alt="Handling operators having the same priority">
   <FigureCaption slot="caption">그림 3. 우선순위가 '같은' 연산자 처리하기. 덧셈 부분은 '그림 2' 처럼 진행합니다. 뺄셈 기호를 만나면 덧셈 기호를 꺼냅니다.</FigureCaption>
 </Figure>
 
@@ -247,7 +247,7 @@ def applyOperator(operator, num1, num2):
 덧셈 기호는 꺼내지 않고 그 위에 곱셈 기호를 둡니다.
 그래야 다 읽고나서 전부 꺼낼 때 곱셈 기호가 먼저 나오니까요.
 
-<Figure src={fig4} alt="Answer to the second exercise">
+<Figure src={texfig4} alt="Answer to the second exercise">
   <FigureCaption slot="caption">그림 4. 우선순위가 다른 경우 처리하기. 덧셈 부분은 '그림 2' 처럼 진행합니다. 나중에 곱셈 기호를 먼저 꺼내기 위해, 덧셈 기호 위에 둡니다. 즉 항상 '급한' 기호를 먼저 꺼냅니다.</FigureCaption>
 </Figure>
 
@@ -268,7 +268,7 @@ def applyOperator(operator, num1, num2):
 예를 들어 `1*(2+3)`를 봅시다.
 닫는 괄호를 만나면, 덧셈 기호만 먼저 꺼내 숫자 옆에 붙이게 됩니다.
 
-<Figure src={fig5} alt="Handling parentheses">
+<Figure src={texfig5} alt="Handling parentheses">
   <FigureCaption slot="caption">
     그림 5. 괄호를 만난 경우 처리하기.
     숫자 3까지는, 여는 괄호는 스택에 넣으며 기존 방법대로 처리합니다.

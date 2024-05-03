@@ -1,0 +1,21 @@
+\documentclass{xdvsvgw}
+\usepackage{t-util}
+\usepackage{ts-cells}
+\usetikzlibrary{shapes.multipart}
+
+\begin{document}
+  \begin{tikzpicture}
+    \node[name=diagram,hcells={5}] {
+      \nodepart{one} $f_1$
+      \nodepart{two} $f_2$
+      \nodepart{three} $f_3$
+      \nodepart{four} \TUpad{5mm}{$\dots$}
+      \nodepart{five} $f_{23}$
+    };
+
+    \draw[shift=(diagram.south)]
+      node[below=1mm] {\small (23 bits)};
+    \draw[shift=(diagram.south)]
+      node[below=10mm] {$F$ = .$f_1 f_2 f_3 \dots f_{23}$};
+  \end{tikzpicture}
+\end{document}

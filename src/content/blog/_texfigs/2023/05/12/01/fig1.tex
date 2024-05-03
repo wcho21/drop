@@ -1,0 +1,32 @@
+\documentclass{xdvsvgw}
+\usepackage{td-simplestack}
+\usetikzlibrary{calc}
+
+\begin{document}
+  \begin{tikzpicture}
+    \def\mytextwidth{36mm}
+
+    \begin{scope}
+      \SDrawPushArrow{0}{0}{1}
+      \SDrawNode{0}{0}{}
+      \SDrawNode{0}{-1}{1}
+      \SAsideText{\textbf{Input}: \fbox{1}\,2\,$+$}{\mytextwidth}
+    \end{scope}
+
+    \begin{scope}[yshift=-4*\SNodeHeight]
+      \SDrawPushArrow{0}{0}{2}
+      \SDrawNode{0}{0}{}
+      \SDrawNode{0}{-1}{2}
+      \SDrawNode{0}{-2}{1}
+      \SAsideText{\textbf{Input}: 1\,\fbox{2}\,$+$}{\mytextwidth}
+    \end{scope}
+
+    \begin{scope}[yshift=-9*\SNodeHeight]
+      \SDrawPushArrow{0}{0}{3}
+      \SDrawPopArrow{0}{0}{2, 1}
+      \SDrawNode{0}{0}{}
+      \SDrawNode{0}{-1}{3}
+      \SAsideText{\textbf{Input}: 1\,2\,\fbox{$+$}}{\mytextwidth}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

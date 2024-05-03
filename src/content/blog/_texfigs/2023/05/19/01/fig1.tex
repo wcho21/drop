@@ -1,0 +1,21 @@
+\documentclass{xdvsvgw}
+\usepackage{t-util}
+\usepackage{ts-cells}
+\usetikzlibrary{shapes.multipart}
+
+\begin{document}
+  \begin{tikzpicture}
+    \node[name=diagram,hcells={3}] {
+      \nodepart{one} \TUpad{2mm}{Sign $S$}
+      \nodepart{two} \TUpad{4mm}{Exponent $E$}
+      \nodepart{three} \TUpad{14mm}{Fraction $F$}
+    };
+
+    \draw[shift=(diagram.one south)]
+      node[below=1mm] {\small(1 bit)};
+    \draw[shift=(diagram.two south)]
+      node[below=1mm] {\small(8 bits)};
+    \draw[shift=(diagram.three south)]
+      node[below=1mm] {\small(23 bits)};
+  \end{tikzpicture}
+\end{document}

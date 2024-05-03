@@ -1,0 +1,52 @@
+\documentclass{xdvsvgw}
+\usepackage{td-simplestack}
+\usetikzlibrary{calc}
+
+\begin{document}
+  \begin{tikzpicture}
+    \def\mytextwidth{50mm}
+
+    \begin{scope}
+      \SDrawNode{0}{0}{}
+      \SDrawNode{0}{-1}{$+$}
+
+      \SAsideText{
+        \textbf{Input}: 1\,$+$\,\fbox{2}\,$*$\,3 \\
+        \textbf{Output}: 1\,\fbox{2}
+      }{\mytextwidth}
+    \end{scope}
+
+    \begin{scope}[yshift=-4*\SNodeHeight]
+      \SDrawPushArrow{0}{0}{$*$}
+      \SDrawNode{0}{0}{}
+      \SDrawNode{0}{-1}{$*$}
+      \SDrawNode{0}{-2}{$+$}
+
+      \SAsideText{
+        \textbf{Input}: 1\,$+$\,2\,\fbox{$*$\vphantom{0}}\,3 \\
+        \textbf{Output}: 1\,2
+      }{\mytextwidth}
+    \end{scope}
+
+    \begin{scope}[yshift=-8*\SNodeHeight]
+      \SDrawNode{0}{0}{}
+      \SDrawNode{0}{-1}{$*$}
+      \SDrawNode{0}{-2}{$+$}
+
+      \SAsideText{
+        \textbf{Input}: 1\,$+$\,2\,$*$\,\fbox{3} \\
+        \textbf{Output}: 1\,2\,\fbox{3}
+      }{\mytextwidth}
+    \end{scope}
+
+    \begin{scope}[yshift=-13*\SNodeHeight]
+      \SDrawPopArrow{0}{0}{$*$, $+$}
+      \SDrawNode{0}{0}{}
+
+      \SAsideText{
+        \textbf{Input}: 1\,$+$\,2\,$*$\,3 \\
+        \textbf{Output}: 1\,2\,3\,\fbox{$*$ $+$}
+      }{\mytextwidth}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
