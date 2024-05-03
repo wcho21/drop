@@ -1,8 +1,9 @@
 \documentclass{xdvsvgw}
-\usepackage{td-8nodes}
+\usepackage{td-circular}
 \usetikzlibrary{backgrounds}
 
 \def\scopeXSep{42.5mm}
+\def\radius{13.5mm}
 
 \tikzset{
   shadecolor/.style={lightgray!50},
@@ -14,8 +15,8 @@
     person/.style={draw,circle,fill=white},
   ]
     \begin{scope}
-      \setNodeCoordinates
-      \drawNodes
+      \setNodeCoords{8}{\radius}{P}{0}{0}
+      \drawNodeCircle{8}{P}
 
       % line and shade
       \begin{scope}[on background layer]
@@ -29,8 +30,8 @@
     \end{scope}
 
     \begin{scope}[xshift=\scopeXSep]
-      \setNodeCoordinates
-      \drawNodes
+      \setNodeCoords{8}{\radius}{P}{0}{0}
+      \drawNodeCircle{8}{P}
 
       % line and shade
       \begin{scope}[on background layer]
@@ -48,8 +49,8 @@
     \end{scope}
 
     \begin{scope}[xshift=2*\scopeXSep]
-      \setNodeCoordinates
-      \drawNodes
+      \setNodeCoords{8}{\radius}{P}{0}{0}
+      \drawNodeCircle{8}{P}
 
       % line and shade
       \begin{scope}[on background layer]
@@ -67,8 +68,8 @@
     \end{scope}
 
     \begin{scope}[xshift=3*\scopeXSep]
-      \setNodeCoordinates
-      \drawNodes
+      \setNodeCoords{8}{\radius}{P}{0}{0}
+      \drawNodeCircle{8}{P}
 
       % line and shade
       \begin{scope}[on background layer]

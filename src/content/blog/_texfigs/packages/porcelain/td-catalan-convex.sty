@@ -1,0 +1,53 @@
+% tikz drawing util for convex polygon to explain Catalan numbers
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-catalan-convex}[2024/05/03]
+
+\RequirePackage{td-circular}
+
+\newcommand\drawPentagon[1]{
+  \def\@CCradius{#1}
+
+  \setNodeCoords{5}{\@CCradius}{P}{0}{0}
+  \draw (P1) -- (P2) -- (P3) -- (P4) -- (P5) -- cycle;
+}
+
+\newcommand\drawPentagonLabel{
+  \node[above]              at (P1) {1};
+  \node[right=-0.25mm]      at (P2) {2};
+  \node[below right=-0.5mm] at (P3) {3};
+  \node[below left=-0.5mm]  at (P4) {4};
+  \node[left=-0.25mm]       at (P5) {5};
+}
+
+\newcommand\drawSkewedNgon[1]{
+  \def\@CCedge{#1}
+
+  \path (0,0) coordinate (P1)
+    -- ++(340:\@CCedge) coordinate (P2)
+    -- ++(300:\@CCedge) coordinate (P3)
+    -- ++(260:\@CCedge) coordinate (P4)
+    -- ++(220:\@CCedge) coordinate (P5)
+    -- ++(180:\@CCedge) coordinate (P6)
+    -- ++(140:\@CCedge) coordinate (P7)
+    -- ++(100:\@CCedge) coordinate (P8)
+    --  ++(60:\@CCedge) coordinate (P9)
+    -- cycle;
+
+  % partially draw edges
+  \draw (P8) -- (P9) -- (P1) -- (P2);
+  \draw (P4) -- (P5) -- (P6);
+}
+
+\newcommand\drawSkewedNgonLabel{
+  % label
+  \node[above]              at (P1) {1};
+  \node[above right=-0.5mm] at (P2) {2};
+  \node                     at (P3) {$\vdots$};
+  \node[right=-0.5mm]       at (P4) {$k-1$};
+  \node[below right=-0.5mm] at (P5) {$k$};
+  \node[below=-0.5mm]       at (P6) {$k+1$};
+  \node                     at (P7) {$\ddots$};
+  \node[above left=-0.5mm]  at (P9) {$n$};
+  \node[left]               at (P8) {$n-1$};
+}

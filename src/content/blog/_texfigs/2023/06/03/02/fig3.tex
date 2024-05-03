@@ -1,0 +1,28 @@
+\documentclass{xdvsvgw}
+\usetikzlibrary{backgrounds}
+\usepackage{td-catalan-convex,ts-arrow}
+
+\newcommand\shadeColor{lightgray!50}
+
+\begin{document}
+  \begin{tikzpicture}
+    \drawSkewedNgon{10mm}
+    \drawSkewedNgonLabel
+
+    % shaded triangle
+    \draw (P1) -- (P5) -- (P9);
+    \begin{scope}[on background layer]
+      \fill[\shadeColor] (P1) -- (P5) -- (P9) -- cycle;
+    \end{scope}
+
+    % right annotation
+    \path (P1) -- (P4) coordinate[midway] (P14);
+    \draw[StlthRev] (P14) .. controls +(45:3mm) and +(165:6mm) .. ++(12mm,6mm) coordinate (R);
+    \node[right] at (R) {\small $k$-gon};
+
+    % left annotation
+    \path (P6) -- (P8) coordinate[midway] (P68);
+    \draw[StlthRev] (P68) .. controls +(135:12mm) and +(90:6mm) .. ++(-9mm,-9mm) coordinate (L);
+    \node[below,xshift=-12mm] at (L) {\small $(n-k+1)$-gon};
+  \end{tikzpicture}
+\end{document}

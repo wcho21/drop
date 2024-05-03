@@ -1,40 +1,40 @@
-\documentclass[tikz,border=5mm,12pt]{standalone}
-\usepackage{pentagon}
+\documentclass{xdvsvgw}
+\usepackage{td-catalan-convex}
 
-\newcommand\scopesep{28mm}
+\newcommand\scopeXSep{20mm}
 
 \begin{document}
   \begin{tikzpicture}
     \begin{scope}
-      \drawpentagon
+      \drawPentagon{8mm}
 
       \draw (P1) -- (P3);
       \draw (P1) -- (P4);
     \end{scope}
 
-    \begin{scope}[xshift=\scopesep]
-      \drawpentagon
+    \begin{scope}[xshift=\scopeXSep]
+      \drawPentagon{8mm}
 
       \draw (P2) -- (P4);
       \draw (P2) -- (P5);
     \end{scope}
 
-    \begin{scope}[xshift=2*\scopesep]
-      \drawpentagon
+    \begin{scope}[xshift=2*\scopeXSep]
+      \drawPentagon{8mm}
 
       \draw (P3) -- (P5);
       \draw (P3) -- (P1);
     \end{scope}
 
-    \begin{scope}[xshift=3*\scopesep]
-      \drawpentagon
+    \begin{scope}[xshift=3*\scopeXSep]
+      \drawPentagon{8mm}
 
       \draw (P4) -- (P1);
       \draw (P4) -- (P2);
     \end{scope}
 
-    \begin{scope}[xshift=4*\scopesep]
-      \drawpentagon
+    \begin{scope}[xshift=4*\scopeXSep]
+      \drawPentagon{8mm}
 
       \draw (P5) -- (P2);
       \draw (P5) -- (P3);
