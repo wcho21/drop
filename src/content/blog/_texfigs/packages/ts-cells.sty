@@ -1,0 +1,16 @@
+% tikz styles for cells
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{ts-cells}[2024/05/03]
+
+\usetikzlibrary{shapes.multipart}
+
+\tikzset{
+  hcells/.style n args={1}{
+    draw,
+    rectangle split,
+    rectangle split horizontal,
+    rectangle split parts=#1,
+    anchor=center
+  }
+}

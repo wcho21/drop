@@ -1,0 +1,35 @@
+\documentclass{xdvsvgw}
+\usepackage{td-8nodes}
+\usetikzlibrary{calc}
+
+\def\scopeXSep{42.5mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \setNodeCoordinates
+
+      \draw (P1) -- (P8);
+      \draw (P2) -- (P3);
+      \draw (P4) -- (P7);
+      \draw (P5) -- (P6);
+
+      \drawNodes;
+
+      \node at ($(P5) - (0,12.5mm)$) {(O)};
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep]
+      \setNodeCoordinates
+
+      \draw (P1) -- (P8);
+      \draw (P2) -- (P3);
+      \draw[red] (P4) to[out=120,in=60] (P6);
+      \draw[red] (P5) to[out=90,in=0] (P7);
+
+      \drawNodes;
+
+      \node at ($(P5) - (0,12.5mm)$) {(X)};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

@@ -10,10 +10,10 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 
-import fig1 from "./_figs/fig1.svg";
-import fig2 from "./_figs/fig2.svg";
-import fig3 from "./_figs/fig3.svg";
-import fig4 from "./_figs/fig4.svg";
+import texfig1 from "@texfigs/2023/06/02/01/fig1.svg";
+import texfig2 from "@texfigs/2023/06/02/01/fig2.svg";
+import texfig3 from "@texfigs/2023/06/02/01/fig3.svg";
+import texfig4 from "@texfigs/2023/06/02/01/fig4.svg";
 
 무언가를 세는 문제에서 광범위하게 나타나는 숫자가 있습니다.
 카탈란 넘버<L>Catalan number</L>라고 불리는 이 숫자들은 다음과 같은 수열, 즉 [시퀀스][wp-seq]<L>sequence</L>입니다.
@@ -29,7 +29,7 @@ $$
 
 [wiki-bin-tree]: https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%A7%84_%ED%8A%B8%EB%A6%AC
 
-<Figure src={fig1} alt="Five kinds of binary trees with three nodes">
+<Figure src={texfig1} alt="Five kinds of binary trees with three nodes">
   <FigureCaption slot="caption">그림 1. 세 노드를 가진 트리들. 총 다섯 가지가 존재합니다.</FigureCaption>
 </Figure>
 
@@ -68,7 +68,7 @@ $$
 왼쪽 서브트리<L>subtree</L>를 주목해보세요.
 여기에 오는 노드 개수를 기준으로 케이스를 나눠봅시다.
 
-<Figure src={fig2} alt="Four cases of binary tress with four nodes">
+<Figure src={texfig2} alt="Four cases of binary tress with four nodes">
   <FigureCaption slot="caption">그림 2. 노드가 네 개일 때의 패턴. 왼쪽 서브 트리에 몇 개의 노드가 있는 지에 따라 나눕니다.</FigureCaption>
 </Figure>
 
@@ -101,7 +101,7 @@ $$
 하지만 팔이 교차되는 일은 없기를 바라고 있습니다.
 그러면 이렇게 악수를 하는 방법은 몇 가지일까요?
 
-<Figure src={fig3} alt="Successful and failed case of handshaking">
+<Figure src={texfig3} alt="Successful and failed case of handshaking">
   <FigureCaption slot="caption">
     그림 3. 악수 문제.
     왼쪽은 올바른 경우입니다.
@@ -113,7 +113,7 @@ $$
 여기서도 더 작은 문제의 답을 이용해 풀 수 있는데요.
 이번에는 1번 사람이 누구와 악수하는지 기준으로 케이스를 나눠봅시다.
 
-<Figure src={fig4} alt="Handshaking diagram">
+<Figure src={texfig4} alt="Handshaking diagram">
   <FigureCaption slot="caption">그림 4. 악수의 네 가지 패턴. 1번 사람이 누구와 악수를 하는 지에 따라 나눕니다. 3번 사람과 악수한다면, 2번 사람은 악수할 사람이 없게 됩니다. 이런 이유로 홀수 번의 사람과 악수하는 경우는 제외합니다.</FigureCaption>
 </Figure>
 

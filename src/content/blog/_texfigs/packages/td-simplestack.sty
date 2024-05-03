@@ -1,0 +1,60 @@
+% tikz drawing util for stack
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-simplestack}[2024/05/03]
+
+\usetikzlibrary{arrows.meta}
+
+\newcommand\SNodeWidth{9mm}
+\newcommand\SNodeHeight{6mm}
+\newcommand\SArrowTipScale{1.2}
+
+\newcommand\SDrawNode[3]{
+  \def\xoffset{#1}
+  \def\nodeindex{#2} % should be <= 0
+  \def\nodetext{#3}
+
+  \draw (\xoffset, \nodeindex*\SNodeHeight)
+    -- ++(0, -\SNodeHeight)
+    -- ++(\SNodeWidth, 0)
+    -- ++(0, \SNodeHeight);
+
+  \path (\xoffset, \nodeindex*\SNodeHeight)
+    -- ++(\SNodeWidth/2, -\SNodeHeight/2) node {\nodetext};
+}
+
+\newcommand\SAsideText[2]{
+  \def\asidetext{#1}
+  \def\asidetextwidth{#2}
+
+  \def\nodetextgap{10mm}
+
+  \node[align=left,text width=\asidetextwidth] at (\SNodeWidth+\asidetextwidth/2+\nodetextgap, -\SNodeHeight/2)
+    {\asidetext};
+}
+
+\newcommand\SDrawPushArrow[3]{
+  \def\xoffset{#1}
+  \def\nodeindex{#2} % should be <= 0
+  \def\nodetext{#3}
+
+  \def\xradius{5mm}
+  \def\yradius{5mm}
+
+  \draw[-{Stealth[scale=\SArrowTipScale]}] (\SNodeWidth*0.8+\xoffset+\xradius, \SNodeHeight*0.8+\nodeindex*\SNodeHeight)
+    node[right] {\nodetext}
+    arc[start angle=90,end angle=180,x radius=\xradius,y radius=\yradius];
+}
+
+\newcommand\SDrawPopArrow[3]{
+  \def\xoffset{#1}
+  \def\nodeindex{#2} % should be <= 0
+  \def\nodetext{#3}
+
+  \def\xradius{5mm}
+  \def\yradius{5mm}
+
+  \draw[-{Stealth[scale=\SArrowTipScale]}] (-\SNodeWidth*0.2+\xoffset+\xradius, \SNodeHeight*0.8-\yradius+\nodeindex*\SNodeHeight)
+    arc[start angle=0,end angle=90,x radius=\xradius,y radius=\yradius]
+    node[left] {\nodetext};
+}
