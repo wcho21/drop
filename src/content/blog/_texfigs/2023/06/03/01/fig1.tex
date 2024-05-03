@@ -1,0 +1,46 @@
+\documentclass{xdvsvgw}
+\usepackage{td-graygrid,ts-dyck}
+
+\def\scopeXSep{37.5mm}
+
+\def\step{\GGridCellSize}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \GDrawSmallFourByFour{0}{0}
+
+      \node[dot] at (0,0) {};
+      \node[dot] at (4*\step,4*\step) {};
+
+      \draw[pathLine] (0,0)
+        -- ++(2*\step,0)
+        -- ++(0,\step)
+        -- ++(\step,0)
+        -- ++(0,2*\step)
+        -- ++(\step,0)
+        -- ++(0,\step);
+
+      \node at (2*\step,-8mm) {(O)};
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep]
+      \GDrawSmallFourByFour{0}{0}
+
+      \node[dot] at (0,0) {};
+      \node[dot] at (4*\step,4*\step) {};
+
+      \draw[pathLine] (0,0)
+        -- ++(2*\step,0)
+        -- ++(0,2*\step);
+      \draw[pathLine,red] (2*\step,2*\step)
+        -- ++(0,\step)
+        -- ++(\step,0);
+      \draw[pathLine] (3*\step,3*\step)
+        -- ++(\step,0)
+        -- ++(0,\step);
+
+      \node at (2*\step,-8mm) {(X)};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

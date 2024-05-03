@@ -1,17 +1,18 @@
-\documentclass[tikz,border=5mm,12pt]{standalone}
-\usepackage[fontsize=16pt]{fontsize}
-\usepackage{lattice}
-\usetikzlibrary{arrows.meta}
+\documentclass{xdvsvgw}
+\usepackage{td-graygrid,ts-dyck,ts-arrow}
 
-\newcommand\scopesep{48mm}
+\def\step{\GGridCellSize}
+\def\shadecolor{lightgray!35}
+
+\tikzset{
+  pathCurve/.style={pathLine,dashed,Stlth},
+  shade/.style={draw=none,fill=\shadecolor}
+}
+
+\newcommand\scopeXSep{37.5mm}
 
 \begin{document}
-  \begin{tikzpicture}[
-    circ/.style={circle,fill,inner sep=1.5pt},
-    dyckpath/.style={line width=0.75pt,line cap=round},
-    dyckpathcurve/.style={dyckpath,dashed,-{Stealth[scale=1.2]},shorten >=2.5pt,shorten <=2.5pt},
-    shade/.style={draw=none,fill=\shadecolor}
-  ]
+  \begin{tikzpicture}
     \begin{scope}
       \path (0,0) coordinate (A)
         ++ (\step,\step) coordinate (B)
@@ -23,25 +24,25 @@
         -- (C)
         -- cycle;
 
-      \drawgrid
+      \GDrawSmallFourByFour{0}{0}
 
-      \node[circ] at (A) {};
-      \node[circ] at (B) {};
-      \node[circ] at (C) {};
+      \node[dot] at (A) {};
+      \node[dot] at (B) {};
+      \node[dot] at (C) {};
 
       % label
       \node[below left] at (A) {A};
       \node[above left] at (B) {B};
       \node[above right] at (C) {C};
 
-      \draw[dyckpath] (0,0)
+      \draw[pathLine] (0,0)
         -- ++(\step,0)
         -- ++(0,\step);
-      \draw[dyckpathcurve] (\step,\step)
+      \draw[pathCurve] (\step,\step)
         .. controls +(right:12mm) and +(down:12mm) .. ++(3*\step,3*\step);
     \end{scope}
 
-    \begin{scope}[xshift=\scopesep]
+    \begin{scope}[xshift=\scopeXSep]
       \path (0,0) coordinate (A)
         ++ (2*\step,2*\step) coordinate (B)
         ++ (2*\step,2*\step) coordinate (C);
@@ -56,26 +57,26 @@
         -- (C)
         -- cycle;
 
-      \drawgrid
+      \GDrawSmallFourByFour{0}{0}
 
-      \node[circ] at (A) {};
-      \node[circ] at (B) {};
-      \node[circ] at (C) {};
+      \node[dot] at (A) {};
+      \node[dot] at (B) {};
+      \node[dot] at (C) {};
 
       % label
       \node[below left] at (A) {A};
       \node[above left] at (B) {B};
       \node[above right] at (C) {C};
 
-      \draw[dyckpath] (0,0) -- ++(\step,0);
-      \draw[dyckpath] (2*\step,\step) -- ++(0,\step);
-      \draw[dyckpathcurve] (\step,0)
+      \draw[pathLine] (0,0) -- ++(\step,0);
+      \draw[pathLine] (2*\step,\step) -- ++(0,\step);
+      \draw[pathCurve] (\step,0)
         .. controls +(right:4mm) and +(down:4mm) .. ++(\step,\step);
-      \draw[dyckpathcurve] (2*\step,2*\step)
+      \draw[pathCurve] (2*\step,2*\step)
         .. controls +(right:8mm) and +(down:8mm) .. ++(2*\step,2*\step);
     \end{scope}
 
-    \begin{scope}[xshift=2*\scopesep]
+    \begin{scope}[xshift=2*\scopeXSep]
       \path (0,0) coordinate (A)
         ++ (3*\step,3*\step) coordinate (B)
         ++ (\step,\step) coordinate (C);
@@ -90,26 +91,26 @@
         -- (C)
         -- cycle;
 
-      \drawgrid
+      \GDrawSmallFourByFour{0}{0}
 
-      \node[circ] at (A) {};
-      \node[circ] at (B) {};
-      \node[circ] at (C) {};
+      \node[dot] at (A) {};
+      \node[dot] at (B) {};
+      \node[dot] at (C) {};
 
       % label
       \node[below left] at (A) {A};
       \node[above left] at (B) {B};
       \node[above right] at (C) {C};
 
-      \draw[dyckpath] (0,0) -- ++(\step,0);
-      \draw[dyckpath] (3*\step,2*\step) -- ++(0,\step);
-      \draw[dyckpathcurve] (\step,0)
+      \draw[pathLine] (0,0) -- ++(\step,0);
+      \draw[pathLine] (3*\step,2*\step) -- ++(0,\step);
+      \draw[pathCurve] (\step,0)
         .. controls +(right:8mm) and +(down:8mm) .. ++(2*\step,2*\step);
-      \draw[dyckpathcurve] (3*\step,3*\step)
+      \draw[pathCurve] (3*\step,3*\step)
         .. controls +(right:4mm) and +(down:4mm) .. ++(\step,\step);
     \end{scope}
 
-    \begin{scope}[xshift=3*\scopesep]
+    \begin{scope}[xshift=3*\scopeXSep]
       \path (0,0) coordinate (A)
         ++ (4*\step,4*\step) coordinate (B);
 
@@ -119,18 +120,18 @@
         -- ++(0,3*\step)
         -- cycle;
 
-      \drawgrid
+      \node[dot] at (A) {};
+      \node[dot] at (B) {};
 
-      \node[circ] at (A) {};
-      \node[circ] at (B) {};
+      \GDrawSmallFourByFour{0}{0}
 
       % label
       \node[below left] at (A) {A};
       \node[above left] at (B) {B};
 
-      \draw[dyckpath] (0,0) -- ++(\step,0);
-      \draw[dyckpath] (4*\step,3*\step) -- ++(0,\step);
-      \draw[dyckpathcurve] (\step,0)
+      \draw[pathLine] (0,0) -- ++(\step,0);
+      \draw[pathLine] (4*\step,3*\step) -- ++(0,\step);
+      \draw[pathCurve] (\step,0)
         .. controls +(right:12mm) and +(down:12mm) .. ++(3*\step,3*\step);
     \end{scope}
   \end{tikzpicture}

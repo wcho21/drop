@@ -1,9 +1,12 @@
-\documentclass[tikz,border=5mm,12pt]{standalone}
-\usepackage[fontsize=16pt]{fontsize}
-\usetikzlibrary{arrows.meta}
+\documentclass{xdvsvgw}
+\usepackage{ts-arrow}
 
-\newcommand\scopesep{46mm}
-\newcommand\stackwidth{28pt}
+\tikzset{
+  arr/.style={StlthRev}
+}
+
+\newcommand\scopeXSep{40mm}
+\newcommand\stackwidth{9mm}
 \newcommand\stackheight{56pt}
 \newcommand\arrowwidth{12pt}
 \newcommand\arrowheight{14pt}
@@ -26,7 +29,7 @@
 }
 
 \begin{document}
-  \begin{tikzpicture}[
+  \begin{tikzpicture}
     arr/.style={{Stealth[scale=1.2]}-}
   ]
     \begin{scope}
@@ -35,7 +38,7 @@
       \drawpushlabel{\fbox{1}\,32}
     \end{scope}
 
-    \begin{scope}[xshift=\scopesep]
+    \begin{scope}[xshift=\scopeXSep]
       \drawstack
 
       \drawpoplabel{\fbox{1}}
@@ -45,7 +48,7 @@
       \drawpusharr
     \end{scope}
 
-    \begin{scope}[xshift=2*\scopesep]
+    \begin{scope}[xshift=2*\scopeXSep]
       \drawstack
 
       \node at (\stackwidth/2,-44pt) {3};
@@ -56,7 +59,7 @@
       \drawpusharr
     \end{scope}
 
-    \begin{scope}[xshift=3*\scopesep]
+    \begin{scope}[xshift=3*\scopeXSep]
       \drawstack
 
       \drawpoplabel{1\,\fbox{23}}

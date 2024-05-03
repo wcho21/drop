@@ -1,0 +1,16 @@
+% tikz drawing util for grid
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-grid}[2024/05/03]
+
+\newcommand\GDrawGrid[6]{
+  \def\@Gx{#1}
+  \def\@Gy{#2}
+  \def\@GxNum{#3}
+  \def\@GyNum{#4}
+  \def\@Gstep{#5}
+  \def\@GgridColor{#6}
+
+  \draw[step=\@Gstep,\@GgridColor] (\@Gx,\@Gy) grid ++(\@GxNum*\@Gstep,\@GyNum*\@Gstep);
+  \draw[\@GgridColor] (\@Gx,\@Gy) -- ++(\@GxNum*\@Gstep,\@GyNum*\@Gstep);
+}
