@@ -12,6 +12,8 @@ A personal magazine about computer science and mathematics.
 
 Built with [astro][astro] framework.
 
+*The following are to be obsolete.*: new convertor to be used (see [BUILD.md](./BUILD.md))
+
 Images contained in articles are usually built with [LaTeX][LaTeX] typesetting system.
 [GNU Make][make] is used as image converting macro, depending on [pdf2svg][pdf2svg] converter and [svgo][svgo] optimizer.
 
