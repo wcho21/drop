@@ -13,3 +13,5 @@ A personal magazine about computer science and mathematics.
 Built with [astro][astro] framework.
 
 For the details, see [BUILD.md](./BUILD.md)
+
+[astro]: https://astro.build/
