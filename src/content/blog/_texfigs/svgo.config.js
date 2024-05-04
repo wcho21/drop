@@ -4,8 +4,8 @@ export default {
       name: 'preset-default',
       params: {
         overrides: {
-          // danger to remove viewbox
-          removeViewBox: false,
+          removeViewBox: false, // danger to remove viewbox
+          cleanupNumericValues: false, // since unit conversion is not working well
         },
       },
     },

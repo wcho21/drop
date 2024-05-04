@@ -5,7 +5,12 @@
 
 \usetikzlibrary{arrows.meta}
 
+\def\@TSAscale{1.1875}
+
 \tikzset{
-  Stlth/.style={-{Stealth[scale=1.1875]},shorten >=0.75mm,shorten <=0.5mm},
-  StlthRev/.style={{Stealth[scale=1.1875]}-,shorten >=0.75mm,shorten <=0.5mm}
+  StlthBase/.style={-{Stealth[scale=\@TSAscale]}},
+  StlthRevBase/.style={{Stealth[scale=\@TSAscale]}-},
+  StlthBodyShorten/.style={shorten >=0.75mm,shorten <=0.5mm},
+  Stlth/.style={StlthBase,StlthBodyShorten},
+  StlthRev/.style={StlthRevBase,StlthBodyShorten}
 }

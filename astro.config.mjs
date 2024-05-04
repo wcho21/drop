@@ -14,6 +14,6 @@ export default defineConfig({
       theme: "github-light"
     },
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex]
-  }
+    rehypePlugins: [rehypeKatex],
+  },
 });

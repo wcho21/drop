@@ -1,0 +1,25 @@
+\documentclass{cmn}
+\usepackage{t-util,ts-arrow,td-interpret-env-diag}
+
+\def\labelYsep{26pt}
+\def\xsep{44mm}
+\def\ysep{10mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    % left codes
+    \node[code] at (-0.115*\xsep, \labelYsep) { \small\texttt{source code} };
+
+    \node[code]       at (0*\xsep, 0*\ysep) { \texttt{a\ =\ 1} };
+    \node[code] (OpB) at (0*\xsep,-1*\ysep) { \texttt{a\ +\ 2} };
+
+    % right environments
+    \node at (1*\xsep, \labelYsep) { \small\texttt{environment} };
+
+    \node (EnvA) at (1*\xsep, 0*\ysep) { \TUfbox{\texttt{a:\ 1}} };
+
+    % arrows
+    \draw[upcurved,StlthBase] (OpB.east)  to (EnvA);
+    \path                    (OpB.east)  -- (EnvA) node[midway,below=4mm] { \small search };
+  \end{tikzpicture}
+\end{document}

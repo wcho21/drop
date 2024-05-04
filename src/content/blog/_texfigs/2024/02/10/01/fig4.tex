@@ -1,0 +1,29 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,td-interpret-diag}
+
+\def\xsep{12mm}
+\begin{document}
+  \begin{tikzpicture}[prattTree]
+    \def\plusY{0}
+    \def\numberY{-16mm}
+
+    \drawOpWithPowers{=}{1*\xsep}{\plusY}{11}{Equal1Child1}{10}{Equal1Child2}
+    \drawOpWithPowers{=}{3*\xsep}{\plusY}{11}{Equal2Child1}{10}{Equal2Child2}
+
+    \node (Number1) at (0*\xsep,\numberY) { \texttt{a} };
+    \node (Number2) at (2*\xsep,\numberY) { \texttt{b} };
+    \node (Number3) at (4*\xsep,\numberY) { \texttt{1} };
+
+    \draw[StlthBase] (Number1) -- (Equal1Child1);
+    \draw[StlthBase] (Number2) -- (Equal2Child1);
+    \draw[StlthBase] (Number3) -- (Equal2Child2);
+
+    \def\eqY{\numberY-10mm}
+    \def\parenSep{12pt}
+    \foreach \x / \text in {0/a,1/=,2/b,3/=,4/1} {
+      \node at (\x*\xsep,\eqY) { \texttt{\text} };
+    }
+    \node at (2*\xsep-\parenSep,\eqY) { \texttt{(} };
+    \node at (4*\xsep+\parenSep,\eqY) { \texttt{)} };
+  \end{tikzpicture}
+\end{document}

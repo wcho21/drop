@@ -1,0 +1,39 @@
+\documentclass{cmn}
+\usepackage{td-memory,ts-arrow}
+
+\def\xsep{140pt}
+\def\ysep{60pt}
+\def\labelWidth{50pt}
+
+\tikzset{
+  curved/.style={
+    in control={+(150:14mm)},
+    out control={+(-30:14mm)}
+  }
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \MEMLabel{\texttt{original:}}{0}{0}{\labelWidth}
+    \MEMDrawCells{2}{{"0x30", "0x40"}}{16}{0}{0}
+
+    \MEMDrawCells{2}{{1, 2}}{48}{\xsep}{0}
+    \MEMDrawCells{2}{{3, 4}}{64}{\xsep}{-\ysep}
+
+    \draw[curved,Stlth] (\MEMCellWidth,-\MEMCellHeight)
+      to ++(\xsep,\MEMCellHeight+20pt);
+    \draw[curved,Stlth] (2*\MEMCellWidth,-\MEMCellHeight)
+      to ++(\xsep-\MEMCellWidth,\MEMCellHeight-\ysep+20pt);
+
+    \MEMLabel{\texttt{copy:}}{0}{-2*\ysep}{\labelWidth}
+    \MEMDrawCells{2}{{"0x50", "0x60"}}{32}{0}{-2*\ysep}
+
+    \MEMDrawCells{2}{{1, 2}}{80}{\xsep}{-2*\ysep}
+    \MEMDrawCells{2}{{3, 4}}{96}{\xsep}{-3*\ysep}
+
+    \draw[curved,Stlth] (\MEMCellWidth,-2*\ysep-\MEMCellHeight)
+      to ++(\xsep,\MEMCellHeight+20pt);
+    \draw[curved,Stlth] (2*\MEMCellWidth,-2*\ysep-\MEMCellHeight)
+      to ++(\xsep-\MEMCellWidth,\MEMCellHeight-\ysep+20pt);
+  \end{tikzpicture}
+\end{document}

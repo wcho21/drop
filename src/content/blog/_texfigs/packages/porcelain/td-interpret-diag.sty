@@ -1,0 +1,26 @@
+% tikz drawing util for interpreter diagram
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-interpret-diag}[2024/05/03]
+
+\RequirePackage{t-util}
+
+\tikzset{
+  parseTree/.style={level distance=12mm,sibling distance=10mm},
+  parseNode/.style={circle,draw,inner sep=0.875mm},
+  prattTree/.style={level distance=16pt,sibling distance=26pt}
+}
+
+\newcommand\drawOpWithPowers[7]{
+  \def\@TIDparent{#1}
+  \def\@TIDx{#2}
+  \def\@TIDy{#3}
+  \def\@TIDleft{#4}
+  \def\@TIDleftName{#5}
+  \def\@TIDright{#6}
+  \def\@TIDrightName{#7}
+
+  \node[inner sep=0pt,draw=none] at (\@TIDx,\@TIDy) {\TUfbox{\texttt{\@TIDparent}}}
+    child {node (\@TIDleftName)  {\small\texttt{\@TIDleft }} edge from parent[draw=none]}
+    child {node (\@TIDrightName) {\small\texttt{\@TIDright}} edge from parent[draw=none]};
+}

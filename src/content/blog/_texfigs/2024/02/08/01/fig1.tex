@@ -1,0 +1,32 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+\usetikzlibrary{calc,positioning}
+
+\begin{document}
+  \begin{tikzpicture}
+    \coordinate (AA) at ( 0mm,  0mm);
+    \coordinate (AB) at (54mm,  0mm);
+    \coordinate (BB) at (54mm,-24mm);
+    \coordinate (CB) at (54mm,-34mm);
+
+    \node[draw] (AAT) at (AA) {\small\texttt{print "Hello"}};
+    \node[below of=AAT] (AAL) {\small (Source code)};
+
+    \node[draw] (ABT) at (AB) {\small\texttt{010010001...}};
+    \node[below of=ABT]       {\small (Machine code)};
+
+    \node[draw] (BBT) at (BB) {\small Compiler};
+
+    \node[draw] (CBT) at (CB) {\small Interpreter};
+
+    \draw[StlthBase] (AAT.east) to (ABT.west);
+    \path           (AAT.east) -- (ABT.west) node[midway,above] {\small compile};
+    \path           ( AA.east) -- ( AB.west) node[midway] (ABM) {};
+
+    \draw[StlthBase] (BBT.west) .. controls +(180:16mm) and +(-90:12mm) .. (ABM);
+
+    \draw[StlthBase] (CBT.west) .. controls +(180:26mm) and +(-90:20mm) .. (AAL);
+    \path           (CBT.west) --                                         (AAL)
+      node[midway,below,xshift=-4mm,yshift=-2mm] {\small execute};
+  \end{tikzpicture}
+\end{document}

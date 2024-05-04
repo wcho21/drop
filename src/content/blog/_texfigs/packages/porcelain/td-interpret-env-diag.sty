@@ -1,0 +1,23 @@
+% tikz drawing util for interpreter environment diagram
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-interpret-env-diag}[2024/05/03]
+
+\RequirePackage{t-util}
+
+\tikzset{
+  upcurved/.style={
+    in control={+(180:14mm)},
+    out control={+(0:14mm)}
+  },
+  downcurved/.style={
+    in control={+(180:2.5mm)},
+    out control={+(-90:2.5mm)}
+  },
+  code/.style={
+    anchor=west
+  },
+  subcode/.style={
+    anchor=north west,below right=2mm
+  }
+}
