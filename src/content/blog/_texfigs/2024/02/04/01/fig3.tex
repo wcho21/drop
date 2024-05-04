@@ -1,0 +1,15 @@
+\documentclass{cmn}
+\usepackage{td-memory,ts-arrow}
+
+\def\labelWidth{50pt}
+\def\ysep{60pt}
+
+\begin{document}
+  \begin{tikzpicture}
+    \MEMLabel{\texttt{original:}}{0}{0}{\labelWidth}
+    \MEMDrawCells{2}{{"0x30", "0x40"}}{16}{0}{0}
+
+    \MEMLabel{\texttt{copy:}}{0}{-\ysep}{\labelWidth}
+    \MEMDrawCells{2}{{"0x30", "0x40"}}{32}{0}{-\ysep}
+  \end{tikzpicture}
+\end{document}

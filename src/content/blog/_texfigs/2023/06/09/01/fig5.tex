@@ -1,16 +1,16 @@
-\documentclass{xdvsvgw}
+\documentclass{cmn}
 
 \usepackage{fontspec}
 \newfontfamily{\fontNotoEmoji}{Noto Emoji}
 
 \usetikzlibrary{backgrounds}
 \newcommand\ul\fbox
-\newcommand\txtx{84mm}
+\newcommand\txtx{70mm}
 \newcommand\txtysep{24pt}
 
 \begin{document}
   \begin{tikzpicture}[
-    txt/.style={text width=140mm,align=left}
+    txt/.style={text width=104mm,align=left}
   ]
     \node at (0,0) {\Large \fontNotoEmoji 😂};
     \node at (0,-8mm) {\texttt{U+1F602}};

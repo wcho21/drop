@@ -1,0 +1,37 @@
+\documentclass{cmn}
+\usepackage{t-util,ts-arrow}
+
+\begin{document}
+  \begin{tikzpicture}[
+    circled/.style={circle,draw,inner sep=3pt},
+    leftcurved/.style={
+      in control={+(-180:6.5mm)},
+      out control={+(90:6.5mm)}
+    },
+    rightcurved/.style={
+      in control={+(0:6.5mm)},
+      out control={+(90:6.5mm)}
+    },
+    level distance=12mm,
+    sibling distance=20mm
+  ]
+    \node[circled] (Root) at (0,0) {\texttt{+}}
+      child {node[circled] (ChildA) {\texttt{1}}}
+      child {node[circled] (ChildB) {\texttt{*}}
+        child {node[circled] (ChildBA) {\texttt{2}}}
+        child {node[circled] (ChildBB) {\texttt{3}}}
+      };
+
+    \draw[leftcurved,StlthBase] (ChildA) to (Root);
+    \path (ChildA) -- (Root) node[midway,above left=2.5mm] {\small\texttt{1}};
+
+    \draw[rightcurved,StlthBase] (ChildB) to (Root);
+    \path (ChildB) -- (Root) node[midway,above right=2.5mm] {\small\texttt{6}};
+
+    \draw[leftcurved,StlthBase] (ChildBA) to (ChildB);
+    \path (ChildBA) -- (ChildB) node[midway,above left=2.5mm] {\small\texttt{2}};
+
+    \draw[rightcurved,StlthBase] (ChildBB) to (ChildB);
+    \path (ChildBB) -- (ChildB) node[midway,above right=2.5mm] {\small\texttt{3}};
+  \end{tikzpicture}
+\end{document}

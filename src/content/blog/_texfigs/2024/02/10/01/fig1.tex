@@ -1,0 +1,18 @@
+\documentclass{cmn}
+\usepackage{t-util,ts-arrow,td-interpret-diag}
+\usetikzlibrary{positioning}
+
+\begin{document}
+  \begin{tikzpicture}[parseTree]
+    \def\topText{\small\texttt{top}};
+
+    \node (TokensA) at (0,0) { \TUfbox{1}\TUfbox{+}\TUfbox{2} };
+
+    \node[right=22mm of TokensA,parseNode,xshift=-4mm,yshift=3mm+6pt] (NodeBTop) { + }
+      child { node[parseNode] { 1 } }
+      child { node[parseNode] { 2 } };
+    \coordinate[xshift=4mm,yshift=-3mm-6pt] (NodeB) at (NodeBTop);
+
+    \draw[StlthBase,shorten <=4mm, shorten >=16mm] (TokensA) -- (NodeB);
+  \end{tikzpicture}
+\end{document}

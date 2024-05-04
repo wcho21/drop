@@ -1,0 +1,35 @@
+\documentclass{cmn}
+\usepackage{t-util,ts-arrow,td-interpret-env-diag}
+
+\def\labelYsep{26pt}
+\def\xsep{58mm}
+\def\ysep{10mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    % left codes
+    \node[code] at (-0.09*\xsep, \labelYsep) { \small\texttt{source code} };
+
+    \node[code]           at (0*\xsep, 0*\ysep) { \texttt{a\ =\ 1} };
+    \node[code]    (OpB)  at (0*\xsep,-1*\ysep) { \texttt{f\ =\ a\ ->\ a+1} };
+    \node[code]    (OpC)  at (0*\xsep,-2*\ysep) { \texttt{f(2)} };
+    \node[subcode] (OpCA) at (OpC.south east)   { \texttt{a+1} };
+
+    % right environments
+    \node at (1*\xsep, \labelYsep) { \small\texttt{environment} };
+
+    \node (EnvA) at (1*\xsep, 0*\ysep) { \TUfbox{\texttt{a:\ 1}} };
+    \node (EnvC) at (1*\xsep,-2*\ysep) { \TUfbox{\texttt{a:\ 2}} };
+
+    % arrows
+    \draw[downcurved,StlthBase] (OpC.south) to (OpCA.west);
+    \path                      (OpC.south) -- (OpCA.west) node[midway,below=3mm,xshift=-2mm] { \small\texttt{body} };
+
+    \draw[StlthBase] (EnvC) -- (EnvA) node[midway,right=1.5mm] {\small extend};
+
+    \draw[upcurved,StlthBase] (OpB.east)  to (EnvA);
+    \path                    (OpB.east)  -- (EnvA) node[midway,below=4mm] { \small\texttt{env} };
+    \draw[upcurved,StlthBase] (OpCA.east) to (EnvC);
+    \path                    (OpCA.east) -- (EnvC) node[midway,below=1mm] { \small search };
+  \end{tikzpicture}
+\end{document}

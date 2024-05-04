@@ -4,7 +4,7 @@
 
 Images contained in articles are usually built with [LaTeX][LaTeX] and [XeTeX][XeTeX] typesetting system.
 [GNU Make][make] is used as image converting macro.
-The macro uses [dvisvgm][dvisvgm] to convert xdv file (output of XeTeX) to svg file, and [svgo][svgo] to optimize the converted svg file.
+The macro uses [dvisvgm][dvisvgm] to convert pdf file (output of XeTeX) to svg file, and [svgo][svgo] to optimize the converted svg file.
 
 ## Dependencies
 
