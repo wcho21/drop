@@ -1,0 +1,17 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+
+\begin{document}
+  \begin{tikzpicture}
+      \draw (0,0) circle [radius=12.5mm] node[above=12.5mm+0.75mm] {Problems};
+
+      \draw[fill=black] (4mm,-2mm) circle [radius=0.375mm];
+      \draw[StlthRevBase] (4.5mm,-1mm) .. controls +(60:8mm) and +(180+11.25:8mm) .. ++(18.5mm,13.5mm);
+
+      \draw (32.5mm,0) circle [radius=10mm] node[above=10mm+0.75mm] {Solvable};
+
+      \draw (32.5mm+4mm,-2mm) circle [radius=1.25mm];
+      \draw[StlthRevBase] (32.5mm+5mm,-0.5mm) .. controls +(60:4mm) and +(180+11.25:4mm) .. ++(10mm,8mm)
+        node[right] {Tractable};
+  \end{tikzpicture}
+\end{document}

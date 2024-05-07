@@ -1,0 +1,78 @@
+\documentclass{cmn}
+\usepackage{fontspec}
+
+\newfontfamily\fontNotoSerifKR{Noto Serif KR}
+
+\makeatletter
+
+\def\@TMboxWidth{27mm}
+\def\@TMboxHeight{15mm}
+\def\@TMboxDepth{9mm}
+\def\@TMtapeCellWidth{7.5mm}
+\def\@TMtapeCellHeight{6mm}
+
+\newcommand\drawTuringMachineBox[4]{
+  \def\@TMx{#1}
+  \def\@TMy{#2}
+  \def\@TMleftLightColor{#3}
+  \def\@TMrightLightColor{#4}
+
+  \draw (\@TMx,\@TMy)
+    -- ++(\@TMboxWidth,0)
+    -- ++(75:\@TMboxHeight)
+    -- ++(-\@TMboxWidth,0)
+    -- cycle;
+
+  \draw (\@TMx,\@TMy-\@TMboxDepth)
+    -- ++(\@TMboxWidth,0)
+    -- ++(75:\@TMboxHeight)
+    -- ++(0,\@TMboxDepth);
+
+  \draw (\@TMx,\@TMy)
+    -- ++(0,-\@TMboxDepth);
+  \draw (\@TMx+\@TMboxWidth,\@TMy)
+    -- ++(0,-\@TMboxDepth);
+
+  \draw[fill=\@TMleftLightColor] (\@TMx+0.8125*\@TMboxWidth,\@TMy+0.7*\@TMboxHeight) circle [radius=1.5mm];
+  \draw[fill=\@TMrightLightColor] (\@TMx+0.9375*\@TMboxWidth,\@TMy+0.7*\@TMboxHeight) circle [radius=1.5mm];
+}
+
+\newcommand\drawTapeCell[2]{
+  \def\@TMx{#1}
+  \def\@TMtxt{#2}
+
+  \draw (\@TMx*\@TMtapeCellWidth,0)
+    -- ++(-\@TMtapeCellWidth,0)
+    -- ++(0,\@TMtapeCellHeight)
+    -- ++(\@TMtapeCellWidth,0);
+  \node at (\@TMx*\@TMtapeCellWidth-0.5*\@TMtapeCellWidth,0.5*\@TMtapeCellHeight) {\fontNotoSerifKR\small\@TMtxt};
+}
+
+\newcommand\drawArrow[1]{
+  \def\@TMx{#1}
+  \node at (\@TMx*\@TMtapeCellWidth,0.5*\@TMtapeCellHeight) {$\rightarrow$};
+}
+
+\makeatother
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \drawTapeCell{0}{안}
+      \drawTapeCell{1}{녕}
+      \drawTapeCell{2}{$\cdots$}
+      \drawArrow{3}
+
+      \drawTuringMachineBox{30mm}{0mm}{green!75}{none}
+    \end{scope}
+
+    \begin{scope}[yshift=-32.5mm]
+      \drawTapeCell{0}{안}
+      \drawTapeCell{1}{}
+      \drawTapeCell{2}{$\cdots$}
+      \drawArrow{3}
+
+      \drawTuringMachineBox{30mm}{0mm}{none}{red!75}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
