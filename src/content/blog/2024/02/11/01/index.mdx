@@ -12,6 +12,9 @@ import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro"
 import CalloutKal from "@/components/post/CalloutKal.astro";
+import Alg from "@/components/post/Algorithm.astro";
+import ABlock from "@/components/post/AlgorithmBlock.astro";
+import AK from "@/components/post/AlgorithmKeyword.astro";
 
 import fig1 from "@texfigs/2024/02/11/01/fig1.svg";
 import fig2 from "@texfigs/2024/02/11/01/fig2.svg";
@@ -607,13 +610,18 @@ class Repl:
 첫 글에서 인터프리터의 수도코드를 다음과 같이 소개했는데요.
 이 메소드는 그 수도코드의 구현이기도 합니다.
 
-```
-function interpret(code)
-  tokens = tokenize(code)
-  syntax tree = parse(tokens)
-  evalutated = evaluate(syntax tree)
-  return evaluated
-```
+<Alg>
+  <AK>인터프리터</AK> (코드)
+  <ABlock>
+    토큰 $\leftarrow$ 토큰화(코드)
+
+    문법 트리 $\leftarrow$ 파싱(토큰)
+
+    값 $\leftarrow$ 평가(문법 트리)
+
+    <AK>리턴</AK> 값
+  </ABlock>
+</Alg>
 
 이제 REPL의 실행은 다음과 같이 구현합니다.
 `quit`을 입력하면 종료를, 아니면 코드를 실행합니다.
