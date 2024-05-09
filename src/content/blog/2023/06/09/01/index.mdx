@@ -9,6 +9,10 @@ series: "UTF 인코딩 구현하기"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
+import Alg from "@/components/post/Algorithm.astro";
+import ABlock from "@/components/post/AlgorithmBlock.astro";
+import AK from "@/components/post/AlgorithmKeyword.astro";
+import AC from "@/components/post/AlgorithmComment.astro";
 
 import fig1 from "@texfigs/2023/06/09/01/fig1.svg";
 import fig2 from "@texfigs/2023/06/09/01/fig2.svg";
@@ -111,28 +115,50 @@ UTF-8는 바이트를 네 개까지 사용하면 $2^{21}$개의 문자를 표현
 
 ## 인코딩 구현: 수도코드
 
-아래 수도코드<L>pseudocode</L>의 `encodeUtf8()` 함수는 코드 포인트를 나타내는 숫자를 입력받고 그것을 UTF-8로 인코딩한 바이트 시퀀스를 리턴합니다.
+아래 수도코드<L>pseudocode</L>는 코드 포인트를 나타내는 숫자를 입력받고 그것을 UTF-8로 인코딩한 바이트 시퀀스를 리턴합니다.
 
-```
-function encodeUtf8(codepoint)
-  if codepoint is within 7 bits
-    let xxx xxxx be the binary representation of codepoint
-    return byte sequence [0xxx xxxx]
+<Alg>
+  <AK>UTF-8 인코딩</AK> (코드 포인트)
+  <ABlock>
+    <AK>만약</AK> 코드 포인트가 7비트 이하 값이면
+    <ABlock>
+      xxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-  if codepoint is within 11 bits
-    let yyy yyxx xxxx be the binary representation of codepoint
-    return byte sequence [110y yyyy, 10xx xxxx]
+      <AK>리턴</AK> 바이트 시퀀스 0xxx xxxx
+    </ABlock>
 
-  if codepoint is within 16 bits
-    let zzzz yyyy yyxx xxxx be the binary representation of codepoint
-    return byte sequence [1110 zzzz, 10yy yyyy, 10xx xxxx]
+    <p>&nbsp;</p>
 
-  if codepoint is within 21 bits
-    let w wwzz zzzz yyyy yyxx xxxx be the binary representation of codepoint
-    return byte sequence [1111 1www, 10zz zzzz, 10yy yyyy, 10xx xxxx]
+    <AK>만약</AK> 코드 포인트가 11비트 이하 값이면
+    <ABlock>
+      yyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-  return U+FFFD in UTF-8
-```
+      <AK>리턴</AK> 바이트 시퀀스 110y yyyy 10xx xxxx
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <AK>만약</AK> 코드 포인트가 16비트 이하 값이면
+    <ABlock>
+      zzzz yyyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
+
+      <AK>리턴</AK> 바이트 시퀀스 1110 zzzz 10yy yyyy 10xx xxxx
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <AK>만약</AK> 코드 포인트가 21비트 이하 값이면
+    <ABlock>
+      w wwzz zzzz yyyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
+
+      <AK>리턴</AK> 바이트 시퀀스 1111 0www 10zz zzzz 10yy yyyy 10xx xxxx
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <AK>리턴</AK> U+FFFD
+  </ABlock>
+</Alg>
 
 맨 아래에서는 21비트를 넘어가는 코드 포인트를 만나는 예외적인 경우를 처리하는데요.
 이때는 특별한 문자인 &lsquo;&#65533;&rsquo;를 리턴합니다.
@@ -252,22 +278,40 @@ int main() {
 
 수도코드는 다음과 같이 간단하게 만들어볼 수 있습니다.
 
-```
-function decodeUtf8(sequence)
-  if sequence is 0xxx xxxx
-    return codepoint xxx xxxx
+<Alg>
+  <AK>UTF-8 디코딩</AK> (바이트 시퀀스)
+  <ABlock>
+    <AK>만약</AK> 바이트 시퀀스가 0xxx xxx 꼴이면
+    <ABlock>
+      <AK>리턴</AK> 코드 포인트 xxx xxxx
+    </ABlock>
 
-  if sequence is 110x xxxx 10yy yyyy
-    return codepoint xxx xxyy yyyy
+    <p>&nbsp;</p>
 
-  if sequence is 1110 xxxx 10yy yyyy 10zz zzzz
-    return codepoint xxxx yyyy yyzz zzzz
+    <AK>만약</AK> 바이트 시퀀스가 110x xxxx 10yy yyyy 꼴이면
+    <ABlock>
+      <AK>리턴</AK> 코드 포인트 xxx xxyy yyyy
+    </ABlock>
 
-  if sequence is 1111 1xxx 10yy yyyy 10zz zzzz 10ww wwww
-    return codepoint x xxyy yyyy zzzz zzww wwww
+    <p>&nbsp;</p>
 
-  return codepoint U+FFFD
-```
+    <AK>만약</AK> 바이트 시퀀스가 1110 xxxx 10yy yyyy 10zz zzzz 꼴이면
+    <ABlock>
+      <AK>리턴</AK> 코드 포인트 xxxx yyyy yyzz zzzz
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <AK>만약</AK> 바이트 시퀀스가 1111 1xxx 10yy yyyy 10zz zzzz 10ww wwww 꼴이면
+    <ABlock>
+      <AK>리턴</AK> 코드 포인트 x xxyy yyyy zzzz zzww wwww
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <AK>리턴</AK> U+FFFD
+  </ABlock>
+</Alg>
 
 그러면 C++로 다음과 같이 구현해볼 수 있고요.
 
@@ -476,7 +520,7 @@ URL에서 ASCII 문자가 아닌 것들은 UTF-8 인코딩을 통해 표현합�
 
 예를 들어 악센트가 있는 A 문자 '&#192;' (`U+00C0`)를 봅시다.
 이 문자는 두 문자를 조합해서 만들 수 있습니다.
-문자 'A' (`U+0041`)에 악센트 조합 문자인 '◌̀' (`U+0300`)를 더해서 '&#65;&#768;'로요.
+문자 'A' (`U+0041`)에 악센트 조합 문자인 &lsquo;&nbsp;&#x300;&nbsp;&rsquo; (`U+0300`)를 더해서 '&#65;&#768;'로요.
 (방금 실제로 두 문자를 조합했습니다.)
 
 그런데 하나의 문자를 하나의 표현으로 통일시키는 노말라이즈<L>normalize</L> 작업이 필요할 수 있습니다.

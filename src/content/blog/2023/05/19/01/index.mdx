@@ -9,6 +9,10 @@ series: "부동소수점 구현하기"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
+import Alg from "@/components/post/Algorithm.astro";
+import ABlock from "@/components/post/AlgorithmBlock.astro";
+import AK from "@/components/post/AlgorithmKeyword.astro";
+import AC from "@/components/post/AlgorithmComment.astro";
 
 import fig1 from "@texfigs/2023/05/19/01/fig1.svg";
 import fig2 from "@texfigs/2023/05/19/01/fig2.svg";
@@ -240,18 +244,33 @@ $$
 여기 두 수가 같은지 비교하는 수도코드입니다.
 즉 부동소수점을 위한 `==` 연산으로 볼 수 있습니다.
 
-```
-function equal(a, b)
-  if a is zero && b is zero
-    return true
-  if a.sign != b.sign
-    return false
-  if a.exponent != b.exponent
-    return false
-  if a.fraction != b.fraction
-    return false
-  return true
-```
+<Alg>
+  <AK>같은지 비교</AK> ($a$, $b$) <AC>// 같으면 true를 리턴하고, 아니면 false를 리턴</AC>
+
+  <ABlock>
+    <AK>만약</AK> $a$와 $b$ 둘 다 $0$이면
+    <ABlock>
+      <AK>리턴</AK> true
+    </ABlock>
+
+    <AK>만약</AK> $a$와 $b$의 `sign`이 다르면
+    <ABlock>
+      <AK>리턴</AK> false
+    </ABlock>
+
+    <AK>만약</AK> $a$와 $b$의 `exponent`가 다르면
+    <ABlock>
+      <AK>리턴</AK> false
+    </ABlock>
+
+    <AK>만약</AK> $a$와 $b$의 `fraction`이 다르면
+    <ABlock>
+      <AK>리턴</AK> false
+    </ABlock>
+
+    <AK>리턴</AK> true
+  </ABlock>
+</Alg>
 
 ## 구현 예시: 파이썬
 

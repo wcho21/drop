@@ -10,6 +10,10 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro";
+import Alg from "@/components/post/Algorithm.astro";
+import ABlock from "@/components/post/AlgorithmBlock.astro";
+import AK from "@/components/post/AlgorithmKeyword.astro";
+import AC from "@/components/post/AlgorithmComment.astro";
 
 import fig1 from "@texfigs/2023/06/10/01/fig1.svg";
 import fig2 from "@texfigs/2023/06/10/01/fig2.svg";
@@ -66,18 +70,28 @@ UTF-8에서 여러 개의 코드 유닛을 썼던 것처럼요.
 
 UTF-16 인코딩을 수도코드로 정리하면 다음과 같습니다.
 
-```
-function encodeUtf16(codepoint)
-  if codepoint is within 16 bits
-    return codepoint as 16-bit byte sequence
+<Alg>
+  <AK>UTF-16 인코딩</AK> (코드 포인트)
+  <ABlock>
+    <AK>만약</AK> 코드 포인트가 16비트 이하 값이면
+    <ABlock>
+      <AK>리턴</AK> 코드 포인트를 그대로 갖는 바이트 시퀀스
+    </ABlock>
 
-  if codepoint is within 21 bits
-    let x xxxx yyyy yyzz zzzz zzzz be the binary representation of codepoint
-    wwww = x xxxx - 1
-    return byte sequence [1101 10ww wwyy yyyy 1101 11zz zzzz zzzz]
+    <p>&nbsp;</p>
 
-  return 0xFFFD in UTF-16
-```
+    <AK>만약</AK> 코드 포인트가 21비트 이하 값이면
+    <ABlock>
+      x xxxx yyyy yyzz zzzz zzzz $\leftarrow$ 코드 포인트의 이진 표현
+
+      <AK>리턴</AK> 바이트 시퀀스 1101 10ww wwyy yyyy 1101 11zz zzzz zzzz
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <AK>리턴</AK> U+FFFD
+  </ABlock>
+</Alg>
 
 이는 다음과 같이 C++로 간단한 비트 조작을 통해 구현해볼 수 있습니다.
 
@@ -158,10 +172,12 @@ UTF-32는 코드유닛이 32비트이기 때문에, 코드 포인트의 이진 �
 
 이를 수도코드로 굳이 표현하자면 다음과 같습니다.
 
-```
-function encodeUtf32(codepoint)
-  return codepoint as 32-bit byte sequence
-```
+<Alg>
+  <AK>UTF-32 인코딩</AK> (코드 포인트)
+  <ABlock>
+    <AK>리턴</AK> 코드 포인트를 그대로 갖는 바이트 시퀀스
+  </ABlock>
+</Alg>
 
 이는 C++로 다음과 같이 구현할 수 있습니다.
 

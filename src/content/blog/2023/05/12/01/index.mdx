@@ -8,6 +8,10 @@ thumbnail: "./_figs/thumbnail.webp"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
+import Alg from "@/components/post/Algorithm.astro";
+import ABlock from "@/components/post/AlgorithmBlock.astro";
+import AK from "@/components/post/AlgorithmKeyword.astro";
+import AC from "@/components/post/AlgorithmComment.astro";
 
 import fig1 from "@texfigs/2023/05/12/01/fig1.svg";
 import fig2 from "@texfigs/2023/05/12/01/fig2.svg";
@@ -38,17 +42,17 @@ import fig5 from "@texfigs/2023/05/12/01/fig5.svg";
 그런데 이 괄호가 정말 필요할까요?
 
 `2+3` 대신 `23+`을 쓰는 식으로, 연산자를 뒤에 놓아볼 수 있습니다.
+예를 들어, `1*(2+3)`을 다음과 같이 바꿀 수 있습니다.
 
 $$
 \begin{align*}
                 & \texttt{1*(2+3)}        &&\text{\small (infix)} \\
   \rightarrow{} & \texttt{1*\fbox{(23+)}} &&{} \\
-  \rightarrow{} & \texttt{\fbox{1(23+)*}} &&{} \\
-  \rightarrow{} & \texttt{\fbox{123+*}}   &&\text{\small (postfix)}
+  \rightarrow{} & \texttt{\fbox{1(23+)*}} &&{} \text{\small (postfix)}\\
 \end{align*}
 $$
 
-그러면 예시로 든 `1*(2+3)`은 `1(23+)*`이 됩니다.
+따라서 `1*(2+3)`은 `1(23+)*`이 됩니다.
 그리고 괄호는 사실 필요가 없습니다.
 즉 `123+*`라고 써도, 덧셈이 `2`와 `3`을 위한 것이라는 사실은 변하지 않습니다.
 
@@ -85,14 +89,18 @@ output: 5
 정리하면 이 프로그램은 입력을 후위 표기식으로 변환하는 입력 처리 부분과, 실제로 계산을 해내는 계산 부분으로 나뉘는데요.
 수도코드로 정리하면 이렇게 됩니다.
 
-```
-function evaluateInfix(infix)
-  postfix = convertInfixToPostfix(infix)
-  evaluated = evaluatePostfix(postfix)
-  return evaluated
-```
+<Alg>
+  <AK>중위 표기식 계산</AK> (중위 표기식) <AC>// 중위 표기식을 계산해 리턴</AC>
+  <ABlock>
+    후위 표기식 $\leftarrow$ 후위 표기식으로 변환(중위 표기식)
 
-이제 후위 표기식을 계산하는 두 번째 함수 `evaluatePostfix()` 부터 만들어봅시다.
+    계산 값 $\leftarrow$ 후위 표기식 계산(후위 표기식)
+
+    <AK>리턴</AK> 계산 값
+  </ABlock>
+</Alg>
+
+이제 후위 표기식을 계산하는 두 번째 함수부터 만들어봅시다.
 
 
 
@@ -118,24 +126,36 @@ function evaluateInfix(infix)
 
 여기까지의 아이디어를 수도코드로 정리하면 이렇게 됩니다.
 
-```
-function evaluatePostfix(postfix)
-  stack = new Stack()
+<Alg>
+  <AK>후위 표기식 계산</AK> (후위 표기식)
 
-  for token in postfix
-    if token is a number
-      stack.push(token)
-    else if token is an operator
-      num2 = stack.pop()
-      num1 = stack.pop()
+  <ABlock>
+    $\textit{stack} \leftarrow$ 스택
 
-      // for example, applyOperator('+', 1, 2) returns 3
-      result = applyOperator(token, num1, num2)
+    <AK>다음을</AK> 후위 표기식의 토큰<AK>마다 반복</AK>
+    <ABlock>
+      <AK>만약</AK> 토큰이 숫자이면
+      <ABlock>
+        $\textit{stack}$.push(토큰)
+      </ABlock>
 
-      stack.push(result)
+      <AK>아니면</AK>&nbsp;<AC>// 토큰이 연산자이면</AC>
+      <ABlock>
+        숫자2 $\leftarrow$ $\textit{stack}$.pop()
 
-  return stack.pop()
-```
+        숫자1 $\leftarrow$ $\textit{stack}$.pop()
+
+        <AC>// 예를 들어, applyOperator(+, 1, 2)는 3을 리턴</AC>
+
+        결과 $\leftarrow$ applyOperator(토큰, 숫자1, 숫자2)
+
+        $\textit{stack}$.push(결과)
+      </ABlock>
+    </ABlock>
+
+    <AK>리턴</AK> $\textit{stack}$.pop()
+  </ABlock>
+</Alg>
 
 여기서 `applyOperator()` 함수는 숫자와 연산자를 받아 계산한 결과를 돌려줍니다.
 
@@ -283,30 +303,61 @@ def applyOperator(operator, num1, num2):
 
 이 내용을 수도코드로 정리하면 이렇게 됩니다.
 
-```
-function convertInfixIntoPostfix(infix)
-  stack = new Stack()
-  postfix = new String()
+<Alg>
+  <AK>후위 표기식으로 변환</AK> (중위 표기식)
 
-  for token in infix
-    if token is a number
-      postfix.append(token)
-    else if token is an operator
-      while precedence(token) > precedence(stack.peek())
-        postfix.append(stack.pop())
+  <ABlock>
+    $\textit{stack} \leftarrow$ 스택
 
-      stack.push(token)
-    else if token == '('
-      stack.push(token)
-    else if token == ')'
-      until '(' appears at the top of stack
-        postfix.append(stack.pop())
+    $\textit{postfix} \leftarrow$ 스트링
 
-  until stack is empty
-    postfix.append(stack.pop())
+    <p>&nbsp;</p>
 
-  return postfix
-```
+    <AK>다음을</AK> 중위 표기식의 토큰<AK>마다 반복</AK>
+    <ABlock>
+      <AK>만약</AK> 토큰이 숫자이면
+      <ABlock>
+        $\textit{postfix}$.append(토큰)
+      </ABlock>
+
+      <AK>아니면 만약</AK> 토큰이 연산자이면
+      <ABlock>
+        <AC>// 토큰보다 우선순위가 높지 않은 것들을 스택에서 꺼냄</AC>
+
+        <AK>다음을</AK> 토큰의 우선순위 > $\textit{stack}$.peek()의 우선순위인 <AK>동안 반복</AK>
+        <ABlock>
+          $\textit{postfix}$.append($\text{stack}$.pop())
+        </ABlock>
+        <p>&nbsp;</p>
+        $\textit{stack}$.push(토큰)
+      </ABlock>
+
+      <AK>아니면 만약</AK> 토큰이 &lsquo;(&rsquo;이면
+      <ABlock>
+        $\textit{stack}$.push(토큰)
+      </ABlock>
+
+      <AK>아니면 만약</AK> 토큰이 &lsquo;)&rsquo;이면
+      <ABlock>
+        <AK>다음을</AK> 스택 맨 위가 &lsquo;(&rsquo;일 때<AK>까지 반복</AK>
+        <ABlock>
+          $\textit{postfix}$.append(토큰)
+        </ABlock>
+      </ABlock>
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <AK>다음을</AK> 스택이 빌 때<AK>까지 반복</AK>
+    <ABlock>
+      $\textit{postfix}$.append($\text{stack}$.pop())
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <AK>리턴</AK> $\textit{postfix}$
+  </ABlock>
+</Alg>
 
 ## 구현 예시: 파이썬
 
