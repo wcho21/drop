@@ -1,0 +1,14 @@
+\documentclass{cmn}
+\usepackage{td-simplenode,ts-arrow}
+
+\begin{document}
+  \begin{tikzpicture}
+    \foreach \x in {0,1,2} {
+      \drawNode{\x*35 mm}{0}{L\x}{D\x}{C\x}{data}{next}{black}
+    }
+    \foreach \x in {0,1} {
+      \pgfmathsetmacro{\nx}{\x+1}
+      \draw[Stlth] (C\x) -- (L\nx);
+    }
+  \end{tikzpicture}
+\end{document}

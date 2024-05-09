@@ -1,0 +1,16 @@
+\documentclass{cmn}
+\usepackage{td-simplenode,ts-arrow}
+
+\begin{document}
+  \begin{tikzpicture}
+    \drawNode{0}{0}{L0}{D0}{C0}{}{}{lightgray!50!gray}
+    \foreach \x in {1,2} {
+      \drawNode{\x*35 mm}{0}{L\x}{D\x}{C\x}{}{}{black}
+    }
+    \draw[Stlth,lightgray!50!gray] (C0) -- (L1);
+    \draw[Stlth] (C1) -- (L2);
+
+    \draw[Stlth,lightgray!50!gray] (0.5*\nodeWidth,-9mm) node[below] {\small\textit{\textbf{head}}} -- ++(0,7mm);
+    \draw[Stlth] (0.5*\nodeWidth+35mm,-9mm) node[below] {\small\textit{\textbf{head}}} -- ++(0,7mm);
+  \end{tikzpicture}
+\end{document}

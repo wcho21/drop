@@ -1,0 +1,69 @@
+\documentclass{cmn}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{units}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{axis}[
+        width=75mm,
+        height=70mm,
+        xlabel={$n$ \texttt{append()}},
+        ylabel={elapsed time},
+        xtick={128,256,512,1024,2048},
+        xticklabels={$2^7$,$2^8$,$2^9$,$2^{10}$,$2^{11}$},
+        ytick distance=1,
+        y filter/.expression={0.001*y},
+        use units,
+        y unit=s,
+        y unit prefix=\mu,
+        xmin=60,
+        xmax=2200,
+        ymin=0,
+        ymax=5,
+      ]
+        \addplot[only marks,mark=x,mark size=3pt] table [x=n,y=T]{
+             n        T
+           128  309.757
+           256  622.256
+           512 1206.944
+          1024 2322.069
+          2048 4566.595
+        };
+        \addplot[domain=60:2200] { 2.20792*x + 53.32142 };
+      \end{axis}
+    \end{scope}
+
+    \begin{scope}[xshift=80mm]
+      \begin{axis}[
+        width=75mm,
+        height=70mm,
+        xlabel={$n$ \texttt{append()} and \texttt{remove()}},
+        ylabel={elapsed time},
+        xtick={128,256,512,1024,2048},
+        xticklabels={$2^7$,$2^8$,$2^9$,$2^{10}$,$2^{11}$},
+        ytick distance=2,
+        y filter/.expression={0.001*y},
+        use units,
+        y unit=s,
+        y unit prefix=\mu,
+        xmin=60,
+        xmax=2200,
+        ymin=0,
+        ymax=10,
+      ]
+        \addplot[only marks,mark=x,mark size=3pt] table [x=n,y=T]{
+             n        T
+           128  590.533
+           256 1173.396
+           512 2290.011
+          1024 4478.524
+          2048 8868.659
+        };
+
+        \addplot[domain=60:2200] { 4.30198*x + 66.177 };
+      \end{axis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

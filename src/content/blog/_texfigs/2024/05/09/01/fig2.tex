@@ -1,0 +1,34 @@
+\documentclass[border={4mm 2mm 4mm 4mm}]{cmn}
+\usepackage{fontspec,ts-arrow}
+\usetikzlibrary{calc}
+
+\newfontfamily\fontKor[BoldFont={* Bold}]{Noto Serif KR}
+
+\def\xSep{52.5} % in mm
+
+\begin{document}
+  \begin{tikzpicture}
+    % function names
+    \foreach[count=\i] \j in {4,3,2} {
+      \pgfmathsetmacro\x{(\i-1)*\xSep}
+      \node (A\i) at (\x mm,0) {\small\fontKor \textbf{피보나치 수} (\j)};
+    }
+
+    % function bodies
+    \foreach[count=\i] \j in {3,2} {
+      \pgfmathsetmacro\x{(\i-1)*\xSep+15}
+      \node[text width=50mm] (B\i) at (\x mm,-10mm) {\small \hspace{3.5mm}$\vdots$\vspace{1mm} \\
+        \fontKor \textbf{리턴} 피보나치 수(\j)${}+{}\dots$};
+    }
+    \pgfmathsetmacro\x{(2*\xSep+15)-15} % -15 due to changed text width
+    \node[text width=20mm] (B3) at (\x mm,-10mm) {\small \hspace{3.5mm}$\vdots$\vspace{1mm} \\
+      \fontKor \textbf{리턴} 1};
+
+    % arrows
+    \draw[StlthBase] ($(B1.east)+(-18.75mm,0)$) .. controls +(60:6mm) and +(180:8mm) .. (A2.west);
+    \draw[StlthBase] ($(B2.east)+(-18.75mm,0)$) .. controls +(60:6mm) and +(180:8mm) .. (A3.west);
+
+    \draw[StlthBase] ($(B3.south)+(-6mm,0)$) .. controls +(-120:9mm) and +(-60:9mm) .. ($(B2.south)+(8mm,0)$);
+    \draw[StlthBase] ($(B2.south)+(-21.5mm,0)$) .. controls +(-120:9mm) and +(-60:9mm) .. ($(B1.south)+(8mm,0)$);
+  \end{tikzpicture}
+\end{document}

@@ -1,0 +1,38 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+
+\newlength\cellWidth
+\newlength\cellHeight
+\setlength\cellWidth{14mm}
+\setlength\cellHeight{10mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    % borders
+    \draw (0,0) -- ++(4*\cellWidth,0);
+    \draw (0,-\cellHeight) -- ++(4*\cellWidth,0);
+
+    % cell dividing borders
+    \foreach \x in {0,...,3} {
+      \pgfmathsetmacro\nx{\x+0.5}
+      \draw (\nx*\cellWidth,0) -- ++(0,-\cellHeight);
+    }
+
+    % cell text
+    \foreach \x in {1,2} {
+      \node at (\x*\cellWidth,-\cellHeight/2) {\texttt{data}};
+    }
+
+    % cell labels
+    \foreach \x/\txt in {1/$n$,2/$n+1$,3/$n+2$} {
+      \node at (\x*\cellWidth,-\cellHeight-4mm) {\txt};
+    }
+
+    % arrow and i's
+    \node[lightgray!50!gray] at (2*\cellWidth,-\cellHeight-16mm) {\texttt{i}};
+    \draw[Stlth,lightgray!50!gray] (2*\cellWidth,-\cellHeight-13mm) -- ++(0,6mm);
+
+    \node at (3*\cellWidth,-\cellHeight-16mm) {\texttt{i}};
+    \draw[Stlth] (3*\cellWidth,-\cellHeight-13mm) -- ++(0,6mm);
+  \end{tikzpicture}
+\end{document}

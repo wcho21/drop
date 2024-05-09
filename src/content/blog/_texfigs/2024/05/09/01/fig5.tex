@@ -1,0 +1,21 @@
+\documentclass{cmn}
+\usepackage{td-simplenode,ts-arrow}
+
+\begin{document}
+  \begin{tikzpicture}
+    \foreach \x in {0,1,2} {
+      \drawNode{\x*35 mm}{0}{L\x}{D\x}{C\x}{}{}{black}
+    }
+    \foreach \x in {0,1} {
+      \pgfmathsetmacro{\nx}{\x+1}
+      \draw[Stlth] (C\x) -- (L\nx);
+    }
+
+    \node at (D0) {\small\textit{\textbf{data}}};
+
+    \draw[Stlth] (0.5*\nodeWidth,-9mm) node[below] {\small\textit{\textbf{head}}} -- ++(0,7mm);
+    \draw[Stlth,lightgray!50!gray] (0.5*\nodeWidth+35mm,-9mm) node[below] {\small\textit{\textbf{head}}} -- ++(0,7mm);
+
+    \node at (0.5*\nodeWidth,\nodeHeight+4mm) {\small\textit{\textbf{node}}};
+  \end{tikzpicture}
+\end{document}

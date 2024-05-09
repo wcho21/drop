@@ -1,0 +1,31 @@
+% tikz drawing util for list node
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-simplenode}[2024/05/09]
+
+\RequirePackage{tikz}
+
+\newlength\nodeWidth
+\newlength\nodeHeight
+\setlength\nodeWidth{26mm}
+\setlength\nodeHeight{8mm}
+
+\newcommand\drawNode[8]{
+  \def\@Nx{#1}
+  \def\@Ny{#2}
+  \def\@NdataLeftCoordName{#3}
+  \def\@NdataCenterCoordName{#4}
+  \def\@NnextCenterCoordName{#5}
+  \def\@NdataLabel{#6}
+  \def\@NnextLabel{#7}
+  \def\@Ncolor{#8}
+
+  \draw[draw=\@Ncolor] (\@Nx,\@Ny) -- ++(\nodeWidth,0) -- ++(0,\nodeHeight) -- ++(-\nodeWidth,0) -- cycle;
+  \draw[draw=\@Ncolor] (\@Nx+0.65*\nodeWidth,\@Ny) -- ++(0,\nodeHeight);
+  \node[\@Ncolor] at (\@Nx+0.325*\nodeWidth,\@Ny-3mm) {\small\texttt{\@NdataLabel}};
+  \node[\@Ncolor] at (\@Nx+0.825*\nodeWidth,\@Ny-3mm) {\small\texttt{\@NnextLabel}};
+
+  \coordinate (\@NdataLeftCoordName) at (\@Nx,\@Ny+\nodeHeight/2);
+  \coordinate (\@NdataCenterCoordName) at (\@Nx+0.325*\nodeWidth,\@Ny+\nodeHeight/2);
+  \coordinate (\@NnextCenterCoordName) at (\@Nx+0.825*\nodeWidth,\@Ny+\nodeHeight/2);
+}
