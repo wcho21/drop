@@ -3,4 +3,10 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{cmn}[2024/05/03]
 
-\LoadClass[tikz,border=4mm,12pt]{standalone}
+\RequirePackage{xkeyval}
+
+\newcommand{\customBorder}{4mm} % default
+\DeclareOptionX{border}[4mm]{\renewcommand\customBorder{#1}}
+\ProcessOptionsX
+
+\LoadClass[tikz,border={\customBorder},12pt]{standalone}
