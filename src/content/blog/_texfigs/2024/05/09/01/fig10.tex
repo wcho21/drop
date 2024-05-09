@@ -1,0 +1,42 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+
+\newlength\cellWidth
+\newlength\cellHeight
+\setlength\cellWidth{12mm}
+\setlength\cellHeight{8mm}
+\def\ySep{10mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    % borders
+    \draw (0,0) -- ++(5*\cellWidth,0);
+    \draw (0,-\cellHeight) -- ++(5*\cellWidth,0);
+
+    \draw (0,-\cellHeight-\ySep) -- ++(9*\cellWidth,0);
+    \draw (0,-\cellHeight-\ySep-\cellHeight) -- ++(9*\cellWidth,0);
+
+    % cell dividing borders
+    \foreach \x in {0,...,4} {
+      \pgfmathsetmacro\nx{\x+0.5}
+      \draw (\nx*\cellWidth,0) -- ++(0,-\cellHeight);
+    }
+    \foreach \x in {0,...,8} {
+      \pgfmathsetmacro\nx{\x+0.5}
+      \draw (\nx*\cellWidth,-\cellHeight-\ySep) -- ++(0,-\cellHeight);
+    }
+
+    % cell text
+    \foreach \x in {1,...,4} {
+      \draw[StlthBase] (\x*\cellWidth,-\cellHeight-2mm) -- ++(0,-6mm);
+    }
+
+    % cell text
+    \foreach \x in {1,...,4} {
+      \node at (\x*\cellWidth,-\cellHeight/2) {\texttt{\x}};
+    }
+    \foreach \x in {1,...,4} {
+      \node at (\x*\cellWidth,-\cellHeight-\ySep-\cellHeight/2) {\texttt{\x}};
+    }
+  \end{tikzpicture}
+\end{document}
