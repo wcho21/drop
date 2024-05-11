@@ -10,9 +10,10 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import CalloutKal from "@/components/post/CalloutKal.astro";
-import Alg from "@/components/post/Algorithm.astro";
-import ABlock from "@/components/post/AlgorithmBlock.astro";
-import AK from "@/components/post/AlgorithmKeyword.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
 
 import fig1 from "@texfigs/2024/02/08/01/fig1.svg";
 import fig2 from "@texfigs/2024/02/08/01/fig2.svg";
@@ -116,7 +117,7 @@ C++ 같은 언어의 컴파일러는, 타겟 기계가 이해하는 코드, 즉 
 
     값 $\leftarrow$ 평가(문법 트리)
 
-    <AK>리턴</AK> 값
+    <ARet>값</ARet>
   </ABlock>
 </Alg>
 

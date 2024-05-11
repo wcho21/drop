@@ -58,7 +58,9 @@ const { Content } = await entry.render();
     </div>
 
     <div class="my-12 pt-12 border-t border-gray-800">
-      <Giscus />
+      {import.meta.env.PROD ? (
+        <Giscus />
+      ) : (<p style='text-align: center'>(Giscus will be rendered here on production mode)</p>)}
     </div>
 
     <nav id="post-nav" class="my-12 pt-12 border-t border-gray-800">

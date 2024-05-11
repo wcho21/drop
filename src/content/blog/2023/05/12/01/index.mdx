@@ -8,10 +8,18 @@ thumbnail: "./_figs/thumbnail.webp"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/Algorithm.astro";
-import ABlock from "@/components/post/AlgorithmBlock.astro";
-import AK from "@/components/post/AlgorithmKeyword.astro";
-import AC from "@/components/post/AlgorithmComment.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import AC from "@/components/post/algorithm/AlgorithmComment.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
+import AForeach from "@/components/post/algorithm/AlgorithmForeach.astro";
+import AUntil from "@/components/post/algorithm/AlgorithmUntil.astro";
+import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
+import AElif from "@/components/post/algorithm/AlgorithmElif.astro";
+import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
+import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
 
 import fig1 from "@texfigs/2023/05/12/01/fig1.svg";
 import fig2 from "@texfigs/2023/05/12/01/fig2.svg";
@@ -96,7 +104,7 @@ output: 5
 
     계산 값 $\leftarrow$ 후위 표기식 계산(후위 표기식)
 
-    <AK>리턴</AK> 계산 값
+    <ARet>계산 값</ARet>
   </ABlock>
 </Alg>
 
@@ -132,14 +140,15 @@ output: 5
   <ABlock>
     $\textit{stack} \leftarrow$ 스택
 
-    <AK>다음을</AK> 후위 표기식의 토큰<AK>마다 반복</AK>
+    <AForeach>후위 표기식의 토큰</AForeach>
     <ABlock>
-      <AK>만약</AK> 토큰이 숫자이면
+      <AIf>토큰이 숫자</AIf>
       <ABlock>
         $\textit{stack}$.push(토큰)
       </ABlock>
 
-      <AK>아니면</AK>&nbsp;<AC>// 토큰이 연산자이면</AC>
+      <AElse />&nbsp;<AC>// 토큰이 연산자이면</AC>
+
       <ABlock>
         숫자2 $\leftarrow$ $\textit{stack}$.pop()
 
@@ -153,7 +162,7 @@ output: 5
       </ABlock>
     </ABlock>
 
-    <AK>리턴</AK> $\textit{stack}$.pop()
+    <ARet>$\textit{stack}$.pop()</ARet>
   </ABlock>
 </Alg>
 
@@ -311,49 +320,51 @@ def applyOperator(operator, num1, num2):
 
     $\textit{postfix} \leftarrow$ 스트링
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>다음을</AK> 중위 표기식의 토큰<AK>마다 반복</AK>
+    <AForeach>중위 표기식의 토큰</AForeach>
     <ABlock>
-      <AK>만약</AK> 토큰이 숫자이면
+      <AIf>토큰이 숫자</AIf>
       <ABlock>
         $\textit{postfix}$.append(토큰)
       </ABlock>
 
-      <AK>아니면 만약</AK> 토큰이 연산자이면
+      <AElif>토큰이 연산자</AElif>
       <ABlock>
         <AC>// 토큰보다 우선순위가 높지 않은 것들을 스택에서 꺼냄</AC>
 
-        <AK>다음을</AK> 토큰의 우선순위 > $\textit{stack}$.peek()의 우선순위인 <AK>동안 반복</AK>
+        <p><AWhile> 토큰의 우선순위 > $\textit{stack}$.peek()의 우선순위인</AWhile></p>
         <ABlock>
           $\textit{postfix}$.append($\text{stack}$.pop())
         </ABlock>
-        <p>&nbsp;</p>
+
+        <ANL />
+
         $\textit{stack}$.push(토큰)
       </ABlock>
 
-      <AK>아니면 만약</AK> 토큰이 &lsquo;(&rsquo;이면
+      <AElif>토큰이 &lsquo;(&rsquo;</AElif>
       <ABlock>
         $\textit{stack}$.push(토큰)
       </ABlock>
 
-      <AK>아니면 만약</AK> 토큰이 &lsquo;)&rsquo;이면
+      <AElif>토큰이 &lsquo;)&rsquo;</AElif>
       <ABlock>
-        <AK>다음을</AK> 스택 맨 위가 &lsquo;(&rsquo;일 때<AK>까지 반복</AK>
+        <AUntil>스택 맨 위가 &lsquo;(&rsquo;일 때</AUntil>
         <ABlock>
           $\textit{postfix}$.append(토큰)
         </ABlock>
       </ABlock>
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>다음을</AK> 스택이 빌 때<AK>까지 반복</AK>
+    <AUntil>스택이 빌 때</AUntil>
     <ABlock>
       $\textit{postfix}$.append($\text{stack}$.pop())
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
     <AK>리턴</AK> $\textit{postfix}$
   </ABlock>

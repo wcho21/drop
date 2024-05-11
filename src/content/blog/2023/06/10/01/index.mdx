@@ -10,10 +10,12 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro";
-import Alg from "@/components/post/Algorithm.astro";
-import ABlock from "@/components/post/AlgorithmBlock.astro";
-import AK from "@/components/post/AlgorithmKeyword.astro";
-import AC from "@/components/post/AlgorithmComment.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import AC from "@/components/post/algorithm/AlgorithmComment.astro";
+import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
 
 import fig1 from "@texfigs/2023/06/10/01/fig1.svg";
 import fig2 from "@texfigs/2023/06/10/01/fig2.svg";
@@ -73,23 +75,23 @@ UTF-16 인코딩을 수도코드로 정리하면 다음과 같습니다.
 <Alg>
   <AK>UTF-16 인코딩</AK> (코드 포인트)
   <ABlock>
-    <AK>만약</AK> 코드 포인트가 16비트 이하 값이면
+    <AIf>코드 포인트가 16비트 이하 값</AIf>
     <ABlock>
-      <AK>리턴</AK> 코드 포인트를 그대로 갖는 바이트 시퀀스
+      <ARet>코드 포인트를 그대로 갖는 바이트 시퀀스</ARet>
     </ABlock>
 
     <p>&nbsp;</p>
 
-    <AK>만약</AK> 코드 포인트가 21비트 이하 값이면
+    <AIf>코드 포인트가 21비트 이하 값</AIf>
     <ABlock>
       x xxxx yyyy yyzz zzzz zzzz $\leftarrow$ 코드 포인트의 이진 표현
 
-      <AK>리턴</AK> 바이트 시퀀스 1101 10ww wwyy yyyy 1101 11zz zzzz zzzz
+      <ARet>바이트 시퀀스 1101 10ww wwyy yyyy 1101 11zz zzzz zzzz</ARet>
     </ABlock>
 
     <p>&nbsp;</p>
 
-    <AK>리턴</AK> U+FFFD
+    <ARet>U+FFFD</ARet>
   </ABlock>
 </Alg>
 
@@ -175,7 +177,7 @@ UTF-32는 코드유닛이 32비트이기 때문에, 코드 포인트의 이진 �
 <Alg>
   <AK>UTF-32 인코딩</AK> (코드 포인트)
   <ABlock>
-    <AK>리턴</AK> 코드 포인트를 그대로 갖는 바이트 시퀀스
+    <ARet>코드 포인트를 그대로 갖는 바이트 시퀀스</ARet>
   </ABlock>
 </Alg>
 

@@ -9,10 +9,13 @@ series: "UTF 인코딩 구현하기"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/Algorithm.astro";
-import ABlock from "@/components/post/AlgorithmBlock.astro";
-import AK from "@/components/post/AlgorithmKeyword.astro";
-import AC from "@/components/post/AlgorithmComment.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import AC from "@/components/post/algorithm/AlgorithmComment.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
+import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
 
 import fig1 from "@texfigs/2023/06/09/01/fig1.svg";
 import fig2 from "@texfigs/2023/06/09/01/fig2.svg";
@@ -120,43 +123,43 @@ UTF-8는 바이트를 네 개까지 사용하면 $2^{21}$개의 문자를 표현
 <Alg>
   <AK>UTF-8 인코딩</AK> (코드 포인트)
   <ABlock>
-    <AK>만약</AK> 코드 포인트가 7비트 이하 값이면
+    <AIf>코드 포인트가 7비트 이하 값</AIf>
     <ABlock>
       xxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <AK>리턴</AK> 바이트 시퀀스 0xxx xxxx
+      <ARet>바이트 시퀀스 0xxx xxxx</ARet>
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>만약</AK> 코드 포인트가 11비트 이하 값이면
+    <AIf>코드 포인트가 11비트 이하 값</AIf>
     <ABlock>
       yyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <AK>리턴</AK> 바이트 시퀀스 110y yyyy 10xx xxxx
+      <ARet>바이트 시퀀스 110y yyyy 10xx xxxx</ARet>
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>만약</AK> 코드 포인트가 16비트 이하 값이면
+    <AIf>코드 포인트가 16비트 이하 값</AIf>
     <ABlock>
       zzzz yyyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <AK>리턴</AK> 바이트 시퀀스 1110 zzzz 10yy yyyy 10xx xxxx
+      <ARet>바이트 시퀀스 1110 zzzz 10yy yyyy 10xx xxxx</ARet>
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>만약</AK> 코드 포인트가 21비트 이하 값이면
+    <AIf>코드 포인트가 21비트 이하 값</AIf>
     <ABlock>
       w wwzz zzzz yyyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <AK>리턴</AK> 바이트 시퀀스 1111 0www 10zz zzzz 10yy yyyy 10xx xxxx
+      <ARet>바이트 시퀀스 1111 0www 10zz zzzz 10yy yyyy 10xx xxxx</ARet>
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>리턴</AK> U+FFFD
+    <ARet>U+FFFD</ARet>
   </ABlock>
 </Alg>
 
@@ -281,35 +284,35 @@ int main() {
 <Alg>
   <AK>UTF-8 디코딩</AK> (바이트 시퀀스)
   <ABlock>
-    <AK>만약</AK> 바이트 시퀀스가 0xxx xxx 꼴이면
+    <AIf>바이트 시퀀스가 0xxx xxx 꼴</AIf>
     <ABlock>
-      <AK>리턴</AK> 코드 포인트 xxx xxxx
+      <ARet>코드 포인트 xxx xxxx</ARet>
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>만약</AK> 바이트 시퀀스가 110x xxxx 10yy yyyy 꼴이면
+    <AIf>바이트 시퀀스가 110x xxxx 10yy yyyy 꼴</AIf>
     <ABlock>
-      <AK>리턴</AK> 코드 포인트 xxx xxyy yyyy
+      <ARet>코드 포인트 xxx xxyy yyyy</ARet>
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>만약</AK> 바이트 시퀀스가 1110 xxxx 10yy yyyy 10zz zzzz 꼴이면
+    <AIf>바이트 시퀀스가 1110 xxxx 10yy yyyy 10zz zzzz 꼴</AIf>
     <ABlock>
-      <AK>리턴</AK> 코드 포인트 xxxx yyyy yyzz zzzz
+      <ARet>코드 포인트 xxxx yyyy yyzz zzzz</ARet>
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>만약</AK> 바이트 시퀀스가 1111 1xxx 10yy yyyy 10zz zzzz 10ww wwww 꼴이면
+    <AIf>바이트 시퀀스가 1111 1xxx 10yy yyyy 10zz zzzz 10ww wwww 꼴</AIf>
     <ABlock>
-      <AK>리턴</AK> 코드 포인트 x xxyy yyyy zzzz zzww wwww
+      <ARet>코드 포인트 x xxyy yyyy zzzz zzww wwww</ARet>
     </ABlock>
 
-    <p>&nbsp;</p>
+    <ANL />
 
-    <AK>리턴</AK> U+FFFD
+    <ARet>U+FFFD</ARet>
   </ABlock>
 </Alg>
 

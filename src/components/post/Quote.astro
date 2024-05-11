@@ -1,7 +1,8 @@
 ---
+const { display = true } = Astro.props;
 ---
 
-<div class="pl-4 border-l border-l-gray-700 my-10 quote-component">
+<div class={`pl-4 border-l border-l-gray-700 quote-component ${display ? "my-10" : "my-2"}`}>
   <div class="mb-1.5">
     <slot />
   </div>
