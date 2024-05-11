@@ -508,7 +508,7 @@ public class ListStack<T> implements Stack<T> {
     stack.push(42);
     stack.push(43);
 
-    assertEquals(stack.pop(), 43);
+    assertEquals(43, stack.pop());
   }
 
   @Test
@@ -921,7 +921,7 @@ public class ArrayStack<T> implements Stack<T> {
     stack.push(42);
     stack.push(43);
 
-    assertEquals(stack.pop(), 43);
+    assertEquals(43, stack.pop());
   }
 
   @Test
