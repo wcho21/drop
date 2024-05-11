@@ -12,9 +12,10 @@ import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro"
 import CalloutKal from "@/components/post/CalloutKal.astro";
-import Alg from "@/components/post/Algorithm.astro";
-import ABlock from "@/components/post/AlgorithmBlock.astro";
-import AK from "@/components/post/AlgorithmKeyword.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
 
 import fig1 from "@texfigs/2024/02/11/01/fig1.svg";
 import fig2 from "@texfigs/2024/02/11/01/fig2.svg";
@@ -619,7 +620,7 @@ class Repl:
 
     값 $\leftarrow$ 평가(문법 트리)
 
-    <AK>리턴</AK> 값
+    <ARet>값</ARet>
   </ABlock>
 </Alg>
 

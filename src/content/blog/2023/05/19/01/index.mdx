@@ -9,10 +9,12 @@ series: "부동소수점 구현하기"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/Algorithm.astro";
-import ABlock from "@/components/post/AlgorithmBlock.astro";
-import AK from "@/components/post/AlgorithmKeyword.astro";
-import AC from "@/components/post/AlgorithmComment.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import AC from "@/components/post/algorithm/AlgorithmComment.astro";
+import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
 
 import fig1 from "@texfigs/2023/05/19/01/fig1.svg";
 import fig2 from "@texfigs/2023/05/19/01/fig2.svg";
@@ -248,27 +250,27 @@ $$
   <AK>같은지 비교</AK> ($a$, $b$) <AC>// 같으면 true를 리턴하고, 아니면 false를 리턴</AC>
 
   <ABlock>
-    <AK>만약</AK> $a$와 $b$ 둘 다 $0$이면
+    <AIf>$a$와 $b$ 둘 다 $0$</AIf>
     <ABlock>
-      <AK>리턴</AK> true
+      <ARet>true</ARet>
     </ABlock>
 
-    <AK>만약</AK> $a$와 $b$의 `sign`이 다르면
+    <AIf postfix="면">$a$와 $b$의 `sign`이 다르</AIf>
     <ABlock>
-      <AK>리턴</AK> false
+      <ARet>false</ARet>
     </ABlock>
 
-    <AK>만약</AK> $a$와 $b$의 `exponent`가 다르면
+    <AIf postfix="면">$a$와 $b$의 `exponent`가 다르</AIf>
     <ABlock>
-      <AK>리턴</AK> false
+      <ARet>false</ARet>
     </ABlock>
 
-    <AK>만약</AK> $a$와 $b$의 `fraction`이 다르면
+    <AIf postfix="면">$a$와 $b$의 `fraction`이 다르</AIf>
     <ABlock>
-      <AK>리턴</AK> false
+      <ARet>false</ARet>
     </ABlock>
 
-    <AK>리턴</AK> true
+    <ARet>true</ARet>
   </ABlock>
 </Alg>
 

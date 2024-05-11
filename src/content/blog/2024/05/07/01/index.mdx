@@ -11,10 +11,13 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import FigureDisplay from "@/components/post/FigureDisplay.astro";
-import Alg from "@/components/post/Algorithm.astro";
-import ABlock from "@/components/post/AlgorithmBlock.astro";
-import AK from "@/components/post/AlgorithmKeyword.astro";
-import AC from "@/components/post/AlgorithmComment.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
+import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import AC from "@/components/post/algorithm/AlgorithmComment.astro";
 import Quote from "@/components/post/Quote.astro";
 
 import fig1 from "./_figs/fig1.png";
@@ -64,13 +67,13 @@ import fig6 from "@texfigs/2024/05/07/01/fig6.svg";
   <ABlock>
     $r \leftarrow$ $m$을 $n$으로 나눈 나머지
 
-    <AK>만약</AK> $r = 0$ 이면
+    <AIf>$r = 0$ </AIf>
     <ABlock>
-      <AK>리턴</AK> $n$
+      <ARet>$n$</ARet>
     </ABlock>
-    <AK>아니면</AK>
+    <AElse />
     <ABlock>
-      <AK>리턴</AK> 유클리드 알고리즘($n$, $r$)
+      <ARet>유클리드 알고리즘($n$, $r$)</ARet>
     </ABlock>
   </ABlock>
 </Alg>
@@ -202,13 +205,13 @@ import fig6 from "@texfigs/2024/05/07/01/fig6.svg";
   <ABlock>
     [단계 1] $r \leftarrow$ $m$을 $n$으로 나눈 나머지
 
-    [단계 2] <AK>만약</AK> $r = 0$ 이면
+    [단계 2] <AIf>$r = 0$ </AIf>
     <ABlock>
-      [단계 3] <AK>리턴</AK> $n$
+      [단계 3] <ARet>$n$</ARet>
     </ABlock>
-    <AK>아니면</AK>
+    <AElse />
     <ABlock>
-      [단계 4] <AK>리턴</AK> 유클리드 알고리즘($n$, $r$)
+      [단계 4] <ARet>유클리드 알고리즘($n$, $r$)</ARet>
     </ABlock>
   </ABlock>
 </Alg>
@@ -360,13 +363,13 @@ $$
   <ABlock>
     $r \leftarrow$ $m$을 $n$으로 나눈 나머지
 
-    <AK>만약</AK> $r = 0$ 이면
+    <AIf>$r = 0$ </AIf>
     <ABlock>
-      <AK>리턴</AK> $n$
+      <ARet>$n$</ARet>
     </ABlock>
-    <AK>아니면</AK>
+    <AElse />
     <ABlock>
-      <AK>리턴</AK> 유클리드 알고리즘($n$, $r$)
+      <ARet>유클리드 알고리즘($n$, $r$)</ARet>
     </ABlock>
   </ABlock>
 </Alg>

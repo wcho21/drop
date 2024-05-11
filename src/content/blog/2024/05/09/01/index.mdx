@@ -11,10 +11,15 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import FigureDisplay from "@/components/post/FigureDisplay.astro";
-import Alg from "@/components/post/Algorithm.astro";
-import ABlock from "@/components/post/AlgorithmBlock.astro";
-import AK from "@/components/post/AlgorithmKeyword.astro";
-import AC from "@/components/post/AlgorithmComment.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
+import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
+import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import AC from "@/components/post/algorithm/AlgorithmComment.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
 import Quote from "@/components/post/Quote.astro";
 import PostLink from "@/components/post/PostLink.astro";
 
@@ -68,11 +73,11 @@ $$
   <AK>피보나치 수</AK> ($n$) <AC>// $n$번째 피보나치 수를 리턴</AC>
 
   <ABlock>
-    <AK>만약</AK> $n \geq 3$ 이면
+    <AIf>$n \geq 3$</AIf>
     <ABlock>
       <AK>리턴</AK> 피보나치 수($n-1$) + 피보나치 수($n-2$)
     </ABlock>
-    <AK>아니면</AK>
+    <AElse />
     <ABlock>
       <AK>리턴</AK> $1$
     </ABlock>
@@ -118,19 +123,23 @@ $$
 
     $\textit{fib} \leftarrow 0$ <AC>// 피보나치 수 계산 결과</AC>
 
-    <AK>다음을</AK> 스택이 비어있지 않은 <AK>동안 반복</AK>
+    <ANL />
+
+    <AWhile>스택이 비어있지 않은</AWhile>
     <ABlock>
       $m \leftarrow$ 스택에서 꺼낸 숫자
 
-      <AK>만약</AK> $m \geq 3$ 이면
+      <AIf>$m \geq 3$ </AIf>
       <ABlock>
         스택에 $m-2$, $m-1$을 차례로 넣는다
       </ABlock>
-      <AK>아니면</AK>
+      <AElse />
       <ABlock>
         $\textit{fib} \leftarrow \textit{fib} + 1$
       </ABlock>
     </ABlock>
+
+    <ANL />
 
     <AK>리턴</AK> $\textit{fib}$
   </ABlock>
@@ -233,14 +242,14 @@ public interface Stack<T> {
   <ABlock>
     $\textit{node} \leftarrow$ 연결 리스트의 첫 노드 (헤드 노드)
 
-    <AK>다음을</AK> $n > 0$인 <AK>동안 반복</AK>
+    <AWhile>$n > 0$ 인</AWhile>
     <ABlock>
       $n \leftarrow n-1$
 
       $\textit{node} \leftarrow$ $\textit{node}$의 다음 노드
     </ABlock>
 
-    <AK>리턴</AK> $\textit{node}$의 데이터
+    <ARet>$\textit{node}$의 데이터</ARet>
   </ABlock>
 </Alg>
 
@@ -285,7 +294,7 @@ public interface Stack<T> {
   <AK>remove</AK> ()
 
   <ABlock>
-    <AK>만약</AK> 연결 리스트가 비었다면
+    <AIf>연결 리스트가 빈 상태</AIf>
     <ABlock>
       에러 <AK>던짐</AK>
     </ABlock>
@@ -429,7 +438,7 @@ public class LinkedList<T> {
 반대로 팝 연산은 헤드 노드의 데이터를 가져온 뒤, 이를 제거하는 일이 됩니다.
 
 <Alg>
-  <AK>push</AK> ($\textit{data}$)
+  <AK>pop</AK> ()
 
   <ABlock>
     $\textit{list} \leftarrow$ 연결 리스트
@@ -438,7 +447,7 @@ public class LinkedList<T> {
 
     $\textit{list}$.remove()
 
-    <AK>리턴</AK> $\textit{data}$
+    <ARet>$\textit{data}$</ARet>
   </ABlock>
 </Alg>
 
@@ -614,7 +623,7 @@ RAM<L>random access machine</L> 계산 모델의 구현으로 볼 수 있는 오
 
     $i \leftarrow$ 데이터를 추가할 다음 인덱스
 
-    <AK>만약</AK> 배열이 전부 찼다면
+    <AIf>배열이 전부 찬 상태</AIf>
     <ABlock>
       $a \leftarrow$ 두 배로 늘인 새 배열
     </ABlock>
@@ -671,7 +680,7 @@ $$
 
     $i \leftarrow$ 데이터를 추가할 다음 인덱스
 
-    <AK>만약</AK> 로드 팩터 $\leq 0.25$ 이면
+    <AIf>로드 팩터 $\leq 0.25$ </AIf>
     <ABlock>
       $a \leftarrow$ 반으로 줄인 새 배열
     </ABlock>
@@ -951,7 +960,7 @@ public class ArrayStack<T> implements Stack<T> {
 
 - *Algorithms* (4th ed., Robert Sedgewick, 2011), 또는 *알고리즘* (길벗, 2018)
 
-- *Computer Organization and Design (5th ed., David Patterson, John Hennessy, 2014), 또는 *컴퓨터 구조 및 설계* (2015): 재귀 수행 스택, 저수준 관점에서의 배열 소개.
+- *Computer Organization and Design* (5th ed., David Patterson, John Hennessy, 2014), 또는 *컴퓨터 구조 및 설계* (2015): 재귀 수행 스택, 저수준 관점에서의 배열 소개.
 
 - *The Practice of Programming* (Brian Kernighan, Rob Pike, 1999), 또는 *프로그래밍 수련법* (인사이트, 2008): 다이나믹 배열 소개.
 
