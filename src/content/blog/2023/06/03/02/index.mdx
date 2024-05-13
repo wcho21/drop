@@ -30,7 +30,7 @@ import fig5 from "@texfigs/2023/06/03/02/fig5.svg";
 나아가 $n$각형에 대해 풀면 카탈란 넘버를 발견하게 되는데요.
 나중에 보겠지만 여기서 다음 카탈란 점화식을 이끌어낼 수 있습니다.
 $$
-C_n = \frac{4n-2}{n+1} C_{n-1}
+C_n = \frac{4n-2\mathstrut}{n+1} C_{n-1}
 $$
 또한 클로즈드 폼<L>closed-form</L>을 얻을 수 있습니다.
 $$
@@ -124,23 +124,24 @@ $$
 
 여기서 $C_n = T_{n+2}$로 둔다면, 다음과 같은 식을 얻는데요.
 $$
-C_n = \frac{n+2}{2(n-1)} (C_1 C_{n-1} + C_2 C_{n-2} + \cdots + C_{n-1} C_1)
+C_n = \frac{n+2\mathstrut}{2(n-1)} (C_1 C_{n-1} + C_2 C_{n-2} + \cdots + C_{n-1} C_1)
 $$
 기존에 얻었던 카탈란 점화식 $\textrm{Eq.1}$을 이용하면 $C_{n+1} = 2 C_n + \frac{4n+2}{n+2} C_n$을 얻습니다.
 (직접 해보세요.)
 여기서 $n$에 $n-1$을 대입하면 원하는 결과가 나오게 됩니다.
 $$
 \tag{Eq.2}
-C_n = \frac{4n-2}{n+1} C_{n-1}
+  C_n = \frac{4n-2\mathstrut}{n+1} C_{n-1}
 $$
 
 ## 클로즈드 폼 구하기
 
 위의 결과 $\textrm{Eq.2}$를 이용해봅시다.
 그러면 점화식 대신 클로즈드 폼 공식을 얻습니다.
+
 $$
 \begin{align*}
-  C_n &= \frac{4n-2}{n+1} \frac{4n-6}{n} \cdots \frac{6}{3} \frac{2}{2} C_0 \\
+  C_n &= \frac{4n-2\mathstrut}{n+1} \frac{4n-6}{n} \cdots \frac{6}{3} \frac{2}{2} C_0 \\
       &= \frac{2^n}{(n+1)!} (2n-1)(2n-3) \cdots 3 \cdot 1 \\
       &= \frac{2^n}{(n+1)!} \frac{(2n)!}{2^n n!} \\
       &= \frac{1}{n+1} {2n \choose n}
@@ -164,7 +165,7 @@ $$
 $$
 \begin{align*}
   & \begin{aligned}
-    (C(x))^2 &= (C_0)^2 + (C_0 C_1 + C_1 C_0) x + (C_0 C_2 + (C_1)^2 + C_2 C_0) x^2 + \cdots \\
+    (C(x))^{2\mathstrut} &= (C_0)^2 + (C_0 C_1 + C_1 C_0) x + (C_0 C_2 + (C_1)^2 + C_2 C_0) x^2 + \cdots \\
              &= C_1 + C_2 x + C_3 x^2 + \cdots \\
              &= (C(x) - C_0) / x
   \end{aligned} \\
@@ -180,6 +181,7 @@ $$
 [wp-taylor]: https://ko.wikipedia.org/wiki/%ED%85%8C%EC%9D%BC%EB%9F%AC_%EA%B8%89%EC%88%98
 
 먼저, 다음 식은 나중에 증명하기로 합니다.
+
 $$
 \tag{Eq.4}
 \frac{1 - \sqrt{1 - 4x}}{2x} = \sum_{n=0}^{\infty} \frac{1}{n+1} {2n \choose n} x^n
@@ -195,6 +197,7 @@ $$
 방금 사용했던 $\textrm{Eq.4}$를 증명할 차례인데요.
 먼저 $A_n = {2n \choose n}$이라고 하고, 이를 계수로 갖는 함수 $A(x) = \sum_{n=0}^{\infty} A_n x^n$을 생각해봅시다.
 이를 미분하면 다음을 얻습니다.
+
 $$
 x A'(x) = x \left( \sum_{n=1}^{\infty} n A_n x^{n-1} \right) = \sum_{n=0}^{\infty} n A_n x^n
 $$
