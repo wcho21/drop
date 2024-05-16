@@ -1,69 +1,73 @@
-\documentclass{cmn}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.18}
+\documentclass{cmnp}
 \usepgfplotslibrary{units}
+\usepackage{ts-plot}
 
 \begin{document}
   \begin{tikzpicture}
     \begin{scope}
-      \begin{axis}[
+      \begin{loglogaxis}[
         width=75mm,
-        height=70mm,
-        xlabel={$n$ \texttt{prepend()}},
-        ylabel={elapsed time},
-        xtick={128,256,512,1024,2048},
-        xticklabels={$2^7$,$2^8$,$2^9$,$2^{10}$,$2^{11}$},
-        ytick distance=1,
-        y filter/.expression={0.001*y},
+        title={Linked List \texttt{prepend()}},
+        log basis x=2,
+        xlabel={$n$ operations},
+        ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
-        y unit prefix=\mu,
-        xmin=60,
-        xmax=2200,
-        ymin=0,
-        ymax=5,
+        y unit prefix=n,
+        xtick distance=2^2,
       ]
-        \addplot[only marks,mark=x,mark size=3pt] table [x=n,y=T]{
-             n        T
-           128  270.977
-           256  549.189
-           512 1118.513
-          1024 2315.228
-          2048 4590.432
+        \addplot[markplot] table [x=n,y=T]{
+               n          T
+             128    271.654
+             256    549.275
+             512   1116.604
+            1024   2288.760
+            2048   4571.190
+            4096   8985.406
+            8192  17868.746
+           16384  35852.375
+           32768  71866.007
+           65536 144527.763
+          131072 290323.052
         };
-        \addplot[domain=60:2200] { 2.25645*x - 21.85058 };
-      \end{axis}
+        \addplot[domain=64:242144] { 2.13*x^(1.00) }
+          node[left=2mm] { \small$t = 2.13 n^{1.00}$ };
+      \end{loglogaxis}
     \end{scope}
 
     \begin{scope}[xshift=80mm]
-      \begin{axis}[
+      \begin{loglogaxis}[
         width=75mm,
-        height=70mm,
-        xlabel={$n$ \texttt{prepend()} and \texttt{remove()}},
-        ylabel={elapsed time},
-        xtick={128,256,512,1024,2048},
-        xticklabels={$2^7$,$2^8$,$2^9$,$2^{10}$,$2^{11}$},
-        ytick distance=2,
-        y filter/.expression={0.001*y},
+        title={Linked List \texttt{prepend()} and \texttt{remove()}},
+        log basis x=2,
+        xlabel={$n$ operations},
+        ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
-        y unit prefix=\mu,
-        xmin=60,
-        xmax=2200,
-        ymin=0,
-        ymax=10,
+        y unit prefix=n,
+        xtick distance=2^2,
       ]
-        \addplot[only marks,mark=x,mark size=3pt] table [x=n,y=T]{
-             n        T
-           128  601.452
-           256 1395.408
-           512 2436.951
-          1024 4670.832
-          2048 9369.192
+        \addplot[markplot] table [x=n,y=T]{
+               n          T
+             128    693.921
+             256   1169.925
+             512   2434.028
+            1024   4672.151
+            2048   9469.801
+            4096  19211.594
+            8192  38606.264
+           16384  82153.622
+           32768 170976.432
+           65536 350461.804
+          131072 705365.199
         };
-
-        \addplot[domain=60:2200] { 4.50878*x + 116.59938 };
-      \end{axis}
+        \addplot[domain=64:242144] { 4.38*x^(1.01) }
+          node[left=2mm] { \small$t = 4.38 n^{1.01}$ };
+      \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}
 \end{document}

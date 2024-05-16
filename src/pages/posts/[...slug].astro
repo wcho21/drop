@@ -108,6 +108,10 @@ const { Content } = await entry.render();
     @apply overflow-x-auto overflow-y-hidden;
   }
 
+  #post-main > .katex-display > .katex > .katex-html > .tag {
+    right: 0.25ex; /* hackish code; to remove scroll that \tag{} makes */
+  }
+
   #post-main a {
     @apply text-blue-500;
   }

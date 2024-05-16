@@ -4,7 +4,6 @@ date: 2024-05-07T01:00:00+09:00
 summary: "최대 공약수 문제를 통해 알고리즘 분석하기"
 thumbnail: "./_figs/thumbnail.webp"
 series: "알고리즘 라이브러리 만들기"
-featured: true
 ---
 
 import L from "@/components/post/AltLang.astro";
@@ -483,7 +482,9 @@ public class Euclid {
 이를 제외하고는 기존 알고리즘과 같습니다.
 
 이 구현이 원하는대로 동작하는지 확인하기 위해 유닛 테스트<L>unit test</L>를 작성할 수 있습니다.
-이를 위해 다음과 같이 JUnit 프레임워크를 사용해서, 성공 케이스와 예외 케이스를 작성해볼 수 있습니다.
+이를 위해 다음과 같이 [JUnit 5][junit5] 프레임워크를 사용해서, 성공 케이스와 예외 케이스를 작성해볼 수 있습니다.
+
+[junit5]: https://junit.org/junit5/
 
 ```java
   @Test
@@ -492,14 +493,14 @@ public class Euclid {
     int n = 100000000;
     int gcd = Euclid.getGCD(m, n);
 
-    assertEquals(gcd, 100000000);
+    assertEquals(100000000, gcd);
   }
 
   @Test
   public void testZeroNum() {
     int gcd = Euclid.getGCD(1, 0);
 
-    assertEquals(gcd, 0);
+    assertEquals(0, gcd);
   }
 ```
 
@@ -511,10 +512,11 @@ public class Euclid {
 여기선 간단히 일곱 개의 경우에 대해 다음과 같이 구했습니다.
 
 <Figure src={fig5} alt="elapsed time plot">
-  <FigureCaption slot="caption">그림 5. 입력 값에 대한 소요 시간. 직선은 선형 회귀선.</FigureCaption>
+  <FigureCaption slot="caption">그림 5. 입력 값에 대한 소요 시간. 직선은 회귀선.</FigureCaption>
 </Figure>
 
-위 그래프에서 데이터 사이에 선형적인 관계가 나타남을 볼 수 있습니다.
+위 그래프에서 데이터 사이에 선형적인 관계를 볼 수 있습니다.
+가로 축은 로그 스케일이기 때문에, 소요 시간이 $\lg\min(m, n)$에 비례합니다.
 
 이로부터, 분석을 통해 구했던 시간 복잡도가 실제 소요 시간과 비슷하다고 결론을 내릴 수 있는데요.
 이는 실제 컴퓨터와 가까운 계산 모델인 RAM 모델로부터, 알고리즘에서 시간 복잡도를 적절히 구했다는 의미로 이해할 수 있습니다.

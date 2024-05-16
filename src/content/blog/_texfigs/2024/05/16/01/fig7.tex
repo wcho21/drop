@@ -1,0 +1,53 @@
+\documentclass{cmn}
+\usepackage{td-simple-card,ts-arrow}
+\usetikzlibrary{decorations.markings}
+
+\def\xCardSep{5mm}
+\def\ySep{19.875mm}
+\def\deckXSep{12mm}
+\def\movedCardColor{gray!50!lightgray}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach \x/\n in {0/2} {
+        \drawCard{\x*\xCardSep}{0}{\n}
+      }
+
+      \foreach \x/\n in {1/5,2/4} {
+        \drawCard{\x*\xCardSep+\xCardSep+\deckXSep}{0}{\n}
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-\ySep]
+      \foreach \x/\n in {0/2,1/5} {
+        \drawCard{\x*\xCardSep}{0}{\n}
+      }
+
+      \drawCard[color=\movedCardColor]{2*\xCardSep+\deckXSep}{0}{5}
+      \foreach \x/\n in {2/4} {
+        \drawCard{\x*\xCardSep+\xCardSep+\deckXSep}{0}{\n}
+      }
+
+      \draw[StlthRevBase] (12.5mm,14.5mm) .. controls +(45:4mm) and +(135:4mm) .. ++(11.25mm,0);
+    \end{scope}
+
+    \begin{scope}[yshift=-2*\ySep]
+      \foreach \x/\n in {0/2,1/5,2/4} {
+        \drawCard{\x*\xCardSep}{0}{\n}
+      }
+
+      \drawCard[color=\movedCardColor]{3*\xCardSep+\deckXSep}{0}{4}
+
+      \draw[StlthRevBase] (17.5mm,14.5mm) .. controls +(45:4mm) and +(135:4mm) .. ++(11.25mm,0);
+    \end{scope}
+
+    \begin{scope}[yshift=-3*\ySep]
+      \foreach \x/\n in {0/2,1/4,2/5} {
+        \drawCard{\x*\xCardSep}{0}{\n}
+      }
+
+      \draw[StlthRevBase] (7.5mm,14.5mm) .. controls +(75:3.5mm) and +(105:3.5mm) .. ++(4.25mm,0);
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

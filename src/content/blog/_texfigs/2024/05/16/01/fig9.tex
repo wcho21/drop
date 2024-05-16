@@ -1,0 +1,24 @@
+\documentclass{cmn}
+\usepackage{td-simple-card,ts-arrow,fontspec}
+\usetikzlibrary{decorations.markings}
+
+\newfontfamily\fontEmoji[SizeFeatures={Size=11}]{Noto Emoji}
+
+\def\dogSuit{\fontEmoji 🐶}
+\def\catSuit{\fontEmoji 🐱}
+\def\xCardSep{5mm}
+\def\yCardSep{0.5mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \foreach[count=\i] \suit/\num in {\dogSuit/3,\catSuit/C,\catSuit/A,\dogSuit/2,\catSuit/B,\dogSuit/1} {
+      \drawCard[suit=\suit]{\i*\xCardSep}{-\i*\yCardSep}{\num}
+    }
+
+    \draw[Stlth] (45mm,5mm) -- ++(10mm,0);
+
+    \foreach[count=\i] \suit/\num in {\dogSuit/3,\dogSuit/2,\dogSuit/1,\catSuit/A,\catSuit/B,\catSuit/C} {
+      \drawCard[suit=\suit]{55mm+\i*\xCardSep}{-\i*\yCardSep}{\num}
+    }
+  \end{tikzpicture}
+\end{document}

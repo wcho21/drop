@@ -1,0 +1,11 @@
+\documentclass{cmn}
+\usepackage{td-simple-card,ts-arrow}
+
+\begin{document}
+\begin{tikzpicture}
+  \foreach \i in {1,...,8} {
+    \drawCardBack{18mm-\i*2mm}{13.5mm-\i*1.5mm}
+  }
+  \drawCard{0}{0}{2}
+  \end{tikzpicture}
+\end{document}

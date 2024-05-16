@@ -1,0 +1,120 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\pgfplotsset{
+  legend pos=north west,
+  legend columns=-1,
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{loglogaxis}[
+        width=70mm,
+        title style={align=center},
+        title={Shell Sort vs. Insertion Sort \\(Best-case)},
+        log basis x=2,
+        xlabel={array size $n$},
+        ylabel={elapsed time $t$},
+        use units,
+        xmin=2^6,
+        xmax=2^18,
+        y unit=s,
+        y unit prefix=n,
+        xtick distance=2^2,
+        ytick distance=10^1,
+        legend entries={\small Shell,\small Insertion},
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n          t
+             128    223.236
+             256    521.503
+             512   1145.996
+            1024   2547.677
+            2048   5694.136
+            4096  12740.414
+            8192  32102.843
+           16384  85733.542
+           32768 152201.963
+           65536 359099.158
+          131072 860194.811
+        };
+
+        % insertion sort
+        \addplot[markploto] table [x=n,y=t]{
+               n         t
+             128    41.331
+             256    86.527
+             512   166.992
+            1024   328.061
+            2048   655.077
+            4096  1315.272
+            8192  3091.728
+           16384  6077.352
+           32768 12289.136
+           65536 25985.574
+          131072 59708.181
+        };
+
+        % regression for Shell sort
+        \addplot[domain=64:262144] { 0.680 * x^1.19 }
+          node[above=-9mm,left=13mm] { \small$t = 0.680 n^{1.19}$ };
+      \end{loglogaxis}
+    \end{scope}
+
+    \begin{scope}[xshift=75mm]
+      \begin{loglogaxis}[
+        width=70mm,
+        title style={align=center},
+        title={Shell Sort vs. Insertion Sort \\(Worst-case)},
+        log basis x=2,
+        xlabel={array size $n$},
+        ylabel={elapsed time $t$},
+        use units,
+        xmin=2^6,
+        xmax=2^18,
+        y unit=s,
+        y unit prefix=\mu,
+        xtick distance=2^2,
+        ytick distance=10^2,
+        legend entries={\small Shell,\small Insertion},
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n        t
+             128    1.276
+             256    3.070
+             512    6.266
+            1024   14.869
+            2048   34.414
+            4096   81.205
+            8192  147.674
+           16384  414.177
+           32768  929.291
+           65536 2338.755
+          131072 5172.701
+        };
+
+        % insertion sort
+        \addplot[markploto] table [x=n,y=t]{
+               n            t
+             128       15.193
+             256       72.249
+             512      262.639
+            1024     1322.160
+            2048     5873.502
+            4096    23125.643
+            8192    92194.907
+           16384   375706.650
+           32768  1556346.381
+           65536  6601758.459
+          131072 29108835.833
+        };
+
+        % regression for Shell sort
+        \addplot[domain=64:262144] { 3.76 * 10^(-3) * x^1.19 }
+          node[below=18mm,left=2mm] { \small$t = 3.76 {\cdot} 10^{-3} n^{1.19}$ };
+      \end{loglogaxis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

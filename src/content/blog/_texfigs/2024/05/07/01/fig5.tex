@@ -1,32 +1,35 @@
-\documentclass{cmn}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.18}
+\documentclass{cmnp}
 \usepgfplotslibrary{units}
+\usepackage{ts-plot}
 
 \begin{document}
   \begin{tikzpicture}
-    \begin{axis}[
+    \begin{semilogxaxis}[
       width=80mm,
-      height=70mm,
-      xlabel={$\log \min(m, n)$},
-      ylabel={elapsed time},
+      title={Euclid Algorithm (Worst-case)},
+      log basis x=10,
+      xlabel={$\min(m, n)$},
+      ylabel={elapsed time $t$},
       use units,
       y unit=s,
       y unit prefix=n,
-      xtick distance=1,
+      ymin=11,
+      ymax=99,
+      xtick distance=10^1,
       ytick distance=10,
     ]
-      \addplot[only marks,mark=x,mark size=3pt] table [x=m,y=t]{
-        m                  t
-        3.203304916138483  18.849
-        4.0392554438064865 26.461
-        5.084193644325543  39.069
-        6.129131845581379  51.608
-        7.174070046831225  63.312
-        8.01002060783114   74.427
-        9.054958809081034  91.376
+      \addplot[markplot] table [x=m,y=t]{
+                 m      t
+              1597 18.849
+             10946 26.461
+            121393 39.069
+           1346269 51.608
+          14930352 63.312
+         102334155 74.427
+        1134903170 91.376
       };
-      \addplot [domain=3:10] { 12.24545*x - 22.53095 };
-    \end{axis}
+      \addplot[domain=100:10000000000] { 3.68*log2(x) - 22.5 }
+        node[left=32mm,below=2mm] { \small$t = 3.68 \lg \min (m, n) - 22.5$ };
+    \end{semilogxaxis}
   \end{tikzpicture}
 \end{document}

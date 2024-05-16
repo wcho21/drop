@@ -1,69 +1,73 @@
-\documentclass{cmn}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.18}
+\documentclass{cmnp}
 \usepgfplotslibrary{units}
+\usepackage{ts-plot}
 
 \begin{document}
   \begin{tikzpicture}
     \begin{scope}
-      \begin{axis}[
+      \begin{loglogaxis}[
         width=75mm,
-        height=70mm,
-        xlabel={$n$ \texttt{append()}},
-        ylabel={elapsed time},
-        xtick={128,256,512,1024,2048},
-        xticklabels={$2^7$,$2^8$,$2^9$,$2^{10}$,$2^{11}$},
-        ytick distance=1,
-        y filter/.expression={0.001*y},
+        title={Dynamic Array \texttt{append()}},
+        log basis x=2,
+        xlabel={$n$ operations},
+        ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
-        y unit prefix=\mu,
-        xmin=60,
-        xmax=2200,
-        ymin=0,
-        ymax=5,
+        y unit prefix=n,
+        xtick distance=2^2,
       ]
-        \addplot[only marks,mark=x,mark size=3pt] table [x=n,y=T]{
-             n        T
-           128  309.757
-           256  622.256
-           512 1206.944
-          1024 2322.069
-          2048 4566.595
+        \addplot[markplot] table [x=n,y=T]{
+               n          T
+             128    309.755
+             256    619.542
+             512   1200.995
+            1024   2341.637
+            2048   4566.142
+            4096   9211.650
+            8192  18251.041
+           16384  36169.712
+           32768  71945.202
+           65536 144485.998
+          131072 522014.192
         };
-        \addplot[domain=60:2200] { 2.20792*x + 53.32142 };
-      \end{axis}
+        \addplot[domain=64:262144] { 1.96*x^1.02 }
+          node[below=3mm,left=5mm] { \small$t = 1.96 n^{1.02}$ };
+      \end{loglogaxis}
     \end{scope}
 
     \begin{scope}[xshift=80mm]
-      \begin{axis}[
+      \begin{loglogaxis}[
         width=75mm,
-        height=70mm,
-        xlabel={$n$ \texttt{append()} and \texttt{remove()}},
-        ylabel={elapsed time},
-        xtick={128,256,512,1024,2048},
-        xticklabels={$2^7$,$2^8$,$2^9$,$2^{10}$,$2^{11}$},
-        ytick distance=2,
-        y filter/.expression={0.001*y},
+        title={Dynamic Array \texttt{append()} and \texttt{remove()}},
+        log basis x=2,
+        xlabel={$n$ operations},
+        ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
-        y unit prefix=\mu,
-        xmin=60,
-        xmax=2200,
-        ymin=0,
-        ymax=10,
+        y unit prefix=n,
+        xtick distance=2^2,
       ]
-        \addplot[only marks,mark=x,mark size=3pt] table [x=n,y=T]{
-             n        T
-           128  590.533
-           256 1173.396
-           512 2290.011
-          1024 4478.524
-          2048 8868.659
+        \addplot[markplot] table [x=n,y=T]{
+               n          T
+             128    587.402
+             256   1157.823
+             512   2288.517
+            1024   4470.229
+            2048   8855.824
+            4096  17997.826
+            8192  35868.994
+           16384  70658.440
+           32768 139875.294
+           65536 279283.107
+          131072 739224.424
         };
-
-        \addplot[domain=60:2200] { 4.30198*x + 66.177 };
-      \end{axis}
+        \addplot[domain=64:262144] { 4.18*x^1.00 }
+          node[below=3mm,left=5mm] { \small$t = 4.18 n^{1.00}$ };
+      \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}
 \end{document}

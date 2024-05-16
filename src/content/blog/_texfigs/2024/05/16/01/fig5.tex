@@ -1,0 +1,48 @@
+\documentclass{cmn}
+\usepackage{fontspec,ts-arrow}
+
+\newfontfamily\fontKR{Noto Serif KR}
+
+\tikzset{
+  tree/.style={
+    grow=right,
+    level distance=18mm,
+    StlthBase,
+    level 1/.style={sibling distance=10mm}
+  }
+}
+
+\begin{document}
+  \begin{tikzpicture}[tree]
+    \begin{scope}
+      \node[text width=12mm,align=right] at (-12mm,0) {\small\fontKR 이름:};
+
+      \node {\fontKR 김 A}
+        child { node {\fontKR 김 B}
+          child { node {\fontKR 김 C}
+            child { node {\fontKR 김 D} }
+          }
+        };
+    \end{scope}
+    \begin{scope}[yshift=-10mm]
+      \node[text width=12mm,align=right] at (-12mm,0) {\small\fontKR 날짜:};
+
+      \node {\fontKR 김 A}
+        child { node {\fontKR 김 C}
+          child { node {\fontKR 김 B}
+            child { node {\fontKR 김 D} }
+          }
+        };
+    \end{scope}
+    \begin{scope}[yshift=-25mm]
+      \node[text width=12mm,align=right] at (-12mm,0) {\small\fontKR 가계도:};
+
+      \node {\fontKR 김 A}
+        child { node {\fontKR 김 C}
+        }
+        child { node {\fontKR 김 B}
+          child { node {\fontKR 김 D} }
+        };
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

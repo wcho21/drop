@@ -1,0 +1,59 @@
+\documentclass{cmn}
+\usepackage{td-simple-card,ts-arrow}
+\usetikzlibrary{decorations.markings}
+
+\def\xCardSep{12mm}
+\def\ySep{32.5mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach \i in {0,...,3} {
+        \drawCardBack{\i*\xCardSep}{0}
+      }
+      \foreach \i in {5,...,8} {
+        \drawCardBack{\i*\xCardSep}{0}
+      }
+      \drawCard{4*\xCardSep}{0}{6}
+
+      \foreach \i/\txt/\tipy/\tiplen/\txty in {
+        0/low/15mm/1mm/20mm,
+        4/mid/-1mm/-1mm/-5mm,
+        9/high/15mm/1mm/20mm
+      } {
+        \path[tips,StlthRevBase] (\i*\xCardSep+5mm,\tipy) -- ++(0,\tiplen);
+        \node at (\i*\xCardSep+5mm,\txty) {\textit{\textbf{\txt}}};
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-\ySep]
+      \foreach \i in {5,6,8} {
+        \drawCardBack{\i*\xCardSep}{0}
+      }
+      \drawCard{7*\xCardSep}{0}{9}
+
+      \foreach \i/\txt/\tipy/\tiplen/\txty in {
+        5/low/15mm/1mm/20mm,
+        7/mid/-1mm/-1mm/-5mm,
+        9/high/15mm/1mm/20mm
+      } {
+        \path[tips,StlthRevBase] (\i*\xCardSep+5mm,\tipy) -- ++(0,\tiplen);
+        \node at (\i*\xCardSep+5mm,\txty) {\textit{\textbf{\txt}}};
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-2*\ySep]
+      \drawCardBack{5*\xCardSep}{0}
+      \drawCard{6*\xCardSep}{0}{8}
+
+      \foreach \i/\txt/\tipy/\tiplen/\txty in {
+        5/low/15mm/1mm/20mm,
+        6/mid/-1mm/-1mm/-5mm,
+        7/high/15mm/1mm/20mm
+      } {
+        \path[tips,StlthRevBase] (\i*\xCardSep+5mm,\tipy) -- ++(0,\tiplen);
+        \node at (\i*\xCardSep+5mm,\txty) {\textit{\textbf{\txt}}};
+      }
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

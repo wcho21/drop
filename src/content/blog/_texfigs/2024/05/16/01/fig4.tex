@@ -1,0 +1,39 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{semilogxaxis}[
+      width=80mm,
+      title={Binary Search (Worst-case)},
+      log basis x=2,
+      xlabel={array size $n$},
+      ylabel={elapsed time $t$},
+      use units,
+      xmin=2^6,
+      xmax=2^18,
+      y unit=s,
+      y unit prefix=n,
+      xtick distance=2^2,
+      ytick distance=1,
+    ]
+      \addplot[markplot] table [x=n,y=t]{
+             n      t
+           128  5.047
+           256  5.642
+           512  6.239
+          1024  6.832
+          2048  7.427
+          4096  8.027
+          8192  8.631
+         16384  9.225
+         32768  9.820
+         65536 10.422
+        131072 11.031
+      };
+      \addplot[domain=64:262144] { 0.598*log2(x) + 0.856 }
+        node[below=1mm,left=3mm] { \small$t = 0.598 \lg n + 0.856$ };
+    \end{semilogxaxis}
+  \end{tikzpicture}
+\end{document}
