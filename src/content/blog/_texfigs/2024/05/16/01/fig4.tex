@@ -11,6 +11,8 @@
       xlabel={array size $n$},
       ylabel={elapsed time $t$},
       use units,
+      xmin=2^6,
+      xmax=2^18,
       y unit=s,
       y unit prefix=n,
       xtick distance=2^2,
@@ -30,8 +32,8 @@
          65536 10.422
         131072 11.031
       };
-      \addplot[domain=128:131072] { 0.598*log2(x) + 0.856 }
-        node[left=2mm] { \small$t = 0.598 \lg n + 0.856$ };
+      \addplot[domain=64:262144] { 0.598*log2(x) + 0.856 }
+        node[below=1mm,left=3mm] { \small$t = 0.598 \lg n + 0.856$ };
     \end{semilogxaxis}
   \end{tikzpicture}
 \end{document}

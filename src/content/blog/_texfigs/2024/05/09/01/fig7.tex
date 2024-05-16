@@ -12,6 +12,8 @@
         xlabel={$n$ operations},
         ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
         y unit prefix=n,
         xtick distance=2^2,
@@ -30,7 +32,7 @@
            65536 144527.763
           131072 290323.052
         };
-        \addplot[domain=128:131072] { 2.13*x^(1.00) }
+        \addplot[domain=64:242144] { 2.13*x^(1.00) }
           node[left=2mm] { \small$t = 2.13 n^{1.00}$ };
       \end{loglogaxis}
     \end{scope}
@@ -43,6 +45,8 @@
         xlabel={$n$ operations},
         ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
         y unit prefix=n,
         xtick distance=2^2,
@@ -61,7 +65,7 @@
            65536 350461.804
           131072 705365.199
         };
-        \addplot[domain=128:131072] { 4.38*x^(1.01) }
+        \addplot[domain=64:242144] { 4.38*x^(1.01) }
           node[left=2mm] { \small$t = 4.38 n^{1.01}$ };
       \end{loglogaxis}
     \end{scope}

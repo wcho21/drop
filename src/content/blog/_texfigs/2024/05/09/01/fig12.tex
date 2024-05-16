@@ -12,6 +12,8 @@
         xlabel={$n$ operations},
         ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
         y unit prefix=n,
         xtick distance=2^2,
@@ -30,8 +32,8 @@
            65536 144485.998
           131072 522014.192
         };
-        \addplot[domain=128:131072] { 1.96*x^1.02 }
-          node[left=2mm] { \small$t = 1.96 n^{1.02}$ };
+        \addplot[domain=64:262144] { 1.96*x^1.02 }
+          node[below=3mm,left=5mm] { \small$t = 1.96 n^{1.02}$ };
       \end{loglogaxis}
     \end{scope}
 
@@ -43,6 +45,8 @@
         xlabel={$n$ operations},
         ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
         y unit prefix=n,
         xtick distance=2^2,
@@ -61,8 +65,8 @@
            65536 279283.107
           131072 739224.424
         };
-        \addplot[domain=128:131072] { 4.18*x^1.00 }
-          node[left=2mm] { \small$t = 4.18 n^{1.00}$ };
+        \addplot[domain=64:262144] { 4.18*x^1.00 }
+          node[below=3mm,left=5mm] { \small$t = 4.18 n^{1.00}$ };
       \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}

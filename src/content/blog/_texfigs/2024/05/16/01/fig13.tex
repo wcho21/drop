@@ -18,6 +18,8 @@
         xlabel={array size $n$},
         ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
         y unit prefix=n,
         xtick distance=2^2,
@@ -56,8 +58,8 @@
         };
 
         % regression for Shell sort
-        \addplot[domain=128:131072] { 0.680 * x^1.19 }
-          node[above=-8mm,left=12mm] { \small$t = 0.680 n^{1.19}$ };
+        \addplot[domain=64:262144] { 0.680 * x^1.19 }
+          node[above=-9mm,left=13mm] { \small$t = 0.680 n^{1.19}$ };
       \end{loglogaxis}
     \end{scope}
 
@@ -70,6 +72,8 @@
         xlabel={array size $n$},
         ylabel={elapsed time $t$},
         use units,
+        xmin=2^6,
+        xmax=2^18,
         y unit=s,
         y unit prefix=\mu,
         xtick distance=2^2,
@@ -108,8 +112,8 @@
         };
 
         % regression for Shell sort
-        \addplot[domain=128:131072] { 3.76 * 10^(-3) * x^1.19 }
-          node[below=18mm,left=0mm] { \small$t = 3.76 {\cdot} 10^{-3} n^{1.19}$ };
+        \addplot[domain=64:262144] { 3.76 * 10^(-3) * x^1.19 }
+          node[below=18mm,left=2mm] { \small$t = 3.76 {\cdot} 10^{-3} n^{1.19}$ };
       \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}
