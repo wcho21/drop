@@ -1,0 +1,81 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+\usetikzlibrary{decorations.markings}
+
+\newlength\yLabelSep
+\setlength\yLabelSep{8.25mm}
+\newcommand\bin[1]{$#1_{(2)}$}
+
+\tikzset{
+  tree/.style={
+    level distance=12mm,
+    level 1/.style={sibling distance=24mm,StlthRevBase},
+    level 2/.style={sibling distance=12mm},
+    level 3/.style={sibling distance=6mm,-,level distance=7.5mm,dotted,line width=0.25mm}
+  }
+}
+
+\begin{document}
+  \begin{tikzpicture}[tree]
+    \begin{scope}
+      \node[yshift=\yLabelSep] {$n \rightarrow \lfloor\frac{n}{2}\rfloor$};
+
+      \node {1}
+        child { node {2}
+          child { node {4}
+            child {}
+            child {}
+          }
+          child { node {5}
+            child {}
+            child {}
+          }
+        }
+        child { node {3}
+          child { node {6}
+            child {}
+            child {}
+          }
+          child { node {7}
+            child {}
+            child {}
+          }
+        };
+    \end{scope}
+
+    \begin{scope}[xshift=50mm]
+      \node[yshift=\yLabelSep] {\texttt{n >> 1}};
+
+      \node {\bin{1}}
+        child { node {\bin{10}}
+          child { node {\bin{100}}
+            child {}
+            child {}
+          }
+          child { node {\bin{101}}
+            child {}
+            child {}
+          }
+        }
+        child { node {\bin{11}}
+          child { node {\bin{110}}
+            child {}
+            child {}
+          }
+          child { node {\bin{111}}
+            child {}
+            child {}
+          }
+        };
+    \end{scope}
+
+    \begin{scope}[xshift=80mm]
+      \node[yshift=\yLabelSep] {$\lfloor\lg n\rfloor$};
+
+      \node {1}
+        child { node {2} edge from parent[draw=none]
+          child { node {3} edge from parent[draw=none] }
+        };
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

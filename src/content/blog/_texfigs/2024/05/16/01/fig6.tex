@@ -1,0 +1,24 @@
+\documentclass{cmn}
+\usepackage{fontspec}
+
+\newlength\width
+\setlength\width{11.125mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \foreach \i in {0,...,7} {
+      \node at (\i*\width,0) {[\i]};
+    }
+
+    \foreach \i in {0,...,7} {
+      \draw (\i*\width-0.35*\width,-4.5mm) -- ++(0.7*\width,0) -- ++(0,-25.75mm) -- ++(-0.7*\width,0) -- cycle;
+
+      \node at (\i*\width,-8mm) {\i};
+      \pgfmathtruncatemacro{\j}{\i+8}
+      \node at (\i*\width,-14mm) {\j};
+      \pgfmathtruncatemacro{\k}{\i+16}
+      \node at (\i*\width,-20mm) {\k};
+      \node at (\i*\width,-25mm) {$\vdots$};
+    }
+  \end{tikzpicture}
+\end{document}

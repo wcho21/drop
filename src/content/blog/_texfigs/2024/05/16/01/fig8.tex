@@ -1,0 +1,71 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{loglogaxis}[
+        width=70mm,
+        title={Insertion Sort (Best-case)},
+        log basis x=2,
+        xlabel={array size $n$},
+        ylabel={elapsed time $t$},
+        use units,
+        y unit=s,
+        y unit prefix=n,
+        xtick distance=2^2,
+        ytick distance=10^1,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n         t
+             128    41.331
+             256    86.527
+             512   166.992
+            1024   328.061
+            2048   655.077
+            4096  1315.272
+            8192  3091.728
+           16384  6077.352
+           32768 12289.136
+           65536 25985.574
+          131072 59708.181
+        };
+        \addplot[domain=128:131072] { 0.248 * x^1.04 }
+          node[left=2mm] { \small$t = 0.248 n^{1.04}$ };
+      \end{loglogaxis}
+    \end{scope}
+
+    \begin{scope}[xshift=75mm]
+      \begin{loglogaxis}[
+        width=70mm,
+        title={Insertion Sort (Worst-case)},
+        log basis x=2,
+        xlabel={array size $n$},
+        ylabel={elapsed time $t$},
+        use units,
+        y unit=s,
+        y unit prefix=\mu,
+        xtick distance=2^2,
+        ytick distance=10^2,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n            t
+             128       15.193
+             256       72.249
+             512      262.639
+            1024     1322.160
+            2048     5873.502
+            4096    23125.643
+            8192    92194.907
+           16384   375706.650
+           32768  1556346.381
+           65536  6601758.459
+          131072 29108835.833
+        };
+        \addplot[domain=128:131072] { 7.05 * 10^(-4) * x^2.07 }
+          node[left=2mm] { \small$t = 7.05 \cdot 10^{-4} n^{2.07}$ };
+      \end{loglogaxis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

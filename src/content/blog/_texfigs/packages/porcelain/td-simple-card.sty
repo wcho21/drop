@@ -1,0 +1,57 @@
+% tikz drawing util for playing card
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-simple-card}[2024/05/15]
+
+\RequirePackage{tikz}
+\RequirePackage{keyval}
+
+\newlength\tdsc@cardWidth
+\setlength\tdsc@cardWidth{10mm}
+\newlength\tdsc@cardHeight
+\setlength\tdsc@cardHeight{14mm}
+
+\newcommand\tdsc@drawCardBorder[4]{
+  \def\tdsc@border@x{#1}
+  \def\tdsc@border@y{#2}
+  \def\tdsc@border@color{#3}
+  \def\tdsc@border@fill{#4}
+
+  \draw[draw=\tdsc@border@color,fill=\tdsc@border@fill] (\tdsc@border@x,\tdsc@border@y)
+    -- ++(\tdsc@cardWidth,0)
+    -- ++(0,\tdsc@cardHeight)
+    -- ++(-\tdsc@cardWidth,0)
+    -- cycle;
+}
+
+\define@key{drawCard}{color}{\def\tdsc@card@k@color{#1}}
+\define@key{drawCard}{fill}{\def\tdsc@card@k@fill{#1}}
+\define@key{drawCard}{suit}{\def\tdsc@card@k@suit{#1}}
+\setkeys{drawCard}{color=black,fill=white,suit=$\spadesuit$}
+\newcommand\drawCard[4][]{
+  \begingroup
+    \setkeys{drawCard}{#1}
+    \def\tdsc@card@x{#2}
+    \def\tdsc@card@y{#3}
+    \def\tdsc@card@numLabel{#4}
+
+    \tdsc@drawCardBorder{\tdsc@card@x}{\tdsc@card@y}{\tdsc@card@k@color}{\tdsc@card@k@fill}
+
+    \node[text=\tdsc@card@k@color,text width=5mm,align=center]
+      at (\tdsc@card@x+0.25*\tdsc@cardWidth,\tdsc@card@y+0.5875*\tdsc@cardHeight)
+      {\tdsc@card@numLabel\\ \tdsc@card@k@suit};
+  \endgroup
+}
+
+\define@key{drawCardBack}{color}{\def\tdsc@back@k@color{#1}}
+\define@key{drawCardBack}{fill}{\def\tdsc@back@k@fill{#1}}
+\setkeys{drawCardBack}{color=black,fill=lightgray!25}
+\newcommand\drawCardBack[3][]{
+  \begingroup
+    \setkeys{drawCardBack}{#1}
+    \def\tdsc@back@x{#2}
+    \def\tdsc@back@y{#3}
+
+    \tdsc@drawCardBorder{\tdsc@back@x}{\tdsc@back@y}{\tdsc@back@k@color}{\tdsc@back@k@fill}
+  \endgroup
+}
