@@ -15,6 +15,7 @@ import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
 import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
 import AC from "@/components/post/algorithm/AlgorithmComment.astro";
 import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
+import AForeach from "@/components/post/algorithm/AlgorithmForeach.astro";
 import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
 import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
 import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
@@ -96,36 +97,32 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 데이터가 소트됐기 때문에 가능한 방법입니다.
 
 서치 구간을 표현하기 위해 양 끝을 나타낼 필요가 있는데요.
-여기선 구간의 시작은 $\textit{low}$가, 마지막은 $\textit{high}$가 나타냅니다.
-다만 $\textit{high}$는 마지막 데이터의 다음을 가리킵니다.
+여기선 구간의 시작은 $\textit{begin}\,$이, 마지막은 $\textit{end}\,$가 나타냅니다.
+다만 $\textit{end}\,$는 마지막 데이터의 다음을 가리킵니다.
 
-이와 같이 마지막이 제외된 구간을 반열린구간<L>half-open interval</L> $[\textit{low}, \textit{high})$이라고 부릅니다.
-이렇게 하면, 구간이 비었다는 사실은 두 끝이 같다는 것, 즉 $\textit{low} = \textit{high}$로 표현할 수 있습니다.
-반대로, 구간이 비어있지 않다는 것은 $\textit{low} < \textit{high}$와 같게 됩니다.
+이와 같이 마지막이 제외된 구간을 반열린구간<L>half-open interval</L>이라고 부르고 $[\textit{begin}, \textit{end})$로 표현합니다.
+이렇게 하면, 구간이 비었다는 사실은 두 끝이 같다는 것, 즉 $\textit{begin} = \textit{end}\,$로 표현할 수 있습니다.
+반대로, 구간이 비어있지 않다는 것은 $\textit{begin} < \textit{end}\,$와 같게 됩니다.
 즉 바로 이런 경우에 한해서 바이너리 서치를 반복한다는 것이, 구간이 빌 때까지 찾겠다는 의미가 됩니다.
 
 이 아이디어를 배열에 있는 데이터에 적용해본다면, 이런 수도코드로 정리해볼 수 있습니다.
 
 <Alg>
-  <AK>바이너리 서치</AK> ($\textit{arr}$, $\textit{target}$) <AC>// 배열 $\textit{arr}$에서 $\textit{target}$를 찾으면 인덱스를, 아니면 $-1$을 리턴</AC>
+  <AK>바이너리 서치</AK> ($\textit{arr}$, $\textit{target}$) <AC>// 배열 $\textit{arr}\,$에서 $\textit{target}\,$을 찾으면 인덱스를, 아니면 $-1$을 리턴</AC>
 
   <ABlock>
-    $\textit{size} \leftarrow$ $\textit{arr}$의 크기
+    <AC>// $\textit{target}\,$을 찾을 구간을 반열린구간 [$\textit{begin}$, $\textit{end}$)로 표현 (즉 $\textit{end}\,$는 제외한 구간)</AC>
 
-    <ANL />
+    $\textit{begin} \leftarrow 0$
 
-    <AC>// 관심있는 데이터의 구간을 반열린구간 [$\textit{low}$, $\textit{high}$)으로 표현 (즉 $\textit{high}$는 제외한 구간)</AC>
+    $\textit{end} \leftarrow \textit{arr}\,$의 크기
 
-    $\textit{low} \leftarrow 0$
-
-    $\textit{high} \leftarrow \textit{size}$
-
-    <AWhile>$\textit{low} < \textit{high}$ 인</AWhile>&nbsp;<AC>// 구간 [$\textit{low}, \textit{high}$)가 비어있지 않는 동안</AC>
+    <AWhile>$\textit{begin} < \textit{end}$ 인</AWhile>&nbsp;<AC>// 구간 [$\textit{begin}, \textit{end}$)가 비어있지 않는 동안</AC>
 
     <ABlock>
       <AC>// 구간 가운데의 데이터를 가져옴</AC>
 
-      $\textit{mid} \leftarrow \lfloor (\textit{low} + \textit{high}) / 2 \rfloor$
+      $\textit{mid} \leftarrow \lfloor (\textit{begin} + \textit{end}) / 2 \rfloor$
 
       $\textit{midValue} \leftarrow \textit{arr}[\textit{mid}]$
 
@@ -133,7 +130,7 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 
       <p><AC>// 찾은 경우 리턴</AC></p>
 
-      <AIf>$\textit{midValue} = \textit{target}$</AIf>
+      <AIf>$\textit{midValue} = \textit{target}$ </AIf>
 
       <ABlock>
         <ARet>$\textit{mid}$</ARet>
@@ -145,11 +142,11 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 
       <AIf>$\textit{midValue} < \textit{target}$ </AIf>
       <ABlock>
-        $\textit{low} \leftarrow \textit{mid}+1$
+        $\textit{begin} \leftarrow \textit{mid}+1$
       </ABlock>
       <AElse />
       <ABlock>
-        $\textit{high} \leftarrow \textit{mid}$
+        $\textit{end} \leftarrow \textit{mid}$
       </ABlock>
     </ABlock>
 
@@ -170,13 +167,13 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
 
 <Alg>
   <ABlock>
-    <AWhile>$\textit{low} < \textit{high}$ 인</AWhile>&nbsp;<AC>// 구간 [$\textit{low}, \textit{high}$)가 비어있지 않는 동안</AC>
+    <AWhile>$\textit{begin} < \textit{end}$ 인</AWhile>&nbsp;<AC>// 구간 [$\textit{begin}, \textit{end}$)가 비어있지 않는 동안</AC>
   </ABlock>
 </Alg>
 
-한편, 자료에 따라서는 양쪽을 구간에 포함시킨, 소위 닫힌구간<L>closed interval</L> $[\textit{low}, \textit{high}]$를 고르기도 합니다.
-그러면 구간이 비어있지 않다는 표현은 $\textit{low} \leq \textit{high}\,$로 달라집니다.
-이에 따라 수도코드에서 $\textit{high}$ 변수의 초기화와 반복문의 조건도 바뀌어야 하는데요.
+한편, 자료에 따라서는 양쪽을 구간에 포함시킨, 소위 닫힌구간<L>closed interval</L> $[\textit{begin}, \textit{end}]$를 고르기도 합니다.
+그러면 구간이 비어있지 않다는 표현은 $\textit{begin} \leq \textit{end}\,$로 달라집니다.
+이에 따라 수도코드에서 $\textit{end}\,$의 초기화와 반복문의 조건도 바뀌어야 하는데요.
 이는 직접 해보는 문제로 남겨두겠습니다.
 
 ## 알고리즘이 올바른지 확인하기
@@ -187,10 +184,10 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
 그러면 수도코드가 기대하는대로 동작하는지 어떻게 확신할 수 있을까요?
 바이너리 서치가 동작하는 이유는 이렇게 정리할 수 있습니다.
 
-- 서치 대상 $\textit{target}\,$이 배열 $\textit{arr}\,$에 있다면, 그 인덱스 $i$는 $[\textit{low}, \textit{high})$ 안에 있다.
-  즉, $\textit{low} \leq i < \textit{high}$ 이다.
+- 서치 대상 $\textit{target}\,$이 배열 $\textit{arr}\,$에 있다면, 그 인덱스 $i$는 $[\textit{begin}, \textit{end})$ 안에 있다.
+  즉, $\textit{begin} \leq i < \textit{end}$ 이다.
 
-- 반대로, 배열에 없다면 그 인덱스 $i$는 $[\textit{low}, \textit{high})$ 안에 없다.
+- 반대로, 배열에 없다면 그 인덱스 $i$는 $[\textit{begin}, \textit{end})$ 안에 없다.
 
 이 중에 첫 번째가 항상 성립함을 보이겠습니다.
 그러기 위해 세 가지 경우를 따져볼 텐데요.
@@ -203,22 +200,20 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
 
 <Alg>
   <ABlock>
-    $\textit{size} \leftarrow$ $\textit{arr}$의 크기
+    $\textit{begin} \leftarrow 0$
 
-    $\textit{low} \leftarrow 0$
-
-    $\textit{high} \leftarrow \textit{size}$
+    $\textit{end} \leftarrow \textit{arr}\,$의 크기
   </ABlock>
 </Alg>
 
 서치 대상이 배열에 있다면, 그 인덱스 $i$는 당연히 $0 \leq i < \textit{size}$ 입니다.
-그리고 수도코드의 변수 초기화로 인해, 루프 인베리언트의 부등식 $\textit{low} \leq i < \textit{high}$가 반복문 시작 직전에 성립합니다.
+그리고 수도코드의 변수 초기화로 인해, 루프 인베리언트의 부등식 $\textit{begin} \leq i < \textit{end}\,$가 반복문 시작 직전에 성립합니다.
 
 두 번째로, 반복할 때를 봅시다.
-즉 $\textit{low} < \textit{high}\,$일 때입니다.
+즉 $\textit{begin} < \textit{end}\,$일 때입니다.
 가운데 데이터가 서치 대상보다 작다고 해봅시다.
 그러면 더 작은 쪽은 볼 필요가 없게 됩니다.
-즉 $i$는 큰 쪽 절반 구간 $[\textit{mid}+1, \textit{high})$에 있는 것입니다.
+즉 $i$는 큰 쪽 절반 구간 $[\textit{mid}+1, \textit{end})$에 있는 것입니다.
 이 때 이런 수도코드가 수행됩니다.
 
 <Alg>
@@ -226,21 +221,21 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
     <ABlock>
       <AIf>$\textit{midValue} < \textit{target}$ </AIf>
       <ABlock>
-        $\textit{low} \leftarrow \textit{mid}+1$
+        $\textit{begin} \leftarrow \textit{mid}+1$
       </ABlock>
     </ABlock>
   </ABlock>
 </Alg>
 
-이는 다음 서치 구간을 $[\textit{mid}+1, \textit{high})$로 줄인 것이고, 정확히 $i$가 속하는 구간과 같습니다.
+이는 다음 서치 구간을 $[\textit{mid}+1, \textit{end})$로 줄인 것이고, 정확히 $i$가 속하는 구간과 같습니다.
 따라서 다음 반복의 시작까지 루프 인베리언트가 성립하게 됩니다.
 그리고 반대의 경우, 즉 $i$가 다른 쪽에 속할 때도 이와 비슷합니다.
 
 마지막으로, 반복이 끝난 직후를 봅시다.
-만약 서치 대상을 찾았다면, 실제로 그 인덱스가 $[\textit{low}, \textit{high})$에 있었던 것이므로 성립합니다.
+만약 서치 대상을 찾았다면, 실제로 그 인덱스가 $[\textit{begin}, \textit{end})$에 있었던 것이므로 성립합니다.
 그리고 반복문은 끝나게 되므로, 끝난 직후에도 성립합니다.
 
-결론적으로 루프 인베리언트, 즉 서치 대상이 배열에 있다면 인덱스가 $[\textit{low}, \textit{high})$ 안에 있음을 보였습니다.
+결론적으로 루프 인베리언트, 즉 서치 대상이 배열에 있다면 인덱스가 $[\textit{begin}, \textit{end})$ 안에 있음을 보였습니다.
 이로부터 반복 조건과 반복마다 줄이는 구간을 올바르게 정했다는 걸 알 수 있게 됩니다.
 반대로 이 두 가지가 살짝이라도 달라졌을 때, 루프 인베리언트는 성립하지 않게 됩니다. (확인해보세요.)
 
@@ -252,7 +247,7 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
 <Alg>
   <ABlock>
     <ABlock>
-      $\textit{mid} \leftarrow \lfloor (\textit{low} + \textit{high}) / 2 \rfloor$
+      $\textit{mid} \leftarrow \lfloor (\textit{begin} + \textit{end}) / 2 \rfloor$
     </ABlock>
   </ABlock>
 </Alg>
@@ -266,7 +261,7 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
 <Alg>
   <ABlock>
     <ABlock>
-      $\textit{mid} \leftarrow \textit{low} + \lfloor (\textit{high} - \textit{low}) / 2 \rfloor$
+      $\textit{mid} \leftarrow \textit{begin} + \lfloor (\textit{end} - \textit{begin}) / 2 \rfloor$
     </ABlock>
   </ABlock>
 </Alg>
@@ -337,12 +332,10 @@ $$
 ```java
 public class BinarySearchIntArray {
   public static int search(int[] arr, int target) {
-    int size = arr.length;
-
-    int low = 0;
-    int high = size;
-    while (low < high) {
-      int mid = low + (high - low) / 2;
+    int begin = 0;
+    int end = arr.length;
+    while (begin < end) {
+      int mid = begin + (end - begin) / 2;
       int midVal = arr[mid];
 
       if (midVal == target) {
@@ -350,9 +343,9 @@ public class BinarySearchIntArray {
       }
 
       if (midVal < target) {
-        low = mid+1;
+        begin = mid+1;
       } else {
-        high = mid;
+        end = mid;
       }
     }
 
@@ -485,23 +478,21 @@ $$
 
 ```java
 public class BinarySearchArray {
-  public static <T> int search(T[] arr, T target, Comparator<T> comparator) {
-    int size = arr.length;
-
-    int low = 0;
-    int high = size;
-    while (low < high) {
-      int mid = low + (high - low) / 2;
+  public static <T> int search(T[] arr, T target, Comparator<T> comp) {
+    int begin = 0;
+    int end = arr.length;
+    while (begin < end) {
+      int mid = begin + (end - begin) / 2;
       T midVal = arr[mid];
 
-      if (isEqualTo(midVal, target, comparator)) {
+      if (isEqualTo(midVal, target, comp)) {
         return mid;
       }
 
-      if (isLessThan(midVal, target, comparator)) {
-        low = mid+1;
+      if (isLessThan(midVal, target, comp)) {
+        begin = mid+1;
       } else {
-        high = mid;
+        end = mid;
       }
     }
 
@@ -537,7 +528,9 @@ public class Comparators {
 
 ```java
   public static <T extends Comparable<? super T>> int search(T[] arr, T target) {
-    return BinarySearchArray.search(arr, target, Comparator.comparing(v -> v));
+    Comparator<T> identityComp = Comparator.comparing(v -> v);
+
+    return BinarySearchArray.search(arr, target, identityComp);
   }
 ```
 
@@ -686,30 +679,23 @@ $$
 수도코드로는 이렇게 표현할 수 있습니다.
 
 <Alg>
-  <AK>인서션 소트</AK> ($\textit{arr}$) <AC>// $\textit{arr}$을 소트</AC>
+  <AK>인서션 소트</AK> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$) <AC>// 배열 $\textit{arr}\,$에서 구간 [$\textit{begin},\textit{end}$)의 데이터 소트</AC>
 
   <ABlock>
-    $\textit{size} \leftarrow$ $\textit{arr}$의 크기
-
-    $i \leftarrow 1$ <AC>// 다음에 가져올 오른쪽 데이터의 인덱스</AC>
-
-    <ANL />
-
-    <p><AC>// 오른쪽에서 하나씩 가져와 소트</AC></p>
-
-    <AWhile>$i < \textit{size}$ 인 </AWhile>
+    <AForeach>$\textit{begin}+1$부터 $\textit{end}\,$전까지인 $i$</AForeach>
     <ABlock>
-      $j \leftarrow i-1$ <AC>// 바로 왼쪽 인덱스</AC>
+      $j \leftarrow i-1$ <AC>// 바로 왼쪽 데이터의 인덱스</AC>
 
-      <p><AC>// 바로 왼쪽과 자리가 안맞는 동안 왼쪽으로 자리를 바꾸면서 이동</AC></p>
+      <p><AC>// 오른쪽($j+1$)이 바로 왼쪽($j$)과 자리가 안맞는 동안</AC></p>
 
-      <AWhile>$j \geq 0$ 이고 $arr$[$j$] $> arr$[$j+1$] 인 </AWhile>
+      <AWhile>$j \geq \textit{begin}$ 이고 $arr$[$j$] $> arr$[$j+1$] 인 </AWhile>
       <ABlock>
+        <AC>// 오른쪽은 왼쪽과 자리 바꿈</AC>
+
         $\textit{arr}$[$j$]와 $\textit{arr}$[$j+1$] 스왑
 
         $j \leftarrow j-1$
       </ABlock>
-      $i \leftarrow i+1$
     </ABlock>
   </ABlock>
 </Alg>
@@ -739,7 +725,7 @@ $$
 
 ```java
 public interface SortStrategy<T> {
-  public T[] sortArray(T[] arr, Comparator<T> comparator);
+  public T[] sortArray(T[] arr, int begin, int end, Comparator<T> comp);
 }
 ```
 
@@ -747,13 +733,11 @@ public interface SortStrategy<T> {
 구현 코드는 수도코드를 그대로 옮깁니다.
 
 ```java
-public class InsertionSortStrategy<T> implements SortStrategy<T> {
-  public T[] sortArray(T[] arr, Comparator<T> comparator) {
-    int size = arr.length;
-
-    for (int i = 1; i < size; ++i) {
+public class InsertionStrategy<T> implements SortStrategy<T> {
+  public T[] sortArray(T[] arr, int begin, int end, Comparator<T> comp) {
+    for (int i = begin+1; i < end; ++i) {
       int j = i-1;
-      while (j >= 0 && isGreaterThan(arr[j], arr[j+1], comparator)) {
+      while (j >= begin && isGreaterThan(arr[j], arr[j+1], comp)) {
         swap(arr, j, j+1);
         j--;
       }
@@ -775,26 +759,33 @@ public class Comparators {
 }
 ```
 
-사용자가 사용할 소트 메소드는 다음 스태틱 메소드로 제공합니다.
+사용자가 사용할 소트 메소드는 별도의 스태틱 메소드로 제공합니다.
 이를 통해 구체적인 소팅 알고리즘을 스트레터지 인자로 줄 수 있습니다.
 
 ```java
 public class Sorter {
-  public static <T>
-  T[] sortArray(T[] arr, SortStrategy<T> strat, Comparator<T> comp) {
-    return strat.sortArray(arr, comp);
+  public static <T> T[] sortArray(T[] arr, int begin, int end,
+      SortStrategy<T> strat, Comparator<T> comp) {
+    return strat.sortArray(arr, begin, end, comp);
   }
 }
 ```
 
-이 메소드가 오더링을 생략할 수 있도록 오버로딩합니다.
+이 메소드가 구간을 생략하면 전체 구간을 소트하도록 오버로딩합시다.
 
 ```java
-  public static <T extends Comparable<? super T>>
-  T[] sortArray(T[] arr, SortStrategy<T> strat) {
-    Comparator<T> identity = Comparator.comparing(v -> v);
+  public static <T> T[] sortArray(T[] arr,
+      SortStrategy<T> strat, Comparator<T> comp) {
+    return Sorter.sortArray(arr, 0, arr.length, strat, comp);
+  }
+```
 
-    return Sorter.sortArray(arr, strat, identity);
+나아가 오더링도 생략할 수 있도록 오버로딩합니다.
+
+```java
+  public static <T extends Comparable<? super T>> T[] sortArray(T[] arr,
+      SortStrategy<T> strat) {
+    return Sorter.sortArray(arr, 0, arr.length, strat);
   }
 ```
 
@@ -806,8 +797,9 @@ public class Sorter {
   public void testSort() {
     Integer[] unsorted = { 20, 30, 10, 40 };
     Integer[] expected = { 10, 20, 30, 40 };
+    SortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    Sorter.sortArray(unsorted, new InsertionSortStrategy<>());
+    Sorter.sortArray(unsorted, strat);
 
     assertArrayEquals(expected, unsorted);
   }
@@ -820,9 +812,9 @@ public class Sorter {
   public void testRem8OrderingDistinctSort() {
     Integer[] unsorted = { 110, 93, 84, 43, 26, 9 };
     Integer[] expected = { 9, 26, 43, 84, 93, 110 };
+    SortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    Sorter.sortArray(unsorted, new InsertionSortStrategy<>(),
-      Comparator.comparing(v -> v % 8));
+    Sorter.sortArray(unsorted, strat, Comparator.comparing(v -> v % 8));
 
     assertArrayEquals(expected, unsorted);
   }
@@ -853,9 +845,9 @@ public class Sorter {
   public void testRem8OrderingDuplicateSort() {
     Integer[] unsorted = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     Integer[] expected = { 0, 8, 1, 9, 2, 10, 3, 4, 5, 6, 7 };
+    SortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    Sorter.sortArray(unsorted, new InsertionSortStrategy()<>,
-      Comparator.comparing(v -> v % 8));
+    Sorter.sortArray(unsorted, strat, Comparator.comparing(v -> v % 8));
 
     assertArrayEquals(expected, unsorted);
   }
@@ -1072,18 +1064,14 @@ $i$번째 데이터와 $j$번째 데이터가 인버전이면 간단히 $(i, j)$
 여기서는 $h = 1, 4, 13, \dotsc, \lfloor n/3 \rfloor$로 하면 수도코드로는 이렇게 표현할 수 있습니다.
 
 <Alg>
-  <AK>셸 소트</AK> ($\textit{arr}$) <AC>// 배열 $\textit{arr}$을 소트</AC>
+  <AK>셸 소트</AK> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$) <AC>// 배열 $\textit{arr}\,$에서 구간 [$\textit{begin},\textit{end}$)의 데이터 소트</AC>
 
   <ABlock>
-    $\textit{size} \leftarrow$ $\textit{arr}$의 크기
-
-    <ANL />
-
     <AC>// 첫 갭을 구함</AC>
 
     $\textit{gap} \leftarrow 1$
 
-    <AWhile>$gap < \lfloor\textit{size}/3\rfloor$ 인 </AWhile>
+    <AWhile>$gap < \lfloor(\textit{end}-\textit{begin})/3\rfloor$ 인 </AWhile>
     <ABlock>
       $\textit{gap} \leftarrow 3\textit{gap} + 1$ <AC>// $1, 4, 13, \dots$</AC>
     </ABlock>
@@ -1092,24 +1080,24 @@ $i$번째 데이터와 $j$번째 데이터가 인버전이면 간단히 $(i, j)$
 
     <AWhile>$\textit{gap} \geq 1$ 인 </AWhile>
     <ABlock>
-      <AC>// $\textit{gap}$ 간격 만큼 인서션 소트</AC>
+      <p><AC>// 간격 $\textit{gap}\,$으로 서브 배열을 인서션 소트</AC></p>
 
-      $i \leftarrow \textit{gap}$
-
-      <AWhile>$i < \textit{size}$ 인 </AWhile>
+      <AForeach>$\textit{begin}+\textit{gap}\,$부터 $\textit{end}\,$전까지인 $i$</AForeach>
       <ABlock>
-        <AC>// 왼쪽으로 가며, 이전 위치 데이터와 순서가 안맞을 때까지 스왑</AC>
+        $j \leftarrow i-\textit{gap}$ <AC>// 서브 배열 상 바로 왼쪽 데이터 인덱스</AC>
 
-        $j \leftarrow i-\textit{gap}$ <AC>// 이전 위치 인덱스</AC>
+        <p><AC>// 오른쪽($j+gap$)이 바로 왼쪽($j$)과 자리가 안맞는 동안</AC></p>
 
-        <AWhile>$j \geq 0$ 이고 $arr$[$j$] $> arr$[$j+\textit{gap}$] 인 </AWhile>
+        <AWhile>$j \geq \textit{begin}$ 이고 $arr$[$j$] $> arr$[$j+\textit{gap}$] 인 </AWhile>
         <ABlock>
+          <p><AC>// 오른쪽은 왼쪽과 자리 바꿈</AC></p>
           $\textit{arr}$[$j$]와 $\textit{arr}$[$j+\textit{gap}$] 스왑
 
           $j \leftarrow j-\textit{gap}$
         </ABlock>
-        $i \leftarrow i+1$
       </ABlock>
+
+      <ANL />
 
       $\textit{gap} \leftarrow \lfloor\textit{gap} / 3\rfloor$
     </ABlock>
@@ -1126,19 +1114,17 @@ $i$번째 데이터와 $j$번째 데이터가 인버전이면 간단히 $(i, j)$
 수도코드를 그대로 옮기면 이렇습니다.
 
 ```java
-public class ShellSortStrategy<T> implements SortStrategy<T> {
-  public T[] sortArray(T[] arr, Comparator<T> comparator) {
-    int size = arr.length;
-
+public class ShellStrategy<T> implements SortStrategy<T> {
+  public T[] sortArray(T[] arr, int begin, int end, Comparator<T> comp) {
     int gap = 1;
-    while (gap < size / 3) {
+    while (gap < (end - begin) / 3) {
       gap = 3*gap + 1;
     }
 
     while (gap >= 1) {
-      for (int i = gap; i < size; ++i) {
+      for (int i = begin+gap; i < end; ++i) {
         int j = i - gap;
-        while (j >= 0 && isGreaterThan(arr[j], arr[j+gap], comparator)) {
+        while (j >= begin && isGreaterThan(arr[j], arr[j+gap], comp)) {
           swap(arr, j, j+gap);
           j -= gap;
         }
@@ -1159,8 +1145,9 @@ public class ShellSortStrategy<T> implements SortStrategy<T> {
   public void testSort() {
     Integer[] unsorted = { 20, 30, 10, 40 };
     Integer[] expected = { 10, 20, 30, 40 };
+    SortStrategy<Integer> strat = new ShellStrategy<>();
 
-    Sorter.sortArray(unsorted, new ShellSortStrategy<>());
+    Sorter.sortArray(unsorted, strat);
 
     assertArrayEquals(expected, unsorted);
   }
