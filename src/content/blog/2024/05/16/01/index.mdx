@@ -807,7 +807,7 @@ public class Sorter {
     Integer[] unsorted = { 20, 30, 10, 40 };
     Integer[] expected = { 10, 20, 30, 40 };
 
-    Sorter.sortArray(unsorted, new InsertionSortStrategy());
+    Sorter.sortArray(unsorted, new InsertionSortStrategy<>());
 
     assertArrayEquals(expected, unsorted);
   }
@@ -821,7 +821,7 @@ public class Sorter {
     Integer[] unsorted = { 110, 93, 84, 43, 26, 9 };
     Integer[] expected = { 9, 26, 43, 84, 93, 110 };
 
-    Sorter.sortArray(unsorted, new InsertionSortStrategy(),
+    Sorter.sortArray(unsorted, new InsertionSortStrategy<>(),
       Comparator.comparing(v -> v % 8));
 
     assertArrayEquals(expected, unsorted);
@@ -854,7 +854,7 @@ public class Sorter {
     Integer[] unsorted = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     Integer[] expected = { 0, 8, 1, 9, 2, 10, 3, 4, 5, 6, 7 };
 
-    Sorter.sortArray(unsorted, new InsertionSortStrategy(),
+    Sorter.sortArray(unsorted, new InsertionSortStrategy()<>,
       Comparator.comparing(v -> v % 8));
 
     assertArrayEquals(expected, unsorted);
@@ -975,7 +975,7 @@ $$
 본격적인 테스트 케이스 내용은 앞서 설명한 오더링으로 소트하는 것입니다.
 
 ```java
-    Sorter.sortArray(unsorted, new InsertionSortStrategy(), (rec1, rec2) -> {
+    Sorter.sortArray(unsorted, new InsertionSortStrategy<>(), (rec1, rec2) -> {
       int speciesOrder1 = rec1.species.equals("Dog") ? 0 : 1;
       int speciesOrder2 = rec2.species.equals("Dog") ? 0 : 1;
 
