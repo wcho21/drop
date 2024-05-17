@@ -1150,7 +1150,20 @@ public class ShellSortStrategy<T> implements SortStrategy<T> {
     return arr;
   }
 }
+```
 
+이렇게 구현한 셸 소트는, 다음 테스트 코드처럼 스트레터지를 넘겨줌으로써 사용할 수 있습니다.
+
+```java
+  @Test
+  public void testSort() {
+    Integer[] unsorted = { 20, 30, 10, 40 };
+    Integer[] expected = { 10, 20, 30, 40 };
+
+    Sorter.sortArray(unsorted, new ShellSortStrategy<>());
+
+    assertArrayEquals(expected, unsorted);
+  }
 ```
 
 이 코드를 바탕으로 소요 시간을 측정해 인서션 소트와 비교하면 이렇습니다.
