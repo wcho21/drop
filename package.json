@@ -14,6 +14,7 @@
     "@astrojs/mdx": "^2.3.1",
     "@astrojs/sitemap": "^3.1.4",
     "@astrojs/tailwind": "^5.1.0",
+    "@shikijs/transformers": "^1.6.0",
     "@types/lodash-es": "^4.17.12",
     "astro": "^4.7.1",
     "lodash-es": "^4.17.21",

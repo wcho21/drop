@@ -104,6 +104,10 @@ const { Content } = await entry.render();
     @apply my-2 text-[0.875em] pl-4 border-l border-gray-500;
   }
 
+  #post-main > .astro-code .highlighted-word {
+    @apply border border-gray-300 bg-gray-100 rounded-md;
+  }
+
   #post-main > .katex-display {
     @apply overflow-x-auto overflow-y-hidden;
   }
