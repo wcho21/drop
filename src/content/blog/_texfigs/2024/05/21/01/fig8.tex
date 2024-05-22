@@ -1,0 +1,81 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\pgfplotsset{
+  legend columns=-1,
+  legend pos=north west,
+  legend entries={\small Merge, \small Ins.},
+  width=70mm,
+  log basis x=2,
+  xmin=2^0.5,
+  xmax=2^6.5,
+  xtick distance=2,
+  title style={align=center},
+  xlabel={array size $n$},
+  ylabel={elapsed time $t$},
+  use units,
+  y unit=s,
+  y unit prefix=n,
+  scaled y ticks=base 10:-3,
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{semilogxaxis}[
+        title={Merge vs. Ins.\\ (Sorted)},
+        ymin=-125,
+        ymax=1750,
+        ytick distance=500,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+           n        t
+           2   19.217
+           4   53.891
+           8  133.644
+          16  300.684
+          32  688.747
+          64 1516.245
+        };
+        \addplot[markploto] table [x=n,y=t]{
+           n      t
+           2  1.673
+           4  2.358
+           8  3.634
+          16  6.189
+          32 11.199
+          64 21.223
+        };
+      \end{semilogxaxis}
+    \end{scope}
+
+    \begin{scope}[xshift=75mm]
+      \begin{semilogxaxis}[
+        title={Merge vs. Ins.\\ (Reversed)},
+        ymin=-250,
+        ymax=3750,
+        ytick distance=1000,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+           n        t
+           2   23.673
+           4  126.999
+           8  201.281
+          16  300.356
+          32  671.956
+          64 1549.582
+        };
+        \addplot[markploto] table [x=n,y=t]{
+           n        t
+           2    6.094
+           4   17.611
+           8   64.544
+          16  218.199
+          32  872.871
+          64 3487.888
+        };
+      \end{semilogxaxis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

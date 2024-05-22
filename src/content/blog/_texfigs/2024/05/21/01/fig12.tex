@@ -1,0 +1,102 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\pgfplotsset{
+  width=70mm,
+  log basis x=2,
+  xmin=2^6,
+  xmax=2^18,
+  xtick distance=2^2,
+  title style={align=center},
+  xlabel={array size $n$},
+  ylabel={elapsed time $t$},
+  use units,
+  y unit=s,
+  scaled y ticks=base 10:-3,
+  legend columns=1,
+  legend cell align=left,
+  legend style={font=\small},
+  legend pos=north west,
+  legend entries={Natural,Bottom-up}
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{semilogxaxis}[
+        title={Natural vs. Bottom-up\\ (Sorted)},
+        y unit prefix=\mu,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n       t
+             128   0.055
+             256   0.109
+             512   0.211
+            1024   0.432
+            2048   1.114
+            4096   2.132
+            8192   4.437
+           16384   8.930
+           32768  17.008
+           65536  35.336
+          131072 193.033
+        };
+        \addplot[markploto] table [x=n,y=t]{
+               n        t
+             128    3.559
+             256    7.787
+             512   16.697
+            1024   36.849
+            2048   80.524
+            4096  170.150
+            8192  370.079
+           16384  781.537
+           32768 1672.174
+           65536 3520.943
+          131072 8435.681
+        } coordinate[pos=0.2] (A);
+        \addplot[domain=64:262144] { 1.33*10^(-3)*x - 7.71 };
+        \node[above=1.5mm] at (A) { \small$t \sim 0.00133 n$ };
+      \end{semilogxaxis}
+    \end{scope}
+
+    \begin{scope}[xshift=75mm]
+      \begin{semilogxaxis}[
+        title={Natural vs. Bottom-up\\ (Reversed)},
+        y unit prefix=\mu,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n         t
+             128     4.162
+             256     9.125
+             512    20.072
+            1024    44.420
+            2048    98.234
+            4096   205.665
+            8192   437.470
+           16384   915.631
+           32768  1957.540
+           65536  4512.461
+          131072 10501.068
+        };
+        \addplot[markploto] table [x=n,y=t]{
+               n        t
+             128    3.621
+             256    7.885
+             512   17.371
+            1024   38.164
+            2048   83.395
+            4096  173.268
+            8192  367.640
+           16384  778.188
+           32768 1645.252
+           65536 3601.670
+          131072 8696.493
+        } coordinate[pos=0.2] (A);
+        \addplot[domain=64:262144] { 0.00465*x*log2(x) - 74.7 };
+        \node[above=1mm,xshift=3mm] at (A) { \small$t \sim 0.00465 n \lg n$ };
+      \end{semilogxaxis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

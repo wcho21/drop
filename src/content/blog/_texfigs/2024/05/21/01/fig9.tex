@@ -1,0 +1,156 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\pgfplotsset{
+  legend pos=north west,
+  legend columns=-1,
+  timeandsizeaxis/.style={
+    width=70mm,
+    ylabel={elapsed time $t$},
+    xlabel={array size $n$},
+    log basis x=2,
+    xmin=2^6,
+    xmax=2^18,
+    xtick distance=2^2,
+    y unit=s,
+    y unit prefix=n,
+    axis y line*=left,
+    title style={align=center},
+    legend entries={\small w\!/ Ins.,\small Merge},
+  },
+  percentaxis/.style={
+    width=70mm,
+    ylabel={$\textrm{reduced time}/\textrm{Merge}$},
+    log basis x=2,
+    xmin=2^6,
+    xmax=2^18,
+    xtick distance=2^2,
+    axis y line*=right,
+    axis x line=none,
+    y unit=\%,
+  },
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{loglogaxis}[
+        timeandsizeaxis,
+        title={Merge w\!/ Ins. vs. Merge\\ (Sorted)},
+        ymin=0.8,
+        ymax=10^(4.25),
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n        t
+             128    1.979
+             256    4.729
+             512   10.365
+            1024   23.717
+            2048   51.678
+            4096  113.840
+            8192  248.030
+           16384  542.785
+           32768 1135.054
+           65536 2452.124
+          131072 6032.887
+        };
+        \addplot[markploto] table [x=n,y=t]{
+               n        t
+             128    3.384
+             256    7.465
+             512   15.666
+            1024   35.110
+            2048   75.537
+            4096  159.563
+            8192  339.642
+           16384  728.562
+           32768 1509.518
+           65536 3268.032
+          131072 7544.924
+        };
+      \end{loglogaxis}
+
+      \begin{semilogxaxis}[
+        percentaxis,
+        ymin=-2.5,
+        ymax=52.5,
+        ytick distance=10,
+      ]
+        \addplot[markplotx] table [x=n,y=p]{
+               n    p
+             128 41.5
+             256 36.7
+             512 33.8
+            1024 32.4
+            2048 31.6
+            4096 28.7
+            8192 27.0
+           16384 25.5
+           32768 24.8
+           65536 25.0
+          131072 20.0
+        };
+      \end{semilogxaxis}
+    \end{scope}
+
+    \begin{scope}[xshift=90mm]
+      \begin{loglogaxis}[
+        timeandsizeaxis,
+        title={Merge w\!/ Ins. vs. Merge\\ (Reversed)},
+        ymin=0.8,
+        ymax=10^(4.25),
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n        t
+             128    2.596
+             256    5.917
+             512   13.157
+            1024   28.144
+            2048   64.028
+            4096  141.827
+            8192  294.040
+           16384  626.597
+           32768 1337.781
+           65536 2790.782
+          131072 7428.002
+        };
+        \addplot[markploto] table [x=n,y=t]{
+               n        t
+             128    3.339
+             256    7.647
+             512   16.422
+            1024   36.621
+            2048   76.350
+            4096  167.422
+            8192  339.917
+           16384  744.971
+           32768 1568.347
+           65536 3340.317
+          131072 8296.393
+        };
+      \end{loglogaxis}
+
+      \begin{semilogxaxis}[
+        percentaxis,
+        ymin=-2.5,
+        ymax=35,
+      ]
+        \addplot[markplotx] table [x=n,y=p]{
+               n    p
+             128 22.3
+             256 22.6
+             512 19.9
+            1024 23.1
+            2048 16.1
+            4096 15.3
+            8192 13.5
+           16384 15.9
+           32768 14.7
+           65536 16.5
+          131072 10.5
+        };
+      \end{semilogxaxis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

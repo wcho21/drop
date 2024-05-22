@@ -1,0 +1,38 @@
+\documentclass{cmn}
+\usepackage{td-simple-card,ts-arrow}
+
+\begin{document}
+  \begin{tikzpicture}
+    \foreach[count=\i] \n in {5,3,2,9} {
+      \drawCard{\i*5mm-5mm}{-\i*0.5mm}{\n}
+    }
+
+    \draw[StlthBase] (10mm-8mm,-11mm) -- ++(-90-15:4mm);
+    \foreach \i in {3,4} {
+      \draw[StlthBase] (\i*10mm-13mm,-5.5mm) -- ++(-90+20*\i-50:4mm);
+    }
+
+    \foreach[count=\i] \n in {5,3} {
+      \drawCard{\i*5mm-5mm-9mm}{-39mm-\i*0.5mm}{\n}
+    }
+
+    \foreach[count=\i] \n in {2,9} {
+      \drawCard{\i*14mm}{-27mm}{\n}
+    }
+
+    \foreach \i in {1,2} {
+      \draw[StlthBase] (\i*10mm+11mm,-31mm) -- ++(-90-20*\i+30:4mm);
+    }
+
+    \foreach[count=\i] \n in {9,2} {
+      \drawCard{\i*5mm-5mm+19mm}{-52mm-\i*0.5mm}{\n}
+    }
+
+    \draw[StlthBase] (10mm-8mm,-51mm) -- ++(-90+15:4mm);
+    \draw[StlthBase] (32mm-11mm,-57mm) -- ++(-90-40+30:4mm);
+
+    \foreach[count=\i] \n in {9,5,3,2} {
+      \drawCard{\i*5mm-5mm}{-\i*0.5mm-78.5mm}{\n}
+    }
+  \end{tikzpicture}
+\end{document}

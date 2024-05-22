@@ -1,0 +1,42 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+
+\def\width{10mm}
+\def\height{8mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \node at (1*\width,\height+4mm) {\textit{\textbf{lower\strut}}};
+
+      \draw (0,0) -- ++(2*\width,0) -- ++(0,\height) -- ++(-2*\width,0) -- cycle;
+      \draw (\width,0) -- ++(0,\height);
+      \node at (0.5*\width,\height/2) {$3_1$};
+      \node at (1.5*\width,\height/2) {$4$};
+
+      \draw[StlthBase] (\width,-2mm) -- ++(2mm,-4mm);
+    \end{scope}
+
+    \begin{scope}[xshift=24mm]
+      \node at (1*\width,\height+4mm) {\textit{\textbf{upper\strut}}};
+
+      \draw (0,0) -- ++(2*\width,0) -- ++(0,\height) -- ++(-2*\width,0) -- cycle;
+      \draw (\width,0) -- ++(0,\height);
+      \node at (0.5*\width,\height/2) {$3_2$};
+      \node at (1.5*\width,\height/2) {$5$};
+
+      \draw[StlthBase] (\width,-2mm) -- ++(-2mm,-4mm);
+    \end{scope}
+
+    \begin{scope}[xshift=2mm,yshift=-16mm]
+      \draw (0,0) -- ++(4*\width,0) -- ++(0,\height) -- ++(-4*\width,0) -- cycle;
+      \draw (\width,0) -- ++(0,\height);
+      \draw (2*\width,0) -- ++(0,\height);
+      \draw (3*\width,0) -- ++(0,\height);
+      \node at (0.5*\width,\height/2) {$3_1$};
+      \node at (1.5*\width,\height/2) {$3_2$};
+      \node at (2.5*\width,\height/2) {$4$};
+      \node at (3.5*\width,\height/2) {$5$};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

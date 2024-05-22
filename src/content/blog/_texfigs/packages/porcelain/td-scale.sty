@@ -1,0 +1,82 @@
+% tikz drawing util for scale
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-scale}[2024/05/21]
+
+\def\ds@scaleHeight{18mm}
+\def\ds@scaleArmLength{6mm}
+\def\ds@scaleArmWeightSep{3mm}
+
+\newcommand\setScaleArmCoord[4]{
+  \def\dsac@centerTopCoord{#1}
+  \def\dsac@tiltAngle{#2}
+  \def\dsac@LT{#3}
+  \def\dsac@RT{#4}
+
+  \coordinate (\dsac@LT) at ($(\dsac@centerTopCoord)+(180-\dsac@tiltAngle:\ds@scaleArmLength)$);
+  \coordinate (\dsac@RT) at ($(\dsac@centerTopCoord)+(-\dsac@tiltAngle:\ds@scaleArmLength)$);
+}
+
+\newcommand\setWeightTopCoords[4]{
+  \def\dsac@centerTopCoord{#1}
+  \def\dsac@tiltAngle{#2}
+  \def\dsac@LT{#3} % left top
+  \def\dsac@RT{#4} % right top
+
+  \coordinate (\dsac@LT) at ($(\dsac@centerTopCoord)+(180-\dsac@tiltAngle:\ds@scaleArmLength)+(0,-\ds@scaleArmWeightSep)$);
+  \coordinate (\dsac@RT) at ($(\dsac@centerTopCoord)+(-\dsac@tiltAngle:\ds@scaleArmLength)+(0,-\ds@scaleArmWeightSep)$);
+}
+
+\newcommand\drawWeightFromCoord[4]{
+  \def\dwfc@bottomCenterCoord{#1}
+  \def\dwfc@width{#2}
+  \def\dwfc@height{#3}
+  \def\dwfc@label{#4}
+
+  \draw ($(\dwfc@bottomCenterCoord)-(\dwfc@width/2,0)$) rectangle ++(\dwfc@width,\dwfc@height);
+  \node at ($(\dwfc@bottomCenterCoord)+(0,\dwfc@height/2)$) {\small\dwfc@label};
+}
+
+\newcommand\drawWeight[5]{
+  \def\dw@centerX{#1}
+  \def\dw@bottomY{#2}
+  \def\dw@width{#3}
+  \def\dw@height{#4}
+  \def\dw@label{#5}
+
+  \coordinate (dw@bottomCenter) at (\dw@centerX,\dw@bottomY);
+  \drawWeightFromCoord{dw@bottomCenter}{\dw@width}{\dw@height}{\dw@label}
+}
+
+\newcommand\drawScale[3]{
+  \def\ds@centerX{#1}
+  \def\ds@bottomY{#2}
+  \def\ds@tiltAngle{#3}
+  \def\ds@bottomWidth{5mm}
+
+  \coordinate (ds@CB) at (\ds@centerX,\ds@bottomY); % center bottom
+  \coordinate (ds@CT) at ($(ds@CB)+(0,\ds@scaleHeight)$); % center top
+  \setWeightTopCoords{ds@CT}{\ds@tiltAngle}{ds@LT}{ds@RT}
+
+  \draw ($(ds@CB)-(\ds@bottomWidth/2,0)$) -- ++(\ds@bottomWidth,0);
+  \draw (ds@CB) -- (ds@CT);
+  \draw (ds@LT) -- ++(0,\ds@scaleArmWeightSep) -- (ds@CT);
+  \draw (ds@RT) -- ++(0,\ds@scaleArmWeightSep) -- (ds@CT);
+}
+
+\newcommand\drawScaleWeights[7]{
+  \def\dsw@scaleCenterX{#1}
+  \def\dsw@scaleBottomY{#2}
+  \def\dsw@tiltAngle{#3}
+  \def\dsw@width{#4}
+  \def\dsw@height{#5}
+  \def\dsw@leftLabel{#6}
+  \def\dsw@rightLabel{#7}
+
+  \coordinate (dsw@SCT) at ($(\ds@centerX,\ds@bottomY)+(0,\ds@scaleHeight)$); % scale center top
+  \setWeightTopCoords{dsw@SCT}{\dsw@tiltAngle}{dsw@LT}{dsw@RT} % set weight left and right tops
+  \coordinate (dsw@LB) at ($(dsw@LT)+(0,-\dsw@height)$);
+  \coordinate (dsw@RB) at ($(dsw@RT)+(0,-\dsw@height)$);
+  \drawWeightFromCoord{dsw@LB}{\dsw@width}{\dsw@height}{\dsw@leftLabel}
+  \drawWeightFromCoord{dsw@RB}{\dsw@width}{\dsw@height}{\dsw@rightLabel}
+}

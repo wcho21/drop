@@ -1,0 +1,84 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,ts-brace}
+
+\def\width{8mm}
+\def\height{6.5mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \draw (0,0) -- ++(11*\width,0) -- ++(0,\height) -- ++(-11*\width,0) -- cycle;
+      \foreach \i in {1,...,10} {
+        \draw (\i*\width,0) -- ++(0,\height);
+      }
+      \foreach[count=\i] \n in {1,6,7,8,3,4,5,10,2,5,9} {
+        \node at (\i*\width-0.5*\width,\height/2) {$\n$};
+      }
+      \draw[dotted,line width=0.5pt] (11*\width,0) -- ++(\width,0) -- ++(0,\height) -- ++(-\width,0);
+
+      \node at (2*\width,\height+7.5mm) {$\textit{\textbf{size\strut}}_{\textit{\textbf{\small m}}}=4$};
+      \draw[upwardCurlybrace] (0,\height+0.5mm) -- ++(4*\width,0);
+
+      \node at (0.5*\width,-6mm) {$\textit{\textbf{begin\strut}}_{\textit{\textbf{\small m}}}$};
+      \path[tips,StlthBase] (0.5*\width,-2mm) -- ++(0,1mm);
+      \node at (4.5*\width,-6mm) {$\textit{\textbf{mid\strut}}_{\textit{\textbf{\small m}}}$};
+      \path[tips,StlthBase] (4.5*\width,-2mm) -- ++(0,1mm);
+      \node at (8.5*\width,-6mm) {$\textit{\textbf{end\strut}}_{\textit{\textbf{\small m}}}$};
+      \path[tips,StlthBase] (8.5*\width,-2mm) -- ++(0,1mm);
+    \end{scope}
+
+    \begin{scope}[yshift=-22mm]
+      \draw (0,0) -- ++(11*\width,0) -- ++(0,\height) -- ++(-11*\width,0) -- cycle;
+      \foreach \i in {1,...,10} {
+        \draw (\i*\width,0) -- ++(0,\height);
+      }
+      \draw[dotted] (12*\width,0) -- ++(0,\height);
+
+      \foreach[count=\i] \n in {1,3,4,5,6,7,8,10,2,5,9} {
+        \node at (\i*\width-0.5*\width,\height/2) {$\n$};
+      }
+      \draw[dotted,line width=0.5pt] (11*\width,0) -- ++(\width,0) -- ++(0,\height) -- ++(-\width,0);
+      \draw[dotted,line width=0.5pt] (12*\width,0) -- ++(\width,0) -- ++(0,\height) -- ++(-\width,0);
+
+      \node at (8.5*\width,-6mm) {$\textit{\textbf{begin\strut}}_{\textit{\textbf{\small m}}}$};
+      \path[tips,StlthBase] (8.5*\width,-2mm) -- ++(0,1mm);
+      \node at (12.5*\width,-6mm) {$\textit{\textbf{mid\strut}}_{\textit{\textbf{\small m}}}$};
+      \path[tips,StlthBase] (12.5*\width,-2mm) -- ++(0,1mm);
+    \end{scope}
+
+    \begin{scope}[yshift=-48mm]
+      \draw (0,0) -- ++(11*\width,0) -- ++(0,\height) -- ++(-11*\width,0) -- cycle;
+      \foreach \i in {1,...,10} {
+        \draw (\i*\width,0) -- ++(0,\height);
+      }
+      \draw[dotted] (12*\width,0) -- ++(0,\height);
+
+      \foreach[count=\i] \n in {1,3,4,5,6,7,8,10,2,5,9} {
+        \node at (\i*\width-0.5*\width,\height/2) {$\n$};
+      }
+      \draw[dotted,line width=0.5pt] (11*\width,0) -- ++(\width,0) -- ++(0,\height) -- ++(-\width,0);
+
+      \node at (4*\width,\height+7.5mm) {$\textit{\textbf{size\strut}}_{\textit{\textbf{\small m}}}=8$};
+      \draw[upwardCurlybrace] (0,\height+0.5mm) -- ++(8*\width,0);
+
+      \node at (0.5*\width,-6mm) {$\textit{\textbf{begin\strut}}_{\textit{\textbf{\small m}}}$};
+      \path[tips,StlthBase] (0.5*\width,-2mm) -- ++(0,1mm);
+      \node at (8.5*\width,-6mm) {$\textit{\textbf{mid\strut}}_{\textit{\textbf{\small m}}}$};
+      \path[tips,StlthBase] (8.5*\width,-2mm) -- ++(0,1mm);
+      \node at (11.5*\width,-6mm) {$\textit{\textbf{end\strut}}_{\textit{\textbf{\small m}}}$};
+      \path[tips,StlthBase] (11.5*\width,-2mm) -- ++(0,1mm);
+    \end{scope}
+
+    \begin{scope}[yshift=-70mm]
+      \draw (0,0) -- ++(11*\width,0) -- ++(0,\height) -- ++(-11*\width,0) -- cycle;
+      \foreach \i in {1,...,10} {
+        \draw (\i*\width,0) -- ++(0,\height);
+      }
+      \draw[dotted] (12*\width,0) -- ++(0,\height);
+
+      \foreach[count=\i] \n in {1,2,3,4,5,5,6,7,8,9,10} {
+        \node at (\i*\width-0.5*\width,\height/2) {$\n$};
+      }
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
