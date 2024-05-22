@@ -27,9 +27,9 @@
           14930352 63.312
          102334155 74.427
         1134903170 91.376
-      };
-      \addplot[domain=100:10000000000] { 3.68*log2(x) - 22.5 }
-        node[left=32mm,below=2mm] { \small$t = 3.68 \lg \min (m, n) - 22.5$ };
+      } coordinate[pos=0.99] (A);
+      \addplot[domain=100:10000000000] { 3.68*log2(x) - 22.5 };
+      \node[left=1mm] at (A) { \small$t \sim 3.68 \lg \min (m, n)$ };
     \end{semilogxaxis}
   \end{tikzpicture}
 \end{document}
