@@ -1,0 +1,189 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,ts-brace}
+\usetikzlibrary{shapes.geometric}
+
+\tikzset{
+  circ/.style={
+    draw,
+    circle,
+    inner sep=2.5pt,
+  },
+  fcirc/.style={
+    draw,
+    fill=lightgray,
+    circle,
+    inner sep=2.5pt,
+  },
+  dots/.style={
+    dotted,
+    line width=0.25mm,
+  },
+  level 1/.style={
+    level distance=6mm,
+    sibling distance=24mm,
+  },
+  level 2/.style={
+    level distance=6mm,
+    sibling distance=12mm,
+  },
+  level 3/.style={
+    level distance=8mm,
+    sibling distance=10mm,
+  },
+  level 4/.style={
+    level distance=7mm,
+    sibling distance=6mm,
+  },
+  level 5/.style={
+    level distance=7mm,
+    sibling distance=5mm,
+  },
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \node[circ] {}
+        child {
+          node[circ] {}
+          child[dots] {
+            child {
+              node[draw=none] {}
+              child {
+                node[circ,solid,thin] {}
+                child[solid,thin] {
+                  node[fcirc] {}
+                }
+                child[solid,thin] {
+                  node[fcirc] {}
+                }
+              }
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              edge from parent[draw=none]
+            }
+          }
+          child[dots] {
+            child {
+              node[draw=none] {}
+              child {
+                edge from parent[draw=none]
+              }
+              child {
+                node[circ,solid,thin] {}
+                child[solid,thin] {
+                  node[fcirc] {}
+                }
+                child[solid,thin] {
+                  node[fcirc] {}
+                }
+              }
+              edge from parent[draw=none]
+            }
+          }
+        }
+        child {
+          node[circ] {}
+          child[dots] {
+            child {
+              node[draw=none] {}
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              child {
+                node[circ,solid,thin] {}
+                child[solid,thin] {
+                  node[fcirc] {}
+                }
+                child[solid,thin] {
+                  node[fcirc] {}
+                }
+              }
+              edge from parent[draw=none]
+            }
+          }
+          child[dots] {
+            child {
+              node[draw=none] {}
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              child {
+                edge from parent[draw=none]
+              }
+              edge from parent[draw=none]
+            }
+          }
+        };
+
+        \draw[downwardCurlybrace] (-25mm,-37mm) -- ++(42mm,0)
+          node[midway, below=3mm] {$n$ leaf nodes (\tikz{\draw[fill=lightgray,draw] circle (1.125mm)})};
+        \draw[upwardCurlybrace] (23mm,0.5mm) -- ++(0,-36mm)
+          node[midway, right=3mm] {$\geq \lg n$};
+    \end{scope}
+
+    \begin{scope}[xshift=70mm,yshift=-5mm]
+      \node[circ] {}
+        child {
+          node[circ] {}
+          child[dots] {
+            child {
+              node[draw=none] {}
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              edge from parent[draw=none]
+            }
+          }
+          child[dots] {
+            child {
+              node[draw=none] {}
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              edge from parent[draw=none]
+            }
+          }
+        }
+        child {
+          node[circ] {}
+          child[dots] {
+            child {
+              node[draw=none] {}
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              edge from parent[draw=none]
+            }
+          }
+          child[dots] {
+            child {
+              node[draw=none] {}
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              child {
+                node[fcirc,solid,thin] {}
+              }
+              edge from parent[draw=none]
+            }
+          }
+        };
+
+        \draw[downwardCurlybrace] (-23mm,-30mm) -- ++(46mm,0)
+          node[midway, below=3mm] {$2^{n-1}$ leaf nodes};
+        \draw[upwardCurlybrace] (27mm,0.5mm) -- ++(0,-29mm)
+          node[midway, right=3mm] {$n-1$};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

@@ -1,0 +1,18 @@
+% tikz styles for brace
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{ts-brace}[2024/05/21]
+
+\usetikzlibrary{decorations.pathreplacing,calligraphy}
+
+\tikzset{
+  upwardCurlybrace/.style={
+    decoration={calligraphic brace,amplitude=5pt,raise=1mm},
+    decorate,
+    line width=1.25pt
+  },
+  downwardCurlybrace/.style={
+    upwardCurlybrace,
+    decoration={mirror}
+  }
+}

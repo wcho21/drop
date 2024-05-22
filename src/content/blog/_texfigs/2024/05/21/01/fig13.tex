@@ -1,0 +1,80 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+
+\def\width{8mm}
+\def\height{6.5mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      % top array
+      \draw (0,0) -- ++(4*\width,0) -- ++(0,\height) -- ++(-4*\width,0) -- cycle;
+      \foreach \i in {1,...,3} {
+        \draw (\i*\width,0) -- ++(0,\height);
+      }
+      \foreach[count=\i] \n in {2,5,6,8} {
+        \node at (\i*\width-0.5*\width,\height/2) {$\n$};
+      }
+
+      % top array value
+      \draw (4.2*\width,0) -- ++(4*\width,0) -- ++(0,\height) -- ++(-4*\width,0) -- cycle;
+      \foreach \i in {1,...,3} {
+        \draw (\i*\width+4.2*\width,0) -- ++(0,\height);
+      }
+      \foreach[count=\i] \n in {1,3,4,7} {
+        \node at (\i*\width-0.5*\width+4.2*\width,\height/2) {$\n$};
+      }
+
+      % curves and annotation
+      \draw (4.7*\width,\height) .. controls +(120:2mm) and +(60:2mm) .. (3.5*\width,\height);
+      \draw (4.7*\width,\height) .. controls +(120:2.5mm) and +(60:2.5mm) .. (2.5*\width,\height);
+      \draw (4.7*\width,\height) .. controls +(120:3mm) and +(60:3mm) .. (1.5*\width,\height);
+      \draw (4.7*\width,\height) .. controls +(120:3.5mm) and +(60:3.5mm) .. (0.5*\width,\height);
+      \node at (2.35*\width,\height+6mm) {\small 4 inversions};
+
+      % bottom array
+      \draw (0.1*\width,-2.4*\height) -- ++(8*\width,0) -- ++(0,\height) -- ++(-8*\width,0) -- cycle;
+      \foreach \i in {1,...,7} {
+        \draw (\i*\width+0.1*\width,-2.4*\height) -- ++(0,\height);
+      }
+      \node at (0.6*\width,-2.4*\height+\height/2) {1};
+
+      % arrow
+      \draw[StlthBase] (4.7*\width,0) .. controls +(-90:8mm) and +(90:8mm) .. (0.6*\width,-1.4*\height);
+    \end{scope}
+
+    \begin{scope}[yshift=-35mm]
+      % top array
+      \draw (0,0) -- ++(4*\width,0) -- ++(0,\height) -- ++(-4*\width,0) -- cycle;
+      \foreach \i in {1,...,3} {
+        \draw (\i*\width,0) -- ++(0,\height);
+      }
+      \foreach[count=\i] \n in {2,5,6,8} {
+        \node at (\i*\width-0.5*\width,\height/2) {$\n$};
+      }
+
+      % top array value
+      \draw (4.2*\width,0) -- ++(4*\width,0) -- ++(0,\height) -- ++(-4*\width,0) -- cycle;
+      \foreach \i in {1,...,3} {
+        \draw (\i*\width+4.2*\width,0) -- ++(0,\height);
+      }
+      \foreach[count=\i] \n in {3,4,7} {
+        \node at (\i*\width+0.5*\width+4.2*\width,\height/2) {$\n$};
+      }
+
+      % annotation
+      \node at (1.375*\width,\height+4mm) {\small no inversions};
+
+      % bottom array
+      \draw (0.1*\width,-2.4*\height) -- ++(8*\width,0) -- ++(0,\height) -- ++(-8*\width,0) -- cycle;
+      \foreach \i in {1,...,7} {
+        \draw (\i*\width+0.1*\width,-2.4*\height) -- ++(0,\height);
+      }
+      \node at (0.6*\width,-2.4*\height+\height/2) {1};
+      \node at (1.6*\width,-2.4*\height+\height/2) {2};
+
+      % arrow
+      \draw[StlthBase] (0.5*\width,0) .. controls +(-90:8mm) and +(90:8mm) .. (1.6*\width,-1.4*\height);
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

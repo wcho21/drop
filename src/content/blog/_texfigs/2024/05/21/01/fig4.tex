@@ -1,0 +1,63 @@
+\documentclass{cmn}
+\usepackage{td-simple-card,ts-arrow}
+
+\def\leftTopX{0mm}
+\def\rightTopX{16mm}
+\def\topCardY{0mm}
+\def\bottomCardX{\leftTopX+\rightTopX/2}
+\def\bottomCardY{-39mm}
+\def\cardXSep{2mm}
+\def\cardYSep{5.5mm}
+\def\scopeXSep{38mm}
+\def\movedColor{lightgray!50!gray}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \drawCard{\leftTopX}{0}{5}
+      \drawCard{\leftTopX+\cardXSep}{-\cardYSep}{3}
+
+      \drawCard{\rightTopX}{0}{9}
+      \drawCard[color=\movedColor]{\rightTopX+\cardXSep}{-\cardYSep}{2}
+
+      \draw[Stlth] (\rightTopX+\cardXSep+5mm,-\cardYSep) .. controls +(-90:16mm) and +(90:16mm) .. (\bottomCardX+5mm,\bottomCardY+14mm);
+
+      \drawCard{\bottomCardX}{\bottomCardY}{2}
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep]
+      \drawCard{\leftTopX}{0}{5}
+      \drawCard[color=\movedColor]{\leftTopX+\cardXSep}{-\cardYSep}{3}
+
+      \drawCard{\rightTopX}{0}{9}
+
+      \draw[Stlth] (\leftTopX+\cardXSep+5mm,-\cardYSep) .. controls +(-90:10mm) and +(90:10mm) .. (\bottomCardX+5mm,\bottomCardY+\cardYSep+14mm);
+
+      \drawCard{\leftTopX+\rightTopX/2}{\bottomCardY+\cardYSep}{3}
+      \drawCard{\leftTopX+\rightTopX/2+\cardXSep}{\bottomCardY}{2}
+    \end{scope}
+
+    \begin{scope}[xshift=2*\scopeXSep]
+      \drawCard[color=\movedColor]{\leftTopX}{0}{5}
+
+      \drawCard{\rightTopX}{0}{9}
+
+      \draw[Stlth] (\leftTopX+5mm,0) .. controls +(-90:10mm) and +(90:10mm) .. (\bottomCardX+5mm,\bottomCardY+2*\cardYSep+14mm);
+
+      \drawCard{\leftTopX+\rightTopX/2}{\bottomCardY+2*\cardYSep}{5}
+      \drawCard{\leftTopX+\rightTopX/2+\cardXSep}{\bottomCardY+\cardYSep}{3}
+      \drawCard{\leftTopX+\rightTopX/2+2*\cardXSep}{\bottomCardY}{2}
+    \end{scope}
+
+    \begin{scope}[xshift=3*\scopeXSep]
+      \drawCard[color=\movedColor]{\rightTopX}{0}{9}
+
+      \draw[Stlth] (\rightTopX+5mm,0) .. controls +(-90:6mm) and +(90:6mm) .. (\bottomCardX+5mm,\bottomCardY+3*\cardYSep+14mm);
+
+      \drawCard{\leftTopX+\rightTopX/2}{\bottomCardY+3*\cardYSep}{9}
+      \drawCard{\leftTopX+\rightTopX/2+\cardXSep}{\bottomCardY+2*\cardYSep}{5}
+      \drawCard{\leftTopX+\rightTopX/2+2*\cardXSep}{\bottomCardY+\cardYSep}{3}
+      \drawCard{\leftTopX+\rightTopX/2+3*\cardXSep}{\bottomCardY}{2}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

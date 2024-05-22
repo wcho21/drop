@@ -1,0 +1,53 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,td-scale}
+\usetikzlibrary{calc}
+
+\def\xSep{40mm}
+\def\ySep{12.5mm}
+\def\arrowSep{20mm}
+\def\weightWidth{5.5mm}
+\def\weightHeight{6.5mm}
+\def\tiltAngle{20}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \drawScale{0}{0}{\tiltAngle}
+      \drawScaleWeights{0}{0}{\tiltAngle}{\weightWidth}{\weightHeight}{$w_1$}{$w_2$}
+      \drawWeight{14mm}{0}{\weightWidth}{\weightHeight}{$w_3$}
+
+      \draw[Stlth] (\arrowSep,\ySep) -- ++(20:7mm);
+      \draw[Stlth] (\arrowSep,\ySep/2) -- ++(-20:7mm);
+    \end{scope}
+
+    \begin{scope}[xshift=\xSep,yshift=\ySep]
+      \drawScale{0}{0}{\tiltAngle}
+      \drawScaleWeights{0}{0}{\tiltAngle}{\weightWidth}{\weightHeight}{$w_2$}{$w_3$}
+      \drawWeight{14mm}{0}{\weightWidth}{\weightHeight}{$w_1$}
+
+      \draw[Stlth] (\arrowSep,0.75*\ySep) -- ++(0:7mm);
+      \drawWeight{34mm}{0}{\weightWidth}{\weightHeight}{$w_1$}
+      \drawWeight{40mm}{0}{\weightWidth}{\weightHeight}{$w_2$}
+      \drawWeight{46mm}{0}{\weightWidth}{\weightHeight}{$w_3$}
+    \end{scope}
+
+    \begin{scope}[xshift=\xSep,yshift=-\ySep]
+      \drawScale{0}{0}{-\tiltAngle}
+      \drawScaleWeights{0}{0}{-\tiltAngle}{\weightWidth}{\weightHeight}{$w_2$}{$w_3$}
+      \drawWeight{14mm}{0}{\weightWidth}{\weightHeight}{$w_1$}
+
+      \draw[Stlth] (\arrowSep,0.75*\ySep) -- ++(0:7mm);
+    \end{scope}
+
+    \begin{scope}[xshift=2*\xSep,yshift=-\ySep]
+      \drawScale{0}{0}{\tiltAngle}
+      \drawScaleWeights{0}{0}{\tiltAngle}{\weightWidth}{\weightHeight}{$w_1$}{$w_3$}
+      \drawWeight{14mm}{0}{\weightWidth}{\weightHeight}{$w_2$}
+
+      \draw[Stlth] (\arrowSep,0.75*\ySep) -- ++(0:7mm);
+      \drawWeight{34mm}{0}{\weightWidth}{\weightHeight}{$w_1$}
+      \drawWeight{40mm}{0}{\weightWidth}{\weightHeight}{$w_3$}
+      \drawWeight{46mm}{0}{\weightWidth}{\weightHeight}{$w_2$}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
