@@ -4,6 +4,7 @@ import rehypeKatex from "rehype-katex";
 import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
+import { transformerMetaWordHighlight } from '@shikijs/transformers'
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,7 +12,10 @@ export default defineConfig({
   integrations: [tailwind(), mdx(), sitemap()],
   markdown: {
     shikiConfig: {
-      theme: "github-light"
+      theme: "github-light",
+      transformers: [
+        transformerMetaWordHighlight(),
+      ],
     },
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
