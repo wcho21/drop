@@ -16,10 +16,10 @@
   \draw (0,0) -- ++(0,-\stackheight) -- ++(\stackwidth,0) -- ++(0,\stackheight);
 }
 \newcommand\drawpoparr{
-  \draw[arr] (-\arrowwidth/2,\arrowheight) .. controls +(right:6pt) and +(up:8pt) .. ++(\arrowwidth,-\arrowheight);
+  \draw[arr] (-\arrowwidth/2,\arrowheight) .. controls +(-15:6pt) and +(up:10pt) .. ++(\arrowwidth,-\arrowheight);
 }
 \newcommand\drawpusharr{
-  \draw[arr] (\stackwidth-\arrowwidth/2,0pt) .. controls +(up:8pt) and +(left:6pt) .. ++(\arrowwidth,\arrowheight);
+  \draw[arr] (\stackwidth-\arrowwidth/2,0pt) .. controls +(up:10pt) and +(195:6pt) .. ++(\arrowwidth,\arrowheight);
 }
 \newcommand\drawpoplabel[1]{
   \node[text width=\labelnodewidth,align=right] at (-\labelnodewidth,12pt) {#1};
@@ -30,8 +30,6 @@
 
 \begin{document}
   \begin{tikzpicture}
-    arr/.style={{Stealth[scale=1.2]}-}
-  ]
     \begin{scope}
       \drawstack
 
