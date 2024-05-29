@@ -1,5 +1,5 @@
 ---
-title: "순서가 해결하는 두 가지 문제"
+title: "순서로 해결하는 두 가지 문제"
 date: 2024-05-16T09:00:00+09:00
 summary: "바이너리 서치와 인서션 소트로 알아보는 서치와 소트"
 thumbnail: "./_figs/thumbnail.webp"
@@ -48,7 +48,7 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 
 뒤집힌 카드 중에서 원하는 카드를 어떻게 빨리 찾을 수 있을까요?
 
-이 카드가 어떻게 분포되어 있는 지 아는 바가 없다면, 원하는 카드를 찾기 위해선 하나하나 뒤집어보는 수밖에 없습니다.
+이 카드가 어떻게 분포되어 있는지 모른다면, 원하는 카드를 찾기 위해선 하나하나 뒤집어보는 수밖에 없습니다.
 이런 방법은 시퀀셜 서치<L>sequential search</L>, 또는 리니어 서치<L>linear search</L>라고 부릅니다.
 모든 데이터가 $n$ 개를 확인해봐야 하는 최악의 경우, 이 알고리즘은 $\Theta(n)$의 시간 복잡도를 가집니다.
 
@@ -64,19 +64,19 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 2. 데이터가 그 순서대로 있을 때
 
 첫 번째는 데이터 상에 오더링<L>ordering</L>이 있다고도 말합니다.
-그리고 그런 데이터를 두 번째 경우로 만드는 것을, 데이터를 정렬 혹은 소트<L>sort</L>한다고 말하고, 그 방법을 소팅 알고리즘<L>sorting algorithm</L>이라고 부릅니다.
+그리고 그런 데이터를 그 순서에 따라 정리하는 것을, 데이터를 정렬 혹은 소트<L>sort</L>한다고 말하고, 그 알고리즘을 소팅 알고리즘<L>sorting algorithm</L>이라고 부릅니다.
 
-데이터가 소트되어 있다는 걸 안다면, 원하는 것을 찾는 문제는 최악의 경우에도 $\Theta(\lg n)$의 시간 복잡도로 해결할 수 있게 됩니다.
-그 방법인 바이너리 서치<L>binary search</L>라는 알고리즘은 데이터가 순서대로 있다는 사실을 서치에 활용합니다.
-이것이 알아볼 첫 번째 알고리즘입니다.
+데이터가 소트되어 있다는 걸 안다면, 원하는 것을 찾는 문제는 빠르게 해결할 수 있게 됩니다.
+바이너리 서치<L>binary search</L>라는 알고리즘은 데이터가 순서대로 있다는 사실을 서치에 활용해서, 최악의 경우에도 $\Theta(\lg n)$의 시간으로 해결하기 때문입니다.
+이것이 첫 번째로 알아볼 알고리즘입니다.
 
-반면, 데이터가 소트되어 있는지 모른다면, 매번 시퀀셜 서치를 이용해야할 것입니다.
-하지만 데이터를 소트하고 나면 이후 더 빠른 바이너리 서치를 활용할 수 있게 됩니다.
+반면, 데이터가 소트되어 있는지 모른다면, 매번 시퀀셜 서치를 해야할 것입니다.
+하지만 데이터를 소트하고 나면 더 빠른 바이너리 서치를 활용할 수 있게 됩니다.
 따라서 소팅은 알고리즘 분야에서 중요한 문제가 됩니다.
 
 소팅에도 다양한 알고리즘이 있지만, 여기서는 간단한 방법인 삽입 정렬 혹은 인서션 소트<L>insertion sort</L>라는 것을 알아보겠습니다.
-이것이 알아볼 두 번째 알고리즘입니다.
-이 알고리즘이 어떤 경우에 느린지 분석해보고, 이를 바탕으로 셸 소트<L>Shell sort</L> 알고리즘으로 개선해보겠습니다.
+이것이 두 번째로 알아볼 알고리즘입니다.
+여기선 이 알고리즘이 어떤 경우에 느린지 분석해보고, 이를 바탕으로 셸 소트<L>Shell sort</L> 알고리즘으로 개선해보겠습니다.
 
 이번에도 <PostLink href="/2024/05/09/01">이전 글</PostLink>처럼 다른 라이브러리의 도움없이 처음부터 구현해봅니다.
 
@@ -87,25 +87,21 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 카드가 순서대로 있다는 걸 안다면, 항상 가운데를 확인하는 것이 좋은 전략이 됩니다.
 
 예를 들어 숫자 8을 찾는다고 해봅시다.
-그 중 가운데 카드가 6이라면, 이전의 카드는 볼 필요가 없게 됩니다.
-그러면 남은 반 중에 다시 가운데를 확인하고, 이를 계속 반복하면 찾을 수 있습니다.
+그 중 가운데 카드가 6이라면, 이전의 카드는 볼 필요가 없으므로 버립니다.
+그리고 숫자 8을 찾을 때까지, 남은 반으로 이를 반복합니다.
 
 <Figure src={fig2} alt="binary search example">
   <FigureCaption slot="caption">그림 2. 바이너리 서치로 숫자 8을 찾는 예시.
     가운데에서 원하는 숫자를 찾을 때까지 카드를 반으로 줄입니다.</FigureCaption>
 </Figure>
 
-바이너리 서치는 이렇게 서치 구간을 반씩 줄여갑니다.
-데이터가 소트됐기 때문에 가능한 방법입니다.
-
 서치 구간을 표현하기 위해 양 끝을 나타낼 필요가 있는데요.
 여기선 구간의 시작은 $\textit{begin}\,$이, 마지막은 $\textit{end}\,$가 나타냅니다.
 다만 $\textit{end}\,$는 마지막 데이터의 다음을 가리킵니다.
 
 이와 같이 마지막이 제외된 구간을 반열린구간<L>half-open interval</L>이라고 부르고 $[\textit{begin}, \textit{end})$로 표현합니다.
-이렇게 하면, 구간이 비었다는 사실은 두 끝이 같다는 것, 즉 $\textit{begin} = \textit{end}\,$로 표현할 수 있습니다.
-반대로, 구간이 비어있지 않다는 것은 $\textit{begin} < \textit{end}\,$와 같게 됩니다.
-즉 바로 이런 경우에 한해서 바이너리 서치를 반복한다는 것이, 구간이 빌 때까지 찾겠다는 의미가 됩니다.
+이렇게 하면, 구간이 비었다는 사실은 $\textit{begin} = \textit{end}\,$로 표현할 수 있습니다.
+반대로, $\textit{begin} < \textit{end}\,$은 구간이 비어있지 않다는 사실을 표현합니다.
 
 이 아이디어를 배열에 있는 데이터에 적용해본다면, 이런 수도코드로 정리해볼 수 있습니다.
 
@@ -180,22 +176,21 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
 
 ## 알고리즘이 올바른지 확인하기
 
-존 벤틀리<L>Jon Bentley</L>의 책에 따르면, 프로그래머 열 명 중 한 명 정도가 바이너리 서치를 올바르게 구현했다고 하는데요.
+존 벤틀리<L>Jon Bentley</L>에 따르면, 프로그래머 열 명 중 한 명 정도가 바이너리 서치를 올바르게 구현했다고 하는데요.
 따라서 구현이 비교적 어려운 알고리즘이라고 할 수 있습니다.
 
 그러면 수도코드가 기대하는대로 동작하는지 어떻게 확신할 수 있을까요?
 바이너리 서치가 동작하는 이유는 이렇게 정리할 수 있습니다.
 
-- 서치 대상 $\textit{target}\,$이 배열 $\textit{arr}\,$에 있다면, 그 인덱스 $i$는 $[\textit{begin}, \textit{end})$ 안에 있다.
+- 서치 대상 $\textit{target}\,$이 배열 $\textit{arr}\,$에 있다면, $\textit{target}\,$의 인덱스 $i$는 $[\textit{begin}, \textit{end})$ 안에 있다.
   즉, $\textit{begin} \leq i < \textit{end}$ 이다.
 
 - 반대로, 배열에 없다면 그 인덱스 $i$는 $[\textit{begin}, \textit{end})$ 안에 없다.
 
-이 중에 첫 번째가 항상 성립함을 보이겠습니다.
+이 중에 첫 번째 문장이 항상 성립함을 보이겠습니다.
 그러기 위해 세 가지 경우를 따져볼 텐데요.
 반복문의 시작 직전, 반복, 그리고 종료 직후입니다.
-여기서 확인하려는 것은, 반복하는 동안 첫 번째 문장은 변하지 않는다는 사실입니다.
-따라서 그 문장은 루프 인베리언트<L>loop invariant</L>라고도 불립니다.
+이 문장은 루프 인베리언트<L>loop invariant</L>라고도 불립니다.
 
 첫 번째로, 시작 직전을 봅시다.
 이때 수행된 수도코드는 이렇습니다.
@@ -208,7 +203,7 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
   </ABlock>
 </Alg>
 
-서치 대상이 배열에 있다면, 그 인덱스 $i$는 당연히 $0 \leq i < \textit{size}$ 입니다.
+서치 대상이 배열에 있다면, 그 인덱스 $i$는 당연히 $0 \leq i < \textit{arr}\,$의 크기입니다.
 그리고 수도코드의 변수 초기화로 인해, 루프 인베리언트의 부등식 $\textit{begin} \leq i < \textit{end}\,$가 반복문 시작 직전에 성립합니다.
 
 두 번째로, 반복할 때를 봅시다.
@@ -231,7 +226,7 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
 
 이는 다음 서치 구간을 $[\textit{mid}+1, \textit{end})$로 줄인 것이고, 정확히 $i$가 속하는 구간과 같습니다.
 따라서 다음 반복의 시작까지 루프 인베리언트가 성립하게 됩니다.
-그리고 반대의 경우, 즉 $i$가 다른 쪽에 속할 때도 이와 비슷합니다.
+그리고 반대의 경우, 즉 $i$가 다른 쪽에 속할 때도 이와 비슷하게 할 수 있습니다.
 
 마지막으로, 반복이 끝난 직후를 봅시다.
 만약 서치 대상을 찾았다면, 실제로 그 인덱스가 $[\textit{begin}, \textit{end})$에 있었던 것이므로 성립합니다.
@@ -239,7 +234,7 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
 
 결론적으로 루프 인베리언트, 즉 서치 대상이 배열에 있다면 인덱스가 $[\textit{begin}, \textit{end})$ 안에 있음을 보였습니다.
 이로부터 반복 조건과 반복마다 줄이는 구간을 올바르게 정했다는 걸 알 수 있게 됩니다.
-반대로 이 두 가지가 살짝이라도 달라졌을 때, 루프 인베리언트는 성립하지 않게 됩니다. (확인해보세요.)
+반대로 이 두 가지가 살짝이라도 달라졌을 때, 루프 인베리언트는 성립하지 않게 되고, 알고리즘은 동작하지 않습니다. (확인해보세요.)
 
 ## 정수 오버플로우 버그
 
@@ -255,8 +250,7 @@ $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 �
 </Alg>
 
 이렇게 더하기를 먼저하면, 숫자가 큰 경우 정수 오버플로우<L>integer overflow</L>를 일으킬 수 있기 때문입니다.
-[이 글][gr-bs]에 따르면 자바<L>Java</L> 라이브러리의 바이너리 서치에도 9년 가까이 있었던 버그입니다.
-이는 뺄셈을 대신 이용해 고칠 수 있습니다.
+[이 글][gr-bs]에 따르면 자바<L>Java</L> 라이브러리의 바이너리 서치에도 9년 가까이 있었던 이 버그는, 뺄셈을 대신 이용해 고칠 수 있습니다.
 
 [gr-bs]: https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/
 
@@ -325,7 +319,7 @@ $$
 </Figure>
 
 따라서 구간은 $\lfloor\lg n\rfloor$번 줄어들고, 반복문의 시간 복잡도는 $T(n) = \Theta(\lfloor\lg n\rfloor)$, 즉 $\Theta(\lg n)$이 됩니다.
-여기에 변수 초기화와 리턴문을 더 실행하는 전체 코드 또한 $\Theta(\lg n)$을 가집니다.
+변수 초기화와 리턴문을 포함한 전체 코드 또한 $\Theta(\lg n)$을 가집니다.
 
 ## 자바로 구현하기
 
@@ -428,7 +422,6 @@ public class BinarySearchIntArrayTest {
 한편, 부모에서 자식 순으로, 즉 가계도로 두 사람의 순서를 비교할 수도 있습니다.
 그러면 부모와 자식 관계로 이어진 사람들, 즉 직계에서는 순서를 가집니다.
 하지만 그 외의 사람들과는 그렇지 않기 때문에, 이 기준으로는 한 줄로 세울 수 없게 됩니다.
-(다른 순서도 떠올릴 수 있을까요?)
 
 <Figure src={fig5} alt="various orderings">
   <FigureCaption slot="caption">그림 5. 다양한 오더링 예시. 오더링에 따라 사람을 한 줄로 세울 수도 있고, 그럴 수 없기도 합니다.</FigureCaption>
@@ -439,7 +432,7 @@ public class BinarySearchIntArrayTest {
 1. 순서는 데이터 바깥에서 정할 수 있다.
    즉, 같은 데이터는 여러가지의 순서를 가질 수 있다.
 
-1. 각 데이터가 모든 나머지와 순서가 정해졌을 때만, 데이터를 일렬로 놓을 수 있다.
+1. 각 데이터가 나머지와 순서가 정해졌을 때만, 데이터를 일렬로 놓을 수 있다.
 
 첫 번째 경우는 파셜 오더링<L>partial ordering</L> 혹은 간단히 오더링을 정의했다고도 말하고, 두 데이터 $a$, $b\,$에 오더링이 있으면 $a \leq b$ 혹은 $a \preceq b$로 표현합니다.
 가계도 예시의 경우, 부모가 $a$이고 자식이 $b$인 경우가 이에 해당합니다.
@@ -467,13 +460,13 @@ $$
   9 \remleq 26 \remleq 43 \remleq 84 \remleq 93 \remleq 110
 $$
 
-이처럼 똑같은 데이터에 다른 토탈 오더링을 만들 수 있다는 것은, 바이너리 서치 구현에서 오더링을 분리할 수 있는 이유가 됩니다.
+이처럼 똑같은 데이터에 다른 토탈 오더링을 만들 수 있다는 것은, 바이너리 서치 구현에서 오더링을 분리할 수 있는 이론적인 이유가 됩니다.
 
 ## 알고리즘에서 오더링 분리하기
 
 바이너리 서치가 구체적인 오더링을 알 필요 없게끔 만들어봅시다.
-자바에는 오더링을 결정하는 [`Comparator`][java-comparator] 인터페이스가 있습니다.
-그 인스턴스를 파라미터로 받도록 바꾸면, 바이너리 서치는 어떠한 오더링도 가정하지 않게 됩니다.
+마침 자바에는 오더링을 위한 [`Comparator`][java-comparator] 인터페이스가 있습니다.
+이를 파라미터로 받으면, 바이너리 서치는 어떠한 오더링도 가정하지 않게 됩니다.
 
 [java-comparator]: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Comparator.html
 
@@ -502,9 +495,10 @@ public class BinarySearchArray {
 }
 ```
 
-여기서는 동시에 제너릭<L>generic</L> 타입 `T`로 확장했습니다.
+제너릭<L>generic</L> 타입 `T`로 확장했습니다.
 이 타입은 [`Comparable`][java-comparable] 같은 인터페이스를 구현할 필요가 없습니다.
-왜냐면 오더링을 밖에서 정하기 때문에, 데이터 타입 자체가 컴패러블한지 알 필요가 없기 때문입니다.
+즉 데이터의 타입 자체에 오더링이 있지 않아도 됩니다.
+왜냐면 오더링을 밖에서 정하기 때문에, 데이터 자체가 컴패러블한지 알 필요가 없기 때문입니다.
 
 [java-comparable]: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Comparable.html
 
@@ -535,7 +529,7 @@ public class Comparators {
   }
 ```
 
-데이터 타입 `T`가 이미 컴패러블할 때 오더링을 생략하면, 그 타입의 기존 오더링을 사용합니다.
+데이터 타입 `T`가 이미 컴패러블할 때 오더링을 생략하면, 자바에서 내츄럴 오더링<L>natural ordering</L>이라고 부르는, 그 타입의 기존 오더링을 사용합니다.
 
 이 메소드가 잘 동작하는지 테스트해봅시다.
 앞서 예시로 든, $8$로 나눈 나머지를 비교하는 오더링 $\leq_{{}/8}$로도 바이너리 서치를 할 수 있습니다.
@@ -561,7 +555,7 @@ public class BinarySearchArrayTest {
 }
 ```
 
-여기서 `rem8ordering` 변수가 $\leq_{{}/8}$ 오더링의 구현입니다.
+여기서 `REM8` 변수가 $\leq_{{}/8}$ 오더링의 구현입니다.
 
 오더링을 생략한 경우를 오버로딩했기 때문에, 수정 전의 인터페이스도 유지합니다.
 
@@ -584,37 +578,39 @@ public class BinarySearchArrayTest {
 
 방금 $\leq_{{}/8}$ 오더링을 테스트하는 케이스에서, 세 번째 데이터를 잘 찾았습니다.
 그런데 사실은 그 숫자 자체를 찾는 것이 아니라, 같은 것으로 취급하는 종류를 찾는 것입니다.
-이 경우 나머지가 같은 것이 그런 종류가 됩니다.
+여기선 $8$로 나눈 나머지가 같은 것이 그런 종류가 됩니다.
 
 이처럼 오더링은 같다는 의미를 은연중에 이용합니다.
-(마침 기호가 $\prec$가 아니라 $\preceq$인 것이 이걸 의미하기도 합니다.)
-이는 오더링을 정의하는 요소에서 나옵니다.
-그 중 두 가지를 봅시다.
+그런데 오더링을 정의하는 요소에서 그 이유를 알 수 있습니다.
+오더링은 아무렇게나 만들 수 있지만 적어도 다음 세 가지를 지켜야합니다.
 
-1. 똑같은 두 데이터에는 오더링이 있어야 합니다.
+1. 리플렉시브<L>reflexive</L>: 데이터는 자기 자신과 오더링이 있어야 합니다.
    즉, 데이터 $a$가 있으면 $a \preceq a$이어야 합니다.
-   (이를 리플렉시브<L>reflexive</L>하다고 합니다.)
 
-1. 두 데이터에 오더링이 있고, 그 반대의 오더링도 있으면, 서로 같아야 합니다.
+1. 안티시메트릭<L>antisymmetric</L>: 두 데이터에 오더링이 있고, 그 반대의 오더링도 있으면, 그 둘은 같아야 합니다.
    즉, 데이터 $a$, $b$가 $a \preceq b$이고 $b \preceq a$이면, $a = b$이어야 합니다.
-   (이를 안티시메트릭<L>antisymmetric</L>하다고 합니다.)
 
-일반적인 숫자 비교 $\leq$를 떠올리면 당연해보입니다.
-예를 들면 $1 \leq 1$처럼, 숫자는 항상 자기 자신 이상입니다. (리플렉시브)
-그리고 두 숫자 $a$, $b$는 서로 반대쪽 이상이면 둘 다 같습니다.
-즉 $a \leq b$이고 $b \leq a$이면, $a = b$입니다. (안티시메트릭)
+1. 트랜지티브<L>transitive</L>: 데이터 $a$, $b$, $c$가 $a \preceq b$이고, $b \preceq c$이면, 반드시 $a \preceq c$이어야 합니다.
 
-이런 두 요소를 연결하면, 다음 두 문장은 논리적으로 동치<L>logical equilvalence</L>, 즉 똑같은 말이 됩니다.
+일반적인 숫자의 대소 비교 $\leq$를 떠올려보면 당연한 사실입니다.
+
+1. $1 \leq 1$처럼, 숫자는 항상 자기 자신 이상입니다. (리플렉시브)
+
+1. 숫자 $a$, $b$가 $a \leq b$이고 $b \leq a$이면, $a = b$입니다. (안티시메트릭)
+
+1. 숫자 $a$, $b$, $c$가 $a \leq b$이고, $b \leq c$이면, $a$와 $c$는 비교할 필요 없이 $a \leq c$입니다. (트랜지티브)
+
+그런데 첫 두 요소인 리플렉시브함과 안티시메트릭함으로부터, 다음 두 문장이 논리적으로 같은 말<L>logical equilvalence</L>이라는 것을 알게 됩니다.
 
 - $a = b$
 
 - $a \preceq b$ 이고 $b \preceq a$
 
-이를 적용하는 예시로, 앞서 정의한 오더링 $\leq_{{}/8}$을 봅시다.
+앞서 예로 든 오더링 $\leq_{{}/8}$을 봅시다.
 그러면 $0 \leq_{{}/8} 8$이기도 하지만, $8 \leq_{{}/8} 0$이기도 합니다.
 따라서 $0 = 8$이어야 합니다.
 
-이런 결론이 나오는 이유는, $\leq_{{}/8}$은 $8$로 나눈 나머지가 같은 숫자를 모두 같은 것으로 만들기 때문입니다.
+이런 결론이 나오는 이유는, $\leq_{{}/8}$은 $8$로 나눈 나머지가 같은 숫자를 모두 같은 것으로 취급하기 때문입니다.
 이런식으로 정해지는 '같다'의 의미를 $=_{{}/8}$로 쓴다면, 이렇게 표현할 수 있습니다.
 
 $$
@@ -622,24 +618,25 @@ $$
   0 \remeq 8 \remeq 16 \remeq \dotsb
 $$
 
-이 $=_{{}/8}$처럼, 같다는 관계도 얼마든지 새로 만들 수 있습니다.
+이처럼 같다는 관계 또한, 동일한 데이터 상에서 얼마든지 새로 만들 수 있습니다.
 이를 동치 혹은 이퀴밸런스 릴레이션<L>equivalence relation</L>, 아니면 간단히 이퀴밸런스라고 부릅니다.
-그러면 이 이퀴밸런스로 같다고 보는 것들이 생깁니다.
+그러면 이 이퀴밸런스로 같다고 취급하는 것들이 생깁니다.
 이를 이퀴밸런스 클래스<L>equivalence class</L>라고 합니다.
-그리고 이퀴밸런스는 데이터를 항상 여러 부분으로 쪼갭니다.
+이 이퀴밸런스는 데이터를 항상 여러 부분으로 쪼갭니다.
 이를 파티션<L>partition</L>이라고 합니다.
+각 파티션은 서로 겹치는 부분이 없고, 파티션을 모두 합쳤을 때 데이터 전부를 이룹니다.
 
-위 예시에서는 이퀴밸런스 $=_{{}/8}$이 $0, 8, 16, \dotsc$ 등을 하나의 이퀴밸런스 클래스 $[0] = \{ 0,8,16,\dotsc \}$를 만듭니다.
-이런 식으로, $[1] = \{1, 9, 17, \dotsc\}$을 비롯해 여덟 개의 이퀴밸런스 클래스 $[0], \dotsc, [7]$이 생깁니다.
-이는 모든 숫자 $\{ 0,1,2,\dotsc \}$를 여덟 부분으로 나눈 파티션입니다.
+이퀴밸런스 $=_{{}/8}$은 숫자 중 $0, 8, 16, \dotsc$을 하나의 이퀴밸런스 클래스로 만듭니다.
+이를 $[0] = \{ 0,8,16,\dotsc \}$로 표현합시다.
+이런 식으로 $[1] = \{1, 9, 17, \dotsc\}$을 비롯해 여덟 개의 이퀴밸런스 클래스 $[0], \dotsc, [7]$이 만들어지고, 이는 모든 숫자를 여덟 부분으로 나누는 파티션이 됩니다.
 
 <Figure src={fig6} alt="partitions">
   <FigureCaption slot="caption">그림 6. 이퀴밸런스가 만드는 파티션. 모든 숫자가 여덟 파티션으로 나뉩니다. 각 파티션은 곧 이퀴밸런스 클래스로, 이퀴밸런스가 같은 것으로 취급하는 숫자들입니다.</FigureCaption>
 </Figure>
 
-정리하면 오더링 $\leq_{{}/8}$은 이퀴밸런스 $=_{{}/8}$을 사용합니다.
+정리하면 오더링 $\leq_{{}/8}$은 이퀴밸런스 $=_{{}/8}$을 가정합니다.
 
-그런데 자바에서는 오더링과 이퀴밸런스가 따로 구현됩니다.
+한편, 자바에서는 오더링과 이퀴밸런스가 따로 구현됩니다.
 이퀴밸런스는 [`Object.equals()`][java-equals] 같은 메소드가 맡는데요.
 따라서 자바에서는 오더링의 구현과 이퀴밸런스의 구현이 실제론 다른 뜻을 가질 수 있습니다.
 
@@ -650,20 +647,19 @@ $$
 
 # 순서대로 놓기
 
-카드 $n$ 개가 아무렇게나 있다면, 원하는 카드를 $m$ 번 찾는 일은 최악의 경우 $\Theta(mn)$의 시간 복잡도를 가집니다.
-한편, 소트된 카드에선 바이너리 서치를 쓸 수 있으므로, (아직 분석하지 않은) 소팅 알고리즘이 $\Theta(f(n))$를 가지면, 시간 복잡도는 $\Theta(f(n) + m\lg n)$이 됩니다.
+카드 $n$ 개가 아무렇게나 있다면, 원하는 카드를 $m$ 번 찾는 일은 시퀀셜 서치를 통해 최악의 경우 $\Theta(mn)$의 시간 복잡도를 가집니다.
+한편, 소트된 카드에선 바이너리 서치를 쓸 수 있으므로, 소팅 알고리즘이 $\Theta(f(n))$의 시간이 들면, 전체적인 시간 복잡도는 $\Theta(f(n) + m\lg n)$이 됩니다.
 
-만약 카드를 찾는 횟수가 많아서 카드 개수를 넘는다면, 소트를 해놓는 것이 유리하다는 결론이 나옵니다.
-곧 알아볼 소팅 알고리즘은 최악의 경우 $\Theta(f(n)) = \Theta(n^2)$으로, 소트해놓는 것이 $\Theta(f(n) + m\lg n) = \Theta(n^2) < \Theta(mn)$으로서 더 나은 시간 복잡도를 가지기 때문입니다.
+따라서, 만약 서치 횟수 카드 개수를 넘을 정도로 많다면, 소트를 해놓는 것이 유리하다는 결론을 낼 수 있습니다.
+곧 알아볼 인서션 소트는 최악의 경우 $\Theta(f(n)) = \Theta(n^2)$으로, 소트해놓고 $m$번 서치하는 것이 $\Theta(n^2 + m\lg n) < \Theta(mn)$으로서 더 나은 시간 복잡도를 가지기 때문입니다.
 
-여기서 소트란 오더링을 따라 데이터를 일렬로 놓는 것입니다.
-그 알고리즘 중 간단한 것으로서 삽입 정렬 혹은 인서션 소트<L>insertion sort</L>라고 불리는 것을 살펴보겠습니다.
+그러면 소팅 알고리즘 중 간단한 것으로서 인서션 소트<L>insertion sort</L>를 살펴보겠습니다.
 
 ## 인서션 소트
 
 카드를 소트해야 한다고 해봅시다.
 
-카드를 두 부분으로 나눠, 왼쪽 부분을 소트된 부분이라고 합시다.
+카드를 두 부분으로 나눠, 왼쪽 부분이 이미 소트된 부분이라고 합시다.
 사실 카드 한 장은 이미 소트되어 있다고 할 수 있습니다.
 따라서 소트된 부분은 가장 왼쪽 한 개부터 시작합니다.
 
@@ -707,17 +703,14 @@ $$
 시간 복잡도를 계산해봅시다.
 먼저 최선의 경우는 이미 정렬된 배열일 때입니다.
 이 경우 스왑은 일어나지 않습니다.
-인덱스 $i$를 배열의 크기 $n$까지 증가시킬 뿐이므로, 시간 복잡도는 $\Theta(n)$이 됩니다.
+반복문은 인덱스 $i$를 배열의 크기 $n$까지 증가시킬 뿐이므로, 시간 복잡도는 $\Theta(n)$이 됩니다.
 
 최악의 경우는 데이터가 반대 순서로 있을 때이고, 시간 복잡도는 $\Theta(n^2)$가 됩니다.
-바깥쪽 반복문이 반복할 때마다, 안쪽 반복문은 $1, 2, \dotsc, n-1$ 번 반복힙니다.
-따라서 총 $1+2+\dots+n-1 = \Theta(n^2)$ 번 반복하고, 이는 시간 복잡도와 같습니다.
-
-한편, 시간 복잡도는 이렇게 계산할 수 있지만, 나중에 볼 것처럼 배열이 얼마나 정렬이 되어있지 않은가에도 비례합니다.
-잠시 후 이를 통해 평균의 경우도 계산해보겠습니다.
+바깥쪽 반복문이 반복할 때마다, 안쪽 반복문은 $1, 2, \dotsc, n-1$ 번 반복합니다.
+전부 더하면 $(n-1)n/2 = \Theta(n^2)$ 번이 되고, 이는 시간 복잡도와 같습니다.
 
 인서션 소트의 수도코드 그대로 자바로 구현할 수 있는데요.
-여기서는 [스트레터지 패턴][wp-strat-pat]<L>strategy pattern</L>으로 구현해 자바 코드가 소트에 집중할 수 있도록 만들겠습니다.
+여기서는 [스트레터지 패턴][wp-strat-pat]<L>strategy pattern</L>으로 구현해, 클래스가 소트에만 집중할 수 있도록 만들겠습니다.
 
 [wp-strat-pat]: https://en.wikipedia.org/wiki/Strategy_pattern
 
@@ -725,7 +718,7 @@ $$
 `Comparator` 인스턴스를 받음으로써, 바이너리 서치 때처럼 오더링 구현이 분리됩니다.
 
 ```java
-public interface SortStrategy<T> {
+public interface ArraySortStrategy<T> {
   public T[] sortArray(T[] arr, int begin, int end, Comparator<T> comp);
 }
 ```
@@ -734,7 +727,7 @@ public interface SortStrategy<T> {
 구현 코드는 수도코드를 그대로 옮깁니다.
 
 ```java
-public class InsertionStrategy<T> implements SortStrategy<T> {
+public class InsertionStrategy<T> implements ArraySortStrategy<T> {
   public T[] sortArray(T[] arr, int begin, int end, Comparator<T> comp) {
     for (int i = begin+1; i < end; ++i) {
       int j = i-1;
@@ -764,9 +757,9 @@ public class Comparators {
 이를 통해 구체적인 소팅 알고리즘을 스트레터지 인자로 줄 수 있습니다.
 
 ```java
-public class Sorter {
+public class ArraySorter {
   public static <T> T[] sortArray(T[] arr, int begin, int end,
-      SortStrategy<T> strat, Comparator<T> comp) {
+      ArraySortStrategy<T> strat, Comparator<T> comp) {
     return strat.sortArray(arr, begin, end, comp);
   }
 }
@@ -776,8 +769,8 @@ public class Sorter {
 
 ```java
   public static <T> T[] sortArray(T[] arr,
-      SortStrategy<T> strat, Comparator<T> comp) {
-    return Sorter.sortArray(arr, 0, arr.length, strat, comp);
+      ArraySortStrategy<T> strat, Comparator<T> comp) {
+    return ArraySorter.sortArray(arr, 0, arr.length, strat, comp);
   }
 ```
 
@@ -785,10 +778,13 @@ public class Sorter {
 
 ```java
   public static <T extends Comparable<? super T>> T[] sortArray(T[] arr,
-      SortStrategy<T> strat) {
-    return Sorter.sortArray(arr, 0, arr.length, strat);
+      ArraySortStrategy<T> strat) {
+    return ArraySorter.sortArray(arr, 0, arr.length, strat);
   }
 ```
+
+이렇게 파라미터의 생략을 구체적인 스트레터지에서가 아닌 `ArraySorter`라는 별도의 클래스에서 구현했습니다.
+따라서 각 스트레터지는 소트하는 방법에만 집중하고, 파라미터를 어떻게 받을 것인지는 신경쓰지 않게 됩니다.
 
 그러면 사용자는 이 메소드를 다음 테스트 코드와 같이 사용할 수 있습니다.
 즉 `unsorted` 배열과 같은 데이터는 `expected` 배열처럼 정리됩니다.
@@ -798,9 +794,9 @@ public class Sorter {
   public void testSort() {
     Integer[] unsorted = { 20, 30, 10, 40 };
     Integer[] expected = { 10, 20, 30, 40 };
-    SortStrategy<Integer> strat = new InsertionStrategy<>();
+    ArraySortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    Sorter.sortArray(unsorted, strat);
+    ArraySorter.sortArray(unsorted, strat);
 
     assertArrayEquals(expected, unsorted);
   }
@@ -810,12 +806,13 @@ public class Sorter {
 
 ```java
   @Test
-  public void testRem8OrderingDistinctSort() {
-    Integer[] unsorted = { 110, 93, 84, 43, 26, 9 };
-    Integer[] expected = { 9, 26, 43, 84, 93, 110 };
-    SortStrategy<Integer> strat = new InsertionStrategy<>();
+  public void testRem8DistinctSort() {
+    Integer[] unsorted = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    Integer[] expected = { 0, 8, 1, 9, 2, 10, 3, 4, 5, 6, 7 };
+    ArraySortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    Sorter.sortArray(unsorted, strat, Comparator.comparing(v -> v % 8));
+    ArraySorter.sortArray(unsorted, strat,
+      Comparator.comparing(v -> v % 8));
 
     assertArrayEquals(expected, unsorted);
   }
@@ -843,12 +840,13 @@ public class Sorter {
 
 ```java
   @Test
-  public void testRem8OrderingDuplicateSort() {
+  public void testRem8DuplicateSort() {
     Integer[] unsorted = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     Integer[] expected = { 0, 8, 1, 9, 2, 10, 3, 4, 5, 6, 7 };
-    SortStrategy<Integer> strat = new InsertionStrategy<>();
+    ArraySortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    Sorter.sortArray(unsorted, strat, Comparator.comparing(v -> v % 8));
+    ArraySorter.sortArray(unsorted, strat,
+      Comparator.comparing(v -> v % 8));
 
     assertArrayEquals(expected, unsorted);
   }
@@ -885,10 +883,12 @@ $$
 \end{array}
 $$
 
-한편, $0$과 $8$을 보면 소팅 전의 순서가 후에도 유지됐고, 다른 숫자도 그러한데요.
-이렇게 소팅 전의 순서가 유지되는 소팅 알고리즘을 안정적 혹은 스테이블<L>stable</L>하다고 부르고, 인서션 소트는 그러한 알고리즘입니다.
+여기서 $0$과 $8$은 소팅 전의 순서가 후에도 유지됐고, $1$과 $9$, $2$와 $10$도 그러한데요.
+이렇게 소팅 전의 순서가 유지되는 소팅 알고리즘을 안정적 혹은 스테이블<L>stable</L>하다고 부릅니다.
+따라서 인서션 소트는 스테이블합니다.
 
-이를 적용할 수 있는 예시로, 동물병원에 이런 문제가 있다고 상상해봅시다.
+이런 스테이블함을 어떻게 이용할 수 있을까요?
+예를 들어, 동물병원에 이런 문제가 있다고 상상해봅시다.
 강아지와 고양이를 진찰한 기록이 섞어버려서 다시 정리해야 합니다.
 
 <Figure src={fig9} alt="animal records">
@@ -900,11 +900,11 @@ $$
 이 때, 고양이 기록들은 이름 순서대로 다시 정리해야 하고, 강아지 기록들 간에는 섞인 순서를 유지해야 합니다.
 이렇게 정리한 기록은 고양이 기록을 강아지 기록 뒤에 두어야 합니다.
 
-어떻게 해결할 수 있을까요?
-간단히 생각하면, 하나하나 기록을 확인하며 강아지와 고양이 것으로 분리한 다음, 고양이 기록을 소트하고, 이걸 강아지 기록 뒤에 놓으면 될 것 같습니다.
+간단한 해결 방법으로는, 하나하나 기록을 확인하며 강아지와 고양이 것으로 분리한 다음, 고양이 기록을 소트하고, 이걸 강아지 기록 뒤에 놓으면 될 것 같습니다.
 
 그런데 오더링을 잘 정해주면 한 번의 소트로 해결할 수 있습니다.
 둘 중 하나가 강아지면 종에 따라, 둘 다 고양이면 이름에 따라 순서를 줍시다.
+종에 따른 오더링은 강아지 $\preceq$ 고양이와 같이 정합시다.
 
 <Alg>
   <AK>동물 오더링</AK> ($\textit{animal\,}_1, \textit{animal\,}_2$)
@@ -945,7 +945,7 @@ $$
 ```java
   @Test
   public void testAnimalRecordSort() {
-    final AnimalRecord[] rec = {
+    final AnimalRecord[] recs = {
       new AnimalRecord("Dog", "3"),
       new AnimalRecord("Dog", "2"),
       new AnimalRecord("Dog", "1"),
@@ -958,17 +958,20 @@ $$
   }
 ```
 
-아래 부분에 이어서, 예시로 들었던 경우를 준비합니다.
+이어서, 위 예시의 경우를 준비합니다.
 
 ```java
-    AnimalRecord[] unsorted = { rec[0], rec[5], rec[3], rec[1], rec[4], rec[2] };
-    AnimalRecord[] expected = { rec };
+    AnimalRecord[] unsorted = { recs[0], recs[5], recs[3],
+      recs[1], recs[4], recs[2] };
+    AnimalRecord[] expected = recs;
 ```
 
 본격적인 테스트 케이스 내용은 앞서 설명한 오더링으로 소트하는 것입니다.
 
 ```java
-    Sorter.sortArray(unsorted, new InsertionSortStrategy<>(), (rec1, rec2) -> {
+    ArraySortStrategy<AnimalRecord> strat = new InsertionStrategy<>();
+
+    ArraySorter.sortArray(unsorted, strat, (rec1, rec2) -> {
       int speciesOrder1 = rec1.species.equals("Dog") ? 0 : 1;
       int speciesOrder2 = rec2.species.equals("Dog") ? 0 : 1;
 
@@ -994,120 +997,131 @@ $$
 # 한 번에 많이 정리하기
 
 데이터가 얼마나 섞여있는가를 말할 수 있는 기준을 세우고나면, 소팅 알고리즘이 얼마나 빨리 정리하는가도 말할 수 있게 됩니다.
-이 기준으로 봤을 때, 인서션 소트가 얼마나 천천히 데이터를 정리하는 지 알 수 있습니다.
-또한 인서션 소트가 데이터를 '한 번에 많이' 정리하도록 개선해볼 수 있습니다.
+이를 통해 인서션 소트가 얼마나 천천히 데이터를 정리하는 지 알아보고, 또한 데이터를 '한 번에 많이' 정리하도록 바꿔보겠습니다.
 
 ## 인버전
 
-데이터 중에 오더링을 따르지 않는 두 데이터가 있다면, 이를 인버전<L>inversion</L>이라고 부릅니다.
+오더링을 따르지 않는 두 데이터를 인버전<L>inversion</L>이라고 부릅니다.
 
 <Figure src={fig10} alt="inversion diagram">
   <FigureCaption slot="caption">그림 10. 인버전 다이어그램. 예를 들어 크기 순을 따르지 않는 두 숫자가 인버전이 됩니다.</FigureCaption>
 </Figure>
 
-곧 보겠지만, 인서션 소트의 시간 복잡도는 이에 직접적으로 영향을 받습니다.
+곧 보겠지만, 인서션 소트의 시간 복잡도는 인버전의 개수에 직접적으로 영향을 받습니다.
+그러면 인버전은 몇 개까지 될 수 있을까요?
 
-인버전이 가장 적을 때는 데이터가 이미 소트되었을 때입니다.
-이 경우 인버전은 $0$ 개 입니다.
-인버전이 가장 많을 때는 데이터가 오더링의 반대로 소트된 경우입니다.
-이 때의 인버전 개수는 첫 번째 데이터부터 세봄으로써 구할 수 있습니다.
-실제로는 $n-1$부터 $1$까지의 합인 $\sum_{k=1}^{n-1} k$, 즉 $n(n-1)/2$가 됩니다.
+- 인버전이 가장 적을 때는 데이터가 이미 소트되었을 때이고, 개수는 $0$ 개가 됩니다.
+
+- 인버전이 가장 많을 때는 데이터가 오더링의 반대로 소트된 경우입니다.
+  이 때의 인버전 개수는 첫 번째 데이터부터 직접 세보면, $n-1$부터 $1$까지의 합인 $\sum_{k=1}^{n-1} k$, 즉 $n(n-1)/2$가 됩니다.
 
 <Figure src={fig11} alt="number of inversions">
   <FigureCaption slot="caption">그림 11. 인버전의 최대 개수. 데이터가 반대로 소트되어 있을 때, 첫 번째 데이터와 이루는 인버전부터 세봄으로써 모든 인버전의 개수를 구할 수 있습니다.</FigureCaption>
 </Figure>
 
-이런 인버전의 개수를 데이터가 소트되어있지 않은 정도로 바라볼 수 있습니다.
-
 인서션 소트는 인접한 두 데이터가 인버전일 때마다 스왑합니다.
-그리고 그 때마다 인버전 개수는 하나씩 줄어듭니다.
+그리고 인접한 인버전을 해소할 때마다, 총 인버전 개수는 하나씩 줄어듭니다. (증명은 간단하니 생략하겠습니다.)
 따라서 인서션 소트가 스왑하는 횟수는 정확히 인버전의 개수와 같게 됩니다.
 
-이를 통해 시간 복잡도를 다시 구할 수 있습니다.
+인버전의 개수가 데이터가 '섞인 정도'라고 해봅시다.
+그러면 인서션 소트의 스왑 횟수는 데이터가 섞인 정도에 비례한다고 볼 수 있습니다.
+따라서 인서션 소트란 거의 섞이지 않은 데이터일 수록 빠른 소팅 알고리즘이 됩니다.
+
+구체적으로 시간 복잡도를 다시 구해봅시다.
 최선의 경우, 배열이 정렬되어 있더라도 알고리즘은 각 데이터를 확인하기 때문에, 적어도 $\Theta(n)$의 시간이 필요합니다.
 하지만 인버전이 없기 때문에 스왑은 없습니다.
 따라서 시간 복잡도는 그대로 $\Theta(n)$입니다.
 
 최악의 경우, 인버전 개수는 앞서 구했듯 $n(n-1)/2 = \Theta(n^2)$ 개인데요.
-여기에 각 데이터를 확인하는 데 드는 시간 복잡도 $\Theta(n)$를 더해, $\Theta(n) + \Theta(n^2) = \Theta(n^2)$로서 같은 결과를 다시 구하게 됩니다.
+이것은 각 데이터를 확인하는 데 드는 시간 복잡도 $\Theta(n)$보다 크기 때문에, 시간 복잡도는 $\Theta(n^2)$로서 같은 결과를 다시 구하게 됩니다.
 
-평균의 경우, 무엇을 평균으로 생각하느냐가 중요한 요소입니다.
-각 인버전 개수가 같은 확률로 등장한다고 가정하면, 그 개수의 평균은 $n(n-1)/4$ 개임이 알려져 있습니다.
-따라서, 최악의 경우처럼 시간 복잡도는 $\Theta(n^2)$가 됩니다.
+평균의 경우, 먼저 입력 값의 분포를 가정해야 시간 복잡도를 말할 수 있습니다.
 
-정리하면, 인서션 소트는 대체로 $\Theta(n^2)$의 시간 복잡도를 가지지만, 거의 소트된 데이터의 경우에는 $\Theta(n)$ 만큼 빠릅니다.
+- 각 인버전 개수가 같은 확률로 등장한다고 가정하면, 그 개수의 평균은 $n(n-1)/4$ 개임이 알려져 있습니다.
+  따라서, 최악의 경우처럼 시간 복잡도는 $\Theta(n^2)$가 됩니다.
+
+- 평균적으로 거의 소트된 데이터가 존재한다고 가정하면, 최선의 경우처럼 $\Theta(n)$에 가까울 것입니다.
+
+정리하면, 인서션 소트는 대체로 $\Theta(n^2)$의 시간이 들지만, 거의 소트된 경우에는 $\Theta(n)$의 시간이 듭니다.
 
 ## 한 번에 많은 인버전 줄이기
 
 인서션 소트는 한 번의 스왑에 하나의 인버전만 줄입니다.
 이와 달리, 여러 개의 인버전을 줄인다면 소팅이 빨라지지 않을까요?
 
-$i$번째 데이터와 $j$번째 데이터가 인버전이면 간단히 $(i, j)$로 써봅시다.
+인버전인 $i$번째와 $j$번째 데이터를 간단히 $(i, j)$로 표현해봅시다.
 그러면 인서션 소트는 $(i, i+1)$ 꼴의 인버전만 해소한다고 표현할 수 있습니다.
 
-이제 $(i, i+2)$ 처럼 두 칸 떨어진 인버전을 해소한다고 해봅시다.
+그런데 대신 $(i, i+2)$ 처럼 두 칸 떨어진 인버전을 해소한다고 해봅시다.
 그러면 최소 하나에서 최대 세 개의 인버전이 해소됨을 알 수 있습니다.
 사실 $n$ 칸이 떨어진 인버전을 해소하면, 최대 $2n-1$ 개의 인버전이 줄어듭니다.
 (직접 계산해보세요.)
 
-그렇다면 속도를 높이기 위해 $h$ 만큼 떨어진 인버전 $(i, i+h)$부터 해소해봅시다.
-그러기 위해 $h$ 만큼 떨어진 데이터를 모아 하나의 서브 배열로 생각해봅시다.
-전체 배열은 이런 서브 배열이 $h$ 개 존재하고, 각 서브 배열에서 인서션 소트를 할 수 있습니다.
-이렇게 소트된 배열을 $h$-소트되었다고 표현합니다.
-다음에는 간격을 줄여 더 작은 $h$로 이를 반복하고, 마지막에는 $h=1$로 마칩니다.
-마지막 경우는 인서션 소트를 수행하는 것과 똑같으므로 배열은 소트됩니다.
+그렇다면 $h$ 만큼 멀리 떨어진 인버전 $(i, i+h)$부터 해소한다면, 인서션 소트보다 한 번에 많이 인버전을 줄이므로, 스왑 횟수 또한 줄일 수 있을 것입니다.
+
+$h$ 만큼 떨어진 데이터만 모아서 하나의 서브 배열로 바라봅시다.
+전체 배열은 이런 서브 배열이 $h$ 개 존재합니다.
+서브 배열에서 인서션 소트를 하는 것은, 곧 $(i, i+h)$의 인버전을 해소하는 것입니다.
+그리고 이렇게 소트된 배열을 $h$-소트되었다고 부릅니다.
+
+처음에 큰 $h$로 시작해 $h$-소트하고, $h$가 $1$이 될 때까지 더 작은 $h$로 이를 반복하는 것을 셸 소트<L>Shell sort</L>라고 부릅니다.
+여기서 마지막 경우는 인서션 소트를 수행하는 것과 똑같습니다.
+따라서 적어도 마지막 경우 때문에, 이 소팅 알고리즘이 올바르다는 것을 알 수 있습니다.
 
 <Figure src={fig12} alt="h-sorted array">
   <FigureCaption slot="caption">그림 12. 셸 소트. 처음에는 간격이 4인 서브 배열을 소트하고, 다음에는 2로 줄인 간격으로 반복합니다.</FigureCaption>
 </Figure>
 
-셸 소트라고 불리는 이 소팅 알고리즘은 간격 $h$를 어떻게 정하느냐에 따라 시간 복잡도가 달라지기도 합니다.
-여기서는 $h = 1, 4, 13, \dotsc, \lfloor n/3 \rfloor$로 하면 수도코드로는 이렇게 표현할 수 있습니다.
+셸 소트의 시간 복잡도는 간격 $h$를 어떻게 정하느냐에 달려있습니다.
+그리고 보통은 분석이 어렵습니다.
+여기서는 $h = 1, 4, 13, \dotsc, \lfloor n/3 \rfloor$로 하고, 구체적인 시간 복잡도 계산은 생략하겠습니다.
+그러면 수도코드로는 이렇게 표현할 수 있습니다.
 
 <Alg>
   <AK>셸 소트</AK> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$) <AC>// 배열 $\textit{arr}\,$에서 구간 [$\textit{begin},\textit{end}$)의 데이터 소트</AC>
 
   <ABlock>
-    <AC>// 첫 갭을 구함</AC>
+    <AC>// 첫 갭 $h = \lfloor n/3 \rfloor$을 구함</AC>
 
-    $\textit{gap} \leftarrow 1$
+    $h \leftarrow 1$
 
-    <AWhile>$gap < \lfloor(\textit{end}-\textit{begin})/3\rfloor$ 인 </AWhile>
+    <AWhile>$h < \lfloor(\textit{end}-\textit{begin})/3\rfloor$ 인 </AWhile>
     <ABlock>
-      $\textit{gap} \leftarrow 3\textit{gap} + 1$ <AC>// $1, 4, 13, \dots$</AC>
+      $\textit{h} \leftarrow 3\textit{h} + 1$
     </ABlock>
 
     <ANL />
 
-    <AWhile>$\textit{gap} \geq 1$ 인 </AWhile>
+    <AWhile>$\textit{h} \geq 1$ 인 </AWhile>
     <ABlock>
-      <p><AC>// 간격 $\textit{gap}\,$으로 서브 배열을 인서션 소트</AC></p>
+      <p><AC>// $h$-소트, 즉 간격 $\textit{h}\,$으로 서브 배열을 인서션 소트</AC></p>
 
-      <AForeach>$\textit{begin}+\textit{gap}\,$부터 $\textit{end}\,$전까지인 $i$</AForeach>
+      <AForeach>$\textit{begin}+\textit{h}\,$부터 $\textit{end}\,$전까지인 $i$</AForeach>
       <ABlock>
-        $j \leftarrow i-\textit{gap}$ <AC>// 서브 배열 상 바로 왼쪽 데이터 인덱스</AC>
+        $j \leftarrow i-\textit{h}$ <AC>// 서브 배열 상 바로 왼쪽 데이터 인덱스</AC>
 
-        <p><AC>// 오른쪽($j+gap$)이 바로 왼쪽($j$)과 자리가 안맞는 동안</AC></p>
+        <ANL />
 
-        <AWhile>$j \geq \textit{begin}$ 이고 $arr$[$j$] $> arr$[$j+\textit{gap}$] 인 </AWhile>
+        <p><AC>// 오른쪽($j+h$)과 바로 왼쪽($j$)이 인버전인 동안</AC></p>
+
+        <AWhile>$j \geq \textit{begin}$ 이고 $arr$[$j$] $> arr$[$j+\textit{h}$] 인 </AWhile>
         <ABlock>
           <p><AC>// 오른쪽은 왼쪽과 자리 바꿈</AC></p>
-          $\textit{arr}$[$j$]와 $\textit{arr}$[$j+\textit{gap}$] 스왑
+          $\textit{arr}$[$j$]와 $\textit{arr}$[$j+\textit{h}$] 스왑
 
-          $j \leftarrow j-\textit{gap}$
+          $j \leftarrow j-\textit{h}$
         </ABlock>
       </ABlock>
 
       <ANL />
 
-      $\textit{gap} \leftarrow \lfloor\textit{gap} / 3\rfloor$
+      $\textit{h} \leftarrow \lfloor\textit{h} / 3\rfloor$
     </ABlock>
   </ABlock>
 </Alg>
 
 셸 소트는 인서션 소트를 일반화한 것으로 생각할 수 있지만, 인서션 소트와는 달리 스테이블하지 않습니다.
-그리고 이미 소트된 배열을 소트하는 최선의 경우에도, 셸 소트는 여러 간격으로 인서션 소트를 반복하기 때문에, 인서션 소트보다 조금 불리한 시간 복잡도를 가집니다.
-한편, 셸 소트는 시간 복잡도를 구하는 것이 간단하지 않기 때문에 생략하겠습니다.
+그리고 이미 소트된 배열을 소트하는 최선의 경우엔, 셸 소트는 $h$-소트를 무의미하게 반복하기 때문에, 인서션 소트보다 조금 불리한 시간 복잡도를 가집니다.
 
 ## 구현 및 소요 시간 측정
 
@@ -1115,23 +1129,23 @@ $i$번째 데이터와 $j$번째 데이터가 인버전이면 간단히 $(i, j)$
 수도코드를 그대로 옮기면 이렇습니다.
 
 ```java
-public class ShellStrategy<T> implements SortStrategy<T> {
+public class ShellStrategy<T> implements ArraySortStrategy<T> {
   public T[] sortArray(T[] arr, int begin, int end, Comparator<T> comp) {
-    int gap = 1;
-    while (gap < (end - begin) / 3) {
-      gap = 3*gap + 1;
+    int h = 1;
+    while (h < (end - begin) / 3) {
+      h = 3*h + 1;
     }
 
-    while (gap >= 1) {
-      for (int i = begin+gap; i < end; ++i) {
-        int j = i - gap;
-        while (j >= begin && isGreaterThan(arr[j], arr[j+gap], comp)) {
-          swap(arr, j, j+gap);
-          j -= gap;
+    while (h >= 1) {
+      for (int i = begin+h; i < end; ++i) {
+        int j = i - h;
+        while (j >= begin && isGreaterThan(arr[j], arr[j+h], comp)) {
+          swap(arr, j, j+h);
+          j -= h;
         }
       }
 
-      gap /= 3;
+      h /= 3;
     }
 
     return arr;
@@ -1146,12 +1160,11 @@ public class ShellStrategy<T> implements SortStrategy<T> {
   public void testSort() {
     Integer[] unsorted = { 20, 30, 10, 40 };
     Integer[] expected = { 10, 20, 30, 40 };
-    SortStrategy<Integer> strat = new ShellStrategy<>();
+    ArraySortStrategy<Integer> strat = new ShellStrategy<>();
 
-    Sorter.sortArray(unsorted, strat);
+    ArraySorter.sortArray(unsorted, strat);
 
     assertArrayEquals(expected, unsorted);
-  }
 ```
 
 이 코드를 바탕으로 소요 시간을 측정해 인서션 소트와 비교하면 이렇습니다.
@@ -1172,7 +1185,7 @@ public class ShellStrategy<T> implements SortStrategy<T> {
 이는 하나의 알고리즘이 다양한 오더링에 따라 수행을 하도록 만듭니다.
 이후 인버전이라는 개념을 통해, 인서션 소트의 동작이 왜 데이터마다 다른 시간 복잡도를 갖는지 이해해보았고, 이를 바탕으로 셸 소트라는 알고리즘의 아이디어까지 알아보았습니다.
 
-본문의 자바 코드는 [깃허브][gh-jal]에서도 확인할 수 있습니다.
+본문의 자바 코드는 [깃허브][gh-jal]<L>GitHub</L>에서도 확인할 수 있습니다.
 
 [gh-jal]: https://github.com/wcho21/jal
 
@@ -1192,7 +1205,9 @@ public class ShellStrategy<T> implements SortStrategy<T> {
 
 - [*Nearly All Binary Searches and Mergesorts are Broken*][gr-bs] (Joshua Bloch, 2006)
 
-- [*Comparable*][oracle-comp], [*Object.equals()*][oracle-eq] (Oracle): 각각 토탈 오더링과 이퀴밸런스 릴레이션 언급.
+- [*Comparable*][oracle-comp] (Oracle): 토탈 오더링, 내츄럴 오더링과 `Comparable` 인터페이스의 관계
+
+- [*Object.equals()*][oracle-eq] (Oracle): 이퀴밸런스 릴레이션과 `equals()` 메소드의 관계.
 
 - [*Reorder Data in Log Files*][leetcode-reorder] (Leetcode): 본문에서 동물 병원 문제로 언급한 같은 문제.
 
