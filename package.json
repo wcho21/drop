@@ -16,7 +16,7 @@
     "@astrojs/tailwind": "^5.1.0",
     "@shikijs/transformers": "^1.6.0",
     "@types/lodash-es": "^4.17.12",
-    "astro": "^4.7.1",
+    "astro": "^4.9.2",
     "lodash-es": "^4.17.21",
     "rehype-katex": "^7.0.0",
     "remark-math": "^6.0.0",
