@@ -1,0 +1,53 @@
+\documentclass{cmn}
+\usepackage{ts-brace,ts-arrow}
+
+\def\cellWidth{8mm}
+\def\cellHeight{8mm}
+
+\newcommand\keyword[1]{\textit{\textbf{#1}}}
+\newcommand\drawCells{
+  \draw (0,0) -- ++(8*\cellWidth,0) -- ++(0,-\cellHeight) -- ++(-8*\cellWidth,0);
+  \foreach \i in {0,...,4} {
+    \draw (\i*\cellWidth,0) -- ++(0,-\cellHeight);
+  }
+  \draw (7*\cellWidth,0) -- ++(0,-\cellHeight);
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \drawCells
+
+      \node at (-1*\cellWidth,-0.5*\cellHeight) {\keyword{arr}};
+
+      \node at (0.5*\cellWidth,3mm) {pivot};
+
+      \foreach \x/\txt in {0/5,1/8,2/2,3/4,5/$\dots$,7/3} {
+        \node at (\x*\cellWidth+0.5*\cellWidth,-0.5*\cellHeight) {\txt};
+      }
+
+      \draw[StlthBase] (0.5*\cellWidth,-\cellHeight) .. controls +(-90:10mm) and +(90:10mm) .. ++(3*\cellWidth,-10.5mm);
+    \end{scope}
+
+    \begin{scope}[yshift=-24mm]
+      \drawCells
+
+      \draw[gray!50!lightgray] (8*\cellWidth,0) -- ++(\cellWidth,0) -- ++(0,-\cellHeight) -- ++(-\cellWidth,0);
+
+      \node at (-1*\cellWidth,-0.5*\cellHeight) {\keyword{arr}};
+
+      \node at (0.5*\cellWidth,3mm) {\keyword{begin}};
+      \node at (3.5*\cellWidth,3mm) {\keyword{i}};
+      \node at (8.5*\cellWidth,3mm) {\keyword{end}};
+
+      \foreach \x/\txt in {0/4,1/2,2/3,3/5,5/$\dots$,7/8} {
+        \node at (\x*\cellWidth+0.5*\cellWidth,-0.5*\cellHeight) {\txt};
+      }
+
+      \draw[downwardCurlybrace] (0,-\cellHeight) -- ++(3*\cellWidth,0)
+        node[midway,below=3mm] {\small ($\leq \textrm{pivot}$)};
+      \draw[downwardCurlybrace] (4*\cellWidth,-\cellHeight) -- ++(4*\cellWidth,0)
+        node[midway,below=3mm] {\small ($\geq \textrm{pivot}$)};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

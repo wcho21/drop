@@ -506,13 +506,11 @@ public class BinarySearchArray {
 
 ```java
 public class Comparators {
-  public static <T> boolean
-  isLessThan(T source, T target, Comparator<T> comparator) {
+  public static <T> boolean isLessThan(T source, T target, Comparator<T> comparator) {
     return comparator.compare(source, target) < 0;
   }
 
-  public static <T> boolean
-  isEqualTo(T source, T target, Comparator<T> comparator) {
+  public static <T> boolean isEqualTo(T source, T target, Comparator<T> comparator) {
     return comparator.compare(source, target) == 0;
   }
 }
@@ -746,8 +744,7 @@ public class InsertionStrategy<T> implements ArraySortStrategy<T> {
 
 ```java
 public class Comparators {
-  public static <T> boolean
-  isGreaterThan(T source, T target, Comparator<T> comparator) {
+  public static <T> boolean isGreaterThan(T source, T target, Comparator<T> comparator) {
     return comparator.compare(source, target) > 0;
   }
 }
@@ -758,8 +755,7 @@ public class Comparators {
 
 ```java
 public class ArraySorter {
-  public static <T> T[] sortArray(T[] arr, int begin, int end,
-      ArraySortStrategy<T> strat, Comparator<T> comp) {
+  public static <T> T[] sortArray(T[] arr, int begin, int end, ArraySortStrategy<T> strat, Comparator<T> comp) {
     return strat.sortArray(arr, begin, end, comp);
   }
 }
@@ -768,8 +764,7 @@ public class ArraySorter {
 이 메소드가 구간을 생략하면 전체 구간을 소트하도록 오버로딩합시다.
 
 ```java
-  public static <T> T[] sortArray(T[] arr,
-      ArraySortStrategy<T> strat, Comparator<T> comp) {
+  public static <T> T[] sortArray(T[] arr, ArraySortStrategy<T> strat, Comparator<T> comp) {
     return ArraySorter.sortArray(arr, 0, arr.length, strat, comp);
   }
 ```
@@ -777,8 +772,7 @@ public class ArraySorter {
 나아가 오더링도 생략할 수 있도록 오버로딩합니다.
 
 ```java
-  public static <T extends Comparable<? super T>> T[] sortArray(T[] arr,
-      ArraySortStrategy<T> strat) {
+  public static <T extends Comparable<? super T>> T[] sortArray(T[] arr, ArraySortStrategy<T> strat) {
     return ArraySorter.sortArray(arr, 0, arr.length, strat);
   }
 ```
@@ -811,8 +805,7 @@ public class ArraySorter {
     Integer[] expected = { 0, 8, 1, 9, 2, 10, 3, 4, 5, 6, 7 };
     ArraySortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    ArraySorter.sortArray(unsorted, strat,
-      Comparator.comparing(v -> v % 8));
+    ArraySorter.sortArray(unsorted, strat, Comparator.comparing(v -> v % 8));
 
     assertArrayEquals(expected, unsorted);
   }
@@ -961,8 +954,7 @@ $$
 이어서, 위 예시의 경우를 준비합니다.
 
 ```java
-    AnimalRecord[] unsorted = { recs[0], recs[5], recs[3],
-      recs[1], recs[4], recs[2] };
+    AnimalRecord[] unsorted = { recs[0], recs[5], recs[3], recs[1], recs[4], recs[2] };
     AnimalRecord[] expected = recs;
 ```
 

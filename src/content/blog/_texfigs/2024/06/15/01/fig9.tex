@@ -1,0 +1,34 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,ts-pivot-circ}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach[count=\j] \i in {2,1,3,1,4} {
+        \node[circ] at (\j*\circXSep,0) {\i};
+      }
+      \foreach[count=\j] \i in {3,0,2,2} {
+        \node[circ] at (\j*\circXSep + \botCircXSep,-\botCircYSep) {\i};
+      }
+
+      \draw[StlthRevBase] (\circXSep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small pivot};
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep+\botCircYSep]
+      \node[circ] at (\circXSep,0) {2};
+      \node[circ] at (2*\circXSep,0) {2};
+      \node[circ] at (\circXSep+\botCircXSep,-\botCircYSep) {2};
+      \node at (\circXSep+\botCircXSep-\lxsep,-2.25*\botCircYSep) {\small ($< 2$)};
+
+      \node[circ] at (\circXSep-\lxsep,0) {1};
+      \node[circ] at (2*\circXSep-\lxsep,0) {0};
+      \node[circ] at (\circXSep+\botCircXSep-\lxsep,-\botCircYSep) {1};
+      \node at (\circXSep+\botCircXSep,-2.25*\botCircYSep) {\small ($= 2$)};
+
+      \node[circ] at (\circXSep+\lxsep,0) {3};
+      \node[circ] at (2*\circXSep+\lxsep,0) {3};
+      \node[circ] at (\circXSep+\botCircXSep+\lxsep,-\botCircYSep) {4};
+      \node at (\circXSep+\lxsep+\botCircXSep,-2.25*\botCircYSep) {\small ($> 2$)};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

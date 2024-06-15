@@ -1,0 +1,55 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,ts-pivot-circ}
+
+\tikzset{
+  sorted/.style={magenta!90!black}
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach[count=\j] \i in {5,?,?,?} {
+        \node[circ] at (\j*\circXSep,0) {\i};
+      }
+      \foreach[count=\j] \i in {?,?,?} {
+        \node[circ] at (\j*\circXSep+\botCircXSep,-\botCircYSep) {\i};
+      }
+
+      \draw[StlthRevBase] (\circXSep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small pivot};
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep]
+      \node[circ,sorted] at (\circXSep,0) {5};
+
+      \node[circ] at (\circXSep-\lxsep+\xtinysep,0) {4};
+      \node[circ] at (\circXSep-\lxsep+\xtinysep+\botCircXSep,-\botCircYSep) {2};
+
+      \node[circ] at (\circXSep+\rxsep-\xtinysep,0) {6};
+      \node[circ] at (2*\circXSep+\rxsep-\xtinysep,0) {9};
+      \node[circ] at (\circXSep+\rxsep-\xtinysep+\botCircXSep,-\botCircYSep) {8};
+      \node[circ] at (2*\circXSep+\rxsep-\xtinysep+\botCircXSep,-\botCircYSep) {7};
+
+      \draw[StlthRevBase] (\circXSep-\lxsep+\xtinysep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small pivot};
+      \draw[StlthRevBase] (\circXSep+\rxsep-\xtinysep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small pivot};
+    \end{scope}
+
+    \begin{scope}[yshift=-2*\scopeYSep]
+      \node[circ,sorted] at (\circXSep+\rxsep-\xtinysep,0) {6};
+
+      \node[circ,sorted] at (\circXSep-\lxsep+\xtinysep,0) {4};
+      \node[circ,sorted] at (\circXSep-\lxsep+\xtinysep-\xsmallsep,0) {2};
+
+      \node[circ] at (\circXSep+\rxsep+\xsmallsep,0) {8};
+      \node[circ] at (2*\circXSep+\rxsep+\xsmallsep,0) {9};
+      \node[circ] at (\circXSep+\rxsep+\xsmallsep+\botCircXSep,-\botCircYSep) {7};
+
+      \draw[StlthRevBase] (\circXSep+\rxsep+\xsmallsep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small pivot};
+    \end{scope}
+
+    \begin{scope}[yshift=-3*\scopeYSep+\botCircYSep]
+      \node[circ,sorted] at (\circXSep+\rxsep,0) {7};
+      \node[circ,sorted] at (\circXSep+\rxsep+\xsmallsep,0) {8};
+      \node[circ,sorted] at (\circXSep+\rxsep+2*\xsmallsep,0) {9};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

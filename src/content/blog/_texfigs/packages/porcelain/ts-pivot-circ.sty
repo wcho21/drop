@@ -1,0 +1,27 @@
+% tikz styles for pivot and circles
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{ts-pivot-circ}[2024/05/15]
+
+\def\scopeYSep{26mm}
+\def\botCircXSep{3.5mm}
+\def\botCircYSep{6mm}
+\def\circXSep{7mm}
+\def\pivotArrowLen{4mm}
+\def\pivotArrowY{4mm}
+\def\lxsep{21mm}
+\def\rxsep{17.5mm}
+\def\xsmallsep{10.5mm}
+\def\xtinysep{3.5mm}
+
+\tikzset{
+  circ/.style={
+    circle,draw,inner sep=1mm
+  },
+  topLabel/.style={
+    above=-0.5mm,
+  },
+  botLabel/.style={
+    below=-0.5mm,
+  }
+}
