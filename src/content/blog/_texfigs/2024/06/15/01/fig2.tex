@@ -1,0 +1,48 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,ts-pivot-circ}
+
+\tikzset{
+  selected/.style={magenta!90!black}
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach[count=\j] \i in {5,?,?,?} {
+        \node[circ] at (\j*\circXSep,0) {\i};
+      }
+      \foreach[count=\j] \i in {?,?,?} {
+        \node[circ] at (\j*\circXSep+\botCircXSep,-\botCircYSep) {\i};
+      }
+
+      \draw[StlthRevBase] (\circXSep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small pivot};
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep]
+      \node[circ,gray] at (\circXSep,0) {5};
+
+      \node[circ,gray] at (\circXSep-\rxsep,0) {4};
+      \node[circ,gray] at (\circXSep-\rxsep+\botCircXSep,-\botCircYSep) {2};
+      \node at (\circXSep-\rxsep+\botCircXSep,-2.25*\botCircYSep) {\small ($\leq 5$)};
+
+      \node[circ] at (\circXSep+\rxsep-\xtinysep,0) {6};
+      \node[circ] at (2*\circXSep+\rxsep-\xtinysep,0) {9};
+      \node[circ] at (\circXSep+\rxsep-\xtinysep+\botCircXSep,-\botCircYSep) {8};
+      \node[circ] at (2*\circXSep+\rxsep-\xtinysep+\botCircXSep,-\botCircYSep) {7};
+      \node at (\circXSep+\rxsep-\xtinysep+2*\botCircXSep,-2.25*\botCircYSep) {\small ($\geq 5$)};
+
+      \draw[StlthRevBase] (\circXSep+\rxsep-\xtinysep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small pivot};
+    \end{scope}
+
+    \begin{scope}[yshift=-2*\scopeYSep-\botCircYSep]
+      \node[circ,selected] at (\circXSep + \rxsep,0) {6};
+
+      \node[circ,gray] at (\circXSep+2*\rxsep-\xtinysep,0) {8};
+      \node[circ,gray] at (2*\circXSep+2*\rxsep-\xtinysep,0) {9};
+      \node[circ,gray] at (\circXSep+2*\rxsep-\xtinysep+\botCircXSep,-\botCircYSep) {7};
+      \node at (\circXSep+2*\rxsep-\xtinysep+\botCircXSep,-2.25*\botCircYSep) {\small ($\geq 6$)};
+
+      \draw[StlthRevBase] (\circXSep+\rxsep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small median};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

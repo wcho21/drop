@@ -1,0 +1,32 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,ts-pivot-circ}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach[count=\j] \i in {5,2,7,4} {
+        \node[circ] at (\j*\circXSep,0) {\i};
+      }
+      \foreach[count=\j] \i in {8,9,6} {
+        \node[circ] at (\j*\circXSep+\botCircXSep,-\botCircYSep) {\i};
+      }
+
+      \draw[StlthRevBase] (2*\circXSep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small 1st};
+      \draw[StlthRevBase] (3*\circXSep+\botCircXSep,-\botCircYSep-\pivotArrowY) -- ++(0,-\pivotArrowLen) node[botLabel] {\small median};
+
+      \draw[StlthBase] (5.5*\circXSep,-0.5*\pivotArrowY) -- ++(10mm,0) node[midway,above=0.5mm] {\small (sort)};
+    \end{scope}
+
+    \begin{scope}[xshift=51mm]
+      \foreach[count=\j] \i in {2,5,7,9} {
+        \node[circ] at (\j*\circXSep,0) {\i};
+      }
+      \foreach[count=\j] \i in {4,6,8} {
+        \node[circ] at (\j*\circXSep+\botCircXSep,-\botCircYSep) {\i};
+      }
+
+      \draw[StlthRevBase] (1*\circXSep,\pivotArrowY) -- ++(0,\pivotArrowLen) node[topLabel] {\small 1st};
+      \draw[StlthRevBase] (2*\circXSep+\botCircXSep,-\botCircYSep-\pivotArrowY) -- ++(0,-\pivotArrowLen) node[botLabel] {\small median};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

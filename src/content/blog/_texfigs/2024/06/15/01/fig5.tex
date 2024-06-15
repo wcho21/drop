@@ -1,0 +1,96 @@
+\documentclass{cmn}
+\usepackage{td-simple-card,ts-arrow}
+\usetikzlibrary{decorations.markings}
+
+\def\cardXSep{13.75mm}
+\def\scopeYSep{28mm}
+\def\smallXSep{1.875mm}
+\def\rectTop{15mm}
+\def\tipYSep{1mm}
+\def\labelYSep{5.5mm}
+
+\newcommand\keyword[1]{\textit{\textbf{#1}}}
+\newcommand\drawTopLabel[2]{
+  \path[tips,StlthRevBase] (#1*\cardXSep+5mm,\rectTop+\tipYSep) -- ++(0,1mm);
+  \node at (#1*\cardXSep+5mm,\rectTop+\labelYSep) {\keyword{#2}};
+}
+\newcommand\drawBotLabel[2]{
+  \path[tips,StlthRevBase] (#1*\cardXSep+5mm,-\tipYSep-1mm) -- ++(0,-1mm);
+  \node at (#1*\cardXSep+5mm,-\labelYSep-1mm) {\keyword{#2}};
+}
+\newcommand\drawLeftEmptyInterval[1]{
+  \draw[gray!80] (#1*\cardXSep-\smallXSep+1pt,\rectTop) rectangle ++(1pt,-\rectTop-1mm);
+}
+\newcommand\drawRightEmptyInterval[1]{
+  \draw[gray!80] (#1*\cardXSep-\smallXSep-2pt,\rectTop) rectangle ++(1pt,-\rectTop-1mm);
+}
+\newcommand\drawInterval[2]{
+  \draw[gray!80] (#1*\cardXSep-\smallXSep+1pt,\rectTop) rectangle ++(#2*\cardXSep-1pt,-\rectTop-1mm);
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach \n/\i in {5/0,3/1,9/2,6/3,2/4,8/5,7/6} {
+        \drawCard{\i*\cardXSep}{0}{\n}
+      }
+
+      \drawLeftEmptyInterval{1}
+      \drawRightEmptyInterval{7}
+
+      \drawTopLabel{1}{l}
+      \drawTopLabel{6.46}{u}
+      \drawBotLabel{1}{b}
+      \drawBotLabel{6.46}{e}
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep-4mm]
+      \foreach \n/\i in {5/0,9/2,6/3,2/4} {
+        \drawCard{\i*\cardXSep}{0}{\n}
+      }
+      \foreach \n/\i in {3/1,8/5,7/6} {
+        \drawCard[color=gray!80]{\i*\cardXSep}{0}{\n}
+      }
+
+      \draw[StlthBase] (2*\cardXSep+8mm,-2mm)
+        .. controls +(-60:2mm) and +(150:4mm) .. ++(1.8*\cardXSep-6mm,-3mm)
+        .. controls +(-30:3mm) and +(90:2mm) .. ++(0.2*\cardXSep,-6mm);
+      \draw[StlthBase] (4*\cardXSep+2mm,-2mm)
+        .. controls +(-120:2mm) and +(30:4mm) .. ++(-1.8*\cardXSep+6mm,-3mm)
+        .. controls +(-150:3mm) and +(90:2mm) .. ++(-0.2*\cardXSep,-6mm);
+
+      \drawInterval{1}{1}
+      \drawInterval{5}{2}
+
+      \drawTopLabel{2}{l}
+      \drawTopLabel{5}{u}
+    \end{scope}
+
+    \begin{scope}[yshift=-2*\scopeYSep-4mm]
+      \foreach \n/\i in {5/0,6/3} {
+        \drawCard{\i*\cardXSep}{0}{\n}
+      }
+      \foreach \n/\i in {3/1,2/2,9/4,8/5,7/6} {
+        \drawCard[color=gray!80]{\i*\cardXSep}{0}{\n}
+      }
+
+      \drawInterval{1}{2}
+      \drawInterval{4}{3}
+
+      \drawTopLabel{3}{l}
+      \drawTopLabel{4}{u}
+    \end{scope}
+
+    \begin{scope}[yshift=-3*\scopeYSep-4mm]
+      \drawCard{0}{0}{5}
+      \foreach \n/\i in {3/1,2/2,6/3,9/4,8/5,7/6} {
+        \drawCard[color=gray!80]{\i*\cardXSep}{0}{\n}
+      }
+
+      \drawInterval{1}{2}
+      \drawInterval{3}{4}
+
+      \drawTopLabel{3}{l,u}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

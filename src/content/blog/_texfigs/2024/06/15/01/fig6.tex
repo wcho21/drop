@@ -1,0 +1,39 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{semilogxaxis}[
+        width=70mm,
+        title style={align=center},
+        title={Randomized Quickselect \\($k=0$)},
+        log basis x=2,
+        xtick distance=2^2,
+        xlabel={array size $n$},
+        ylabel={elapsed time $t$},
+        use units,
+        y unit=s,
+        y unit prefix=n,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n           t
+             128     951.570
+             256    1870.909
+             512    3862.364
+            1024    7883.799
+            2048   16207.256
+            4096   31141.925
+            8192   64285.067
+           16384  133321.560
+           32768  300842.262
+           65536  593985.908
+          131072 1209886.180
+        };
+        \addplot[domain=128:131072] { 9.237 * x - 5090 }
+          node[left=1mm] { \small$t \sim 9.237 n$ };
+      \end{semilogxaxis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
