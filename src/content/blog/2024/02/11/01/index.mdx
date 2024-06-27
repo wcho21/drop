@@ -408,7 +408,7 @@ class FunctionValue:
 여기서 만드는 언어는 함수 단위로 스코프가 생깁니다.
 
 그러면 기존의 `Environment` 클래스를 고쳐서, 기존 인바이런먼트를 확장할 수 있도록 만들어봅시다.
-이런 확장은 인바이런먼트의 단방향 연결 리스트<L>singly linked list</L>를 만들 것입니다.
+이런 확장은 인바이런먼트의 단방향 링크드 리스트<L>singly linked list</L>를 만들 것입니다.
 
 ```python
     def __init__(self, super = None):

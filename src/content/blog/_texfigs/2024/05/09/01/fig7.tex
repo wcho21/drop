@@ -2,21 +2,25 @@
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
+\pgfplotsset{
+  width=70mm,
+  title style={align=center},
+  log basis x=2,
+  xtick distance=2^2,
+  xlabel={$n$ operations},
+  ylabel={elapsed time $t$},
+  use units,
+  y unit=s,
+  y unit prefix=n,
+}
+
 \begin{document}
   \begin{tikzpicture}
     \begin{scope}
       \begin{loglogaxis}[
-        width=75mm,
-        title={Linked List \texttt{prepend()}},
-        log basis x=2,
-        xlabel={$n$ operations},
-        ylabel={elapsed time $t$},
-        use units,
+        title={Linked List\\\texttt{prepend()}},
         xmin=2^6,
         xmax=2^18,
-        y unit=s,
-        y unit prefix=n,
-        xtick distance=2^2,
       ]
         \addplot[markplot] table [x=n,y=T]{
                n          T
@@ -39,17 +43,9 @@
 
     \begin{scope}[xshift=80mm]
       \begin{loglogaxis}[
-        width=75mm,
-        title={Linked List \texttt{prepend()} and \texttt{remove()}},
-        log basis x=2,
-        xlabel={$n$ operations},
-        ylabel={elapsed time $t$},
-        use units,
+        title={Linked List\\\texttt{prepend()} and \texttt{remove()}},
         xmin=2^6,
         xmax=2^18,
-        y unit=s,
-        y unit prefix=n,
-        xtick distance=2^2,
       ]
         \addplot[markplot] table [x=n,y=T]{
                n          T

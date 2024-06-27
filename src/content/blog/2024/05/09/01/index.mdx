@@ -1,7 +1,7 @@
 ---
 title: "두 가지 방법으로 만드는 스택"
 date: 2024-05-09T17:00:00+09:00
-summary: "기본적인 데이터 구조인 배열과 연결 리스트 살펴보기"
+summary: "기본적인 데이터 구조인 배열과 링크드 리스트 살펴보기"
 thumbnail: "./_figs/thumbnail.webp"
 series: "알고리즘 라이브러리 만들기"
 ---
@@ -213,37 +213,37 @@ public interface Stack<T> {
 [oracle-ab]: https://docs.oracle.com/javase/tutorial/java/data/autoboxing.html
 
 
-# 연결 리스트로 구현하는 스택
+# 링크드 리스트로 구현하는 스택
 
 스택은 배열로도 만들 수 있지만, 배열은 크기를 미리 정해야 합니다.
 하지만 스택에 보관할 데이터의 개수는 미리 알기 힘들 수 있습니다.
 따라서 데이터를 넣을 때마다 크기가 알아서 조절되는 스택을 만드는 것이 목표입니다.
 여기서 배열 말고 다른 데이터 구조를 이용해볼 수 있습니다.
 
-## 연결 리스트로 벗어나는 크기 제약
+## 링크드 리스트로 벗어나는 크기 제약
 
 배열과 달리, 필요할 때마다 메모리 크기를 늘리거나 줄일 수 있는 데이터 구조가 있습니다.
-연결 리스트<L>linked list</L>가 대표적인 예시인데요.
+링크드 리스트<L>linked list</L>가 대표적인 예시인데요.
 보관할 데이터와 다음 데이터의 위치, 이 두 가지를 담는 노드<L>node</L>라는 데이터 구조를 사용합니다.
 그러면 데이터를 한 뱡향으로 연결할 수 있게 됩니다.
 
 <Figure src={fig4} alt="linked list node diagram">
-  <FigureCaption slot="caption">그림 4. 연결 리스트의 노드 다이어그램. 각 노드는 데이터를 가지며 그 다음 노드를 가리킵니다. 이때 마지막 노드는 다음 노드를 갖지 않습니다.</FigureCaption>
+  <FigureCaption slot="caption">그림 4. 링크드 리스트의 노드 다이어그램. 각 노드는 데이터를 가지며 그 다음 노드를 가리킵니다. 이때 마지막 노드는 다음 노드를 갖지 않습니다.</FigureCaption>
 </Figure>
 
-연결 리스트는 각 데이터를 따로 떨어진 곳에 두기 때문에, 연속적인<L>contiguous</L> 메모리 공간을 사용하는 배열과는 차이가 있습니다.
+링크드 리스트는 각 데이터를 따로 떨어진 곳에 두기 때문에, 연속적인<L>contiguous</L> 메모리 공간을 사용하는 배열과는 차이가 있습니다.
 연속적인 메모리 공간은, 데이터의 순번 만으로 빠르게 접근하는 랜덤 엑세스<L>random access</L>를 가능하게 해주는데요.
-이를 포기한 연결 리스트는 랜덤 엑세스 또한 할 수 없게 됩니다.
+이를 포기한 링크드 리스트는 랜덤 엑세스 또한 할 수 없게 됩니다.
 다시 말해, 크기의 제약에서 벗어난 것은 랜덤 엑세스를 희생한 결과입니다.
 
-실제로 연결 리스트는 중간의 데이터를 찾기 위해 다음 노드를 계속 방문해야 합니다.
+실제로 링크드 리스트는 중간의 데이터를 찾기 위해 다음 노드를 계속 방문해야 합니다.
 수도코드에서 볼 수 있듯이, $n$번째 데이터를 찾는 연산은 $\Theta(n)$의 시간 복잡도를 가집니다.
 
 <Alg>
   <AK>데이터 찾기</AK> ($n$) <AC>// $n$번째 데이터를 리턴</AC>
 
   <ABlock>
-    $\textit{node} \leftarrow$ 연결 리스트의 첫 노드 (헤드 노드)
+    $\textit{node} \leftarrow$ 링크드 리스트의 첫 노드 (헤드 노드)
 
     <AWhile>$n > 0$ 인</AWhile>
     <ABlock>
@@ -258,11 +258,11 @@ public interface Stack<T> {
 
 같은 연산을 배열은 $\Theta(1)$에 해내므로 비교적 불리한 특징입니다.
 
-연결 리스트는 헤드<L>head</L> 노드라고 불리는 맨 앞의 노드만 기억합니다.
+링크드 리스트는 헤드<L>head</L> 노드라고 불리는 맨 앞의 노드만 기억합니다.
 나머지 노드는 다음 노드를 따라가다보면 찾을 수 있기 때문입니다.
-이런 식으로 한 방향으로 연결된 것을, 이를 단방향 연결 리스트<L>singly linked list</L>라고도 부릅니다.
+이런 식으로 한 방향으로 연결된 것을, 이를 단방향 링크드 리스트<L>singly linked list</L>라고도 부릅니다.
 
-그러면 연결 리스트가 효율적으로 해낼 수 있는 작업을 ADT로 정리해봅시다.
+그러면 링크드 리스트가 효율적으로 해낼 수 있는 작업을 ADT로 정리해봅시다.
 여기서 사용자가 데이터에만 집중할 수 있도록 노드의 존재를 감춥시다.
 
 - `prepend(data)`: 맨 앞에 데이터를 추가합니다.
@@ -300,7 +300,7 @@ public interface Stack<T> {
   <AK>remove</AK> ()
 
   <ABlock>
-    <AIf>연결 리스트가 빈 상태</AIf>
+    <AIf>링크드 리스트가 빈 상태</AIf>
     <ABlock>
       에러 <AK>던짐</AK>
     </ABlock>
@@ -313,38 +313,60 @@ public interface Stack<T> {
 새 노드를 만드는 연산을 $\Theta(1)$이라고 가정하면, 각 메소드는 노드의 개수에 상관 없이 $\Theta(1)$의 시간 복잡도로 정리할 수 있습니다.
 과연 실제로도 그럴지는 구현 후 확인해보겠습니다.
 
-## 연결 리스트 구현하기
+## 링크드 리스트 구현하기
 
-연결 리스트의 구성 요소인 노드 클래스가 먼저 필요합니다.
-이 클래스는 데이터와 다음 노드를 기억해야 있어야 합니다.
+링크드 리스트의 구성 요소인 노드 클래스가 먼저 필요합니다.
+이 클래스는 데이터와 다음 노드를 기억해야 합니다.
 여기선 인스턴스를 만들 때 인자 값을 생략해도 되게끔 생성자를 만들어두었습니다.
 
 ```java
-public class LinkedListNode<T> {
-  public T data;
-  public LinkedListNode<T> next;
+public class LinkedNode<T> {
+  private T data;
+  private LinkedNode<T> next;
 
-  public LinkedListNode(T data, LinkedListNode<T> next) {
+  public LinkedNode(T data, LinkedNode<T> next) {
     this.data = data;
     this.next = next;
   }
 
-  public LinkedListNode() {
+  public LinkedNode() {
     this(null, null);
   }
+
+  // ...
 }
 ```
 
-위 노드 클래스를 이용해 연결 리스트를 만들어 봅시다.
+그리고 이어서 필드 접근을 위한 메소드를 만듭니다.
+
+```java
+  public T getData() {
+    return this.data;
+  }
+
+  public LinkedNode<T> getNext() {
+    return this.next;
+  }
+
+  public void setData(T data) {
+    this.data = data;
+  }
+
+  public void setNext(LinkedNode<T> next) {
+    this.next = next;
+  }
+```
+
+위 노드 클래스를 이용해 링크드 리스트를 만들어 봅시다.
 먼저 생성자는 헤드 노드와 사이즈를 초기화하도록 만듭시다.
 
 ```java
 public class LinkedList<T> {
-  private LinkedListNode<T> head;
+  private LinkedNode<T> head;
   private int size;
 
   public LinkedList() {
-    this.head = new LinkedListNode<>(); // sentinel
+    this.head = new LinkedNode<>(); // sentinel
     this.size = 0;
   }
 }
@@ -357,7 +379,7 @@ public class LinkedList<T> {
 
 ```java
   public void prepend(T data) {
-    LinkedListNode<T> node = new LinkedListNode<>(data, head);
+    LinkedNode<T> node = new LinkedNode<>(data, head);
     this.head = node;
 
     this.size++;
@@ -373,7 +395,7 @@ public class LinkedList<T> {
   public T getData() {
     this.throwIfEmpty();
 
-    return this.head.data;
+    return this.head.getData();
   }
 
   private void throwIfEmpty() {
@@ -387,7 +409,7 @@ public class LinkedList<T> {
 이 때에도 데이터가 없는 경우를 예외로 처리합니다.
 
 단순히 다음 노드로 헤드 노드를 업데이트 할 수 있는 이유는, 더미 노드 때문에 다음 노드가 적어도 하나 있기 때문입니다.
-만약 이런 센티넬이 없었다면, 연결 리스트에 노드가 하나도 없는 경우를 특별히 처리해야 했을 것입니다.
+만약 이런 센티넬이 없었다면, 링크드 리스트에 노드가 하나도 없는 경우를 특별히 처리해야 했을 것입니다.
 
 기존 헤드 노드는 자바의 가비지 컬렉션<L>garbage collection</L> 대상이 되어 곧 사라집니다.
 
@@ -395,7 +417,7 @@ public class LinkedList<T> {
   public void remove() {
     this.throwIfEmpty();
 
-    this.head = this.head.next;
+    this.head = this.head.getNext();
 
     this.size--;
   }
@@ -427,17 +449,17 @@ public class LinkedList<T> {
 노드의 개수 $n$과 $n$번 연산에 드는 소요 시간 사이에 선형적인 관계가 나타나는데요.
 즉 노드의 개수 $n$에 상관 없이 각 연산은 소요 시간을 일정하게 증가시킴을 확인할 수 있습니다.
 
-## 연결 리스트로 스택 구현하기
+## 링크드 리스트로 스택 구현하기
 
-위에서 만든 연결 리스트를 이용해 스택을 만들 수 있는데요.
-기존의 연결 리스트 연산을 대부분 그대로 이용해 만들 수 있습니다.
-예를 들어, 푸시 연산은 단순히 연결 리스트에 헤드 노드를 추가하는 일이 됩니다.
+위에서 만든 링크드 리스트를 이용해 스택을 만들 수 있는데요.
+기존의 링크드 리스트 연산을 대부분 그대로 이용해 만들 수 있습니다.
+예를 들어, 푸시 연산은 단순히 링크드 리스트에 헤드 노드를 추가하는 일이 됩니다.
 
 <Alg>
   <AK>push</AK> ($\textit{data}$)
 
   <ABlock>
-    $\textit{list} \leftarrow$ 연결 리스트
+    $\textit{list} \leftarrow$ 링크드 리스트
 
     $\textit{list}$.prepend($\textit{data}$)
   </ABlock>
@@ -449,7 +471,7 @@ public class LinkedList<T> {
   <AK>pop</AK> ()
 
   <ABlock>
-    $\textit{list} \leftarrow$ 연결 리스트
+    $\textit{list} \leftarrow$ 링크드 리스트
 
     $\textit{data} \leftarrow$ $\textit{list}$.getData()
 
@@ -460,7 +482,7 @@ public class LinkedList<T> {
 </Alg>
 
 이제 실제로 스택을 구현해봅시다.
-먼저, 생성자는 단순히 연결 리스트를 초기화하는 일이 됩니다.
+먼저, 생성자는 단순히 링크드 리스트를 초기화하는 일이 됩니다.
 
 ```java
 public class ListStack<T> implements Stack<T> {
@@ -487,7 +509,7 @@ public class ListStack<T> implements Stack<T> {
   }
 ```
 
-나머지 메소드는 연결 리스트 메소드에 할 일을 위임함으로써 간단히 만들 수 있습니다.
+나머지 메소드는 링크드 리스트 메소드에 할 일을 위임함으로써 간단히 만들 수 있습니다.
 
 ```java
   public T peek() {
@@ -529,7 +551,7 @@ public class ListStack<T> implements Stack<T> {
 
 이는 모두 잘 통과하는 테스트가 됩니다.
 
-정리하면 연결 리스트를 이용해 푸시와 팝 연산을 $\Theta(1)$의 시간 복잡도로 할 수 있는 스택을 만들었습니다.
+정리하면 링크드 리스트를 이용해 푸시와 팝 연산을 $\Theta(1)$의 시간 복잡도로 할 수 있는 스택을 만들었습니다.
 
 
 
@@ -844,7 +866,7 @@ public class DynamicArray<T> {
 
 ## 소요 시간 측정
 
-연결 리스트 때와 마찬가지로, 소요 시간을 측정해봅시다.
+링크드 리스트 때와 마찬가지로, 소요 시간을 측정해봅시다.
 데이터 추가와 삭제 메소드를 아모타이즈드 $\Theta(1)$으로 분석했는데요.
 데이터 추가만 할 때와, 그것과 데이터 삭제를 같은 횟수로 하는 시나리오로 벤치마킹을 한 결과는 각각 이렇습니다.
 
@@ -859,7 +881,7 @@ public class DynamicArray<T> {
 
 ## 배열로 구현하는 스택
 
-연결 리스트 때와 마찬가지로 같은 스택 인터페이스를 구현해봅시다.
+링크드 리스트 때와 마찬가지로 같은 스택 인터페이스를 구현해봅시다.
 이번에도 많은 부분을 배열 메소드에 위임합니다.
 
 먼저 생성자는 내부의 다이나믹 배열을 초기화 합니다.
@@ -885,7 +907,7 @@ public class ArrayStack<T> implements Stack<T> {
 팝은 마지막 위치의 데이터를 가져오기를 시도합니다.
 이 작업은 `getLast()`라는 프라이빗 메소드에 맡겼습니다.
 다이나믹 배열이 빈 경우, 잘못된 인덱스 접근이라는 에러가 던져집니다.
-이때, 연결 리스트의 경우처럼, 의미 상 원소를 찾지 못한 것으로 바꿔 다시 에러를 던집시다.
+이때, 링크드 리스트의 경우처럼, 의미 상 원소를 찾지 못한 것으로 바꿔 다시 에러를 던집시다.
 그러면 사용자는 구현의 디테일에 상관없이 일관된 인터페이스를 가집니다.
 
 ```java
@@ -923,7 +945,7 @@ public class ArrayStack<T> implements Stack<T> {
   }
 ```
 
-이렇게 만든 스택은, 연결 리스트 때와 같은 유닛 테스트를 통과합니다.
+이렇게 만든 스택은, 링크드 리스트 때와 같은 유닛 테스트를 통과합니다.
 
 ```java
   @Test
@@ -959,8 +981,8 @@ public class ArrayStack<T> implements Stack<T> {
 
 한편, 이 스택은 여러 기초적인 데이터 구조로 구현할 수 있었습니다.
 여기서는 두 가지를 이용해 구현했는데요.
-하나는 연결 리스트, 또 다른 하나는 다이나믹 배열이었습니다.
-이 중에 다이나믹 배열은 크기를 조절하기 위해 복사가 필요하므로 비교적 불리한 시간 복잡도를 가질 것 같지만, 아모타이즈드 분석으로 사실상 연결 리스트와 같은 시간 복잡도를 계산할 수 있었습니다.
+하나는 링크드 리스트, 또 다른 하나는 다이나믹 배열이었습니다.
+이 중에 다이나믹 배열은 크기를 조절하기 위해 복사가 필요하므로 비교적 불리한 시간 복잡도를 가질 것 같지만, 아모타이즈드 분석으로 사실상 링크드 리스트와 같은 시간 복잡도를 계산할 수 있었습니다.
 그리고 이는 실제 소요 시간 측정으로 확인해봤습니다.
 
 정리하면, 같은 데이터 구조라도 다른 방법으로 만들 수 있었습니다.

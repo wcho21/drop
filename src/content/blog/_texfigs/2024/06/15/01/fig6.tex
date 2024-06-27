@@ -6,10 +6,13 @@
   \begin{tikzpicture}
     \begin{scope}
       \begin{semilogxaxis}[
-        width=70mm,
+        width=80mm,
         title style={align=center},
         title={Randomized Quickselect \\($k=0$)},
         log basis x=2,
+        xmin=2^6,
+        xmax=2^18,
+        ymax=10^6.125,
         xtick distance=2^2,
         xlabel={array size $n$},
         ylabel={elapsed time $t$},
@@ -31,8 +34,8 @@
            65536  593985.908
           131072 1209886.180
         };
-        \addplot[domain=128:131072] { 9.237 * x - 5090 }
-          node[left=1mm] { \small$t \sim 9.237 n$ };
+        \addplot[domain=64:262144] { 9.237 * x - 5090 }
+          node[pos=0.5,left=1mm] { \small$t \sim 9.237 n$ };
       \end{semilogxaxis}
     \end{scope}
   \end{tikzpicture}

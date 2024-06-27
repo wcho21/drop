@@ -3,14 +3,16 @@
 \usepackage{ts-plot}
 
 \pgfplotsset{
-  legend columns=-1,
-  legend pos=north west,
-  legend entries={\small Three-way, \small Two-way},
   width=70mm,
   log basis x=2,
   xtick distance=2^2,
+  xmin=2^6,
+  xmax=2^18,
   use units,
   y unit=s,
+  legend columns=-1,
+  legend pos=north west,
+  legend entries={\small Three-way, \small Two-way},
 }
 
 \begin{document}
@@ -52,12 +54,12 @@
            65536 3850084.775
           131072 8452238.986
         };
-        \addplot[domain=128:131072] { 0.527 * x + 19.8 }
-          node[above=4mm,left=22mm] { \small$t \sim 0.527 n$ };
+        \addplot[domain=64:262144] { 0.527 * x + 19.8 }
+          node[pos=0.0025,above=2mm] { \small$t \sim 0.527 n$ };
       \end{semilogxaxis}
     \end{scope}
 
-    \begin{scope}[xshift=75mm]
+    \begin{scope}[xshift=80mm]
       \begin{semilogxaxis}[
         title style={align=center},
         title={Two-way vs. Three-way Quicksort \\(Reversed)},
@@ -65,6 +67,7 @@
         xlabel={array size $n$},
         ylabel={elapsed time $t$},
         y unit prefix=\mu,
+        ymax=10^4.25,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n         t
@@ -94,8 +97,8 @@
            65536 3376.932
           131072 6031.852
         };
-        \addplot[domain=128:131072] { 0.00604 * x * log2(x) - 35.3 }
-          node[below=7mm,left=1mm] { \small$t \sim 0.00604 n \log_2 n$ };
+        \addplot[domain=64:262144] { 0.00604 * x * log2(x) - 35.3 }
+          node[pos=0.4375,left=1mm] { \small$t \sim 0.00604 n \log_2 n$ };
       \end{semilogxaxis}
     \end{scope}
   \end{tikzpicture}
