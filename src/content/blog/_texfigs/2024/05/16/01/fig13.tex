@@ -3,6 +3,14 @@
 \usepackage{ts-plot}
 
 \pgfplotsset{
+  width=70mm,
+  title style={align=center},
+  log basis x=2,
+  xlabel={array size $n$},
+  ylabel={elapsed time $t$},
+  use units,
+  y unit=s,
+  xtick distance=2^2,
   legend pos=north west,
   legend columns=-1,
 }
@@ -11,18 +19,10 @@
   \begin{tikzpicture}
     \begin{scope}
       \begin{loglogaxis}[
-        width=70mm,
-        title style={align=center},
         title={Shell Sort vs. Insertion Sort \\(Best-case)},
-        log basis x=2,
-        xlabel={array size $n$},
-        ylabel={elapsed time $t$},
-        use units,
         xmin=2^6,
         xmax=2^18,
-        y unit=s,
         y unit prefix=n,
-        xtick distance=2^2,
         ytick distance=10^1,
         legend entries={\small Shell,\small Insertion},
       ]
@@ -63,20 +63,13 @@
       \end{loglogaxis}
     \end{scope}
 
-    \begin{scope}[xshift=75mm]
+    \begin{scope}[xshift=80mm]
       \begin{loglogaxis}[
-        width=70mm,
-        title style={align=center},
         title={Shell Sort vs. Insertion Sort \\(Worst-case)},
-        log basis x=2,
-        xlabel={array size $n$},
-        ylabel={elapsed time $t$},
-        use units,
         xmin=2^6,
         xmax=2^18,
-        y unit=s,
+        ymin=0.11,
         y unit prefix=\mu,
-        xtick distance=2^2,
         ytick distance=10^2,
         legend entries={\small Shell,\small Insertion},
       ]

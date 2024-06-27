@@ -3,9 +3,6 @@
 \usepackage{ts-plot}
 
 \pgfplotsset{
-  legend columns=-1,
-  legend pos=north west,
-  legend entries={\small Merge, \small Ins.},
   width=70mm,
   log basis x=2,
   xmin=2^0.5,
@@ -18,6 +15,9 @@
   y unit=s,
   y unit prefix=n,
   scaled y ticks=base 10:-3,
+  legend columns=-1,
+  legend pos=north west,
+  legend entries={\small Merge, \small Ins.},
 }
 
 \begin{document}

@@ -13,6 +13,7 @@
   ylabel={elapsed time $t$},
   use units,
   y unit=s,
+  y unit prefix=\mu,
   scaled y ticks=base 10:-3,
 }
 
@@ -23,7 +24,6 @@
         title={Merge Sort\\ (Sorted)},
         ymin=-500,
         ymax=8500,
-        y unit prefix=\mu,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n        t
@@ -49,7 +49,6 @@
         title={Merge Sort\\ (Reversed)},
         ymin=-500,
         ymax=9500,
-        y unit prefix=\mu,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n        t

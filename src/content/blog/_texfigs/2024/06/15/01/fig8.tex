@@ -6,6 +6,8 @@
   width=70mm,
   scaled y ticks=base 10:-3,
   log basis x=2,
+  xmin=2^6,
+  xmax=2^18,
   xtick distance=2^2,
   use units,
   y unit=s,
@@ -20,6 +22,7 @@
         title={Randomized Quicksort \\(Sorted)},
         xlabel={array size $n$},
         ylabel={elapsed time $t$},
+        ymax=10^3.8125,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n        t
@@ -35,8 +38,8 @@
            65536 2431.310
           131072 5038.508
         };
-        \addplot[domain=128:131072] { 0.00226 * x * log2(x) + 31.4 }
-          node[left=1mm] { \small$t \sim 0.00226 n \log_2 n$ };
+        \addplot[domain=64:262144] { 0.00226 * x * log2(x) + 31.4 }
+          node[pos=0.5,left=1mm] { \small$t \sim 0.00226 n \log_2 n$ };
       \end{semilogxaxis}
     \end{scope}
 
@@ -46,6 +49,7 @@
         title={Randomized Quicksort \\(Reversed)},
         xlabel={array size $n$},
         ylabel={elapsed time $t$},
+        ymax=10^3.8125,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n        t
@@ -61,8 +65,8 @@
            65536 2624.543
           131072 5646.977
         };
-        \addplot[domain=128:131072] { 0.00252 * x * log2(x) + 28.8 }
-          node[left=1mm] { \small$t \sim 0.00252 n \log_2 n$ };
+        \addplot[domain=64:262144] { 0.00252 * x * log2(x) + 28.8 }
+          node[pos=0.4375,left=1mm] { \small$t \sim 0.00252 n \log_2 n$ };
       \end{semilogxaxis}
     \end{scope}
   \end{tikzpicture}

@@ -2,21 +2,24 @@
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
+\pgfplotsset{
+  width=70mm,
+  log basis x=2,
+  xtick distance=2^2,
+  xlabel={array size $n$},
+  ylabel={elapsed time $t$},
+  use units,
+  y unit=s,
+}
+
 \begin{document}
   \begin{tikzpicture}
     \begin{scope}
       \begin{loglogaxis}[
-        width=70mm,
         title={Insertion Sort (Best-case)},
-        log basis x=2,
-        xlabel={array size $n$},
-        ylabel={elapsed time $t$},
-        use units,
         xmin=2^6,
         xmax=2^18,
-        y unit=s,
         y unit prefix=n,
-        xtick distance=2^2,
         ytick distance=10^1,
       ]
         \addplot[markplot] table [x=n,y=t]{
@@ -38,19 +41,13 @@
       \end{loglogaxis}
     \end{scope}
 
-    \begin{scope}[xshift=75mm]
+    \begin{scope}[xshift=80mm]
       \begin{loglogaxis}[
-        width=70mm,
         title={Insertion Sort (Worst-case)},
-        log basis x=2,
-        xlabel={array size $n$},
-        ylabel={elapsed time $t$},
-        use units,
         xmin=2^6,
         xmax=2^18,
-        y unit=s,
+        ymin=1.1,
         y unit prefix=\mu,
-        xtick distance=2^2,
         ytick distance=10^2,
       ]
         \addplot[markplot] table [x=n,y=t]{
