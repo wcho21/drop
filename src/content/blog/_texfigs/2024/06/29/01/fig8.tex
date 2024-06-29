@@ -1,0 +1,71 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\pgfplotsset{
+  width=70mm,
+  log basis x=2,
+  xtick distance=2^2,
+  xmin=2^6,
+  xmax=2^18,
+  use units,
+  y unit=s,
+  y unit prefix=n,
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{semilogxaxis}[
+        title style={align=center},
+        title={Resizing Chaining Hash Table\\Successful \texttt{get()}},
+        xlabel={array size $n$},
+        ylabel={elapsed time $t$},
+        ymin=10,
+        ymax=40,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n      t
+             128 17.589
+             256 23.379
+             512 18.555
+            1024 17.921
+            2048 18.429
+            4096 19.316
+            8192 19.820
+           16384 20.262
+           32768 20.597
+           65536 20.826
+          131072 21.757
+        };
+      \end{semilogxaxis}
+    \end{scope}
+
+    \begin{scope}[xshift=75mm]
+      \begin{semilogxaxis}[
+        title style={align=center},
+        title={Resizing Chaining Hash Table\\$n$ \texttt{set()}},
+        xlabel={$n$ elements},
+        ylabel={elapsed time $t$},
+        ymax=10^6.75,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n           t
+             128    1228.422
+             256    2786.464
+             512    5510.264
+            1024   11152.399
+            2048   26555.388
+            4096   76112.395
+            8192  170265.048
+           16384  377573.011
+           32768  781849.117
+           65536 1620281.151
+          131072 3700891.325
+        };
+        \addplot[domain=64:262144] { 27.8 * x - 46600 }
+          node[pos=0.675,left=1mm] { \small$t \sim 27.8 n$ };
+      \end{semilogxaxis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

@@ -1,0 +1,72 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\pgfplotsset{
+  width=70mm,
+  log basis x=2,
+  xtick distance=2^2,
+  xmin=2^6,
+  xmax=2^18,
+  use units,
+  y unit=s,
+  y unit prefix=n,
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{semilogxaxis}[
+        title style={align=center},
+        title={(Fixed-size) Chaining Hash Table\\Successful \texttt{get()}},
+        xlabel={array size $n$},
+        ylabel={elapsed time $t$},
+        ymax=10^4.5,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n         t
+             128    31.084
+             256    51.502
+             512    59.345
+            1024    89.705
+            2048   155.088
+            4096   307.710
+            8192   703.958
+           16384  2037.103
+           32768  4427.007
+           65536 12252.797
+          131072 24347.607
+        };
+        \addplot[domain=64:262144,samples=50] { 0.187 * x - 419 }
+          node[pos=0.5,left=2mm] { \small$t \sim 0.187 n$ };
+      \end{semilogxaxis}
+    \end{scope}
+
+    \begin{scope}[xshift=80mm]
+      \begin{semilogxaxis}[
+        title style={align=center},
+        title={(Fixed-size) Chaining Hash Table\\$n$ \texttt{set()}},
+        xlabel={$n$ elements},
+        ylabel={elapsed time $t$},
+        ymax=10^9.875,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n              t
+             128       2245.991
+             256       7303.539
+             512      31708.943
+            1024     141534.340
+            2048     579573.213
+            4096    2905725.867
+            8192   10096777.174
+           16384   77103145.818
+           32768  385598618.816
+           65536 1575934296.278
+          131072 5249668304.833
+        };
+        \addplot[domain=64:262144,samples=50] { 0.308 * x ^ 2 - 231 * 10^5 }
+          node[pos=0.25,left=2mm] { \small$t \sim 0.308 n ^ 2$ };
+      \end{semilogxaxis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

@@ -1,0 +1,59 @@
+\documentclass{cmn}
+\usepackage{td-simplenode,ts-arrow}
+\usetikzlibrary{calc}
+
+\def\scopeYSep{22mm}
+\def\labelY{-4mm}
+\def\removedColor{gray!50!lightgray}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach \x in {0,1,2,3} {
+        \drawNodeW{\x*22 mm}{0}{L\x}{D\x}{C\x}{}{}{black}{15mm}
+      }
+
+      \foreach \x in {0,1,2} {
+        \pgfmathsetmacro{\nx}{\x+1}
+        \draw[Stlth] (C\x) -- (L\nx);
+      }
+
+      \coordinate (DB0) at ($(D0)+(0,-4mm)$);
+      \coordinate (CB3) at ($(C3)+(0,-8mm)$);
+
+      \draw[Stlth] (C3) |- (CB3) -| (DB0);
+
+      \node at (D0) {\small\texttt{3}};
+      \node at (D1) {\small\texttt{2}};
+      \node at (D2) {\small\texttt{1}};
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep]
+      \node[text width=40mm,align=left] at (\labelY,4mm) {\small\texttt{remove(2)}};
+
+      \foreach \x/\nodeColor in {0/black,1/\removedColor,2/black,3/black} {
+        \drawNodeW{\x*22 mm}{0}{L\x}{D\x}{C\x}{}{}{\nodeColor}{15mm}
+      }
+
+      \foreach \x/\arrowColor in {1/\removedColor,2/black} {
+        \pgfmathsetmacro{\nx}{\x+1}
+        \draw[Stlth,\arrowColor] (C\x) -- (L\nx);
+      }
+
+      \coordinate (DB1) at ($(D1)+(0,-4mm)$);
+      \coordinate (CT0) at ($(C0)+(0,6mm)$);
+      \coordinate (CB2) at ($(C2)+(0,-8mm)$);
+      \coordinate (DT0) at ($(D0)+(0,7mm)$);
+      \coordinate (DT2) at ($(D2)+(0,7mm)$);
+
+      \draw[Stlth] (C0) |- (CT0) -- ++(25mm,0) -- ++(6mm,-4mm);
+      \draw[Stlth] (C3) |- (CB2) -| (DB1);
+
+      \node at (D0) {\small\texttt{3}};
+      \node[\removedColor] at (D1) {\small\texttt{2}};
+      \node at (D2) {\small\texttt{1}};
+      \node at (DT0) {\texttt{prev}};
+      \node at (DT2) {\texttt{next}};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

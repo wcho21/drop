@@ -1,0 +1,38 @@
+\documentclass{cmn}
+\usepackage{amsmath,ts-arrow}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \node at (0,0) { $x \in \{ 1, 2, \dots, n \}$ };
+      \node at (4mm,-6mm) { \small (domain) };
+
+      \draw[Stlth] (18mm,0) -- ++(6mm,0);
+
+      \node at (43mm,0) {
+        $\begin{cases}
+          \texttt{true} &(x=1) \\
+          \texttt{false} &(x=2) \\
+          \texttt{true} &(x=3)
+        \end{cases}$
+      };
+    \end{scope}
+
+    \begin{scope}[yshift=-20mm]
+      \node at (0,0) { \texttt{i} = \texttt{1}, \texttt{2}, \texttt{\dots}, \texttt{n} };
+      \node at (4mm,-6mm) { \small (domain) };
+
+      \draw[Stlth] (18mm,0) -- ++(6mm,0);
+
+      \def\l{31mm}
+      \def\w{22mm}
+      \foreach \i/\txt in {1/true,2/false,3/true,4/$\vdots$} {
+        \draw (\l,6mm-\i*6mm) -- ++(0,6mm) -- ++(\w,0) -- ++(0,-6mm);
+        \node at (\l+0.5*\w,9mm-\i*6mm) { \texttt{\txt} };
+      }
+      \foreach \i in {1,2,3} {
+        \node at (\l+0.5*\w+14mm,9mm-\i*6mm) { \small\texttt{\i} };
+      }
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
