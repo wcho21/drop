@@ -1,0 +1,75 @@
+\documentclass{cmn}
+\usepackage{td-simplenode,ts-arrow}
+
+\def\scopeYSep{14mm}
+\def\labelX{-34mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach \x in {0,1,2} {
+        \drawNodeW{\x*22 mm}{0}{L\x}{D\x}{C\x}{}{}{black}{15mm}
+      }
+      \foreach \x in {0,1} {
+        \pgfmathsetmacro{\nx}{\x+1}
+        \draw[Stlth] (C\x) -- (L\nx);
+      }
+      \node at (D0) {\small\texttt{3}};
+      \node at (D1) {\small\texttt{2}};
+      \node at (D2) {\small\texttt{1}};
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep]
+      \node[text width=40mm,align=left] at (\labelX,4mm) {\small\texttt{prepend(4)}};
+
+      \foreach \x in {0,...,3} {
+        \drawNodeW{\x*22 mm-22mm}{0}{L\x}{D\x}{C\x}{}{}{black}{15mm}
+      }
+      \foreach \x in {0,1,2} {
+        \pgfmathsetmacro{\nx}{\x+1}
+        \draw[Stlth] (C\x) -- (L\nx);
+      }
+      \node at (D0) {\small\texttt{4}};
+      \node at (D1) {\small\texttt{3}};
+      \node at (D2) {\small\texttt{2}};
+      \node at (D3) {\small\texttt{1}};
+    \end{scope}
+
+    \begin{scope}[yshift=-2*\scopeYSep]
+      \node[text width=40mm,align=left] at (\labelX,4mm) {\small\texttt{change(< 4, 5)}};
+
+      \foreach \x in {0,...,3} {
+        \drawNodeW{\x*22 mm-22mm}{0}{L\x}{D\x}{C\x}{}{}{black}{15mm}
+      }
+      \foreach \x in {0,1,2} {
+        \pgfmathsetmacro{\nx}{\x+1}
+        \draw[Stlth] (C\x) -- (L\nx);
+      }
+      \node at (D0) {\small\texttt{4}};
+      \node at (D1) {\small\texttt{5}};
+      \node at (D2) {\small\texttt{2}};
+      \node at (D3) {\small\texttt{1}};
+    \end{scope}
+
+    \begin{scope}[yshift=-3*\scopeYSep]
+      \node[text width=40mm,align=left] at (\labelX,4mm) {\small\texttt{remove(< 4)}};
+
+      \foreach \x in {0,1,2} {
+        \drawNodeW{\x*22 mm}{0}{L\x}{D\x}{C\x}{}{}{black}{15mm}
+      }
+      \foreach \x in {0,1} {
+        \pgfmathsetmacro{\nx}{\x+1}
+        \draw[Stlth] (C\x) -- (L\nx);
+      }
+      \node at (D0) {\small\texttt{4}};
+      \node at (D1) {\small\texttt{5}};
+      \node at (D2) {\small\texttt{1}};
+
+      \node[text width=60mm,align=left] at (\labelX+90mm,4mm-12mm) {\small\texttt{get(< 4)}};
+
+      \draw[StlthBase] (\labelX+80mm+9mm,-8mm) .. controls +(0:4mm) and +(-90:4mm) .. ++(4mm,7mm);
+
+      \node[text width=60mm,align=left] at (\labelX+90mm,4mm-20mm) {\small\texttt{has(< 4)} = \texttt{true}};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

@@ -1,0 +1,64 @@
+\documentclass{cmn}
+\usepackage{td-simplenode,ts-arrow}
+\usetikzlibrary{calc}
+
+\def\scopeYSep{18mm}
+\def\labelY{-4mm}
+\def\removedColor{gray!50!lightgray}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \drawNodeW{0}{0}{L0}{D0}{C0}{}{}{black}{15mm}
+
+      \coordinate (DB0) at ($(D0)+(0,-4mm)$);
+      \coordinate (CB0) at ($(C0)+(0,-8mm)$);
+      \coordinate (DT0) at ($(D0)+(0,7mm)$);
+
+      \draw[Stlth] (C0) |- (CB0) -| (DB0);
+
+      \node at (DT0) {\texttt{end}};
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep]
+      \node[text width=40mm,align=left] at (\labelY,4mm) {\small\texttt{prepend(1)}};
+
+      \foreach \x in {0,1} {
+        \drawNodeW{\x*22 mm}{0}{L\x}{D\x}{C\x}{}{}{black}{15mm}
+      }
+
+      \foreach \x in {0} {
+        \pgfmathsetmacro{\nx}{\x+1}
+        \draw[Stlth] (C\x) -- (L\nx);
+      }
+
+      \coordinate (DB0) at ($(D0)+(0,-4mm)$);
+      \coordinate (CB1) at ($(C1)+(0,-8mm)$);
+
+      \draw[Stlth] (C1) |- (CB1) -| (DB0);
+
+      \node at (D0) {\small\texttt{1}};
+    \end{scope}
+
+    \begin{scope}[yshift=-2*\scopeYSep]
+      \node[text width=40mm,align=left] at (\labelY,4mm) {\small\texttt{prepend(2)}};
+
+      \foreach \x in {0,1,2} {
+        \drawNodeW{\x*22 mm}{0}{L\x}{D\x}{C\x}{}{}{black}{15mm}
+      }
+
+      \foreach \x in {0,1} {
+        \pgfmathsetmacro{\nx}{\x+1}
+        \draw[Stlth] (C\x) -- (L\nx);
+      }
+
+      \coordinate (DB0) at ($(D0)+(0,-4mm)$);
+      \coordinate (CB2) at ($(C2)+(0,-8mm)$);
+
+      \draw[Stlth] (C2) |- (CB2) -| (DB0);
+
+      \node at (D0) {\small\texttt{2}};
+      \node at (D1) {\small\texttt{1}};
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

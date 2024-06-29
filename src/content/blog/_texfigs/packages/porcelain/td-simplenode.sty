@@ -29,3 +29,24 @@
   \coordinate (\@NdataCenterCoordName) at (\@Nx+0.325*\nodeWidth,\@Ny+\nodeHeight/2);
   \coordinate (\@NnextCenterCoordName) at (\@Nx+0.825*\nodeWidth,\@Ny+\nodeHeight/2);
 }
+
+\newcommand\drawNodeW[9]{
+  \def\@Nx{#1}
+  \def\@Ny{#2}
+  \def\@NdataLeftCoordName{#3}
+  \def\@NdataCenterCoordName{#4}
+  \def\@NnextCenterCoordName{#5}
+  \def\@NdataLabel{#6}
+  \def\@NnextLabel{#7}
+  \def\@Ncolor{#8}
+  \def\@Nwidth{#9}
+
+  \draw[draw=\@Ncolor] (\@Nx,\@Ny) -- ++(\@Nwidth,0) -- ++(0,\nodeHeight) -- ++(-\@Nwidth,0) -- cycle;
+  \draw[draw=\@Ncolor] (\@Nx+0.65*\@Nwidth,\@Ny) -- ++(0,\nodeHeight);
+  \node[\@Ncolor] at (\@Nx+0.325*\@Nwidth,\@Ny-3mm) {\small\texttt{\@NdataLabel}};
+  \node[\@Ncolor] at (\@Nx+0.825*\@Nwidth,\@Ny-3mm) {\small\texttt{\@NnextLabel}};
+
+  \coordinate (\@NdataLeftCoordName) at (\@Nx,\@Ny+\nodeHeight/2);
+  \coordinate (\@NdataCenterCoordName) at (\@Nx+0.325*\@Nwidth,\@Ny+\nodeHeight/2);
+  \coordinate (\@NnextCenterCoordName) at (\@Nx+0.825*\@Nwidth,\@Ny+\nodeHeight/2);
+}
