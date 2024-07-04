@@ -19,6 +19,7 @@ import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
 import AC from "@/components/post/algorithm/AlgorithmComment.astro";
 import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
 import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
+import AThrow from "@/components/post/algorithm/AlgorithmThrow.astro";
 import Quote from "@/components/post/Quote.astro";
 import PostLink from "@/components/post/PostLink.astro";
 
@@ -302,7 +303,7 @@ public interface Stack<T> {
   <ABlock>
     <AIf>링크드 리스트가 빈 상태</AIf>
     <ABlock>
-      에러 <AK>던짐</AK>
+      <AThrow>오류</AThrow>
     </ABlock>
 
     $\textit{head} \leftarrow$ $\textit{head}$의 다음 노드 <AC>// 기존 헤드 노드를 버림</AC>
