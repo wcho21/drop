@@ -19,26 +19,26 @@
       \begin{semilogxaxis}[
         title style={align=center},
         title={(Fixed-size) Chaining Hash Table\\Successful \texttt{get()}},
-        xlabel={array size $n$},
+        xlabel={slot size $n$},
         ylabel={elapsed time $t$},
         ymax=10^4.5,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n         t
-             128    31.084
-             256    51.502
-             512    59.345
-            1024    89.705
-            2048   155.088
-            4096   307.710
-            8192   703.958
-           16384  2037.103
-           32768  4427.007
-           65536 12252.797
-          131072 24347.607
+             128    34.786
+             256    42.846
+             512    60.416
+            1024    91.794
+            2048   201.585
+            4096   591.176
+            8192  1441.377
+           16384  2938.349
+           32768  6152.936
+           65536 12974.841
+          131072 26659.197
         };
-        \addplot[domain=64:262144,samples=50] { 0.187 * x - 419 }
-          node[pos=0.5,left=2mm] { \small$t \sim 0.187 n$ };
+        \addplot[domain=64:262144,samples=50] { 0.203 * x - 191 }
+          node[pos=0.5,left=2mm] { \small$t \sim 0.203 n$ };
       \end{semilogxaxis}
     \end{scope}
 
@@ -48,24 +48,24 @@
         title={(Fixed-size) Chaining Hash Table\\$n$ \texttt{set()}},
         xlabel={$n$ elements},
         ylabel={elapsed time $t$},
-        ymax=10^9.875,
+        ymax=10^9.82,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n              t
-             128       2245.991
-             256       7303.539
-             512      31708.943
-            1024     141534.340
-            2048     579573.213
-            4096    2905725.867
-            8192   10096777.174
-           16384   77103145.818
-           32768  385598618.816
-           65536 1575934296.278
-          131072 5249668304.833
+             128       2245.501
+             256       7461.650
+             512      32496.109
+            1024     143192.942
+            2048     577619.505
+            4096    2857839.673
+            8192    9422427.704
+           16384   55867059.015
+           32768  369972003.049
+           65536 1763542921.333
+          131072 6039339958.333
         };
-        \addplot[domain=64:262144,samples=50] { 0.308 * x ^ 2 - 231 * 10^5 }
-          node[pos=0.25,left=2mm] { \small$t \sim 0.308 n ^ 2$ };
+        \addplot[domain=64:262144,samples=50] { 0.354 * x ^ 2 + 1.1900000 * 10^7 }
+          node[pos=0.23,left=1mm] { \small$t \sim 0.354 n ^ 2$ };
       \end{semilogxaxis}
     \end{scope}
   \end{tikzpicture}
