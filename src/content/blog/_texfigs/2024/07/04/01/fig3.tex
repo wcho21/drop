@@ -1,0 +1,193 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+
+\def\stepRFactor{0.375}
+\def\dotXSep{2.25mm}
+\def\dotYSep{3.375mm}
+\def\scopeXSep{42.5mm}
+\def\scopeYSep{11.25mm}
+\def\labelX{-39mm}
+\def\arrowX{-8mm}
+\def\arrowLen{-5mm}
+
+\newcommand\getX[1]{
+  Mod(#1-1,16)
+}
+\newcommand\getY[1]{
+  -(\i-1)/16
+}
+\newcommand\getR[1]{
+  sqrt(\n)*\stepRFactor
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \node at (\labelX,8mm) {$n$};
+
+      \node at (7.5*\dotXSep,8mm) {\small Modular $h(n)$};
+
+      \node at (\labelX,-0.5*\dotYSep) {\small 0, 1, 2, \dots, 15};
+      \draw[StlthRevBase] (\arrowX,-0.5*\dotYSep) -- ++(-6mm,0);
+
+      \foreach[count=\i] \n in {
+        1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
+      } {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep]
+      \node at (\labelX,-0.5*\dotYSep) {\small 0, 2, 4, \dots, 254};
+      \draw[StlthRevBase] (\arrowX,-0.5*\dotYSep) -- ++(-6mm,0);
+
+      \foreach[count=\i] \n in {
+        8, 0, 8, 0, 8, 0, 8, 0,
+        8, 0, 8, 0, 8, 0, 8, 0,
+        8, 0, 8, 0, 8, 0, 8, 0,
+        8, 0, 8, 0, 8, 0, 8, 0
+      } {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-2*\scopeYSep]
+      \node at (\labelX,-0.5*\dotYSep) {\small 0, 4, 8, \dots, 508};
+      \draw[StlthRevBase] (\arrowX,-0.5*\dotYSep) -- ++(-6mm,0);
+
+      \foreach[count=\i] \n in {
+        16, 0, 0, 0, 16, 0, 0, 0,
+        16, 0, 0, 0, 16, 0, 0, 0,
+        16, 0, 0, 0, 16, 0, 0, 0,
+        16, 0, 0, 0, 16, 0, 0, 0
+      } {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-3*\scopeYSep]
+      \node at (\labelX,-0.5*\dotYSep) {\small 0, 32, 64, \dots, 4064};
+      \draw[StlthRevBase] (\arrowX,-0.5*\dotYSep) -- ++(-6mm,0);
+
+      \foreach[count=\i] \n in {128} {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}-1.75}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-4*\scopeYSep]
+      \node at (\labelX,-0.5*\dotYSep) {\small 0, $\lfloor \phi \rfloor$, $\lfloor 2\phi \rfloor$, \dots, $\lfloor 127\phi \rfloor$};
+      \draw[StlthRevBase] (\arrowX,-0.5*\dotYSep) -- ++(-6mm,0);
+
+      \foreach[count=\i] \n in {
+        5, 5, 3, 6, 3, 5, 4, 4,
+        5, 4, 4, 5, 4, 4, 5, 2,
+        5, 4, 3, 4, 3, 4, 4, 3,
+        5, 3, 4, 4, 3, 4, 4, 3
+      } {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+
+      \node at (7.5*\dotXSep+0.5*\scopeXSep,-3.5*\dotYSep) {\small$(m=32)$};
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep]
+      \node at (7.5*\dotXSep,8mm) {\small Fibonacci $h(n)$};
+
+      \foreach[count=\i] \n in {
+        1, 1, 1, 0, 0, 1, 0, 1,
+        1, 0, 1, 0, 0, 1, 0, 1,
+        0, 1, 0, 1, 1, 0, 1, 0,
+        0, 1, 0, 1, 0, 0, 1, 0
+      } {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep,yshift=-\scopeYSep]
+      \foreach[count=\i] \n in {
+        5, 3, 5, 4, 4, 3, 4, 5,
+        4, 3, 4, 5, 3, 4, 3, 6,
+        3, 4, 4, 5, 3, 4, 4, 5,
+        3, 4, 4, 4, 4, 3, 5, 4
+      } {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep,yshift=-2*\scopeYSep]
+      \foreach[count=\i] \n in {
+        5, 3, 4, 3, 4, 5, 4, 5,
+        3, 4, 3, 4, 3, 5, 4, 6,
+        3, 4, 3, 4, 3, 5, 5, 4,
+        4, 3, 4, 3, 4, 4, 6, 4
+      } {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep,yshift=-3*\scopeYSep]
+      \foreach[count=\i] \n in {
+        2, 5, 5, 3, 4, 5, 5, 0,
+        5, 5, 4, 3, 5, 5, 1, 5,
+        5, 4, 2, 5, 5, 2, 5, 5,
+        5, 2, 5, 5, 2, 4, 5, 5
+      } {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+    \end{scope}
+
+    \begin{scope}[xshift=\scopeXSep,yshift=-4*\scopeYSep]
+      \foreach[count=\i] \n in {
+        1, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 4, 7, 6, 7,
+        6, 7, 6, 7, 6, 7, 7, 6,
+        6, 7, 6, 7, 6, 6, 6, 7
+      } {
+        \pgfmathtruncatemacro{\x}{\getX{\i}}
+        \pgfmathtruncatemacro{\y}{\getY{\i}}
+        \pgfmathsetmacro{\r}{\getR{\n}}
+
+        \draw[fill=black] (\x*\dotXSep,\y*\dotYSep) circle[radius=\r mm];
+      }
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

@@ -1,0 +1,79 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\pgfplotsset{
+  width=70mm,
+  use units,
+  ylabel={elapsed time $t$},
+  y unit=s,
+  y unit prefix=n,
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{semilogxaxis}[
+        title style={align=center},
+        title={Linear Probing \texttt{get()}\\(Fixed $\alpha=0.375$)},
+        xlabel={slot size $n$},
+        xmin=24,
+        xmax=196608,
+        ymin=10,
+        ymax=30,
+        log basis x=2,
+        xtick distance=2^2,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+              n      t
+             48 11.478
+             96 15.905
+            192 13.852
+            384 15.282
+            768 15.334
+           1536 15.242
+           3072 17.677
+           6144 19.561
+          12288 21.487
+          24576 22.208
+          49152 23.102
+          98304 26.547
+        };
+      \end{semilogxaxis}
+    \end{scope}
+
+    \begin{scope}[xshift=75mm]
+      \begin{axis}[
+        title style={align=center},
+        title={Linear Probing \texttt{get()}\\(Fixed $m=2^{17}$)},
+        xlabel={load factor $\alpha$},
+        xmin=0.35,
+        xmax=0.75,
+        ymin=22,
+        ymax=38,
+        xtick distance=0.1,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+              n      t
+          0.375 23.412
+            0.4 24.314
+          0.425 24.971
+           0.45 25.996
+          0.475 26.501
+            0.5 27.382
+          0.525 28.102
+           0.55 29.236
+          0.575 30.179
+            0.6 31.123
+          0.625 32.042
+           0.65 33.058
+          0.675 33.145
+            0.7 34.344
+          0.725 35.078
+        };
+        \addplot[domain=0.35:0.75] { 5.91 * (1 / (1 - x)) + 15.3 }
+          node[pos=0.8,left=2mm] { \small$\displaystyle t \sim 5.91 \frac{1}{1-\alpha}$ };
+      \end{axis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
