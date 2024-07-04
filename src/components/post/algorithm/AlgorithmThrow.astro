@@ -1,0 +1,7 @@
+---
+import AK from "./AlgorithmKeyword.astro";
+
+const { returnKeyword = "던짐" } = Astro.props;
+---
+
+<span><slot /> <AK>{returnKeyword}</AK></span>

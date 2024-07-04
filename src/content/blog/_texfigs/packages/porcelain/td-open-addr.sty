@@ -1,0 +1,52 @@
+% tikz drawing util for open addressing memory
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{td-open-addr}[2024/07/04]
+
+\newcommand\drawHCap[4]{
+  \def\capLeftX{#1}
+  \def\capTopY{#2}
+  \def\capWidth{#3}
+  \def\capHeight{#4}
+
+  \draw (\capLeftX+\capWidth,\capTopY) -- ++(-\capWidth,0) -- ++(0,-\capHeight) -- ++(\capWidth,0);
+}
+
+\newcommand\drawHSides[4]{
+  \def\capLeftX{#1}
+  \def\capTopY{#2}
+  \def\capWidth{#3}
+  \def\capHeight{#4}
+
+  \draw (\capLeftX,\capTopY) -- ++(\capWidth,0);
+  \draw (\capLeftX,\capTopY-\capHeight) -- ++(\capWidth,0);
+}
+
+\newcommand\drawHText[5]{
+  \def\capLeftX{#1}
+  \def\capTopY{#2}
+  \def\capWidth{#3}
+  \def\capHeight{#4}
+  \def\capText{#5}
+
+  \node at (\capLeftX+0.5*\capWidth,\capTopY-0.5*\capHeight) {\capText};
+}
+
+\newcommand\drawHSideText[5]{
+  \def\capLeftX{#1}
+  \def\capTopY{#2}
+  \def\capWidth{#3}
+  \def\capHeight{#4}
+  \def\capText{#5}
+
+  \node at (\capLeftX+0.5*\capWidth,-1.5*\capHeight) {\capText};
+}
+
+\newcommand\drawHSideArrow[4]{
+  \def\arrowLeftX{#1}
+  \def\arrowTopY{#2}
+  \def\capWidth{#3}
+  \def\arrowWidth{#4}
+
+  \draw[StlthBase] (\arrowLeftX+0.6*\capWidth,0.5*\arrowTopY) .. controls +(90-30:4mm+\arrowWidth mm) and +(90+30:4mm+\arrowWidth mm) .. ++(\arrowWidth*\capWidth-0.2*\capWidth,0);
+}

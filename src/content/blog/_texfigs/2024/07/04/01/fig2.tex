@@ -1,0 +1,75 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,td-open-addr}
+
+\def\capH{8mm}
+\def\capW{11mm}
+\def\scopeYSep{36mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \node at (4.5*\capW,8mm) {\texttt{set(}C\texttt{)}};
+      \node at (0,14mm) {key = C};
+      \node at (0,8mm) {hash = \texttt{42}};
+
+      \drawHSides{-\capW}{0}{\capW}{\capH}
+      \foreach \i in {0,...,5} {
+        \drawHCap{\i*\capW}{0}{\capW}{\capH}
+      }
+
+      \foreach \i in {0,2} {
+        \drawHSideArrow{\i*\capW}{0}{\capW}{2}
+      }
+
+      \foreach \i/\txt in {-1/$\cdots$,0/A,2/B,4/C,5/$\cdots$} {
+        \drawHText{\i*\capW}{0}{\capW}{\capH}{\txt}
+      }
+
+      \foreach \i/\txt in {0/42,2/44} {
+        \drawHSideText{\i*\capW}{0}{\capW}{\capH}{\small\texttt{\txt}}
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep]
+      \node at (2.5*\capW,6mm) {\texttt{remove(}B\texttt{)}};
+      \node at (0,12mm) {key = B};
+      \node at (0,6mm) {hash = \texttt{44}};
+
+      \drawHSides{-\capW}{0}{\capW}{\capH}
+      \foreach \i in {0,...,5} {
+        \drawHCap{\i*\capW}{0}{\capW}{\capH}
+      }
+
+      \foreach \i/\txt in {-1/$\cdots$,0/A,4/C,5/$\cdots$} {
+        \drawHText{\i*\capW}{0}{\capW}{\capH}{\txt}
+      }
+
+      \foreach \i/\txt in {2/44} {
+        \drawHSideText{\i*\capW}{0}{\capW}{\capH}{\small\texttt{\txt}}
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-2*\scopeYSep]
+      \node at (2.5*\capW,8mm) {\texttt{get(}C\texttt{)}};
+      \node at (0,14mm) {key = C};
+      \node at (0,8mm) {hash = \texttt{42}};
+
+      \drawHSides{-\capW}{0}{\capW}{\capH}
+      \foreach \i in {0,...,5} {
+        \drawHCap{\i*\capW}{0}{\capW}{\capH}
+      }
+
+      \foreach \i in {0} {
+        \drawHSideArrow{\i*\capW}{0}{\capW}{2}
+      }
+
+      \foreach \i/\txt in {-1/$\cdots$,0/A,4/C,5/$\cdots$} {
+        \drawHText{\i*\capW}{0}{\capW}{\capH}{\txt}
+      }
+
+      \foreach \i/\txt in {0/42,2/44} {
+        \drawHSideText{\i*\capW}{0}{\capW}{\capH}{\small\texttt{\txt}}
+      }
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

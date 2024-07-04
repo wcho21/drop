@@ -1,0 +1,58 @@
+\documentclass{cmn}
+\usepackage{ts-arrow,td-open-addr}
+
+\def\capH{8mm}
+\def\capW{11mm}
+\def\scopeYSep{42mm}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \node at (4.5*\capW,8mm) {\texttt{set(}D\texttt{)}};
+      \node at (0,20mm) {key = D};
+      \node at (0,14mm) {hash${}_1$ = \texttt{42}};
+      \node at (0,8mm) {hash${}_2$ = \texttt{2}};
+
+      \drawHSides{-\capW}{0}{\capW}{\capH}
+      \foreach \i in {0,...,5} {
+        \drawHCap{\i*\capW}{0}{\capW}{\capH}
+      }
+
+      \foreach \i in {0,2} {
+        \drawHSideArrow{\i*\capW}{0}{\capW}{2}
+      }
+
+      \foreach \i/\txt in {-1/$\cdots$,0/A,1/B,2/C,4/D,5/$\cdots$} {
+        \drawHText{\i*\capW}{0}{\capW}{\capH}{\txt}
+      }
+
+      \foreach \i/\txt in {0/42,2/44,4/46} {
+        \drawHSideText{\i*\capW}{0}{\capW}{\capH}{\small\texttt{\txt}}
+      }
+    \end{scope}
+
+    \begin{scope}[yshift=-\scopeYSep]
+      \node at (4.5*\capW,8mm) {\texttt{set(}E\texttt{)}};
+      \node at (0,20mm) {key = E};
+      \node at (0,14mm) {hash${}_1$ = \texttt{42}};
+      \node at (0,8mm) {hash${}_2$ = \texttt{3}};
+
+      \drawHSides{-\capW}{0}{\capW}{\capH}
+      \foreach \i in {0,...,5} {
+        \drawHCap{\i*\capW}{0}{\capW}{\capH}
+      }
+
+      \foreach \i in {0} {
+        \drawHSideArrow{\i*\capW}{0}{\capW}{3}
+      }
+
+      \foreach \i/\txt in {-1/$\cdots$,0/A,1/B,2/C,3/E,4/D,5/$\cdots$} {
+        \drawHText{\i*\capW}{0}{\capW}{\capH}{\txt}
+      }
+
+      \foreach \i/\txt in {0/42,3/45} {
+        \drawHSideText{\i*\capW}{0}{\capW}{\capH}{\small\texttt{\txt}}
+      }
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
