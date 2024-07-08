@@ -358,7 +358,6 @@ public class BinarySearchIntArray {
 [junit5]: https://junit.org/junit5/
 
 ```java
-public class BinarySearchIntArrayTest {
   static int[] SORTED = { 10, 20, 30, 40, 50, 60, 70 };
 
   @Test
@@ -370,16 +369,17 @@ public class BinarySearchIntArrayTest {
 
     assertEquals(2, index);
   }
-}
 ```
 
 한편, 배열에 없는 데이터를 찾는 데 실패해 `-1`를 리턴하는 케이스입니다.
 
 ```java
+  static int BAD_VALUE = 0;
+
   @Test
   public void testNotFound() {
     int[] arr = SORTED;
-    int badValue = 0;
+    int badValue = BAD_VALUE;
 
     int index = search(arr, badValue);
 
@@ -534,12 +534,11 @@ public class Comparators {
 이를 통해 세 번째 데이터를 찾도록 만듭시다.
 
 ```java
-public class BinarySearchArrayTest {
   static Integer[] SORTED = { 9, 26, 43, 84, 93, 110 };
   static Comparator<Integer> REM8 = Comparator.comparing(v -> v % 8);
 
   @Nested
-  class WithRem8Ordering {
+  class Rem8Ordering {
     @Test
     public void testFound() {
       Integer[] arr = SORTED;
@@ -550,7 +549,6 @@ public class BinarySearchArrayTest {
       assertEquals(2, index);
     }
   }
-}
 ```
 
 여기서 `REM8` 변수가 $\leq_{{}/8}$ 오더링의 구현입니다.
@@ -559,7 +557,7 @@ public class BinarySearchArrayTest {
 
 ```java
   @Nested
-  class WithoutComparator {
+  class DefaultComparator {
     @Test
     public void testFound() {
       Integer[] arr = SORTED;
@@ -781,18 +779,18 @@ public class ArraySorter {
 따라서 각 스트레터지는 소트하는 방법에만 집중하고, 파라미터를 어떻게 받을 것인지는 신경쓰지 않게 됩니다.
 
 그러면 사용자는 이 메소드를 다음 테스트 코드와 같이 사용할 수 있습니다.
-즉 `unsorted` 배열과 같은 데이터는 `expected` 배열처럼 정리됩니다.
+즉 `toSort` 배열과 같은 데이터는 `expected` 배열처럼 정리됩니다.
 
 ```java
   @Test
   public void testSort() {
-    Integer[] unsorted = { 20, 30, 10, 40 };
+    Integer[] toSort = { 20, 30, 10, 40 };
     Integer[] expected = { 10, 20, 30, 40 };
     ArraySortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    ArraySorter.sortArray(unsorted, strat);
+    ArraySorter.sortArray(toSort, strat);
 
-    assertArrayEquals(expected, unsorted);
+    assertArrayEquals(expected, toSort);
   }
 ```
 
@@ -801,13 +799,13 @@ public class ArraySorter {
 ```java
   @Test
   public void testRem8DistinctSort() {
-    Integer[] unsorted = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    Integer[] toSort = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     Integer[] expected = { 0, 8, 1, 9, 2, 10, 3, 4, 5, 6, 7 };
     ArraySortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    ArraySorter.sortArray(unsorted, strat, Comparator.comparing(v -> v % 8));
+    ArraySorter.sortArray(toSort, strat, Comparator.comparing(v -> v % 8));
 
-    assertArrayEquals(expected, unsorted);
+    assertArrayEquals(expected, toSort);
   }
 ```
 
@@ -834,14 +832,14 @@ public class ArraySorter {
 ```java
   @Test
   public void testRem8DuplicateSort() {
-    Integer[] unsorted = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    Integer[] toSort = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     Integer[] expected = { 0, 8, 1, 9, 2, 10, 3, 4, 5, 6, 7 };
     ArraySortStrategy<Integer> strat = new InsertionStrategy<>();
 
-    ArraySorter.sortArray(unsorted, strat,
+    ArraySorter.sortArray(toSort, strat,
       Comparator.comparing(v -> v % 8));
 
-    assertArrayEquals(expected, unsorted);
+    assertArrayEquals(expected, toSort);
   }
 ```
 
@@ -954,7 +952,7 @@ $$
 이어서, 위 예시의 경우를 준비합니다.
 
 ```java
-    AnimalRecord[] unsorted = { recs[0], recs[5], recs[3], recs[1], recs[4], recs[2] };
+    AnimalRecord[] toSort = { recs[0], recs[5], recs[3], recs[1], recs[4], recs[2] };
     AnimalRecord[] expected = recs;
 ```
 
@@ -963,7 +961,7 @@ $$
 ```java
     ArraySortStrategy<AnimalRecord> strat = new InsertionStrategy<>();
 
-    ArraySorter.sortArray(unsorted, strat, (rec1, rec2) -> {
+    ArraySorter.sortArray(toSort, strat, (rec1, rec2) -> {
       int speciesOrder1 = rec1.species.equals("Dog") ? 0 : 1;
       int speciesOrder2 = rec2.species.equals("Dog") ? 0 : 1;
 
@@ -974,7 +972,7 @@ $$
       return rec1.name.compareTo(rec2.name);
     });
 
-    assertArrayEquals(expected, unsorted);
+    assertArrayEquals(expected, toSort);
 ```
 
 이는 잘 통과하는 테스트입니다.
@@ -1145,21 +1143,9 @@ public class ShellStrategy<T> implements ArraySortStrategy<T> {
 }
 ```
 
-이렇게 구현한 셸 소트는, 다음 테스트 코드처럼 스트레터지를 넘겨줌으로써 사용할 수 있습니다.
+이렇게 구현한 셸 소트 또한 인서션 소트처럼 스트레터지로서 사용할 수 있게 됩니다.
 
-```java
-  @Test
-  public void testSort() {
-    Integer[] unsorted = { 20, 30, 10, 40 };
-    Integer[] expected = { 10, 20, 30, 40 };
-    ArraySortStrategy<Integer> strat = new ShellStrategy<>();
-
-    ArraySorter.sortArray(unsorted, strat);
-
-    assertArrayEquals(expected, unsorted);
-```
-
-이 코드를 바탕으로 소요 시간을 측정해 인서션 소트와 비교하면 이렇습니다.
+소요 시간을 측정해 인서션 소트와 비교하면 이렇습니다.
 
 <Figure src={fig13} alt="h-sorted array">
   <FigureCaption slot="caption">그림 13. 셸 소트와 인서션 소트의 비교. 직선은 회귀선.</FigureCaption>
