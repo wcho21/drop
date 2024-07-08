@@ -827,24 +827,7 @@ public class QuickStrategy<T> implements ArraySortStrategy<T> {
 }
 ```
 
-이는 다음 테스트 코드와 같이 사용할 수 있습니다.
-여기서 파티셔닝은 항상 마지막 위치를 피벗으로 고르지만, 실제론 어떤 파티셔닝이든 상관없이 동작합니다.
-
-```java
-  @Test
-  public void testSort() {
-    Integer[] unsorted = { 20, 30, 10, 40 };
-    Integer[] expected = { 10, 20, 30, 40 };
-
-    IntBinaryOperator chooseEnd = (begin, end) -> end-1;
-    PartitionStrategy<Integer> partStrat = new RandTwoWayStrategy<>(chooseEnd);
-    ArraySortStrategy<Integer> sortStrat = new QuickStrategy<>(partStrat);
-
-    ArraySorter.sortArray(unsorted, sortStrat);
-
-    assertArrayEquals(expected, unsorted);
-  }
-```
+이는 이전에 만들었던 것과 같은 테스트 케이스를 통과합니다.
 
 이렇게 만든 랜더마이즈드 퀵소트의 소요 시간을 재봅시다.
 소트된 배열일 때와 반대로 소트되었을 때를 시나리오로 측정한 결과는 다음과 같습니다.

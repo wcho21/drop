@@ -268,7 +268,7 @@ public interface Stack<T> {
 
 - `prepend(data)`: 맨 앞에 데이터를 추가합니다.
 - `remove()`:  맨 앞의 데이터를 지웁니다.
-- `getData()`: 맨 앞의 데이터를 가져옵니다.
+- `getFirst()`: 맨 앞의 데이터를 가져옵니다.
 - `getSize()`: 데이터의 개수를 구합니다.
 - `isEmpty()`: 리스트가 비었는지 알아냅니다.
 
@@ -291,6 +291,20 @@ public interface Stack<T> {
   </ABlock>
 </Alg>
 
+이렇게 맨 앞에 둔 데이터는 `getFirst()` 연산으로 찾을 때 가져옵니다.
+
+<Alg>
+  <AK>getFirst</AK> ()
+
+  <ABlock>
+    $\textit{head} \leftarrow$ 헤드 노드
+
+    <ARet>$\textit{head}$의 데이터</ARet>
+  </ABlock>
+</Alg>
+
+이런 식으로 마지막에 넣었던 데이터를 가장 먼저 찾게 되므로 LIFO 순서를 따릅니다.
+
 반대로 헤드 노드를 지우는 `remove()` 연산은 다음과 같이 만들어볼 수 있습니다.
 
 <Figure src={fig6} alt="remove diagram">
@@ -310,7 +324,7 @@ public interface Stack<T> {
   </ABlock>
 </Alg>
 
-간단히 소요 시간을 예상해볼 수 있습니다.
+이런 연산의 소요 시간을 간단히 예상해볼 수 있습니다.
 새 노드를 만드는 연산을 $\Theta(1)$이라고 가정하면, 각 메소드는 노드의 개수에 상관 없이 $\Theta(1)$의 시간 복잡도로 정리할 수 있습니다.
 과연 실제로도 그럴지는 구현 후 확인해보겠습니다.
 
@@ -362,11 +376,11 @@ public class LinkedNode<T> {
 먼저 생성자는 헤드 노드와 사이즈를 초기화하도록 만듭시다.
 
 ```java
-public class LinkedList<T> {
+public class LifoLinkedList<T> {
   private LinkedNode<T> head;
   private int size;
 
-  public LinkedList() {
+  public LifoLinkedList() {
     this.head = new LinkedNode<>(); // sentinel
     this.size = 0;
   }
@@ -389,11 +403,10 @@ public class LinkedList<T> {
 
 사이즈를 기억할 필요가 있기 때문에, 늘어난 노드의 개수를 반영합니다.
 
-이제 `getData()` 메소드가 데이터를 구하도록 만듭니다.
-단, 데이터가 없는 경우 에러를 던지도록 만들었습니다.
+이제 `getFirst()` 메소드가 데이터를 구하도록 만들고, 데이터가 없는 경우 에러를 던지도록 합시다.
 
 ```java
-  public T getData() {
+  public T getFirst() {
     this.throwIfEmpty();
 
     return this.head.getData();
@@ -474,7 +487,7 @@ public class LinkedList<T> {
   <ABlock>
     $\textit{list} \leftarrow$ 링크드 리스트
 
-    $\textit{data} \leftarrow$ $\textit{list}$.getData()
+    $\textit{data} \leftarrow$ $\textit{list}$.getFirst()
 
     $\textit{list}$.remove()
 
@@ -487,10 +500,10 @@ public class LinkedList<T> {
 
 ```java
 public class ListStack<T> implements Stack<T> {
-  private LinkedList<T> list;
+  private LifoLinkedList<T> list;
 
   public ListStack() {
-    this.list = new LinkedList<>();
+    this.list = new LifoLinkedList<>();
   }
 }
 ```
@@ -503,7 +516,7 @@ public class ListStack<T> implements Stack<T> {
   }
 
   public T pop() {
-    T data = this.list.getData();
+    T data = this.list.getFirst();
     this.list.remove();
 
     return data;
@@ -514,7 +527,7 @@ public class ListStack<T> implements Stack<T> {
 
 ```java
   public T peek() {
-    return this.list.getData();
+    return this.list.getFirst();
   }
 
   public int getSize() {
