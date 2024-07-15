@@ -1,0 +1,129 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+\usetikzlibrary{backgrounds}
+
+\def\pzero{\phantom{0}}
+\definecolor{silvergray}{gray}{0.9375}
+\definecolor{shadegray}{gray}{0.875}
+\definecolor{darkgray}{gray}{0.75}
+
+\tikzset{
+  node/.style={
+    draw,circle,inner sep=0.75mm,fill=white
+  },
+  tree/.style={
+    level 1/.style={level distance=12mm,sibling distance=16mm},
+    level 2/.style={level distance=12mm,sibling distance=8mm},
+  },
+  shade/.style={
+    shadegray,line width=7.5mm,line cap=round,rounded corners
+  }
+}
+
+\begin{document}
+  \begin{tikzpicture}[tree]
+    \begin{scope}
+      \node[node] {1}
+        child {
+          node[node] {6}
+          child {
+            node[node] {7}
+          }
+          child {
+            node[node] {9}
+          }
+        }
+        child {
+          node[node] {2}
+          child {
+            node[node] (T) {5}
+          }
+          child { edge from parent[draw=none] }
+        };
+
+      \begin{scope}[on background layer]
+        \draw[shade] (8mm,-12mm) -- ++(-4mm,-12mm);
+      \end{scope}
+
+      \node[below=4mm] at (T) {\small\texttt{siftDown(\tikz[baseline=-3mm]{\node[node,inner sep=0.25mm] {2}})}};
+    \end{scope}
+
+    \begin{scope}[xshift=36mm]
+      \draw[Stlth] (-22mm,-12mm) -- ++(8mm,0);
+
+      \node[node] {1}
+        child {
+          node[node] {6}
+          child {
+            node[node] {7}
+          }
+          child {
+            node[node] (T) {9}
+          }
+        }
+        child {
+          node[node] {5}
+          child {
+            node[node] {2}
+          }
+          child { edge from parent[draw=none] }
+        };
+
+      \begin{scope}[on background layer]
+        \draw[shade] (-8mm,-12mm) -- ++(4mm,-12mm);
+      \end{scope}
+
+      \node[below=4mm] at (T) {\small\texttt{siftDown(\tikz[baseline=-3mm]{\node[node,inner sep=0.25mm] {6}})}};
+    \end{scope}
+
+    \begin{scope}[xshift=2*36mm]
+      \draw[Stlth] (-22mm,-12mm) -- ++(8mm,0);
+
+      \node[node] (T) {1}
+        child {
+          node[node] {9}
+          child {
+            node[node] {7}
+          }
+          child {
+            node[node] {6}
+          }
+        }
+        child {
+          node[node] {5}
+          child {
+            node[node] {2}
+          }
+          child { edge from parent[draw=none] }
+        };
+
+      \begin{scope}[on background layer]
+        \draw[shade] (0,0) -- ++(-8mm,-12mm) -- ++(-4mm,-12mm);
+      \end{scope}
+
+      \node[above=4mm] at (T) {\small\texttt{siftDown(\tikz[baseline=1mm]{\node[node,inner sep=0.25mm] {1}})}};
+    \end{scope}
+
+    \begin{scope}[xshift=3*36mm]
+      \draw[Stlth] (-22mm,-12mm) -- ++(8mm,0);
+
+      \node[node] {9}
+        child {
+          node[node] {7}
+          child {
+            node[node] {1}
+          }
+          child {
+            node[node] {6}
+          }
+        }
+        child {
+          node[node] {5}
+          child {
+            node[node] {2}
+          }
+          child { edge from parent[draw=none] }
+        };
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

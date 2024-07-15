@@ -1,0 +1,96 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+\usetikzlibrary{backgrounds}
+
+\def\pzero{\phantom{0}}
+\definecolor{shadegray}{gray}{0.875}
+\definecolor{darkgray}{gray}{0.75}
+
+\tikzset{
+  node/.style={
+    draw,circle,inner sep=0.5mm,fill=white,
+  },
+  tree/.style={
+    level 1/.style={level distance=12mm,sibling distance=24mm},
+    level 2/.style={level distance=12mm,sibling distance=12mm},
+    level 3/.style={level distance=12mm,sibling distance=6mm},
+  },
+  shade/.style={
+    shadegray,line width=7.5mm,line cap=round,rounded corners
+  }
+}
+
+\begin{document}
+  \begin{tikzpicture}[tree]
+    \node[node] (R) {\pzero}
+      child {
+        node[node] (AA) {\pzero}
+        child {
+          node[node] (BA) {\pzero}
+          child {
+            node[node] {\pzero}
+          }
+          child {
+            node[node] {\pzero}
+          }
+        }
+        child {
+          node[node] {\pzero}
+          child {
+            node[node] {\pzero}
+          }
+          child {
+            node[node] {\pzero}
+          }
+        }
+      }
+      child {
+        node[node] (AB) {\pzero}
+        child {
+          node[node] (BC) {\pzero}
+          child {
+            node[node] {\pzero}
+          }
+          child {
+            node[node] {\pzero}
+          }
+        }
+        child {
+          node[node,fill=darkgray] {\pzero}
+          child {
+            node[node] {\pzero}
+          }
+          child {
+            edge from parent[draw=none]
+          }
+        }
+      };
+
+    \begin{scope}[on background layer]
+      \draw[shade,fill] (0,0)
+        -- ++(-12mm,-12mm)
+        -- ++(-6mm,-12mm)
+        -- ++(2*12mm,0)
+        -- ++(6mm,12mm)
+        -- ++(-12mm,12mm);
+
+      \draw[shade] (-12mm-6mm-3mm,-3*12mm)
+        -- ++(6*6mm,0)
+        -- ++(3mm,12mm);
+    \end{scope}
+
+    \node[text width=14mm,align=center] at (-16mm,0) {\small internal\\nodes};
+    \node at (16mm,-43.5mm) {\small leaf nodes};
+
+    \draw[StlthBoth] (25mm,-0.5mm)  -- ++(0,-23mm) node[midway,right] {\small depth of \tikz[baseline=-1mm]{\draw[fill=darkgray] circle [radius=2mm]}};
+    \draw[StlthBoth] (25mm,-24.5mm) -- ++(0,-11mm) node[midway,right] {\small height of \tikz[baseline=-1mm]{\draw[fill=darkgray] circle [radius=2mm]}};
+
+    \node at (-36mm,8mm)   {\small Level};
+    \node at (-36mm,0)     {\small $0$};
+    \node at (-36mm,-12mm) {\small $1$};
+    \node at (-36mm,-24mm) {\small $2$};
+    \node at (-36mm,-36mm) {\small $3$};
+
+    \node at (0,-52mm) {\small (Complete Binary Tree)};
+  \end{tikzpicture}
+\end{document}

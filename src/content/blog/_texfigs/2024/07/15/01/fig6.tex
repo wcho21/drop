@@ -1,0 +1,90 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+\usetikzlibrary{backgrounds}
+
+\def\pzero{\phantom{0}}
+\definecolor{shadegray}{gray}{0.875}
+\definecolor{darkgray}{gray}{0.75}
+
+\tikzset{
+  node/.style={
+    draw,circle,inner sep=0.75mm,fill=white
+  },
+  tree/.style={
+    level 1/.style={level distance=12mm,sibling distance=16mm},
+    level 2/.style={level distance=12mm,sibling distance=8mm},
+  },
+  shade/.style={
+    shadegray,line width=7.5mm,line cap=round,rounded corners
+  }
+}
+
+\begin{document}
+  \begin{tikzpicture}[tree]
+    \begin{scope}
+      \node[node] {7}
+        child {
+          node[node] {6}
+          child {
+            node[node] {1}
+          }
+          child {
+            node[node,fill=shadegray] (BB) {9}
+          }
+        }
+        child {
+          node[node] {5}
+          child {
+            node[node] {2}
+          }
+          child { edge from parent[draw=none] }
+        };
+
+      \node[below=4mm] at (BB) {\small\texttt{siftUp(\tikz[baseline=-3mm]{\node[node,inner sep=0.25mm] {9}})}};
+    \end{scope}
+
+    \begin{scope}[xshift=36mm]
+      \draw[Stlth] (-22mm,-12mm) -- ++(8mm,0);
+
+      \node[node] {7}
+        child {
+          node[node,fill=shadegray] {9}
+          child {
+            node[node] {1}
+          }
+          child {
+            node[node] {6}
+          }
+        }
+        child {
+          node[node] {5}
+          child {
+            node[node] {2}
+          }
+          child { edge from parent[draw=none] }
+        };
+    \end{scope}
+
+    \begin{scope}[xshift=2*36mm]
+      \draw[Stlth] (-22mm,-12mm) -- ++(8mm,0);
+
+      \node[node,fill=shadegray] {9}
+        child {
+          node[node] {7}
+          child {
+            node[node] {1}
+          }
+          child {
+            node[node] {6}
+          }
+        }
+        child {
+          node[node] {5}
+          child {
+            node[node] {2}
+          }
+          child { edge from parent[draw=none] }
+        };
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

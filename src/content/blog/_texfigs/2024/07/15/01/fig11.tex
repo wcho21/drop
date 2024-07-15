@@ -1,0 +1,72 @@
+\documentclass{cmnp}
+\usepgfplotslibrary{units}
+\usepackage{ts-plot}
+
+\pgfplotsset{
+  width=70mm,
+  use units,
+  xlabel={array size $n$},
+  ylabel={elapsed time $t$},
+  xmin=2^6,
+  xmax=2^18,
+  y unit=s,
+  y unit prefix=\mu,
+  log basis x=2,
+  xtick distance=2^2,
+}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{scope}
+      \begin{semilogxaxis}[
+        title style={align=center},
+        title={Heapsort\\(Sorted)},
+        ymin=-2500,
+        ymax=47500,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+              n         t
+            128     7.280
+            256    45.841
+            512   137.573
+           1024   271.065
+           2048   588.812
+           4096  1233.728
+           8192  2621.094
+          16384  4169.806
+          32768  8903.692
+          65536 19089.120
+         131072 40860.837
+        };
+        \addplot[domain=2^5:2^19] { 0.0182 * x * log2(x) + 138 }
+          node[pos=0.225,left=2mm] { \small$t \sim 0.0182 n \log_2 n$ };
+      \end{semilogxaxis}
+    \end{scope}
+
+    \begin{scope}[xshift=75mm]
+      \begin{semilogxaxis}[
+        title style={align=center},
+        title={Heapsort\\(Reversed)},
+        ymin=-3750,
+        ymax=45000,
+      ]
+        \addplot[markplot] table [x=n,y=t]{
+               n         t
+             128     6.436
+             256    34.185
+             512    95.113
+            1024   229.396
+            2048   524.036
+            4096   881.654
+            8192  2120.447
+           16384  4674.993
+           32768  8142.639
+           65536 17509.782
+          131072 37364.371
+        };
+        \addplot[domain=2^5:2^19] { 0.0167 * x * log2(x) + 144 }
+          node[pos=0.235,left=2mm] { \small$t \sim 0.0167 n \log_2 n$ };
+      \end{semilogxaxis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}

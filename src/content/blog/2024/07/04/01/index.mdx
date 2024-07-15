@@ -3,8 +3,7 @@ title: "배열로 만드는 딕셔너리"
 date: 2024-07-04T20:00:00+09:00
 summary: "오픈 어드레싱으로 해시 테이블 만들기"
 thumbnail: "./_figs/thumbnail.webp"
-series: "라이브러리로 만들어보는 알고리즘"
-featured: true
+series: "알고리즘 라이브러리 만들기"
 ---
 
 import L from "@/components/post/AltLang.astro";
@@ -31,6 +30,14 @@ import fig4 from "@texfigs/2024/07/04/01/fig4.svg";
 import fig5 from "@texfigs/2024/07/04/01/fig5.svg";
 import fig6 from "@texfigs/2024/07/04/01/fig6.svg";
 
+
+<Quote>
+  이 단어에는 정의가 없다. 해시가 뭔지는 아무도 모른다.
+
+  <p slot="detail">There is no definition for this word--nobody knows what hash is.</p>
+
+  <p slot="name">-- *The Devil's Dictionary* (1906)</p>
+</Quote>
 
 
 <PostLink href="/2024/06/29/01">이전 글</PostLink>에서 딕셔너리<L>dictionary</L>라는 데이터 구조를 해시 테이블<L>hash table</L>로 구현해보았습니다.
@@ -99,7 +106,7 @@ $$
 이 경우, 프로브 시퀀스는 키 $\textit{key}$의 해시 값으로 시작하기 때문에, 해시가 충돌한다면 프로브 시퀀스의 나머지 부분 또한 같게 됩니다.
 이런 현상을 피하고 싶다면, 프로브 시퀀스의 간격을 별도의 해시 함수로 결정할 수 있고, 이를 더블 해싱<L>double hashing</L>이라고 부릅니다.
 
-이 글에서는 오픈 어드레싱을 다른 라이브러리를 사용하지 않고 자바로 구현까지 해보겠습니다.
+이 글에서는 오픈 어드레싱을 다른 라이브러리를 사용하지 않고 자바<L>Java</L>로 구현까지 해보겠습니다.
 리니어 프로빙과 더블 해싱은 프로브 시퀀스만 다르게 해서 만들 수 있으므로, 공통적인 부분부터 살펴보겠습니다.
 
 
