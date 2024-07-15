@@ -1,0 +1,914 @@
+---
+title: "우선순위를 기억하는 방법"
+date: 2024-07-15T01:00:00+09:00
+summary: "힙으로 만드는 우선순위 큐와 힙소트"
+thumbnail: "./_figs/thumbnail.webp"
+series: "알고리즘 라이브러리 만들기"
+featured: true
+---
+
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
+import FigureCaption from "@/components/post/FigureCaption.astro";
+import FigureDisplay from "@/components/post/FigureDisplay.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import ABreak from "@/components/post/algorithm/AlgorithmBreak.astro";
+import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
+import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
+import AForeach from "@/components/post/algorithm/AlgorithmForeach.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
+import AC from "@/components/post/algorithm/AlgorithmComment.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import Quote from "@/components/post/Quote.astro";
+import PostLink from "@/components/post/PostLink.astro";
+
+import fig1 from "@texfigs/2024/07/15/01/fig1.svg";
+import fig2 from "_figs/fig2.jpg";
+import fig3 from "@texfigs/2024/07/15/01/fig3.svg";
+import fig4 from "@texfigs/2024/07/15/01/fig4.svg";
+import fig5 from "@texfigs/2024/07/15/01/fig5.svg";
+import fig6 from "@texfigs/2024/07/15/01/fig6.svg";
+import fig7 from "@texfigs/2024/07/15/01/fig7.svg";
+import fig8 from "@texfigs/2024/07/15/01/fig8.svg";
+import fig9 from "@texfigs/2024/07/15/01/fig9.svg";
+import fig10 from "@texfigs/2024/07/15/01/fig10.svg";
+import fig11 from "@texfigs/2024/07/15/01/fig11.svg";
+
+<Quote>
+  도구란 우리가 생각하는 습관과 능력에 심오하고 교활한 영향을 끼치는 것이다.
+
+  <p slot="detail">The tools we use have a profound (and devious!) influence on our thinking habits, and, therefore, on our thinking abilities.</p>
+
+  <p slot="name">-- 에츠허르 다익스트라<L>Edsger Dijkstra</L> (1975)</p>
+</Quote>
+
+
+
+어느 가게에 손님이 몰려서, 기다리는 손님을 관리해야 할 필요가 생겼다고 해봅시다.
+그렇다면 손님들에게 대기 순번을 나눠줬다가, 여유가 생길 때마다 다음 손님을 받는 것으로 해결할 수 있습니다.
+
+그런데 가게 또한 다음으로 받을 손님이 누구인지 알아야합니다.
+따라서 대기 순번을 쌓아두면 다음 번호를 차례대로 바로 가져올 수 있는 그런 데이터 구조를<L>data structure</L>를 다음과 같은 연산으로 정의해봅시다.
+
+- `add()`: 대기 순번을 추가합니다.
+
+- `poll()`: 다음 대기 순번을 가져옵니다.
+
+보통은 먼저 대기하던 손님부터 차례대로 받고 싶을 것입니다.
+즉 `add()`로 추가한 순서대로 `poll()` 연산이 번호를 가져오는 것입니다.
+이런 데이터 구조는 FIFO<L>first-in first-out</L> 순서를 따르는 큐<L>queue</L>라고 부릅니다.
+
+<Figure src={fig1} alt="fifo queue and priority queue diagram">
+  <FigureCaption slot="caption">그림 1. FIFO 큐와 우선순위 큐의 다이어그램.
+    FIFO 큐는 먼저 추가한 것을, 우선순위 큐는 우선순위가 가장 높은 것을 다음에 가져옵니다.</FigureCaption>
+</Figure>
+
+그런데 가게에서 단골 손님은 다른 손님보다 먼저 받기를 원한다고 해봅시다.
+다시 말해, 큐에 `add()`로 대기 손님을 추가할 때 임의로 우선순위를 부여하고, `poll()`은 가장 우선순위가 높은 것부터 꺼내도록 하는 것입니다.
+
+이런 연산을 갖는 큐를 우선순위 큐<L>priority queue</L>라고 부릅니다.
+따라서 우선순위 큐는 FIFO 큐를 일반화 한 것으로 생각할 수 있습니다.
+
+<Figure src={fig2} alt="line">
+  <FigureCaption slot="caption">그림 2. 큐 데이터 구조는 줄을 선 손님처럼 무언가를 대기시키는 것으로 생각할 수 있습니다. -- 사진: [Zach Rowlandson][unsplash-zr]</FigureCaption>
+</Figure>
+
+[unsplash-zr]: https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EB%A7%A4%EC%9E%A5%EC%97%90-%EC%A4%84%EC%9D%84-%EC%84%A0-%EC%82%AC%EB%9E%8C%EB%93%A4-WGB9EEnAaMQ
+
+우선순위 큐는 어떻게 만들 수 있을까요?
+별도의 데이터 구조로 구현한다고 해봅시다.
+그러면 가장 큰 것을 찾는 `getMax()` 연산 같은 것이 여기에 정의되어 있다면, 이것만으로도 우선순위 큐를 만들기 충분해집니다.
+왜냐면 `getMax()`로 가장 큰 우선순위를 찾는 것이 곧 `poll()` 연산이기 때문입니다.
+
+그렇다면 `getMax()`를 갖는 데이터 구조를 만들기 위해, 가장 큰 값을 항상 루트 노드<L>root node</L>에 두는 트리를 생각해봅시다.
+그러면 `poll()` 연산은 단순히 루트 노드의 값을 가져오는 것에 불과하게 됩니다.
+
+가장 큰 값이 루트 노드에 있도록 만들기 위해, 모든 노드가 그 자식 노드 이상이 되게끔 정리해둔고 해봅시다.
+이런 트리는 힙 프로퍼티<L>heap property</L>를 갖는다고 하거나, 힙 오더<L>heap-ordered</L>를 따른다고 합니다.
+특히 부모 노드가 자식 노드 이상이어서 루트 노드가 가장 큰 값이 되는 경우, 맥스 힙 프로퍼티<L>max-heap property</L>라고도 부릅니다.
+
+<Figure src={fig3} alt="tree with heap property">
+  <FigureCaption slot="caption">그림 3. 맥스 힙 프로퍼티를 갖는 트리. 모든 노드가 자식 노드 이상입니다.</FigureCaption>
+</Figure>
+
+한편, 트리라는 데이터 구조가 등장하므로 앞으로 사용할 용어를 간단히 정리하자면 이렇습니다.
+
+<Figure src={fig4} alt="terms for tree">
+  <FigureCaption slot="caption">그림 4. 트리 데이터 구조에 대한 용어들. 리프 노드와 인터널 노드, 깊이와 높이, 그리고 레벨의 의미를 보여줍니다.
+    그림의 트리는 컴플리트 바이너리 트리지만, 이러한 용어는 모든 종류의 트리에도 일반적으로 사용됩니다.</FigureCaption>
+</Figure>
+
+- 자식 노드가 없는 것을 리프<L>leaf</L> 노드라고 하고, 리프 노드를 제외한 모든 노드를 인터널<L>internal</L> 노드라고 부릅니다.
+
+- 어떤 노드가 있으면, 그 노드에서 루트 노드까지 경로가 존재합니다. 그 길이를 노드의 깊이<L>depth</L>라고 합니다.
+  반대 방향으로, 그 노드에서 리프 노드까지 가장 긴 경로도 존재합니다. 그 길이를 노드의 높이<L>height</L>라고 합니다.
+
+- 트리의 높이는 루트 노드의 높이를 일컫습니다.
+  트리의 레벨<L>level</L>이란, 깊이가 같은 노드들을 말합니다.
+  예를 들어 레벨 0은 루트 노드를 말하고, 레벨 1은 그 자식 노드들이 됩니다.
+
+- 각 노드가 최대 두 개의 자식 노드를 가지는 트리를 바이너리 트리<L>binary tree</L>라고 부릅니다.
+  여기서 인터널 노드가 모두 자식 노드를 두 개씩 갖고, 리프 노드가 같은 깊이를 가지면, 그 트리는 컴플리트<L>complete</L>한 바이너리 트리라고 부릅니다.
+  이런 트리는 다이어그램 상 세모를 채우는 꼴로 나타납니다.
+  여기서는 의미를 좀더 확장해서, 마지막 레벨의 오른쪽 일부가 빈 경우 또한 컴플리트하다고 부르겠습니다.
+
+힙<L>heap</L>은 힙 프로퍼티를 가지는 컴플리트 트리를 말합니다.
+그 중에 바이너리 힙<L>binary heap</L>은 바이너리 트리를 이용한 것을 말합니다.
+트리가 컴플리트하기 때문에, 노드가 채워지는 순서로 인덱스를 매기면, 노드 개수만큼 큰 배열로 트리를 표현할 수 있게 됩니다.
+
+<Figure src={fig5} alt="tree as array">
+  <FigureCaption slot="caption">그림 5. 배열로 표현한 컴플리트 바이너리 트리.
+    트리가 컴플리트하면 빈 원소가 없는 배열로 표현할 수 있습니다.</FigureCaption>
+</Figure>
+
+이렇게 맥스 힙 프로퍼티를 만족시키는, 즉 가장 큰 것이 루트 노드에 있는 힙은 맥스 힙<L>max heap</L>이라고 부릅니다.
+이 데이터 구조는 우선순위 큐를 만드는 것 외의 여러 문제도 해결할 수 있게 됩니다.
+
+- 대표적으로는 소팅 알고리즘<L>sorting algorithm</L>으로서, 가장 큰 것을 계속해서 찾아 반대 순서로 두면 정렬이 됩니다.
+  이를 힙소트<L>heapsort</L>라고 부릅니다.
+
+- 소트된 데이터셋<L>dataset</L>이 여러 개가 주어질 때 이를 소트된 하나로 합치는 멀티웨이 머지<L>multiway merge</L>를 구현할 수 있습니다.
+  머지 소트<L>merge sort</L>의 머지 알고리즘의 일반화 같은 이 알고리즘은 우선순위 큐로 간단히 만들 수 있습니다.
+
+여기서는 배열을 통해 힙을 만들어보고, 이를 통해 우선순위 큐와 힙 소트를 구현해볼 것입니다.
+이전 글에 이어서 여기서도 다른 라이브러리의 도움 없이 자바<L>Java</L>로 처음부터 만들어보겠습니다.
+
+
+
+# 바이너리 힙
+
+바이너리 힙을 구현은, 먼저 컴플리트 바이너리 트리를 배열로 표현하고, 그것이 힙 프로퍼티를 갖게함으로써 만들 수 있습니다.
+그러면 이 두 단계를 나눠서 살펴봅시다.
+여기서 앞으로 트리라는 표현은 편의상 컴플리트 바이너리인 것을 줄인 것으로 하겠습니다.
+
+## 배열로 만드는 트리
+
+트리를 배열로 표현한다는 것은, 어떤 노드의 부모와 자식 노드를 구할 수 있다는 것, 즉 이런 연산을 배열로 구현한다는 것입니다.
+
+- `getParent(node)`: `node`의 부모 노드를 구합니다.
+
+- `getLeftChild(node)`: `node`의 왼쪽 자식 노드를 구합니다.
+
+- `getRightChild(node)`: `node`의 오른쪽 자식 노드를 구합니다.
+
+여기서 트리의 루트 노드가 배열 상 `0`의 인덱스를 갖는다고 해봅시다.
+그러면 레벨 1은 인덱스를 `1`부터, 레벨 2는 `3`부터 가집니다.
+즉 레벨 $l$는 $2^l-1$부터 갖게 됩니다.
+
+<Figure src={fig5} alt="tree as array">
+  <FigureCaption slot="caption">그림 5. 배열로 표현한 트리. 이전의 그림과 같음.</FigureCaption>
+</Figure>
+
+노드를 인덱스로 표현한다면, 부모와 자식 노드를 얻는 것은 인덱스를 계산하는 일이 됩니다.
+먼저, 트리에서 각 레벨의 가장 왼쪽 노드를 바라봅시다.
+그러면 이 노드는 다음 레벨의 가장 왼쪽 노드를 자식 노드로 가집니다.
+다시 말해, $2^l-1$은 $2^{l+1}-1$을 자식 노드로 갖습니다.
+그리고 바로 오른쪽 노드인 $2^{l+1}$ 또한 자식 노드가 됩니다.
+따라서 부모 노드를 구하는 함수는 다음과 같이 인덱스를 인덱스로 보내는 함수가 됩니다.
+
+$$
+  2^{l+1}-1, 2^{l+1} \mapsto 2^l-1
+$$
+
+이것은 다음과 같은 함수 $f(l)$로도 표현할 수 있습니다.
+
+$$
+  f(l) = \Big\lfloor \frac{i-1}{2} \Big\rfloor
+$$
+
+여기서 $\lfloor x \rfloor$는 [플로어 함수][wp-floor]<L>floor function</L>로서, 소수점 이하를 버리기 위해 쓰인 것입니다.
+사실 이 함수는 가장 왼쪽 노드 뿐만 아니라 나머지 노드에 대해서도 부모 노드를 구합니다.
+따라서, 부모 노드를 구하는 `getParent()` 연산은 다음 수도코드로 표현할 수 있게 됩니다.
+
+[wp-floor]: https://ko.wikipedia.org/wiki/%EB%B0%94%EB%8B%A5_%ED%95%A8%EC%88%98%EC%99%80_%EC%B2%9C%EC%9E%A5_%ED%95%A8%EC%88%98
+
+<Alg>
+  <AK>getParent ($i$)</AK>&nbsp;<AC>// 노드 $i$의 부모 노드를 리턴</AC>
+
+  <ABlock>
+    <ARet>$\lfloor (i-1)/2 \rfloor$</ARet>
+  </ABlock>
+</Alg>
+
+비슷한 방법으로, 자식 노드를 구하는 연산 또한 구할 수 있고, `getParent()` 연산을 거꾸로 한 것처럼 표현됩니다.
+먼저, 왼쪽 자식의 경우는 이렇게 만들 수 있습니다.
+
+<Alg>
+  <AK>getLeftChild ($i$)</AK>&nbsp;<AC>// 노드 $i$의 왼쪽 자식 노드를 리턴</AC>
+
+  <ABlock>
+    <ARet>$2i+1$</ARet>
+  </ABlock>
+</Alg>
+
+그리고 여기서 하나 더 큰 것을 리턴하면 오른쪽 자식이 됩니다.
+
+## 힙 프로퍼티 유지하기
+
+앞서 배열로 표현한 트리를 통해, 어떤 배열이 주어지면 항상 어떤 트리를 표현한 것이라는 사실을 알 수 있습니다.
+
+하지만 반드시 어떤 힙을 표현한 것이라고는 할 수 없습니다.
+왜냐면 그 트리가 힙 프로퍼티를 갖지 않을 수도 있으니까요.
+따라서 트리가 힙 오더를 따르도록 만들 필요가 있습니다.
+
+만약 어떤 노드가 힙 오더를 따르지 않는다면, 그 부모 노드와 힙 프로퍼티를 만족하지 않거나, 그 자식 노드와 그런 것으로 나눠볼 수 있습니다.
+따라서 각각의 경우를 해결해봅시다.
+
+첫 번째 경우, 부모 노드를 따라 필요할 때마다 계속 자리를 바꿔서 힙 오더를 따르도록 만들 수 있습니다.
+이 연산에는 버블 업<L>bubble up</L>, 스윔<L>swim</L> 등의 여러 이름이 붙어있지만, 여기서는 시프트 업<L>sift up</L>이라고 부르겠습니다.
+
+<Figure src={fig6} alt="sift up">
+  <FigureCaption slot="caption">그림 6. 시프트 업 다이어그램. 힙 오더를 따르지 않는 한 부모 노드와 자리를 바꿉니다.</FigureCaption>
+</Figure>
+
+이 연산은 다음 수도코드처럼 표현할 수 있습니다.
+
+<Alg>
+  <AK>siftUp ($i$)</AK>&nbsp;<AC>// 노드 $i$가 힙 오더를 따르도록 위로 옮김</AC>
+
+  <ABlock>
+    <AWhile>$i$가 루트 노드가 아닌</AWhile>
+    <ABlock>
+      $\textit{parent}$ $\leftarrow$ getParent($i$)
+
+      <AIf>$i$와 $\textit{parent}$가 힙 오더를 따르는 경우</AIf>
+      <ABlock>
+        <ABreak />
+      </ABlock>
+
+      <ANL />
+
+      $i$와 $\textit{parent}$ 스왑
+    </ABlock>
+  </ABlock>
+</Alg>
+
+컴플리트 바이너리 트리의 높이는 노드가 $n$ 개일 때 $\lfloor \log_2(n) \rfloor$이므로, 시프트 업은 최악의 경우 리프 노드에서 루트 노드까지, 즉 트리의 높이만큼 반복하므로 $\Theta(\lg n)$의 시간이 든다는 것을 알 수 있습니다.
+
+반면 두 번째 경우, 반대로 자식 노드와 자리를 바꿔가며 힙 오더를 따르도록 만듭니다.
+이 때 더 큰 값을 가진 쪽과 바꿔야 힙 오더를 유지할 수 있습니다. (이유는 직접 확인해보세요.)
+
+<Figure src={fig7} alt="sift down">
+  <FigureCaption slot="caption">그림 7. 시프트 다운 다이어그램. 힙 오더를 따르지 않는 한 자식 노드와 자리를 바꿉니다.</FigureCaption>
+</Figure>
+
+이를 수행하는 시프트 다운<L>sift down</L> 연산은 다음과 같이 만들 수 있습니다.
+
+<Alg>
+  <AK>siftDown ($i$)</AK>&nbsp;<AC>// 노드 $i$가 힙 오더를 따르도록 아래로 옮김</AC>
+
+  <ABlock>
+    <AWhile>$i$가 왼쪽 자식 노드를 가진 동안</AWhile>
+    <ABlock>
+      $\textit{largerChild}$ $\leftarrow$ 두 자식 노드 중에 큰 것
+
+      <AIf>$i$와 $\textit{largerChild}$가 힙 오더를 따르는 경우</AIf>
+      <ABlock>
+        <ABreak />
+      </ABlock>
+
+      <ANL />
+
+      $i$와 $\textit{largerChild}$ 스왑
+    </ABlock>
+  </ABlock>
+</Alg>
+
+이 또한 비슷한 이유로 최악의 경우 $\Theta(\lg n)$의 시간 복잡도를 가집니다.
+
+이렇게 만든 연산은 트리가 힙 프로퍼티를 잃게 되는 경우, 다시 힙 프로퍼티를 유지시키기 위해 쓰일 수 있습니다.
+그 구체적인 예는 이후 우선순위 큐를 구현할 때 볼 것입니다.
+
+## 자바로 구현하기
+
+먼저 배열을 트리로 표현하기 위해, 배열에서 부모와 자식 노드를 구하는 연산을 만들어봅시다.
+간단한 인덱스 연산에 불과하지만, 배열을 추상적인 트리로서 바라보기 위해 별도의 클래스로 만들어보겠습니다.
+따라서 다음과 같이 스태틱 메소드로서 수도코드를 그대로 옮겨 만듭시다.
+
+```java
+class ArrayTree {
+  private static int getParent(int index) {
+    assert index >= 1;
+
+    return (index-1)/2;
+  }
+
+  private static int getLeftChild(int index) {
+    assert index >= 0;
+
+    return 2*index+1;
+  }
+
+  private static int getRightChild(int index) {
+    assert index >= 0;
+
+    return 2*index+2;
+  }
+
+  // ...
+}
+```
+
+이렇게 만든 연산은 루트 노드가 인덱스 `0`에 있다고 가정한 것입니다.
+이를 일반화해서 임의의 인덱스를 가질 수 있다고 한다면, 외부에서 그 인덱스를 받도록 하여 다음처럼 확장할 수 있습니다.
+
+```java
+  public static int getParent(int index, int root) {
+    assert root >= 0;
+
+    return getParent(index-root) + root;
+  }
+
+  public static int getLeftChild(int index, int root) {
+    assert root >= 0;
+
+    return getLeftChild(index-root) + root;
+  }
+
+  public static int getRightChild(int index, int root) {
+    assert root >= 0;
+
+    return getRightChild(index-root) + root;
+  }
+```
+
+이제 이 클래스를 이용해, 시프트 업과 시프트 다운을 만들어봅시다.
+여기서는 힙을 표현하는 데이터 구조를 배열에만 한정시키지 않고, 인덱스로 값을 가져오거나 줄 수 있는 모든 데이터 구조로 일반화 할 것입니다.
+따라서 그런 인덱스 연산을 `get`과 `set`으로 받아 초기화하도록 만듭니다.
+
+```java
+public class Heapifier<T> {
+  private Function<Integer, T> get;
+  private BiConsumer<Integer, T> set;
+  private Comparator<T> comp;
+
+  public Heapifier(Function<Integer, T> get, BiConsumer<Integer, T> set, Comparator<T> comp) {
+    this.get = get;
+    this.set = set;
+    this.comp = comp;
+  }
+
+  // ...
+}
+```
+
+여기서 비교 연산을 위해 컴패러터<L>comparator</L> 또한 외부에서 받았습니다.
+
+이어서 시프트 업은 다음과 같이 수도코드를 그대로 옮겨 만들 수 있습니다.
+배열의 루트 노드 인덱스 `root`는 외부에서 받습니다.
+
+```java
+  public void siftUp(int index, int root) {
+    while (index > root) {
+      int parent = getParent(index, root);
+      if (isHeapOrdered(parent, index)) {
+        break;
+      }
+
+      this.swap(index, parent);
+      index = parent;
+    }
+  }
+```
+
+여기서 힙 오더를 따르는지 확인하는 메소드는 다음처럼 부모가 자식 이상인지 확인합니다.
+
+```java
+  private boolean isHeapOrdered(int parentIndex, int childIndex) {
+    T parent = this.get.apply(parentIndex);
+    T child = this.get.apply(childIndex);
+    return isGreaterThanOrEqualTo(parent, child, this.comp);
+  }
+```
+
+여기서 쓰인 `isGreasterThanOrEqualTo()` 메소드는 다음과 같이 정의한 유틸 메소드입니다.
+
+```java
+  public static <T> boolean isGreaterThanOrEqualTo(T source, T target, Comparator<T> comparator) {
+    return comparator.compare(source, target) >= 0;
+  }
+```
+
+노드의 스왑을 위한 `swap()` 메소드는 외부에서 받았던 `get`과 `set`을 통해 만듭니다.
+
+```java
+  private void swap(int i, int j) {
+    T temp = this.get.apply(i);
+    this.set.accept(i, this.get.apply(j));
+    this.set.accept(j, temp);
+  }
+```
+
+한편, 시프트 다운은 다음과 같이 수도코드를 옮겨 만들 수 있습니다.
+여기서 루트 노드와 마지막 노드의 인덱스, 즉 `root`와 `last`를 외부에서 받습니다.
+
+```java
+  public void siftDown(int index, int root, int last) {
+    while (getLeftChild(index, root) <= last) {
+      int largerChild = this.getLargerChildIndex(index, root, last);
+      if (isHeapOrdered(index, largerChild)) {
+        break;
+      }
+
+      this.swap(index, largerChild);
+      index = largerChild;
+    }
+  }
+```
+
+둘 중 더 큰 자식 노드를 구하는 메소드는 다음과 같이 만듭니다.
+자식이 왼쪽밖에 없다면 그것을 그대로 리턴합니다.
+
+```java
+  private int getLargerChildIndex(int index, int root, int last) {
+    int left = getLeftChild(index, root);
+    assert left <= last;
+
+    // return left child if no right one
+    int right = getRightChild(index, root);
+    if (right > last) {
+      return left;
+    }
+
+    T leftValue = this.get.apply(left);
+    T rightValue = this.get.apply(right);
+    if (isGreaterThanOrEqualTo(leftValue, rightValue, this.comp)) {
+      return left;
+    } else {
+      return right;
+    }
+  }
+```
+
+이렇게 만든 메소드는 다음과 같은 테스트 코드처럼 사용할 수 있습니다.
+JUnit 5 프레임워크를 이용한 다음 테스트 케이스는 자식의 부모가 자신인지 확인합니다.
+
+```java
+  @Test
+  public void testGetParentAndGetChild() {
+    int root = 42;
+    int leftChild = ArrayTree.getLeftChild(root, root);
+    int rightChild = ArrayTree.getRightChild(root, root);
+
+    assertEquals(root, ArrayTree.getParent(leftChild, root));
+    assertEquals(root, ArrayTree.getParent(rightChild, root));
+  }
+```
+
+이 테스트 코드는 루트 노드의 인덱스가 무슨 값이더라도 통과합니다.
+달리 말하자면, 루트 노드가 주어지기만 한다면 노드가 인덱스라는 사실을 신경쓰지 않을 수 있습니다.
+즉 노드는 일종의 불투명한 값<L>opaque value</L>으로 취급할 수 있는 것입니다.
+따라서 배열을 트리라는 데이터 구조로 추상화할 수 있게 됩니다.
+
+
+
+# 우선순위 큐
+
+앞서 언급한 것처럼, 데이터를 추가하는 `add()` 연산과 가장 큰 우선순위를 갖는 것을 가져오는 `poll()` 연산을 만들어봅시다.
+`add()` 연산은 앞서 만들었던 시프트 업으로 만들 수 있습니다.
+즉 새 데이터를 마지막 리프 노드로 추가한 뒤에, 이 노드를 시프트 업으로 힙 오더를 따르도록 올립니다.
+
+<Alg>
+  <AK>add ($\textit{value}$)</AK>&nbsp;<AC>// 값 $\textit{value}$를 힙에 추가</AC>
+
+  <ABlock>
+    <p><AC>// $\textit{arr}\,$: 힙을 표현하는 배열</AC></p>
+
+    <p><AC>// $\textit{last}\,$: $\textit{arr}$의 마지막 원소 인덱스</AC></p>
+
+    <ANL />
+
+    $\textit{arr}$[$\textit{last}+1$] $\leftarrow$ $\textit{value}$
+
+    siftUp($\textit{last}+1$)
+  </ABlock>
+</Alg>
+
+한편, `poll()` 연산은 시프트 다운으로 만들 수 있습니다.
+루트 노드가 가장 높은 우선순위를 갖기 때문에 이것을 가져옵니다.
+그리고 이 노드를 트리에서 지우기 위해, 마지막 노드를 리프 노드에 덮어 쓴 뒤에 시프트 다운으로 내려서 힙 오더를 유지합니다.
+
+<Alg>
+  <AK>poll ()</AK>&nbsp;<AC>// 힙에서 가장 높은 우선순위의 값을 리턴</AC>
+
+  <ABlock>
+    <p><AC>// $\textit{arr}\,$: 힙을 표현하는 배열</AC></p>
+
+    <p><AC>// $\textit{last}\,$: $\textit{arr}$의 마지막 원소 인덱스</AC></p>
+
+    <ANL />
+
+    $\textit{polled}$ $\leftarrow$ $\textit{arr}$[$0$]
+
+    <ANL />
+
+    $\textit{arr}$[$0$]와 $\textit{arr}$[$\textit{last}+1$] 스왑
+
+    $\textit{arr}$[$\textit{last}+1$] 삭제
+
+    siftDown($0$) <AC>// 루트 노드 시프트 다운</AC>
+
+    <ANL />
+
+    <ARet>$\textit{polled}$</ARet>
+  </ABlock>
+</Alg>
+
+`add()`와 `poll()`은 각각 시프트 업과 시프트 다운의 시간 복잡도를 따릅니다.
+즉 큐에 $n$ 개의 값이 있을 때, 둘 다 최악의 경우 $\Theta(\lg n)$의 시간이 듭니다.
+
+## 자바로 구현하기
+
+우선순위 큐가 가질 연산을 큐 인터페이스로 만들어봅시다.
+
+```java
+public interface Queue<T> {
+  public void add(T data);
+  public T poll();
+  public T peek();
+  public int getSize();
+  public boolean isEmpty();
+}
+```
+
+여기서 `peek()`는 `poll()` 처럼 값을 가져오는 대신, 힙에서 꺼내지는 않습니다.
+`getSize()`는 큐에 든 데이터의 개수를, `isEmpty()`은 큐가 비어있는지 여부를 라턴합니다.
+
+이제 힙으로 구현하는 우선순위 큐 클래스를 만듭시다.
+내부적으로 사용할 배열로, 크기가 알아서 조절되는 것을 이용할 것입니다.
+여기서는 <PostLink href="/2024/05/09/01">이전 글</PostLink>에서 만든 다이나믹 배열<L>dynamic array</L>를 가져다 쓰겠습니다.
+
+```java
+public class HeapPriorityQueue<T> implements Queue<T> {
+  private DynamicArray<T> arr;
+  private Comparator<T> comp;
+  private Heapifier<T> heapifier;
+
+  public HeapPriorityQueue(Comparator<T> comp) {
+    this.arr = new DynamicArray<>();
+    this.comp = comp;
+    this.heapifier = new Heapifier<>(this.arr::get, this.arr::set, this.comp);
+  }
+
+  // ...
+}
+```
+
+이어서 `add()`와 `poll()` 연산은 수도코드를 그대로 옮겨 만듭니다.
+
+```java
+  public void add(T value) {
+    this.arr.append(value);
+    this.heapifier.siftUp(this.arr.getSize()-1, 0);
+  }
+
+  public T poll() {
+    T polled = this.arr.get(0);
+
+    this.swap(0, this.arr.getSize()-1);
+    this.arr.remove();
+    this.heapifier.siftDown(0, 0, this.arr.getSize()-1);
+
+    return polled;
+  }
+
+  private void swap(int i, int j) {
+    T temp = this.arr.get(i);
+    this.arr.set(i, this.arr.get(j));
+    this.arr.set(j, temp);
+  }
+```
+
+`peek()` 연산은 루트 노드의 값을 가져옵니다.
+
+```java
+  public T peek() {
+    return arr.get(0);
+  }
+```
+
+나머지 메소드는 배열의 메소드에 맡겨서 만듭니다.
+
+```java
+  public int getSize() {
+    return arr.getSize();
+  }
+
+  public boolean isEmpty() {
+    return arr.getSize() == 0;
+  }
+```
+
+## 소요 시간 측정
+
+최악의 경우 $\Theta(\lg n)$의 시간이 드는 `add()`와 `poll()` 메소드의 소요 시간을 재봅시다.
+다음은 $n$ 개의 값을 우선순위 큐에 `add()`로 추가한 경우와, 그렇게 추가하고 모두 `poll()`로 꺼낸 경우를 측정한 것입니다.
+이는 다음과 같이 이론적으로 최악의 경우 $\Theta(n \lg n)$의 시간 복잡도를 갖게됩니다.
+
+$$
+  \lg 1 + \lg 2 + \lg 3 + \dots + \lg n = \lg (n!) \sim n \lg n = \Theta(n \lg n)
+$$
+
+여기서 $\lg (n!) \sim n \lg n$이라는 사실은 [스털링 근사][wp-stirling]<L>Stirling's approximation</L>로부터 나옵니다.
+
+[wp-stirling]: https://ko.wikipedia.org/wiki/%EC%8A%A4%ED%84%B8%EB%A7%81_%EA%B7%BC%EC%82%AC
+
+<Figure src={fig8} alt="elapsed time for heap priority queue">
+  <FigureCaption slot="caption">그림 8. 우선순위 큐의 소요 시간 측정. 선은 회귀선.</FigureCaption>
+</Figure>
+
+위 결과가 보여주는 것처럼, 앞서 만든 우선순위 큐는 이론적인 시간 복잡도를 실제로 따르는 것으로 볼 수 있습니다.
+
+
+## 다른 종류의 큐
+
+앞서 우선순위 큐를 FIFO 큐의 일반화로 바라보았고, 따라서 이렇게 만든 우선순위 큐가 FIFO 순서를 갖도록 직접 만들 수도 있습니다.
+
+하지만 FIFO 큐를 우선순위 큐로 만들어서 최악의 경우 $\Theta(\lg n)$의 시간 복잡도를 갖게 만드는 대신, 별도의 데이터 구조를 만들어 $\Theta(1)$의 시간으로 줄일 수도 있습니다.
+예를 들어, FIFO 순서로 노드를 더하고 없애는 링크드 리스트<L>linked list</L>로 큐 인터페이스를 구현하는 것입니다.
+이 부분은 직접 해보는 것으로 남기고 넘어가겠습니다.
+
+한편, FIFO 순서의 반대로, 나중에 넣은 것을 먼저 꺼낼 수도 있습니다.
+손님이 줄을 선 상황에서는 어울리지 않을 수 있겠지만, 이는 사실 스택<L>stack</L>과도 같아서 컴퓨터가 재귀를 수행할 때 따르는 순서가 됩니다.
+즉 재귀를 수행할 때마다 일종의 LIFO<L>last-in first-out</L> 큐에 작업이 대기된다고 바라볼 수 있습니다.
+
+따라서 LIFO 큐는 단순히 스택의 연산에 맡겨 간단히 만들 수 있습니다.
+여기서는 <PostLink href="/2024/05/09/01">이전 글</PostLink>에서 만든 스택 클래스인 `ListStack`을 이용해서, 내부적으로 이 스택을 유지하도록 초기화합니다.
+
+```java
+public class LifoQueue<T> implements Queue<T> {
+  private ListStack<T> stack;
+
+  public LifoQueue() {
+    this.stack = new ListStack<>();
+  }
+
+  // ...
+}
+```
+
+값을 넣거나 가져오는 연산은 각각 푸시와 팝에 맡깁니다.
+
+```java
+  public void add(T value) {
+    stack.push(value);
+  }
+
+  public T poll() {
+    return stack.pop();
+  }
+```
+
+나머지 메소드는 단순히 스택의 메소드에 맡기는 것으로 완성합니다.
+
+```java
+  public T peek() {
+    return stack.peek();
+  }
+
+  public int getSize() {
+    return stack.getSize();
+  }
+
+  public boolean isEmpty() {
+    return stack.isEmpty();
+  }
+```
+
+이렇게 만든 큐는 스택의 시간 복잡도를 그대로 따르기 때문에, 모든 연산은 $\Theta(1)$의 시간이 들게 됩니다.
+
+
+
+
+# 힙소트
+
+힙의 두 번째 응용으로, 힙소트라는 소팅 알고리즘이 있습니다.
+이 알고리즘이 배열을 소트하는 방법은 이렇습니다.
+
+<Figure src={fig9} alt="heap sort diagram">
+  <FigureCaption slot="caption">그림 9. 힙소트 다이어그램. 스왑과 시프트 다운을 통해 큰 값부터 소트합니다.</FigureCaption>
+</Figure>
+
+1. 배열을 트리로서 바라보고, 이 트리가 힙으로 주어진다고 해봅시다. (힙이 아니더라도 힙으로 만들 수 있습니다.)
+
+1. 루트 노드와 마지막 노드를 스왑합니다.
+   그러면 원래 루트 노드에 있었던 가장 큰 값은 이제 마지막 노드에 위치합니다.
+   즉 가장 큰 값은 소트된 것입니다.
+
+1. 스왑하고 나면 트리가 힙 오더를 따르지 않을 수 있습니다.
+   따라서 바뀐 루트 노드를 시프트 다운으로 내려 힙 오더를 유지합니다.
+
+1. 마지막 노드를 다음 반복에서 제외시키고 이 과정을 반복합니다.
+   그러면 큰 값부터 마지막에 위치하게 되어 최종적으로 소트된 상태로 끝나게 됩니다.
+
+수도코드로는 이렇게 표현할 수 있습니다.
+배열이 힙 오더를 갖지 않을 수도 있기 때문에, 배열을 힙으로 만드는 `heapify()` 연산이 일단 있다고 가정하고 나중에 만들어보겠습니다.
+
+<Alg>
+  <AK>heapsort ($\textit{arr}$)</AK>&nbsp;<AC>// 배열 $\textit{arr}$을 소트</AC>
+
+  <ABlock>
+    <p><AC>// $\textit{last}\,$: $\textit{arr}$의 마지막 원소 인덱스</AC></p>
+
+    <ANL />
+
+    heapify($\textit{arr}$) <AC>// 배열 $\textit{arr}$을 힙으로 재구성</AC>
+
+    <ANL />
+
+    <AForeach>$\textit{last}\,$부터 $1$까지 $i$</AForeach>&nbsp;<AC>// 루트 노드를 제외하고 역순으로 노드마다 반복</AC>
+    <ABlock>
+      $\textit{arr}$[$\textit{root}$]와 $\textit{arr}$[$\textit{i}$] 스왑
+
+      siftDown($\textit{root}$)&nbsp;<AC>// 노드 $i$를 제외한 트리에서 시프트 다운</AC>
+    </ABlock>
+  </ABlock>
+</Alg>
+
+이 알고리즘은 배열의 크기가 $n$이라면 $\Theta(n \lg n)$의 시간 복잡도를 가집니다.
+왜냐면 반복문에서 $O(\lg n)$의 시간이 드는 시프트 다운을 노드마다 반복하므로 총 $O(n \lg n)$의 시간이 들기 때문입니다.
+그리고 <PostLink href="/2024/05/21/01">이전 글</PostLink>에서 살펴본 것처럼, 비교 기반 소팅 알고리즘은 $\Omega(n \lg n)$의 시간 복잡도를 가집니다.
+따라서 정리하면 $\Theta(n \lg n)$이라는 결과를 얻게 됩니다.
+여기서 `heapify()` 연산은 나중에 확인할 것이지만 $\Theta(n)$의 시간이 걸리므로 결과가 달라지지 않습니다.
+
+남은 숙제인 `heapify()` 연산을 만들어봅시다.
+배열을 힙으로 어떻게 만들 수 있을까요?
+간단히는 첫 번째부터 마지막 원소까지 시프트 업을 하여 전체적으로 힙 프로퍼티를 갖도록 만들 수 있습니다.
+
+그런데 반대 순서로 시프트 다운을 한다면, 리프 노드는 이미 힙이라고 볼 수 있기 때문에 생략할 수 있고, 인터널 노드만 힙 오더로 정리하면 끝납니다.
+즉 모든 노드에 대해 시프트 업을 하는 대신, 대략 절반인 인터널 노드에 대해서만 시프트 다운을 하는 것입니다.
+
+<Figure src={fig10} alt="heapify diagram">
+  <FigureCaption slot="caption">그림 10. 트리를 힙으로 만드는 다이어그램. 마지막 인터널 노드부터 루트 노드까지 시프트 다운하면 트리가 힙 오더를 따르게 됩니다.</FigureCaption>
+</Figure>
+
+이를 수도코드로 표현하면 다음과 같습니다.
+
+<Alg>
+  <AK>heapify ($\textit{arr}$)</AK>&nbsp;<AC>// 배열 $\textit{arr}$을 힙으로 재구성</AC>
+
+  <ABlock>
+    <p><AC>// $\textit{lastInternal}\,$: $\textit{arr}$의 마지막 인터널 노드 인덱스</AC></p>
+
+    <ANL />
+
+    <AForeach>$\textit{lastInternal}\,$부터 $0$까지 $i$</AForeach>&nbsp;<AC>// 리프 노드를 제외하고 역순으로 노드마다 반복</AC>
+    <ABlock>
+      siftDown($\textit{i}$)
+    </ABlock>
+  </ABlock>
+</Alg>
+
+노드가 $n$ 개인 트리는 $\lfloor n/2 \rfloor$ 개의 인터널 노드를 가집니다.
+따라서 인터널 노드마다 시프트 다운을 반복하는 이 알고리즘의 시간 복잡도로 $O(n \lg n)$을 얻을 수 있기는 합니다.
+시프트 다운에 $O(\lg n)$의 시간이 든다고 계산한다면요.
+하지만 좀더 자세한 분석으로 $\Theta(n)$의 시간이 든다는 것을 알 수 있습니다.
+
+먼저, 높이가 $h$인 노드는 트리에서 최대 $\lceil n/2^{h+1} \rceil$ 개가 있다는 사실을 이용해봅시다.
+여기서 $\lceil x \rceil$은 [실링 함수][wp-floor]<L>ceiling function</L>로 소수점을 올리기 위해 사용된 것입니다.
+
+높이가 $h$인 노드는 시프트 다운에 최악의 경우 $\Theta(\lg h)$의 시간이 듭니다.
+이를 상수 $c$에 대해 $ch$로 바꿔서 표현해봅시다.
+그러면 모든 노드의 시프트 다운에 드는 시간 $T$는 최악의 경우 다음과 같습니다.
+
+$$
+\begin{align*}
+  T(n) &\leq \sum_{h=0}^{\lfloor \lg n \rfloor} \Big\lceil \frac{n}{2^{h+1}} \Big\rceil ch \\
+       &\leq \sum_{h=0}^{\lfloor \lg n \rfloor} \frac{n}{2^h} ch \quad \left( \because\: \Big\lceil \frac{n}{2^{h+1}} \Big\rceil \leq \frac{n}{2^h} \quad \textrm{(Eq.1)} \right) \\
+       &\leq \sum_{h=0}^{\infty}                \frac{n}{2^h} ch \\
+       &\leq 2cn                                                 \quad \left( \because\: \sum_{h=0}^{\infty} \frac{h}{2^h} = 2 \quad \textrm{(Eq.2)} \right) \\
+       &= O(n)
+\end{align*}
+$$
+
+한편, `heapify()` 연산은 $\lfloor n/2 \rfloor$ 개의 인터널 노드마다 반복하기 때문에 $\Omega(n)$의 시간이 든다는 것은 바로 알 수 있습니다.
+따라서 $O(n)$인 결과와 종합하면 $\Theta(n)$의 시간 복잡도를 얻습니다.
+
+위에서 사용한 식 $\textrm{Eq.1}$은, $x \geq 1/2$에 대해 $\lceil x \rceil \leq 2x$ 라는 사실로부터 나옵니다.
+여기서 $x=n/2^{h+1}$를 대입하면 그 결과를 바로 얻습니다.
+식 $\textrm{Eq.2}$은 기하급수<L>geometric series</L> 식을 미분한 것으로부터 얻습니다.
+즉 다음과 같이 유도할 수 있습니다.
+
+$$
+\begin{align*}
+  &            &&x\frac{d}{dx} \sum_{h=0}^{\infty} x^h  = x\frac{d}{dx} \frac{1}{1-x} \\
+  &\Rightarrow &&\sum_{h=0}^{\infty} hx^h = \frac{x}{(1-x)^2}
+\end{align*}
+$$
+
+여기에 $x=1/2$를 대입하면 원하는 결과를 얻습니다.
+
+## 자바로 구현하기
+
+앞서 `heapify()` 연산에서 마지막 인터널 노드를 구할 필요가 있었습니다.
+이 노드는 마지막 노드 $last$로부터 $\lfloor (last-1)/2 \rfloor$로 구할 수 있습니다.
+이런 계산을 `ArrayTree` 클래스의 정적 메소드로 추가해봅시다.
+
+```java
+class ArrayTree {
+  // ...
+
+  private static int getLastInternalNode(int last) {
+    assert last >= 1;
+
+    return (last-1)/2;
+  }
+}
+```
+
+루트 노드의 인덱스를 일반화한 메소드는 다음과 같이 만들 수 있습니다.
+
+```java
+  public static int getLastInternalNode(int last, int root) {
+    assert root >= 0;
+
+    return getLastInternalNode(last-root) + root;
+  }
+```
+
+이제 `heapify()` 연산은 수도코드를 그대로 옮겨 `Heapifier` 클래스의 메소드로 만들어봅시다.
+
+```java
+public class Heapifier<T> {
+  // ...
+
+  public void heapify(int root, int last) {
+    int lastInternalNode = getLastInternalNode(last, root);
+
+    for (int i = lastInternalNode; i >= root; --i) {
+      this.siftDown(i, root, last);
+    }
+  }
+}
+```
+
+힙소트를 <PostLink href="/2024/05/16/01">이전 글</PostLink>에서 했던 것처럼, 다음과 같이 스트레터지<L>strategy</L> 패턴으로 만들어봅시다.
+
+```java
+public interface ArraySortStrategy<T> {
+  public T[] sortArray(T[] arr, int begin, int end, Comparator<T> comp);
+}
+```
+
+이 메소드는 배열 `arr`을 마지막을 제외한 구간 [`begin`, `end`)에 대해 소트합니다.
+이에 따라 수도코드를 그대로 옮겨 힙소트를 다음과 같이 만들 수 있습니다.
+
+```java
+public class HeapStrategy<T> implements ArraySortStrategy<T> {
+  public T[] sortArray(T[] arr, int begin, int end, Comparator<T> comp) {
+    Heapifier<T> heapifier = new Heapifier<>(i -> arr[i], (i, value) -> arr[i] = value, comp);
+
+    int root = begin;
+    int last = end-1;
+    heapifier.heapify(root, last);
+
+    for (int i = last; i > begin; --i) {
+      swap(arr, begin, i);
+      heapifier.siftDown(begin, begin, i-1);
+    }
+
+    return arr;
+  }
+}
+```
+
+<PostLink href="/2024/05/21/01">이전 글</PostLink>에서 살펴본 머지 소트<L>merge sort</L>는 머지한 결과를 따로 담기 위해 최대 $n$ 개만큼 큰 배열을 별도로 마련할 필요가 있었습니다.
+반면 힙소트는 그런 배열 없이 데이터를 직접 스왑함으로써 소트하는 인플레이스<L>in-place</L> 알고리즘입니다.
+
+## 소요 시간
+
+이렇게 만든 힙소트의 소요 시간을 재봅시다.
+배열이 이미 소트되었을 때와 반대 순서로 소트되었을 때를 각각 측정해보면 다음과 같습니다.
+
+<Figure src={fig11} alt="heapsort elapsed time">
+  <FigureCaption slot="caption">그림 11. 힙소트의 소요 시간. 선은 회귀선.</FigureCaption>
+</Figure>
+
+그래프가 보여주는 것처럼, 이론적인 시간 복잡도인 $\Theta(n \lg n)$을 따르는 것으로 보입니다.
+
+
+
+# 마치며
+
+힙이라는 데이터 구조를 이용해 우선순위 큐와 힙소트를 만들어보았습니다.
+바이너리 힙이란 힙 오더를 따르는 컴플리트 바이너리 트리로, 이것을 배열로 표현할 수 있었습니다.
+그리고 트리의 노드를 더하거나 없애더라도, 시프트 업이나 시프트 다운을 통해 트리가 힙 프로퍼티를 유지하도록 만들 수 있었습니다.
+
+본문의 자바 코드는 생략된 부분을 포함해 [깃허브][gh-jal]<L>GitHub</L>에서 확인할 수 있습니다.
+
+[gh-jal]: https://github.com/wcho21/jal
+
+## 레퍼런스
+
+- *Introduction to Algorithms* (3rd ed., Thomas Cormen et al., 2009)
+
+- *Algorithms* (4th ed., Robert Sedgewick, 2011), 또는 *알고리즘* (길벗, 2018)
+
+- [*Algorithm 245: Treesort*][acm-treesort] (Robert W. Floyd): (당시에는 다른 이름을 가졌던) 힙소트.
+
+- [Java Microbenchmark Harness (JMH)][jmh]: 자바 코드의 소요 시간 측정에 사용한 도구.
+
+[acm-treesort]: https://dl.acm.org/doi/pdf/10.1145/355588.365103
+[jmh]: https://github.com/openjdk/jmh

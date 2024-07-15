@@ -1,0 +1,59 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+
+\tikzset{
+  node/.style={
+    draw,circle,inner sep=0.75mm,
+  },
+  tree/.style={
+    level 1/.style={level distance=12mm,sibling distance=16mm},
+    level 2/.style={level distance=12mm,sibling distance=8mm},
+  },
+  label/.style={
+    above left=0.75mm,yshift=-0.75mm,xshift=-0.5mm,
+  }
+}
+
+\begin{document}
+  \begin{tikzpicture}[tree]
+    \node[node] (R) {9}
+      child {
+        node[node] (AA) {7}
+        child {
+          node[node] (BA) {1}
+        }
+        child {
+          node[node] (BB) {6}
+        }
+      }
+      child {
+        node[node] (AB) {5}
+        child {
+          node[node] (BC) {2}
+        }
+        child { edge from parent[draw=none] }
+      };
+
+    \node[label] at (R)  {\texttt{0}};
+    \node[label] at (AA) {\texttt{1}};
+    \node[label] at (AB) {\texttt{2}};
+    \node[label] at (BA) {\texttt{3}};
+    \node[label] at (BB) {\texttt{4}};
+    \node[label] at (BC) {\texttt{5}};
+
+    \draw[StlthBoth] (16mm,-2*6.5mm) -- ++(8mm,0);
+
+    \def\arrayTopLeftX{30mm}
+    \def\arrayTopLeftY{6.5mm}
+    \def\arrayCellWidth{12mm}
+    \def\arrayCellHeight{6.5mm}
+    \foreach \y/\txt in {0/9,1/7,2/5,3/1,4/6,5/2} {
+      \def\cy{\arrayTopLeftY-\y*\arrayCellHeight-0.5*\arrayCellHeight}
+
+      \draw (\arrayTopLeftX,\cy-0.5*\arrayCellHeight) -- ++(0,\arrayCellHeight) -- ++(\arrayCellWidth,0) -- ++(0,-\arrayCellHeight);
+      \node at (\arrayTopLeftX+0.5*\arrayCellWidth,\cy) {\txt};
+      \node at (\arrayTopLeftX+1.25*\arrayCellWidth,\cy) {\small\texttt{\y}};
+    }
+    \draw (\arrayTopLeftX,\arrayTopLeftY-6*\arrayCellHeight) -- ++(\arrayCellWidth,0);
+  \end{tikzpicture}
+\end{document}
