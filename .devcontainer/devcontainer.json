@@ -1,0 +1,15 @@
+{
+  "name": "env",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "postCreateCommand": "corepack enable pnpm && corepack use pnpm@9 && pnpm install --frozen-lockfile",
+  "forwardPorts": [3000, 3000],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "astro-build.astro-vscode"
+      ]
+    }
+  }
+}
