@@ -1,7 +1,5 @@
 SRC=$(shell find . -name *.tex)
 
-# ghostscript libgs dynamic library directory
-LIBGS:=/opt/homebrew/lib/libgs.dylib
 # svgo config file (see svgo documentation for the options and detail)
 SVGO_CONFIG_JS:=./svgo.config.js
 # custom tex package directory
@@ -9,7 +7,7 @@ TEX_CUSTOM_PACKAGES:=./packages//:
 
 XELATEX:=xelatex
 # --libgs: dvisvgm seems to have a problem to find ghostscript brew package, so specify its directory
-DVISVGM:=dvisvgm --libgs=$(LIBGS) --no-fonts --optimize --bbox=papersize --pdf
+DVISVGM:=dvisvgm --no-fonts --optimize --bbox=papersize --pdf
 SVGO:=svgo --config "$(SVGO_CONFIG_JS)"
 
 # $1: path with basename of dvi output
