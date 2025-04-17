@@ -1,0 +1,16 @@
+{
+  "name": "env",
+  "build": {
+    "context": "..",
+    "dockerfile": "Dockerfile"
+  },
+  "postCreateCommand": "corepack enable pnpm && corepack use pnpm@9 && pnpm add --global svgo && pnpm install --frozen-lockfile",
+  "forwardPorts": [3000, 3000],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "astro-build.astro-vscode"
+      ]
+    }
+  }
+}

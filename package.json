@@ -4,11 +4,9 @@
   "version": "0.0.1",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
+    "dev": "astro dev --port 3000 --host 0.0.0.0",
     "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "preview": "astro preview --port 3000 --host 0.0.0.0"
   },
   "dependencies": {
     "@astrojs/mdx": "^2.3.1",
@@ -22,5 +20,6 @@
     "remark-math": "^6.0.0",
     "sharp": "^0.33.3",
     "tailwindcss": "^3.4.3"
-  }
+  },
+  "packageManager": "pnpm@9.15.9+sha512.68046141893c66fad01c079231128e9afb89ef87e2691d69e4d40eee228988295fd4682181bae55b58418c3a253bde65a505ec7c5f9403ece5cc3cd37dcf2531"
 }
