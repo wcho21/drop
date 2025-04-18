@@ -11,20 +11,19 @@ interface Props {
   title?: string;
   desc?: string;
   image?: Image;
-  url?: string;
 }
 
-const { title, desc, image, url } = Astro.props;
+const { title, desc, image } = Astro.props;
+const url = Astro.url.href;
 
 const defaultTitle = "Drop";
 const defaultDescription = "A magazine about computation";
 const defaultImage: Image = { src: "/logo.png", width: 512, height: 512 };
-const defaultUrl = config.domain;
 ---
 
 <meta property="og:title" content={title ?? defaultTitle} />
 <meta property="og:image" content={image?.src ?? defaultImage.src} />
 <meta property="og:image:width" content={String(image?.width ?? defaultImage.width)} />
 <meta property="og:image:height" content={String(image?.height ?? defaultImage.height)} />
-<meta property="og:url" content={url ?? defaultUrl} />
+<meta property="og:url" content={url} />
 <meta property="og:description" content={desc ?? defaultDescription} />
