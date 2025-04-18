@@ -1,10 +1,10 @@
-import { defineConfig } from "astro/config";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-import { transformerMetaWordHighlight } from '@shikijs/transformers'
+import tailwind from "@astrojs/tailwind";
+import { transformerMetaWordHighlight } from "@shikijs/transformers";
+import { defineConfig } from "astro/config";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,9 +13,7 @@ export default defineConfig({
   markdown: {
     shikiConfig: {
       theme: "github-light",
-      transformers: [
-        transformerMetaWordHighlight(),
-      ],
+      transformers: [transformerMetaWordHighlight()],
     },
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],

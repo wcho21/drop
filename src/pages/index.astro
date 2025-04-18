@@ -1,13 +1,15 @@
 ---
-import Base from "@/layouts/Base.astro";
+import Footer from "@/components/layout/Footer.astro";
 import ArticleList from "@/components/page/ArticleList.astro";
 import SeriesList from "@/components/page/SeriesList.astro";
-import Footer from "@/components/layout/Footer.astro";
+import Base from "@/layouts/Base.astro";
 import { articles } from "@/scripts/collections";
 import { getSeries } from "@/scripts/utils/pages";
 
 const featuredArticles = articles.filter(article => article.data.featured);
-const nonfeaturedArticles = articles.filter(article => article.data.featured !== true);
+const nonfeaturedArticles = articles.filter(
+  article => article.data.featured !== true,
+);
 ---
 
 <Base pageTitle="Home">

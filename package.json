@@ -1,25 +1,31 @@
 {
-  "name": "",
+  "name": "drop",
   "type": "module",
-  "version": "0.0.1",
-  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "dev": "astro dev --port 3000 --host 0.0.0.0",
     "build": "astro build",
-    "preview": "astro preview --port 3000 --host 0.0.0.0"
+    "preview": "astro preview --port 3000 --host 0.0.0.0",
+    "format": "biome check --write"
   },
   "dependencies": {
-    "@astrojs/mdx": "^2.3.1",
-    "@astrojs/sitemap": "^3.1.4",
-    "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/mdx": "4.2.4",
+    "@astrojs/sitemap": "3.3.0",
+    "@astrojs/tailwind": "6.0.2",
     "@shikijs/transformers": "^1.6.0",
     "@types/lodash-es": "^4.17.12",
-    "astro": "^4.9.2",
+    "astro": "5.7.4",
     "lodash-es": "^4.17.21",
     "rehype-katex": "^7.0.0",
     "remark-math": "^6.0.0",
     "sharp": "^0.33.3",
     "tailwindcss": "^3.4.3"
   },
-  "packageManager": "pnpm@9.15.9+sha512.68046141893c66fad01c079231128e9afb89ef87e2691d69e4d40eee228988295fd4682181bae55b58418c3a253bde65a505ec7c5f9403ece5cc3cd37dcf2531"
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/bun": "^1.2.10"
+  },
+  "peerDependencies": {
+    "typescript": "5.8.3"
+  }
 }

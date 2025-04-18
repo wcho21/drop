@@ -1,21 +1,21 @@
 ---
-import { makeTitle } from "./Base";
+import Favicons from "@/components/layout/head/Favicons.astro";
 import Fonts from "@/components/layout/head/Fonts.astro";
 import GoogleAnalytics from "@/components/layout/head/GoogleAnalytics.astro";
-import OpenGraph from "@/components/layout/head/OpenGraph.astro";
-import Favicons from "@/components/layout/head/Favicons.astro";
 import Katex from "@/components/layout/head/Katex.astro";
+import OpenGraph from "@/components/layout/head/OpenGraph.astro";
 import config from "@/config";
+import { makeTitle } from "./Base";
 
 interface Props {
-  pageTitle: string,
-  desc?: string,
+  pageTitle: string;
+  desc?: string;
   image?: {
-    src: string,
-    width: number,
-    height: number,
-  },
-  url: string,
+    src: string;
+    width: number;
+    height: number;
+  };
+  url: string;
 }
 const { pageTitle, desc, image, url } = Astro.props;
 

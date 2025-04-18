@@ -2,16 +2,16 @@
 import config from "@/config";
 
 interface Image {
-  src: string,
-  width: number,
-  height: number,
+  src: string;
+  width: number;
+  height: number;
 }
 
 interface Props {
-  title?: string,
-  desc?: string,
-  image?: Image,
-  url?: string,
+  title?: string;
+  desc?: string;
+  image?: Image;
+  url?: string;
 }
 
 const { title, desc, image, url } = Astro.props;
