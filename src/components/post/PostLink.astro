@@ -6,7 +6,7 @@ interface Props {
 const { href } = Astro.props;
 
 const base = "/posts";
-const postHref = `${base}${href}`;
+const postHref = `${base}${href}${href.endsWith("/") ? "" : "/"}`;
 ---
 
 <a href={postHref}><slot /></a>
