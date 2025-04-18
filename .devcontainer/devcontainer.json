@@ -4,7 +4,7 @@
     "context": "..",
     "dockerfile": "Dockerfile"
   },
-  "postCreateCommand": "corepack enable pnpm && corepack use pnpm@9 && pnpm add --global svgo && pnpm install --frozen-lockfile",
+  "postCreateCommand": "bun install --frozen-lockfile",
   "forwardPorts": [3000, 3000],
   "customizations": {
     "vscode": {
