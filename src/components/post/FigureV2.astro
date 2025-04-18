@@ -2,9 +2,9 @@
 import { Image } from "astro:assets";
 
 interface Props {
-  src: ImageMetadata,
-  alt: string,
-  shrink?: boolean,
+  src: ImageMetadata;
+  alt: string;
+  shrink?: boolean;
 }
 
 const { src, alt, shrink = false } = Astro.props;

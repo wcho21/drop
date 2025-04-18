@@ -1,12 +1,12 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import ArticleCard from "./ArticleCard.astro";
 import List from "../core/List.astro";
 import ListItem from "../core/ListItem.astro";
+import ArticleCard from "./ArticleCard.astro";
 
 interface Props {
-  heading: string,
-  articles: CollectionEntry<"blog">[],
+  heading: string;
+  articles: CollectionEntry<"blog">[];
 }
 
 const { heading, articles } = Astro.props;

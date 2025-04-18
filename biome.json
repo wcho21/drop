@@ -1,0 +1,13 @@
+{
+  "files": {
+    "ignore": ["dist", "fonts", "public", ".astro"]
+  },
+  "formatter": {
+    "indentStyle": "space"
+  },
+  "javascript": {
+    "formatter": {
+      "arrowParentheses": "asNeeded"
+    }
+  }
+}

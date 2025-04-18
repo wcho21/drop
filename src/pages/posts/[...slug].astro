@@ -1,14 +1,14 @@
 ---
-import Base from "@/layouts/Base.astro";
-import ArticleCard from "@/components/page/ArticleCard.astro";
-import Footer from "@/components/layout/Footer.astro";
-import Share from "@/components/post/ShareButton.astro";
-import Home from "@/components/icon/Home.astro";
-import Giscus from "@/components/post/Giscus.astro";
+import type { CollectionEntry } from "astro:content";
 import Heading1 from "@/components/core/Heading1.astro";
+import Home from "@/components/icon/Home.astro";
+import Footer from "@/components/layout/Footer.astro";
+import ArticleCard from "@/components/page/ArticleCard.astro";
+import Giscus from "@/components/post/Giscus.astro";
+import Share from "@/components/post/ShareButton.astro";
+import Base from "@/layouts/Base.astro";
 import { articles } from "@/scripts/collections";
 import { formatDate } from "@/scripts/utils/formatters";
-import type { CollectionEntry } from "astro:content";
 
 type BlogEntry = CollectionEntry<"blog">;
 
@@ -16,8 +16,8 @@ export async function getStaticPaths() {
   const staticPaths = articles.map((entry, i) => ({
     params: { slug: entry.slug },
     props: {
-      nextEntry: (i > 0) ? articles[i-1] : undefined,
-      prevEntry: (i < articles.length-1) ? articles[i+1] : undefined,
+      nextEntry: i > 0 ? articles[i - 1] : undefined,
+      prevEntry: i < articles.length - 1 ? articles[i + 1] : undefined,
       entry,
     },
   }));
@@ -26,9 +26,9 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  entry: BlogEntry,
-  nextEntry?: BlogEntry,
-  prevEntry?: BlogEntry,
+  entry: BlogEntry;
+  nextEntry?: BlogEntry;
+  prevEntry?: BlogEntry;
 }
 
 const { entry, prevEntry, nextEntry } = Astro.props;
