@@ -1,0 +1,1659 @@
+---
+title: "링크드 리스트로 만드는 딕셔너리"
+date: 2024-06-29T01:00:00+09:00
+summary: "연관 리스트와 체이닝 해시 테이블 만들기"
+thumbnail: "/src/assets/thumbnails/2024/06/29/01/thumbnail.webp"
+series: "알고리즘 라이브러리 만들기"
+---
+
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
+import FigureCaption from "@/components/post/FigureCaption.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AC from "@/components/post/algorithm/AlgorithmComment.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
+import AForeach from "@/components/post/algorithm/AlgorithmForeach.astro";
+import AForever from "@/components/post/algorithm/AlgorithmForever.astro";
+import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
+import AElif from "@/components/post/algorithm/AlgorithmElif.astro";
+import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
+import S from "@/components/post/Serif.astro";
+import Quote from "@/components/post/Quote.astro";
+import PostLink from "@/components/post/PostLink.astro";
+
+import fig1 from "@texfigs/2024/06/29/01/fig1.svg";
+import fig2 from "_figs/fig2.jpg";
+import fig3 from "@texfigs/2024/06/29/01/fig3.svg";
+import fig4 from "@texfigs/2024/06/29/01/fig4.svg";
+import fig5 from "@texfigs/2024/06/29/01/fig5.svg";
+import fig6 from "@texfigs/2024/06/29/01/fig6.svg";
+import fig7 from "@texfigs/2024/06/29/01/fig7.svg";
+import fig8 from "@texfigs/2024/06/29/01/fig8.svg";
+
+<Quote>
+  데이터는 프로그램이 간단해지도록 표현해라.
+
+  <p slot="detail">Choose a data representation that makes the program simple.</p>
+
+  <p slot="name">-- *The Elements of Pragramming Style* (1978)</p>
+</Quote>
+
+
+
+배열<L>array</L>은 인덱스<L>index</L>로 데이터를 빠르게 찾는 데이터 구조<L>data structure</L>입니다.
+그런데 인덱스는 숫자이기 때문에, 배열은 숫자를 데이터로 보내는 매핑<L>mapping</L>, 즉 숫자가 도메인<L>domain</L>인 함수로 바라볼 수도 있습니다.
+
+<Figure src={fig1} alt="array as function">
+  <FigureCaption slot="caption">그림 1. 함수로서의 배열. 예를 들어, 불리언 배열은 숫자를 불리언으로 보내는 함수로 볼 수 있습니다.</FigureCaption>
+</Figure>
+
+배열을 이용해서 출석부를 만든다고 해봅시다.
+만약 $n$ 명의 학생들에게 $1$번부터 $n$번까지 순번이 매겨졌다면, 순번을 인덱스로 써서 배열로 출석부를 구현할 수 있습니다.
+즉 $i$ 번째 원소가 $i$번 학생의 출석 여부를 기억하는 것입니다.
+이는 순번의 집합 $\{1, \dots, n\}$을 출석 여부 $\{\textit{true}, \textit{false}\}$로 보내는 함수 $f$의 구현으로도 볼 수 있습니다.
+
+그런데 어떤 사람이 이렇게 만든 출석부를 쓰다가 이런 요구를 했다고 해봅시다.
+
+- 학생을 줄이거나 늘릴 수 있어야 한다.
+
+- (순번을 관리하기가 번거로워서) 순번 대신 이름을 쓸 수 있어야 한다.
+
+첫 번째 사항은, 매핑 $f$가 시간에 따라 바뀌기를 요구하는 것입니다.
+즉 이런 연산이 가능해야 합니다.
+
+- 매핑 추가: $x$의 함수값 $f(x)$를 $y$로 만드는 연산.
+  $x$가 도메인에 없었다면 새로 추가합니다.
+
+- 매핑 제거: $x$의 함수값을 없애는 연산.
+  $x$를 도메인에서 제외시키는 것과 같습니다.
+
+두 번째 사항은, 매핑 $f$의 도메인이 이름이기를 바라는 것입니다.
+즉 배열로 말하자면, 이름을 일종의 인덱스로 쓸 수 있어야 합니다.
+여기서는 나아가서 이름 뿐만 아니라 다른 것도 인덱스가 될 수 있어야 한다고 문제를 바꿔보겠습니다.
+
+위와 같은 요구를 만족하는 데이터 구조는, 인덱스를 임의의 타입으로 일반화한 배열로 생각할 수 있습니다.
+그래서 이를 연관 배열<L>associative array</L>이라고도 합니다.
+이때 인덱스 대신 키<L>key</L>라고 부릅니다.
+즉, 연관 배열은 키와 연관된 데이터가 일종의 배열처럼 모인 것입니다.
+
+다른 이름으로는 딕셔너리<L>dictionary</L>가 있습니다.
+이 딕셔너리는 파이썬<L>Python</L>에서 같은 이름으로 존재하는 데이터 타입과 같습니다.
+여기서는 이 이름으로 부르겠습니다.
+
+<Figure src={fig2} alt="dictionary">
+  <FigureCaption slot="caption">그림 2. 딕셔너리 데이터 구조는 키가 주어지면 그것과 연관된 값을 사전처럼 가져옵니다. -- 사진: [Joshua Hoehne][unsplash-jh]</FigureCaption>
+</Figure>
+
+[unsplash-jh]: https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EA%B2%80%EC%9D%80%EC%83%89-%ED%85%8D%EC%8A%A4%ED%8A%B8%EA%B0%80-%EC%9E%88%EB%8A%94-%ED%9D%B0%EC%83%89-%ED%94%84%EB%A6%B0%ED%84%B0-%EC%9A%A9%EC%A7%80-1UDjq8s8cy0
+
+출석부 문제는 딕셔너리로 해결할 수 있습니다.
+여기서 딕셔너리는 다음 연산을 갖는 ADT<L>abstract data type</L>로 정의합니다.
+
+- `get(key)`: 키 `key`와 연관된 값을 가져옵니다.
+
+- `set(key, value)`: 키 `key`를 값 `value`에 연관시킵니다.
+  기존에 연관된 값이 있었다면 버리고 `value`로 바꿉니다.
+  앞서 언급했던 매핑 추가의 구현입니다.
+
+- `remove(key)`: 키 `key`와 연관된 값을 없앱니다.
+  앞서 언급했던 매핑 삭제의 구현입니다.
+
+이 딕셔너리는 앞으로 세 가지 방법으로 구현해볼 것입니다.
+첫 번째는 간단한 방법으로서 링크드 리스트<L>linked list</L>로 만드는 것입니다.
+이렇게 만든 것은 연관 리스트<L>association list</L>라고도 합니다.
+
+두 번째와 세 번째는 배열을 이용할 것입니다.
+이는 각각 체이닝<L>chaining</L>과 오픈 어드레싱<L>open addressing</L>이라고 불리는 것입니다.
+하지만 일반적으로, 도메인의 모든 키를 전부 담을만큼 배열을 크게 만들기란 도메인이 너무 커서 불가능합니다.
+그래서 배열의 랜덤 엑세스<L>random access</L>를 직접적으로 쓰는 것을 포기하고, 적당한 크기의 배열을 사용하게 됩니다.
+따라서 이렇게 만든 딕셔너리에는 랜덤 엑세스보다 더 오랜 시간이 걸릴 수록 메모리 공간을 덜 사용하는 트레이드 오프<L>trade-off</L>가 일어납니다.
+
+여기서는 먼저 연관 리스트와 체이닝을 다뤄보겠습니다.
+그리고 다른 라이브러리를 사용하지 않고 자바<L>Java</L>로 처음부터 구현해볼 것입니다.
+
+
+
+# 연관 리스트로 만드는 딕셔너리
+
+딕셔너리를 만드는 간단한 방법으로, 일렬로 둔 데이터를 생각해봅시다.
+그러면 데이터의 추가는 맨 앞에 놓는 것으로 하고, 데이터를 찾는 것은 처음부터 끝까지 확인하는 시퀀셜 서치<L>sequential search</L>로 만들 수 있습니다.
+
+이 방법의 특징은 랜덤 엑세스가 필요 없고, 데이터 추가를 위해 첫 자리를 기억해야 한다는 것입니다.
+그리고 이 역할을 맡을 수 있는 데이터 구조로 링크드 리스트<L>linked list</L>를 이용할 수 있습니다.
+
+여기서 리스트의 연산을 다음과 같이 정의합시다.
+이것들은 앞으로 구현할 것처럼, 내부 노드의 존재를 감춰서 사용자가 데이터에 신경쓸 수 있도록 만들겠습니다.
+
+<Figure src={fig3} alt="linked list operations diagram">
+  <FigureCaption slot="caption">그림 3. 링크드 리스트 연산 다이어그램.</FigureCaption>
+</Figure>
+
+- `get(predicate)`: 조건 `predicate`를 만족하는 첫 번째 데이터를 가져옵니다.
+
+- `has(predicate)`: 조건 `predicate`를 만족하는 데이터가 있으면 참, 아니면 거짓을 가져옵니다.
+
+- `prepend(data)`: 리스트 앞에 데이터 `data`를 추가합니다.
+
+- `change(predicate, data)`: 조건 `predicate`를 만족하는 첫 번째 데이터를 `data`로 수정합니다.
+
+- `remove(predicate)`: 조건 `predicate`를 만족하는 첫 번째 데이터를 삭제합니다.
+
+리스트 연산으로 딕셔너리의 ADT를 만들어봅시다.
+이렇게 만드는 딕셔너리는 키와 연관된 값이 리스트로 존재하므로 연관 리스트<L>association list</L>라고도 합니다.
+먼저, 딕셔너리의 `get()` 연산은 다음 수도코드처럼 리스트의 `get()` 연산에 맡길 수 있습니다.
+
+<Alg>
+  <AK>get ($\textit{list}$, $\textit{key}$)</AK>&nbsp;<AC>// 링크드 리스트 $\textit{list}$에서 키 $\textit{key}$로 값을 찾아 리턴</AC>
+
+  <ABlock>
+    $\textit{value}$ $\leftarrow$ $\textit{list}$.get($\textit{key}$와 연관된 값)
+
+    <ARet>$\textit{value}$</ARet>
+  </ABlock>
+</Alg>
+
+`set()`은 다음과 같이 두 가지 역할을 맡습니다.
+이미 키와 연관된 값이 있으면 새 값에 연관시키고, 없으면 새롭게 추가합니다.
+
+<Alg>
+  <AK>set ($\textit{list}$, $\textit{key}$, $\textit{value}$)</AK>&nbsp;<AC>// 링크드 리스트 $\textit{list}$에서 키 $\textit{key}$를 값 $\textit{value}$에 연관시킴</AC>
+
+  <ABlock>
+    <AIf>$\textit{list}$.has($\textit{key}$와 연관된 값) </AIf>
+    <ABlock>
+      $\textit{list}$.change($\textit{key}$와 연관된 값, $\textit{value}$)
+    </ABlock>
+    <AElse />
+    <ABlock>
+      $\textit{list}$.prepend($\textit{value}$)
+    </ABlock>
+  </ABlock>
+</Alg>
+
+`remove()`는 단순히 리스트 조작에 맡깁니다.
+
+<Alg>
+  <AK>remove ($\textit{list}$, $\textit{key}$)</AK>&nbsp;<AC>// 링크드 리스트 $\textit{list}$에서 키 $\textit{key}$에 연관된 값을 삭제</AC>
+
+  <ABlock>
+    $\textit{list}$.remove($\textit{key}$와 연관된 값)
+  </ABlock>
+</Alg>
+
+연관 리스트에 $n$ 개의 데이터가 있다면, 모든 연산은 최악의 경우에 $n$ 개의 노드를 방문하므로 $\Theta(n)$의 시간이 걸립니다.
+
+## 링크드 리스트 구현하기
+
+링크드 리스트는 <PostLink href="/2024/05/09/01">이전 글</PostLink>에서도 구현해본 것입니다.
+하지만 여기서는 서큘러 링크드 리스트<L>circular linked list</L>를 이용해보겠습니다.
+이 리스트는 모든 노드를 순환시켜 연결하기 때문에 순환 또는 서큘러<L>circular</L>라는 이름을 가집니다.
+
+서큘러 리스트는 맨 뒤의 노드가 맨 앞의 노드를 가리킵니다.
+따라서 모든 노드가 하나도 빠짐 없이 다음 노드를 가집니다.
+이러한 일관성은 구현 상 다음 노드가 있는지 확인할 필요를 없애므로, 구현 코드를 간단하게 만들 수 있습니다.
+
+여기서는 리스트의 끝을 나타내는 더미<L>dummy</L> 노드를 이용할 것입니다.
+센티넬<L>sentinel</L>이라고도 불리는 이것 또한 구현 코드를 줄여줍니다.
+이 더미 노드는 리스트에 항상 존재하므로, 리스트는 적어도 하나의 노드를 갖게 됩니다.
+따라서 구현 시 노드가 없는 경우를 생각할 필요가 사라집니다.
+
+이제 앞서 정의한 리스트의 연산을 만들어봅시다.
+리스트 맨 앞에 값을 추가하는 `prepend()` 연산은, 새 노드를 마지막 노드 다음에 끼워넣는 것으로 만들 수 있습니다.
+
+<Figure src={fig4} alt="list prepend diagram">
+  <FigureCaption slot="caption">그림 4. 노드 추가 연산 다이어그램. 새 노드를 마지막 노드 다음에 넣습니다.</FigureCaption>
+</Figure>
+
+<Alg>
+  <AK>prepend ($\textit{list}$, $\textit{data}$)</AK>&nbsp;<AC>// 리스트 $\textit{list}$ 맨 앞에 데이터 $\textit{data}$ 추가</AC>
+
+  <ABlock>
+    <p><AC>// $\textit{list}$.<S>end</S>: 더미 노드</AC></p>
+
+    <p><AC>// <S>노드</S>.<S>data</S>: 노드의 데이터</AC></p>
+
+    <p><AC>// <S>노드</S>.<S>next</S>: 노드의 다음 노드</AC></p>
+
+    <ANL />
+
+    $\textit{head}$ $\leftarrow$ $\textit{list}$.end.next <AC>// 더미 노드의 다음 노드를 가져옴</AC>
+
+    <ANL />
+
+    <AC>// 새 노드를 마지막 다음에 끼워넣음</AC>
+
+    $\textit{node}$ $\leftarrow$ 새 노드
+
+    $\textit{node}$.data $\leftarrow$ $\textit{data}$
+
+    $\textit{node}$.next $\leftarrow$ $\textit{head}$
+
+    $\textit{list}$.end.next $\leftarrow$ $\textit{node}$
+  </ABlock>
+</Alg>
+
+노드 삭제는 그 이전의 노드를 찾아서, 삭제할 노드의 다음 노드에 연결합니다.
+
+<Figure src={fig5} alt="list remove diagram">
+  <FigureCaption slot="caption">그림 5. 노드 삭제 연산 다이어그램. 삭제할 이전 노드를 다음 노드에 연결합니다.</FigureCaption>
+</Figure>
+
+따라서 이전 노드를 찾는 연산을 만들어봅시다.
+다음 수도코드는 조건을 만족하는 노드의 이전 노드를 찾습니다.
+
+<Alg>
+  <AK>findPrev ($\textit{list}$, $\textit{pred}$)</AK>&nbsp;<AC>// 리스트 $\textit{list}$에서 $\textit{pred}$를 만족하는 노드의 이전을 찾고, 없으면 null 리턴</AC>
+
+  <ABlock>
+    <p><AC>// $\textit{prev}$ 노드는 첫 번째 노드의 이전</AC></p>
+
+    $\textit{prev}$ $\leftarrow$ $\textit{list}$.end
+
+    <ANL />
+
+    <p><AC>// $\textit{prev}$ 노드가 마지막의 이전일 때까지 탐색</AC></p>
+
+    <AForever></AForever>
+    <ABlock>
+      $\textit{node}$ $\leftarrow$ $\textit{prev}$.next
+
+      <AIf>$\textit{node} = \textit{list}$.end </AIf>
+      <ABlock>
+        <ARet>null</ARet>
+      </ABlock>
+
+      <ANL />
+
+      <AIf>$\textit{pred}$를 만족하는 $\textit{node}$ </AIf>
+      <ABlock>
+        <ARet>$\textit{prev}$</ARet>
+      </ABlock>
+
+      <ANL />
+
+      $\textit{prev} \leftarrow \textit{node}$
+    </ABlock>
+  </ABlock>
+</Alg>
+
+이를 이용해서 노드 삭제를 만듭니다.
+
+<Alg>
+  <AK>remove ($\textit{list}$, $\textit{pred}$)</AK>&nbsp;<AC>// 리스트 $\textit{list}$에서 $\textit{pred}$를 만족하는 노드 삭제</AC>
+
+  <ABlock>
+    $\textit{prev}$ $\leftarrow$ findPrev($\textit{list, pred}$)
+
+    <p><AC>// 못 찾았으면 아무 것도 하지 않음</AC></p>
+
+    <AIf>$\textit{prev} = $ null </AIf>
+    <ABlock>
+      <ARet asKeyword />
+    </ABlock>
+
+    <ANL />
+
+    <AC>// $\textit{toRemove}$ 노드를 리스트에서 삭제</AC>
+
+    $\textit{toRemove}$ $\leftarrow$ $\textit{prev}$.next
+
+    $\textit{prev.next}$ $\leftarrow$ $\textit{toRemove}$.next
+  </ABlock>
+</Alg>
+
+이와 비슷한 방식으로 남은 `get()`, `has()`, `change()` 연산 또한 만들 수 있습니다.
+이는 직접 해보는 것으로 남기고 넘어가겠습니다.
+
+## 링크드 리스트 구현하기
+
+자바로 링크드 리스트를 구현해봅시다.
+먼저, 노드는 <PostLink href="/2024/05/09/01">이전 글</PostLink>에서 만든 클래스를 그대로 이용합니다.
+이는 다음처럼 데이터와 다음 노드를 가집니다.
+
+```java
+class LinkedNode<T> {
+  private T data;
+  private LinkedNode<T> next;
+
+  public LinkedNode(T data, LinkedNode<T> next) {
+    this.data = data;
+    this.next = next;
+  }
+
+  public LinkedNode() {
+    this(null, null);
+  }
+
+  public T getData() {
+    return this.data;
+  }
+
+  public LinkedNode<T> getNext() {
+    return this.next;
+  }
+
+  public void setData(T data) {
+    this.data = data;
+  }
+
+  public void setNext(LinkedNode<T> next) {
+    this.next = next;
+  }
+}
+```
+
+이 노드를 이용해 서큘러 링크드 리스트 클래스를 만듭시다.
+마지막 노드를 나타내는 더미 노드를 초기화합니다.
+
+```java
+public class CircularLinkedList<T> {
+  private LinkedNode<T> end;
+
+  public CircularLinkedList() {
+    // sentinel
+    this.end = new LinkedNode<>();
+    // the next of the end is always the head
+    this.end.setNext(this.end);
+  }
+
+  // ...
+}
+```
+
+`prepend()`, `findPrev()`, `remove()` 연산은 수도코드를 그대로 옮겨서 구현합니다.
+
+```java
+  public void prepend(T data) {
+    LinkedNode<T> head = this.end.getNext();
+    LinkedNode<T> node = new LinkedNode<>(data, head);
+
+    // prepend node as a new head
+    node.setNext(head);
+    this.end.setNext(node);
+  }
+
+  private LinkedNode<T> findPrev(Predicate<T> pred) {
+    LinkedNode<T> prev = this.end; // end is just before the head
+
+    while (true) {
+      LinkedNode<T> node = prev.getNext();
+      if (node == this.end) {
+        return null;
+      }
+
+      if (pred.test(node.getData())) {
+        return prev;
+      }
+
+      prev = node;
+    }
+  }
+
+  public void remove(Predicate<T> pred) {
+    LinkedNode<T> prev = this.findPrev(pred);
+    if (prev == null) {
+      return;
+    }
+
+    LinkedNode<T> toRemove = prev.getNext();
+    prev.setNext(toRemove.getNext());
+  }
+```
+
+이와 같이 `get()`, `has()`, `change()` 연산도 `findPrev()` 메소드를 통해 만들 수 있습니다.
+이는 직접 만들어보는 것으로 남기고 넘어가겠습니다.
+
+ADT에는 없었지만, 노드의 개수를 리턴하는 `getSize()` 연산과, 리스트가 비었는지 확인하는 `isEmpty()` 연산을 추가로 만들어봅시다.
+노드의 개수를 세는 `size` 필드로 만들 수 있습니다.
+
+```java /size/
+public class CircularLinkedList<T> {
+  // ...
+
+  private int size;
+
+  // ...
+}
+```
+
+노드를 추가하거나 삭제할 때 `size` 필드에도 반영합니다.
+
+```java /size/
+  public void prepend(T data) {
+    // ...
+
+    this.size++;
+  }
+
+  public void remove(Predicate<T> pred) {
+    // ...
+
+    this.size--;
+  }
+```
+
+이제 `getSize()`과 `isEmpty()` 메소드를 구현할 수 있습니다.
+
+```java
+  public int getSize() {
+    return this.size;
+  }
+
+  public boolean isEmpty() {
+    return this.size == 0;
+  }
+```
+
+이렇게 만든 링크드 리스트를 테스트해봅시다.
+다음 테스트 코드는 [JUnit 5][junit5] 프레임워크를 통해 스트링 리스트의 각 메소드가 잘 동작하는지 확인합니다.
+
+[junit5]: https://junit.org/junit5/
+
+```java
+  @Test
+  public void testStringList() {
+    // initailize
+    CircularLinkedList<String> list = new CircularLinkedList<>();
+    list.prepend("foo");
+    list.prepend("bar");
+    list.prepend("quux");
+
+    // query
+    assertEquals("quux", list.get(data -> true)); // first data
+    assertEquals(true, list.has(data -> data.length() == 4));
+
+    // size
+    assertEquals(3, list.getSize());
+    assertEquals(false, list.isEmpty());
+
+    // modify
+    list.change(data -> data.equals("bar"), "baz");
+    assertEquals(true, list.has(data -> data.equals("baz")));
+    list.remove(data -> data.equals("quux"));
+    assertEquals(false, list.has(data -> data.equals("quux")));
+  }
+```
+
+## 연관 리스트로 딕셔너리 만들기
+
+이제 링크드 리스트로 연관 리스트를 만들어 딕셔너리를 구현해보겠습니다.
+먼저, 딕셔너리의 인터페이스를 다음과 같이 정의합니다.
+
+```java
+public interface Dictionary<K, V> {
+  public void set(V value);
+  public V get(K key);
+  public void remove(K key);
+  public int getSize();
+}
+```
+
+여기서 키는 값에서 항상 알아낼 수 있다고 가정하겠습니다.
+나중에 이런 제한 조건을 없앤 맵<L>map</L>과 셋<L>set</L> 타입을 만들어볼 것입니다.
+
+연관 리스트 클래스를 만듭시다.
+값에서 키를 찾는 함수 `getKey`를 받고, 내부적으로 쓸 링크드 리스트를 초기화합니다.
+
+```java
+public class AssocList<K, V> implements Dictionary<K, V> {
+  private CircularLinkedList<V> list;
+  private Function<V, K> getKey;
+
+  public AssocList(Function<V, K> getKey) {
+    this.list = new CircularLinkedList<>();
+    this.getKey = getKey;
+  }
+
+  // ...
+}
+```
+
+연관 리스트의 연산을 구현합시다.
+수도코드를 그대로 옮겨 만듭니다.
+먼저, 키를 값에 연관시키는 `set()` 연산은 다음과 같이 만듭니다.
+
+```java
+  public void set(V value) {
+    K key = this.getKey.apply(value);
+
+    if (this.list.has(this.hasEqualKey(key))) {
+      this.list.change(this.hasEqualKey(key), value);
+    } else {
+      this.list.prepend(value);
+    }
+  }
+```
+
+여기서 키는 생성자에서 받았던 `getKey`로 알아냅니다.
+그렇게 구한 키인 `key`와 연관된 값을 리스트에서 찾아야 합니다.
+리스트의 값이 키와 연관되어 있는지 확인하는 함수는 `hasEqualKey()` 함수로 만듭니다.
+즉 이 함수는 함수를 리턴하는 고차 함수<L>higher-order function</L>입니다.
+
+```java
+  private Predicate<V> hasEqualKey(K key) {
+    return element -> this.getKey.apply(element).equals(key);
+  }
+```
+
+이를 이용하면 남은 딕셔너리 연산은 리스트의 메소드에 맡길 수 있습니다.
+`get()` 연산은 리스트에서 키와 연관된 값을 리턴합니다.
+
+```java
+  public V get(K key) {
+    return this.list.get(this.hasEqualKey(key));
+  }
+```
+
+`remove()` 연산은 리스트에서 키와 연관된 값을 제거합니다.
+
+```java
+  public void remove(K key) {
+    this.list.remove(hasEqualKey(key));
+  }
+```
+
+마지막으로, 값의 개수를 리턴하는 `getSize()`도 리스트의 연산에 맡깁니다.
+
+```java
+  public int getSize() {
+    return this.list.getSize();
+  }
+```
+
+이렇게 만든 연관 리스트는 딕셔너리로서 출석부를 만들 수 있는 데이터 구조가 됩니다.
+따라서 출석부를 테스트 코드를 통해 실제로 만들어봅시다.
+먼저, 학생 클래스가 이름과 출석 여부를 갖도록 정의합니다.
+
+```java
+  private class Student {
+    private String name;
+    private boolean attended;
+
+    public Student(String name, boolean attended) {
+      this.name = name;
+      this.attended = attended;
+    }
+
+    public String getName() {
+      return this.name;
+    }
+
+    public boolean getAttended() {
+      return this.attended;
+    }
+  }
+```
+
+그러면 출석부는 다음과 같이 딕셔너리로 만들어 사용할 수 있습니다.
+
+```java
+  @Test
+  public void testAttendance() {
+    // initialize students
+    Dictionary<String, Student> table = new AssocList<>(Student::getName);
+    table.set(new Student("John", false));
+    table.set(new Student("Jane", false));
+    table.set(new Student("Tom", false));
+
+    // query
+    assertEquals(false, table.get("John").getAttended());
+
+    // update
+    table.set(new Student("Jane", true));
+    assertEquals(true, table.get("Jane").getAttended());
+
+    // remove
+    table.remove("Tom");
+    assertEquals(null, table.get("Tom"));
+
+    // size
+    assertEquals(2, table.getSize());
+  }
+```
+
+이렇게 출석부 문제를 해결했습니다.
+즉 학생을 줄이거나 늘일 수 있고, 학생의 이름으로 출석 여부를 알아낼 수 있게 되었습니다.
+
+## 더 빠른 딕셔너리 생각해보기
+
+연관 리스트로 딕셔너리를 만들긴 했지만, 앞서 설명한대로 `get()`, `set()`, `remove()` 연산이 모두 최악의 경우 $\Theta(n)$의 시간이 걸립니다.
+
+만약 시퀀셜 서치 대신 바이너리 서치를 쓰려고 했다면 어땠을까요?
+바이너리 서치는 랜덤 엑세스가 필요하므로, 내부적으로 링크드 리스트 대신 배열을 사용했을 것입니다.
+그리고 이렇게 만든 딕셔너리의 `get()` 연산은 $\Theta(\lg n)$의 시간으로 줄어들 수 있습니다.
+
+그런데 이 방식은 데이터를 정렬된 채로 유지해야 합니다.
+그리고 이것은 이런 결과를 가져옵니다.
+
+- 키의 순서를 생각할 필요가 생깁니다.
+  정렬은 순서가 주어져야 하기 때문입니다.
+  단순히 이름으로 학생을 찾고 싶은 출석부의 경우, 굳이 이름의 순서까지 신경써야 할 이유는 없습니다.
+  그리고 이것은 연관 리스트로 구현할 때는 생각할 필요가 없었던 것입니다.
+
+- `set()`, `remove()` 연산은 여전히 최악의 경우에 $\Theta(n)$의 시간이 걸립니다.
+  예를 들어, `set()`으로 추가할 값이 맨 앞에 와야할 때, 배열에서 나머지 값을 한 자리씩 뒤로 옮겨야 합니다.
+  이와 비슷한 일이 `remove()`로 맨 앞의 값을 삭제할 때도 일어납니다.
+
+한편, 배열을 다른 식으로 사용해서, 세 연산들이 전부 평균적으로 $\Theta(1)$의 시간이 들도록 만들 수 있습니다.
+다음으로 알아볼 딕셔너리의 구현 방법은 이런 특징을 가지는 것입니다.
+
+
+
+# 체이닝으로 만드는 딕셔너리
+
+딕셔너리를 배열로 만든다면, 두 가지 문제를 해결해야 합니다.
+
+첫 번째로, 키를 인덱스로 바꿔야 합니다.
+배열은 인덱스로 접근할 수 밖에 없기 때문입니다.
+이 문제는 키를 인덱스로 바꾸는 해시 함수<L>hash function</L>로 해결할 것입니다.
+여기서 키 $k$에 대한 해시 함수 $h$의 결과값 $h(k)$는 해시 값<L>hash value</L>이라고 부릅니다.
+이렇게 해시 값을 이용해 구현한 딕셔너리를 해시 테이블<L>hash table</L>이라고 부릅니다.
+
+두 번째로, 키가 다르지만 해시 값이 같을 때를 처리해야 합니다.
+다시 말해, 배열 상 접근할 인덱스가 같더라도, 그 중에 키와 연관된 하나의 값을 찾을 방법이 필요합니다.
+이렇게 해시 값이 같은 경우를 해시 충돌<L>hash collision</L>이라고 하고, 이 때 올바른 값을 찾는 방법을 충돌 해소<L>collision resolution</L>이라고 부릅니다.
+
+키가 배열의 크기보다 많아지면 해시 충돌은 항상 일어나게 됩니다.
+하지만 키가 배열의 6% 남짓 있더라도 해시 충돌이 일어날 확률은 50%를 넘게 됩니다.
+이것은 생일 문제<L>birthday problem</L>라고 불리는 결과이기도 합니다.
+23명부터 같은 생일을 가질 확률은 절반을 넘기 시작합니다.
+
+이렇게 해시 충돌은 확률적으로 빈번하게 일어나고, 이를 해소하는 방법은 여기서 알아볼 문제입니다.
+그리고 체이닝<L>chaining</L>이라고 불리는 방법은, 같은 해시를 가지는 값을 링크드 리스트로 모아서 보관하는 것입니다.
+
+배열의 각 원소를 슬롯<L>slot</L>이라고 부르고, 슬롯에 있는 링크드 리스트를 체인<L>chain</L>이라고 합시다.
+딕셔너리에 값을 추가할 때마다, 키의 해시 값에 해당하는 슬롯으로 가서 체인에 넣습니다.
+그리고 값을 찾을 때마다 그 체인에서 찾습니다.
+이처럼 체이닝이란 체인으로 해시 충돌을 해소하는 방법이라고 할 수 있습니다.
+
+<Figure src={fig6} alt="hash table diagram">
+  <FigureCaption slot="caption">그림 6. 체이닝 해시 테이블 예시. 각 슬롯은 값을 체인으로 보관합니다.
+  예를 들어 해시가 `99`라면, 이에 해당하는 체인에서 같은 키를 가지는 값을 찾습니다.</FigureCaption>
+</Figure>
+
+그런데 체인에서 값을 찾는 과정은 연관 리스트의 경우와 비슷합니다.
+사실 체이닝이란, 시퀀셜 서치로 찾을 대상을 해시값으로 좁힌 것으로 볼 수 있습니다.
+따라서 체인을 연관 리스트로 구현하면, 딕셔너리는 단순히 연관 리스트의 연산으로 구성할 수 있게 됩니다.
+
+예를 들어, 딕셔너리의 `get()` 연산은  연관 리스트의 `get()` 연산에 맡길 수 있습니다.
+
+<Alg>
+  <AK>get ($\textit{slots}$, $\textit{key}$)</AK>&nbsp;<AC>// 슬롯 배열 $\textit{slots}$에서 키 $\textit{key}$로 값을 찾아 리턴</AC>
+
+  <ABlock>
+    <p><AC>// <S>getHash()</S>: 미리 주어진 해시 함수</AC></p>
+
+    <ANL />
+
+    $\textit{hash}$ $\leftarrow$ getHash($\textit{key}$)
+
+    $\textit{chain} \leftarrow \textit{slots}$[$\textit{hash}$] <AC>// 연관 리스트 가져옴</AC>
+
+    <ARet>$\textit{chain}$.get($\textit{key}$)</ARet>
+  </ABlock>
+</Alg>
+
+`set()` 연산도 이와 같습니다.
+
+<Alg>
+  <AK>set ($\textit{slots}$, $\textit{key}$, $\textit{value}$)</AK>&nbsp;<AC>// 슬롯 배열 $\textit{slots}$에서 키 $\textit{key}$를 값 $\textit{value}$에 연관시킴</AC>
+
+  <ABlock>
+    $\textit{hash}$ $\leftarrow$ getHash($\textit{key}$)
+
+    $\textit{chain} \leftarrow \textit{slots}$[$\textit{hash}$]
+
+    $\textit{chain}$.set($\textit{value}$)
+  </ABlock>
+</Alg>
+
+`remove()` 연산 또한 이런 식으로 만들 수 있으므로, 직접 해보는 것으로 남기고 넘어가겠습니다.
+
+## 시간 복잡도 구하기
+
+딕셔너리를 체이닝으로 만들었을 때 `get()` 연산에 드는 시간을 계산해보겠습니다.
+결론적으로는, 이상적인 해시 함수를 가정하면, 값이 $n$ 개일 때 평균의 경우 $\Theta(n)$의 시간 복잡도를 구하게 됩니다.
+이 결과에 이르기까지의 과정을 살펴보겠습니다.
+
+평균의 경우를 말하려면, 먼저 그 평균이란 무엇인지, 즉 어떤 입력 값의 분포를 말하는 것인지 정해야 합니다.
+그리고 딕셔너리는 시간 복잡도가 해시 값의 분포에 따라 결정됩니다.
+따라서 입력 값인 키를 받아 해시 값으로 바꾸는 해시 함수에 주목해봅시다.
+
+여기서 해시 함수가 두 가지 이상적인 성질을 가진다고 가정할 것입니다.
+그렇게 하는 이유는 문제를 간단하게 만들기 위한 것이기도 하면서, 바람직한 딕셔너리의 시간 복잡도를 구하기 위한 것이기도 합니다.
+
+- 해시 함수는 해시 값을 균등하게 분포시킵니다.
+  즉 어떤 키가 $m$ 가지의 해시 값 중 임의로 고른 하나로 바뀔 확률은 $1/m$입니다.
+  이를 해시 함수가 유니폼<L>uniform</L>하다고 부릅니다.
+
+- 어떤 키로부터 해시 값을 구했다고 하더라도, 이것이 다른 키의 해시 값을 결정하는 데에 영향을 미치지 않습니다.
+  즉 한 키의 해시 값은, 다른 키의 해시 값이 무엇인지 알아낼 때 어떤 정보도 주지 못한다는 뜻입니다.
+  이는 확률론<L>probability theory</L>의 독립<L>independence</L>을 의미합니다.
+
+해시 함수의 가정에서 확률을 말했기 때문에, 시간 복잡도 분석은 <PostLink href="/2024/06/15/01">이전 글</PostLink>처럼 확률적 분석<L>probabilistic analysis</L>이 됩니다.
+그리고 유니폼하다는 가정으로부터, 딕셔너리에 있는 어떤 값이 $m$ 개의 체인 임의로 고른 것에 속할 확률은 $1/m$이 됩니다.
+왜냐면 그 값의 키가 그 체인의 인덱스를 해시 값으로 가질 확률이 $1/m$이기 때문입니다.
+
+이를 기호로 나타내봅시다.
+딕셔너리에 추가된 순서대로 $n$ 개의 값에 순번을 매기고, $m$ 개의 체인에 임의로 순번을 매겼다고 합시다.
+그러면 $1 \leq i \leq n$과 $1 \leq j \leq m$에 대해, 방금의 확률 $1/m$은 $i$ 번째 값이 $j$ 번째 체인에 속할 확률을 말하는 것입니다.
+
+그리고 바로 그런 경우에 인디케이터 랜덤 변수 $I_{ij}$가 $1$이고, 그렇지 않으면 $0$이라고 합시다.
+즉 $I_{12}$란 첫 번째 값이 두 번째 체인에 있을 때만 $1$인 인디케이터입니다.
+그러면 인디케이터는 기댓값이 확률과 같다는 특징이 있으므로, 인디케이터의 기댓값 $E[I_{ij}]$은 $1/m$이 됩니다.
+
+이어서 체인의 길이는 기댓값이 $n/m$이라는 사실도 알 수 있습니다.
+$j$ 번째 슬롯의 길이를 $l_j$라고 합시다.
+이것은 $j$ 번째 슬롯에 속한 값의 개수와 같으므로 $l_j = \sum_{i=1}^{n} I_{ij}$ 입니다.
+따라서 길이의 기댓값 $E[l_j]$를 다음과 같이 얻게 됩니다.
+
+$$
+  E[l_j] = \sum_{i=1}^{n} E[I_{ij}] = \frac{n}{m}
+$$
+
+한편, $m$은 딕셔너리가 내부적으로 쓰는 배열의 크기이기도 합니다.
+따라서, <PostLink href="/2024/05/09/01">이전 글</PostLink>에서 알아봤던 다이나믹 배열<L>dynamic array</L>처럼, 배열의 크기 대비 값의 개수를 나타내는 로드 팩터<L>load factor</L> $\alpha$를 $n/m$으로 정의할 수 있습니다.
+그러면 $E[l_i] = \alpha$, 즉 길이의 기댓값은 곧 로드 팩터가 됩니다.
+
+이제 `get()` 연산의 시간 복잡도를 구해봅시다.
+여기서 시간 복잡도는 수행하는 수도코드 줄의 개수라고 합시다.
+그리고 해시 값의 시간 복잡도는 $c_h$, 즉 $\Theta(1)$이라고 하겠습니다.
+시간 복잡도는 `get()` 연산이 값을 찾는 경우와 못 찾는 경우를 각각 $T_s$, $T_u$라고 하고 계산해봅시다.
+
+값을 못 찾는 경우의 $T_u$는 기댓값을 간단히 구할 수 있습니다.
+이 때의 `get()` 연산은 해시 값을 계산해 슬롯에 접근하고, 체인의 모든 노드마다 키를 확인합니다.
+그런데 체인의 길이는 기댓값이 $\alpha$ 이므로, 노드의 키를 확인하는 시간 $c$에 대해 $E[T_u] = c_k + c \alpha$, 즉 $\Theta(1 + \alpha)$ 또는 $\Theta(n)$을 얻습니다.
+
+값을 찾는 경우는, 그 값을 가진 노드를 찾을 때까지 거쳐가는 노드의 개수를 알아야 합니다.
+그런데 값에는 딕셔너리에 추가한 순서대로 순번을 매겼고, 연관 리스트는 나중에 들어간 것이 앞에 오기 때문에, 찾는 값보다 나중에 들어간 것이 체인에 몇 개인지 세는 문제가 됩니다.
+그 개수를 $X$라고 합시다.
+그러면 값을 찾은 경우의 시간 복잡도 $T_s$는, 반대의 경우의 $T_u$처럼, 기댓값이 $E[T_s] = c_k + c X$가 됩니다.
+
+$i$와 $j$ 번째 값이 $k$ 번째 체인에 있을 때 $1$인 인디케이터는 $I_{ik} I_{jk}$로 쓸 수 있습니다.
+이를 $i$ 보다 큰 $j$에 대해 더한 $\sum_{j=i+1}^n I_{ik} I_{jk}$는 $i$ 번째 값이 $k$ 번째 체인에 있을 때 그것보다 나중에 들어온 것의 개수를 갖는 랜덤 변수가 됩니다.
+따라서 $i$ 번째 값보다 나중에 들어온 것의 개수 $L_i$는 이렇게 쓸 수 있습니다.
+
+$$
+  L_i = \sum_{k=0}^m \sum_{j=i+1}^n I_{ik} I_{jk}
+$$
+
+여기서 인디케이터 $S_i$는 $i$가 찾으려는 값의 순번일 때 $1$이고, 아니면 $0$이라고 합시다.
+그러면 찾는 대상인 $i$ 번째 값보다 나중에 들어온 것들의 개수는 $L_i S_i$가 됩니다.
+또한 찾는 값의 순번은 전체 $n$ 개 중에 하나이므로, $i$가 찾는 값의 순번일 확률은 $1/n$이 됩니다.
+
+$L_i$와 $S_i$가 독립이라고 합시다.
+해시 값도 서로 독립이므로, $L_i S_i$의 기댓값은 다음과 같습니다.
+
+$$
+\begin{align*}
+  E [ L_i S_i ] &= \sum_{k=0}^m \sum_{j=i+1}^n E [ I_{ik} I_{jk} S_i ] \\
+                  &= \sum_{k=0}^m \sum_{j=i+1}^n E [ I_{ik} ] E [ I_{jk} ] E [ S_i ] \\
+                  &= \frac{1}{m n} (n-i)
+\end{align*}
+$$
+
+여기서도 인디케이터의 기댓값이 그 확률과 같다는 성질을 사용했습니다.
+이를 모든 값의 순번에 대해 더하면, $X$의 기댓값을 얻습니다.
+
+$$
+\begin{align*}
+  E[X] &= \sum_{i=1}^n E[L_i S_i] \\
+       &= \frac{1}{mn} \left( n^2 - \frac{n(n+1)}{2} \right) \\
+       &= \frac{\alpha}{2} - \frac{1}{2m}
+\end{align*}
+$$
+
+따라서 시간 복잡도 기댓값 $E[T_s]$는 $c_k + c\alpha/2 - c/2m$이고, $\Theta(1 + \alpha)$ 또는 $\Theta(n)$을 얻습니다.
+이는 값을 못 찾았던 경우와 같은 결과이므로, `get()` 연산은 $\Theta(n)$의 시간이 걸린다고 정리할 수 있습니다.
+
+그리고 `set()`과 `remove()` 연산 또한 이와 비슷한 방법으로 $\Theta(n)$임을 보일 수 있습니다.
+왜냐면 이 연산 또한 거치는 노드의 개수가 앞서 본 것과 같기 때문입니다.
+
+## 구현하기
+
+그러면 체이닝을 자바로 구현해보고, 실제로 측정한 소요 시간이 방금의 시간 복잡도를 따르는지 확인해봅시다.
+
+먼저 체이닝으로 구현하는 해시 테이블 클래스를 만듭니다.
+생성자는 키를 구하는 함수를 받고, 슬롯을 초기화합니다.
+슬롯의 개수는 임의의 숫자로 정했습니다.
+
+```java
+abstract class AbstractChainingTable<K, V> implements Dictionary<K, V> {
+  protected static int INIT_NUM_SLOTS = 16;
+
+  protected AssocList<K, V>[] slots;
+  protected Function<V, K> getKey;
+  protected int numValues;
+
+  public AbstractChainingTable(Function<V, K> getKey) {
+    this.slots = this.initSlots(INIT_NUM_SLOTS, getKey);
+    this.getKey = getKey;
+    this.numValues = 0;
+  }
+
+  // ...
+}
+```
+
+여기서 슬롯을 초기화하는 `initSlots()` 메소드는 연관 리스트로 채워 리턴합니다.
+
+```java
+  protected AssocList<K, V>[] initSlots(int numSlots, Function<V, K> getKey) {
+    @SuppressWarnings("unchecked")
+    AssocList<K, V>[] slots = new AssocList[numSlots];
+
+    for (int i = 0; i < slots.length; ++i) {
+      slots[i] = new AssocList<K, V>(getKey);
+    }
+
+    return slots;
+  }
+```
+
+`get()` 메소드는 수도코드를 그대로 옮겨 구현합니다.
+
+```java
+  public V get(K key) {
+    int hash = this.getHash(key);
+    AssocList<K, V> chain = this.slots[hash];
+
+    return chain.get(key);
+  }
+```
+
+여기서 해시 값을 계산하는 `getHash()` 메소드는 일단 구현 없이 추상 메소드로 남깁시다.
+
+```java
+  abstract protected int getHash(K key);
+```
+
+`set()`과 `remove()` 메소드는 값의 개수를 바꿀 수 있습니다.
+따라서 이를 `numValues` 필드에 반영해야 하는데요.
+이 역할을 맡는 `updateChain()` 메소드를 먼저 만듭시다.
+이 메소드는 `updateFunc` 함수를 수행하고, 이후 값의 개수가 바뀌면 반영합니다.
+
+```java
+  protected void updateChain(int hash, Consumer<AssocList<K, V>> updateFunc) {
+    AssocList<K, V> chain = this.slots[hash];
+    int oldSize = chain.getSize();
+
+    updateFunc.accept(chain);
+
+    int deltaSize = chain.getSize() - oldSize;
+    this.numValues += deltaSize;
+  }
+```
+
+이를 이용해 `set()`과 `remove()` 메소드를 만듭니다.
+
+```java
+  public void set(V value) {
+    K key = this.getKey.apply(value);
+    int hash = this.getHash(key);
+
+    this.updateChain(hash, chain -> chain.set(value));
+  }
+
+  public void remove(K key) {
+    int hash = this.getHash(key);
+
+    this.updateChain(hash, chain -> chain.remove(key));
+  }
+```
+
+마지막으로, 크기를 리턴하는 메소드 `getSize()`는 `numValues` 필드를 리턴합니다.
+
+```java
+  public int getSize() {
+    return this.numValues;
+  }
+```
+
+이렇게 만든 추상 클래스로부터 체이닝 클래스를 다음과 같이 만듭시다.
+여기서 해시 값은 자바의 `hashCode()` 메소드를 이용합니다.
+자바는 이 메소드로 데이터 타입마다 해시 함수를 제공합니다.
+다만 이 함수는 정수<L>integer</L> 타입을 결과로 가지므로, 슬롯의 인덱스보다 커질 수 있습니다.
+따라서 슬롯 개수로 나눈 나머지를 구합니다.
+이 방법은 모듈러 해싱<L>modular hashing</L>이라고도 불립니다.
+
+```java
+public class FixedChainingTable<K, V> extends AbstractChainingTable<K, V> {
+  public FixedChainingTable(Function<V, K> getKey) {
+    super(getKey);
+  }
+
+  @Override
+  protected int getHash(K key) {
+    return key.hashCode() % this.slots.length;
+  }
+}
+```
+
+이렇게 만든 해시 테이블은 연관 리스트로 만든 딕셔너리와 같은 방식으로 사용할 수 있습니다.
+
+## 소요 시간 측정
+
+앞서 만든 `get()`과 `set()` 메소드의 소요 시간을 재봅시다.
+다음은 배열의 크기가 $n$ 일 때 `get()`이 값을 성공적으로 찾는 데 소요되는 시간과, `set()`으로 $n$ 개의 값을 넣을 때까지의 시간을 측정한 것입니다.
+여기서 해시 테이블을 채우는 `set()`의 경우는 $n = 1, 2, \dots, n$인 경우를 더한 것이기 때문에 이론적으로는 $\Theta(n^2)$의 시간 복잡도를 갖습니다.
+
+<Figure src={fig7} alt="elapsed time for fixed-size chaining hash table">
+  <FigureCaption slot="caption">그림 7. 체이닝 해시 테이블의 소요 시간. 선은 회귀선.</FigureCaption>
+</Figure>
+
+위 결과는 실제 소요 시간 또한 이론적인 시간 복잡도를 따르는 것을 보여줍니다.
+
+
+# 체이닝 해시 테이블 보완하기
+
+앞서 체이닝으로 만든 해시 테이블은 잘 동작하기는 하지만, `get()` 연산은 예고했던 $\Theta(1)$의 시간 복잡도를 갖지는 않습니다.
+이것은 예상할 수 있는 결과입니다.
+값이 많아질 수록 로드 팩터가 커지고, 이는 곧 체인의 길이가 되기 때문입니다.
+
+사실 값의 개수가 많지 않다면, 혹은 값이 많아져도 슬롯의 크기가 충분히 크다면, 시간 복잡도 $\Theta(1+\alpha)$에서 로드 팩터 $\alpha$가 그리 크지 않아 실제 소요 시간 또한 길지 않을 수 있습니다.
+
+그럼에도 $\Theta(1)$의 시간을 보장하고 싶다면, $\Theta(n)$의 시간을 만드는 로드 팩터 $\alpha = n/m$를 일정 수준 이하로 만들어 달성할 수 있습니다.
+다시 말해, 로드 팩터가 기껏해야 상수 $c$ 만큼만 커지도록 만들면, $\alpha \leq c$이므로, 시간 복잡도 $\Theta(1 + \alpha)$는 $\Theta(1 + c) = \Theta(1)$로 줄어들게 됩니다.
+
+이렇게 로드 팩터를 만들려면, 값의 개수 $n$이 커짐에 따라 슬롯의 개수 $m$도 그만큼 많아져야 합니다.
+그래야 $\alpha = n/m$을 줄일 수 있기 때문입니다.
+따라서 이것은 다이나믹 배열처럼, 배열이 리사이징<L>resizing</L>할 수 있도록 만들어야 합니다.
+여기에 드는 시간은 <PostLink href="/2024/05/09/01">이전 글</PostLink>에서 분석했던 것처럼 아모타이즈드<L>amortized</L> $\Theta(1)$이므로, 해시 테이블의 연산은 여전히 $\Theta(1)$의 시간 복잡도를 갖게 됩니다.
+
+리사이징은 새로운 크기의 배열을 할당해서 기존 값을 복사하는 것으로 만들게 됩니다.
+그런데 단순히 각 인덱스의 값을 옮기는 것이 아니라, 해시 값을 다시 계산해야 합니다.
+왜냐면 해시 함수는 슬롯 개수에 의존하는데, 그것이 바뀌었기 때문입니다.
+다시 말해, 리사이징이 일어나면 각 값은 기존과는 다른 해시 값을 가질 수 있게 됩니다.
+따라서 리사이징은 해시 값을 다시 계산하는 리해싱<L>rehashing</L>이 필요합니다.
+
+리해싱은 체인의 각 값마다 계산해야 합니다.
+하지만 앞서 만든 연관 리스트는 각 노드마다 반복할 수 있는 인터페이스를 제공하지는 않았습니다.
+이를 위해 자바의 `Iterator` 인터페이스를 구현함으로써 리스트의 각 값마다 반복할 수 있도록 만들어볼 것입니다.
+이렇게 만든 클래스는 자바의 문법인 `for` 문으로 사용할 수 있게 됩니다.
+
+## 페일 패스트 이터러블 구현하기
+
+체인은 결국 링크드 리스트를 쓰고 있기 때문에, 이것부터 이터러블을 구현하도록 만들겠습니다.
+이 작업은 주로 기존의 코드를 수정하는 일이 될 것입니다.
+먼저 다음과 같이 리스트 클래스를 `Iterable` 인터페이스의 구현으로 선언합니다.
+
+```java /Iterable<T>/
+public class CircularLinkedList<T> implements Iterable<T> {
+  // ...
+}
+```
+
+이 인터페이스는 `iterator()` 메소드를 요구하고, 이것은 `Iterator` 인터페이스의 구현을 리턴해야 합니다.
+따라서 리스트 클래스 내부에 `Iterator`를 구현하는 클래스를 만들어봅시다.
+이 클래스의 생성자는 반복의 시작으로서 첫 노드를 받습니다.
+
+```java
+  private class ListIterator<U> implements Iterator<U> {
+    private LinkedNode<U> node;
+
+    public ListIterator(LinkedNode<U> head) {
+      this.node = head;
+    }
+
+    // ...
+  }
+```
+
+이 인터페이스는 다음이 있는지 확인하는 `hasNext()` 메소드와, 다음 값을 리턴하는 `next()` 메소드를 요구합니다.
+먼저 `hasNext()` 메소드는 단순히 리스트가 끝났는지 확인합니다.
+이는 끝을 나타내는 더미 노드인 `end`로 만들 수 있습니다.
+
+```java
+    public boolean hasNext() {
+      return this.node != end;
+    }
+```
+
+그리고 다음 값을 가져올 때, 값을 리턴하면서 다음 노드로 건너갑니다.
+
+```java
+    public U next() {
+      U data = this.node.getData();
+
+      this.node = this.node.getNext();
+
+      return data;
+    }
+```
+
+이제 리스트 클래스의 `iterator()` 메소드는 이 내부 클래스를 이용해 만듭니다.
+
+```java
+  public Iterator<T> iterator() {
+    LinkedNode<T> head = this.end.getNext();
+    return new ListIterator<>(head);
+  }
+```
+
+이를 이용해, 체인으로 쓰는 연관 리스트도 이터러블하도록 만들어 보겠습니다.
+다음과 같이 값을 이터러블로서 리턴하는 메소드 `getValues()`를 만듭니다.
+
+```java /Iterable<V>/
+public class AssocList<K, V> implements Dictionary<K, V> {
+  // ...
+
+  public Iterable<V> getValues() {
+    return this.list;
+  }
+}
+```
+
+이렇게 고친 연관 리스트는 다음 테스트 코드처럼, 자바의 `for` 문으로 값마다 반복할 수 있게 됩니다.
+
+```java
+  @Test
+  public void testIterable() {
+    AssocList<Integer, Integer> list = new AssocList<>(v -> v);
+    list.set(42);
+    list.set(43);
+    list.set(44);
+
+    // value = 44, 43, 42
+    int i = 44;
+    for (int value : list.getValues()) {
+      assertEquals(i--, value);
+    }
+  }
+```
+
+그런데 이런 반복문에서 리스트를 변경하는 상황을 떠올려볼 수 있습니다.
+이는 반복문의 동작을 파악하기 어렵게 만들고, 심각하면 반복문이 끝나지 않는 무한 루프를 일으킬 수도 있습니다.
+(만약 링크드 리스트가 노드를 맨 뒤에 추가했다면 그랬을 것입니다.)
+그러므로 이런 경우가 보이면 바로 예외를 던지도록 만들어봅시다.
+이런 이터레이터를 자바에서 페일 패스트<L>fail-fast</L> 이터레이터라고 부릅니다.
+
+이것은 변경 작업이 일어난 횟수를 세는 것으로 만들 수 있습니다.
+그리고 이터레이터는 만들어질 시점의 횟수를 기억하고 있다가, 반복이 수행될 때 그 횟수가 달라졌으면 예외를 던집니다.
+이를 위해 변경 작업의 횟수를 세는 `modCount` 필드를 만듭시다.
+
+```java /modCount/
+public class CircularLinkedList<T> implements Iterable<T> {
+  // ...
+
+  private int modCount;
+
+  public CircularLinkedList() {
+    // ...
+
+    this.modCount = 0;
+  }
+
+  // ...
+}
+```
+
+그리고 변경 작업을 수행하면 이 횟수를 하나씩 늘립니다.
+
+```java /modCount/
+  public void prepend(T data) {
+    // ...
+
+    this.modCount++;
+  }
+
+  public void change(Predicate<T> pred, T data) {
+    // ...
+
+    this.modCount++;
+  }
+
+  public void remove(Predicate<T> pred) {
+    // ...
+
+    this.modCount++;
+  }
+```
+
+이터레이터를 초기화할 때 이 횟수를 `expectedModCount`로 기억합니다.
+
+```java /expectedModCount/
+  private class ListIterator<U> implements Iterator<U> {
+    // ...
+
+    private int expectedModCount;
+
+    public ListIterator(LinkedNode<U> head) {
+      // ...
+
+      this.expectedModCount = modCount;
+    }
+
+    // ...
+  }
+```
+
+다음 값을 가져올 때, 이 `modCount`가 달라져 있는지 확인합니다.
+만약 달라져 있으면, 반복 도중에 리스트에 변경이 일어난 것이므로, 예외를 던집니다.
+
+```java
+    public U next() {
+      this.throwIfModified();
+
+      // ...
+    }
+
+    private void throwIfModified() {
+      if (modCount != this.expectedModCount) {
+        throw new ConcurrentModificationException();
+      }
+    }
+```
+
+자바에서 `ConcurrentModificationException` 클래스는 페일 패스트 이터레이터가 던져야 할 예외로 정해져 있습니다.
+이제 이터레이터는 다음과 같은 테스트 코드처럼, 반복 도중에 리스트가 바뀌면 예외를 던집니다.
+
+```java
+  @Test
+  public void testFailFastIterable() {
+    CircularLinkedList<Integer> list = createList();
+
+    assertThrows(ConcurrentModificationException.class, () -> {
+      for (int value : list) {
+        list.prepend(45);
+      }
+    });
+  }
+```
+
+## 리해싱을 통한 리사이징
+
+방금 만든 이터러블 인터페이스를 이용해, 체이닝 해시 테이블이 크기를 알아서 조절하도록 만들어 봅시다.
+먼저, 다음과 같이 상속으로 새 클래스를 만들겠습니다.
+
+```java
+public class ChainingTable<K, V> extends AbstractChainingTable<K, V> {
+  public ChainingTable(Function<V, K> getKey) {
+    super(getKey);
+  }
+}
+```
+
+그러면 크기를 어떻게 조절할 것인지 결정해야 합니다.
+여기서는 로드 팩터가 $\alpha \geq 4$이면 슬롯을 두 배로 늘리도록 합시다.
+이렇게 늘어나는 비율을 그로스 팩터<L>growth factor</L>라고 부르겠습니다.
+반대로  $\alpha \leq 1$인 경우, 반으로 줄입시다.
+이 결정은 다음과 같은 상수로 표현합니다.
+
+```java
+public class ChainingTable<K, V> extends AbstractChainingTable<K, V> {
+  private static double MAX_LOAD_FACTOR = 4.0;
+  private static double MIN_LOAD_FACTOR = 1.0;
+  private static double GROWTH_FACTOR = 2.0;
+
+  // ...
+}
+```
+
+리사이징하는 해시 테이블은, 값을 추가했을 때 로드 팩터가 정해진 기준에 다다르면 슬롯을 늘리도록 만듭니다.
+
+```java
+  @Override
+  public void set(V value) {
+    super.set(value);
+
+    if (this.isTooManyLoaded()) {
+      int extendedSize = (int)(this.slots.length * GROWTH_FACTOR);
+      this.resizeSlots(extendedSize);
+    }
+  }
+```
+
+값을 삭제할 때는 이와 반대로 슬롯을 줄입니다.
+
+```java
+  @Override
+  public void remove(K key) {
+    super.remove(key);
+
+    if (this.isTooFewLoaded()) {
+      int reducedSize = (int)(this.slots.length / GROWTH_FACTOR);
+      this.resizeSlots(reducedSize);
+    }
+  }
+```
+
+로드 팩터가 너무 커졌는지는 다음과 같이 확인합니다.
+
+```java
+  private boolean isTooManyLoaded() {
+    return this.getLoadFactor() >= MAX_LOAD_FACTOR;
+  }
+```
+
+반대로 너무 작아졌는지는, 슬롯이 처음 사이즈보다 커졌는지 보면서 로드 팩터를 확인합니다.
+
+```java
+  private boolean isTooFewLoaded() {
+    if (this.slots.length <= INIT_NUM_SLOTS) {
+      return false;
+    }
+
+    return this.getLoadFactor() <= MIN_LOAD_FACTOR;
+  }
+```
+
+그리고 로드 팩터는 이렇게 계산합니다.
+
+```java
+  private double getLoadFactor() {
+    return (double)this.numValues / (double)this.slots.length;
+  }
+```
+
+리사이징은 슬롯의 크기를 조절하는 것으로 만들 수 있습니다.
+먼저 새로운 슬롯 배열을 할당하고, 기존의 값에서 다시 해시 값을 구해 체인에 넣습니다.
+여기서 체인은 이터러블하기 때문에, `for` 문으로 체인의 값마다 반복할 수 있게 됩니다.
+
+```java
+  private void resizeSlots(int newSize) {
+    AssocList<K, V>[] oldSlots = this.slots;
+
+    AssocList<K, V>[] newSlots = this.initSlots(newSize, this.getKey);
+    this.slots = newSlots;
+
+    // rehash values
+    for (int i = 0; i < oldSlots.length; ++i) {
+      AssocList<K, V> oldChain = oldSlots[i];
+      for (V values : oldChain.getValues()) {
+        int hash = this.getHash(this.getKey.apply(values));
+        this.slots[hash].set(values);
+      }
+    }
+  }
+```
+
+마지막으로, 해시 함수는 기존과 같이 모듈러 해싱으로 만듭니다.
+이렇게 완성한 해시 테이블은 기존 체이닝 해시 테이블과 같이 사용할 수 있게 됩니다.
+
+## 이터러블 해시 테이블
+
+앞서 딕셔너리로 만든 출석부에는 한 가지 부족한 점이 있습니다.
+출석부에 어떤 학생들이 있는지 그 목록을 구할 방법이 없기 때문입니다.
+하지만 방금 살펴본 이터러블 인터페이스로 이 기능을 간단히 만들 수 있습니다.
+
+먼저, 딕셔너리의 인터페이스에 모든 값을 리턴하는 메소드를 선언합시다.
+
+```java
+public interface Dictionary<K, V> {
+  // ...
+
+  public Iterable<V> getValues();
+}
+```
+
+이 인터페이스를 가지는 클래스를 수정해봅시다.
+연관 리스트의 경우, 단순히 내부의 링크드 리스트를 리턴하는 것으로 만들 수 있습니다.
+
+```java
+public class AssocList<K, V> implements Dictionary<K, V> {
+  // ...
+
+  public Iterable<V> getValues() {
+    return this.list;
+  }
+}
+```
+
+체이닝으로 만든 해시 테이블의 경우, 모든 슬롯의 값을 링크드 리스트로 모아서 리턴하는 것으로 구현할 수 있습니다.
+다음과 같이 상위 클래스에서 구현을 만들어 모든 체이닝 해시 테이블에 적용합니다.
+
+```java
+abstract class AbstractChainingTable<K, V> implements Dictionary<K, V> {
+  // ...
+
+  public Iterable<V> getValues() {
+    CircularLinkedList<V> list = new CircularLinkedList<>();
+
+    for (int i = 0; i < this.slots.length; ++i) {
+      for (V value : this.slots[i].getValues()) {
+        list.prepend(value);
+      }
+    }
+
+    return list;
+  }
+}
+```
+
+이제 딕셔너리는 값을 모두 가져오는 것까지도 할 수 있게 되었습니다.
+다만 이렇게 가져온 값은 어떤 순서를 보장할 수는 없습니다.
+딕셔너리를 설계할 때 처음부터 키의 순서를 신경쓰지 않았기 때문입니다.
+
+
+## 소요 시간 측정
+
+앞서 말했던 대로, 리사이징 해시 테이블의 `get()`, `set()` 연산에 $\Theta(1)$의 시간이 걸리는지 실제로 측정해봅시다.
+이번에도 크기가 $n$ 인 해시 테이블에서 `get()`에 소요되는 시간과, 해시 테이블에 $n$ 개의 값을 `set()`으로 채울 때의 소요 시간을 보겠습니다.
+
+<Figure src={fig8} alt="elapsed time for resizing chaining hash table">
+  <FigureCaption slot="caption">그림 8. 리사이징 체이닝 해시 테이블의 소요 시간. 선은 회귀선.</FigureCaption>
+</Figure>
+
+`get()`의 소요 시간은 크기가 커짐에 따라 늘어나긴 하지만, 리사이징이 없을 때와 비교하면 현저히 적습니다.
+그리고 $n$ 번 수행하는 `set()`의 경우 $\Theta(n)$을 따르는 것처럼 보이므로, 한 번의 수행은 $\Theta(1)$로 생각할 수 있습니다.
+이 또한 리사이징이 없을 때와 비교하면 더 적은 소요 시간을 보입니다.
+
+
+
+# 맵과 셋
+
+맵<L>map</L>과 셋<L>set</L>은 그 이름처럼 각각 매핑과 집합을 표현하는 데이터 구조입니다.
+즉 맵은 키를 값으로 보내는 매핑과 같고, 셋은 키로 만든 집합과 같습니다.
+그리고 이는 앞서 만든 딕셔너리를 간단히 확장해 만들 수 있습니다.
+
+## 셋
+
+셋은 집합을 구현하는 데이터 구조로서, 값을 신경쓰지 않는 딕셔너리와 같습니다.
+이러한 셋은 다음 ADT로 정의합시다.
+
+- `has(key)`: 키 `key`가 존재하는 지 확인합니다.
+
+- `set(key)`: 키 `key`를 셋에 넣습니다. 기존에 이미 있었다면 변화는 사실상 없습니다.
+
+- `remove(key)`: 키 `key`를 셋에서 없앱니다.
+
+셋은 키와 값이 같은 딕셔너리로 간단히 만들 수 있습니다.
+`has()` 연산은 다음과 같이 키로 값을 찾을 수 있는지 여부를 불리언<L>Boolean</L>으로 리턴합니다.
+
+<Alg>
+  <AK>has ($\textit{dict}$, $\textit{key}$)</AK>&nbsp;<AC>// 셋의 내부 딕셔너리 $\textit{dict}$에 키 $\textit{key}$가 존재하는지 확인</AC>
+
+  <ABlock>
+    <ARet>$\textit{dict}$.get($\textit{key}$) $ \neq $ null</ARet>
+  </ABlock>
+</Alg>
+
+`set()` 연산은 단순히 딕셔너리 연산에 맡깁니다.
+
+<Alg>
+  <AK>set ($\textit{dict}$, $\textit{key}$)</AK>&nbsp;<AC>// 셋의 내부 딕셔너리 $\textit{dict}$에 키 $\textit{key}$를 넣음</AC>
+
+  <ABlock>
+    $\textit{dict}$.set($\textit{key}$)
+  </ABlock>
+</Alg>
+
+`remove()` 연산도 이와 같이 만들 수 있습니다.
+
+이렇게 만드는 셋은 모든 연산을 사실상 딕셔너리에 맡기므로, 시간 복잡도 또한 내부의 딕셔너리를 따르게 됩니다.
+예를 들어 딕셔너리의 모든 연산이 $\Theta(1)$의 시간 복잡도를 가진다면, 셋은 거기에 고작 몇 줄의 코드를 더 수행할 뿐이기 때문에 이 또한 $\Theta(1)$을 갖습니다.
+
+셋을 구현해봅시다.
+셋의 인터페이스를 다음과 같이 만듭니다.
+
+```java
+public interface Set<K> {
+  public void set(K key);
+  public boolean has(K key);
+  public void remove(K key);
+  public int getSize();
+  public Iterable<K> getKeys();
+}
+```
+
+여기서 ADT에 없던 `getSize()`는 키의 개수를, `getKeys()`는 이터러블로서 모든 키를 리턴합니다.
+
+셋은 키와 값이 같은 딕셔너리로 만들 수 있습니다.
+체이닝 해시 테이블로 구현 클래스를 만들어봅시다.
+먼저, 셋의 생성자는 값을 키로 가지는 딕셔너리를 초기화합니다.
+
+```java
+public class ChainingSet<K> implements Set<K> {
+  private Dictionary<K, K> dict;
+
+  public ChainingSet() {
+    this.dict = new ChainingTable<>(v -> v);
+  }
+
+  // ...
+}
+```
+
+이 셋의 메소드는 모두 딕셔너리에 맡길 수 있습니다.
+
+```java
+  public void set(K key) {
+    this.dict.set(key);
+  }
+
+  public boolean has(K key) {
+    return this.dict.get(key) != null;
+  }
+
+  public void remove(K key) {
+    this.dict.remove(key);
+  }
+
+  public int getSize() {
+    return this.dict.getSize();
+  }
+
+  public Iterable<K> getKeys() {
+    return this.dict.getValues();
+  }
+}
+```
+
+이렇게 만든 셋은 다음과 같은 테스트 코드처럼 출석부 문제를 해결할 수 있습니다.
+`set()`은 출석한 학생으로 만드는 것을, `has()`는 출석 여부를, `remove()`는 출석한 학생에서 제외함을 표현합니다.
+
+```java
+  @Test
+  public void testSetAndHas() {
+    Set<String> set = new ChainingSet<>();
+
+    set.set("Jane");
+
+    assertEquals(false, set.has("John"));
+    assertEquals(true, set.has("Jane"));
+    assertEquals(false, set.has("Tom"));
+
+    set.set("John");
+
+    assertEquals(true, set.has("John"));
+    assertEquals(true, set.has("Jane"));
+    assertEquals(false, set.has("Tom"));
+
+    set.remove("John");
+
+    assertEquals(false, set.has("John"));
+    assertEquals(true, set.has("Jane"));
+    assertEquals(false, set.has("Tom"));
+  }
+```
+
+## 맵
+
+맵 또한 딕셔너리처럼 매핑의 구현입니다.
+따라서 딕셔너리와 같은 연산을 가집니다.
+그러나 딕셔너리는 키에서 값을 구할 수 있다고 가정한 반면, 맵은 전혀 상관없어보이는 키 또한 값에 연관시킬 수 있다는 것이 차이점입니다.
+
+맵은 페어<L>pair</L>, 즉 순서쌍을 값으로 갖는 딕셔너리로 만들 수 있습니다.
+이때 키는 페어의 첫 번째 데이터로 정합니다.
+예를 들어, `get()` 연산은 다음과 같습니다.
+
+<Alg>
+  <AK>get ($\textit{dict}$, $\textit{key}$)</AK>&nbsp;<AC>// 맵의 내부 딕셔너리 $\textit{dict}$에서 키 $\textit{key}$로 값을 찾아 리턴</AC>
+
+  <ABlock>
+    <p><AC>// <S>페어</S>.first: 페어의 첫 번째 데이터</AC></p>
+    <p><AC>// <S>페어</S>.second: 페어의 두 번째 데이터</AC></p>
+
+    <ANL />
+
+    $\textit{pair}$ $\leftarrow$ $\textit{dict}$.get($\textit{key}$)
+
+    $\textit{value}$ $\leftarrow$ $\textit{pair}$.second
+
+    <ARet>$\textit{value}$</ARet>
+  </ABlock>
+</Alg>
+
+`set()` 연산은 단순히 딕셔너리에 페어를 넣는 것으로 만들 수 있습니다.
+
+<Alg>
+  <AK>set ($\textit{dict}$, $\textit{key}$, $\textit{value}$)</AK>&nbsp;<AC>// 맵의 내부 딕셔너리 $\textit{dict}$에서 키 $\textit{key}$를 값 $\textit{value}$에 연관시킴</AC>
+
+  <ABlock>
+    $\textit{pair}$ $\leftarrow$ 페어($\textit{key}$, $\textit{value}$)
+
+    $\textit{dict}$.set($\textit{pair}$)
+  </ABlock>
+</Alg>
+
+`remove()` 연산도 이와 같이 만들 수 있습니다.
+
+이렇게 만드는 맵 또한 셋처럼 딕셔너리의 시간 복잡도를 따릅니다.
+
+맵을 자바로 만들어봅시다.
+셋의 경우처럼, 맵 또한 인터페이스를 정의하고 체이닝 해시 테이블로 구현해볼 것입니다.
+맵의 인터페이스는 다음과 같이 만듭니다.
+
+```java
+public interface Map<K, V> {
+  public void set(K key, V value);
+  public V get(K key);
+  public void remove(K key);
+  public int getSize();
+  public Iterable<Pair<K, V>> getEntries();
+}
+```
+
+여기서 `getSize()`는 값의 개수를, `getEntries()`는 모든 값을 연관된 키와 함께 페어로 리턴합니다.
+
+페어 클래스는 다음과 같이 두 필드를 갖도록 만듭니다.
+
+```java
+public class Pair<T, U> {
+  private T first;
+  private U second;
+
+  public Pair(T first, U second) {
+    this.first = first;
+    this.second = second;
+  }
+
+  public T getFirst() {
+    return this.first;
+  }
+
+  public U getSecond() {
+    return this.second;
+  }
+}
+```
+
+이제 체이닝 해시 테이블을 초기화하는 맵 클래스를 만듭시다.
+이 딕셔너리는 페어의 첫 번째 데이터를 키로 가집니다.
+
+```java
+public class ChainingMap<K, V> implements Map<K, V> {
+  private ChainingTable<K, Pair<K, V>> dict;
+
+  public ChainingMap() {
+    this.dict = new ChainingTable<>(Pair::getFirst);
+  }
+
+  // ...
+}
+```
+
+그리고 맵의 구현은 딕셔너리에 맡길 수 있습니다.
+
+```java
+  public void set(K key, V value) {
+    Pair<K, V> pair = new Pair<>(key, value);
+    this.dict.set(pair);
+  }
+
+  public V get(K key) {
+    Pair<K, V> pair = this.dict.get(key);
+    if (pair == null) {
+      return null;
+    }
+
+    V value = pair.getSecond();
+    return value;
+  }
+
+  public void remove(K key) {
+    this.dict.remove(key);
+  }
+
+  public int getSize() {
+    return this.dict.getSize();
+  }
+
+  public Iterable<Pair<K, V>> getEntries() {
+    return this.dict.getValues();
+  }
+}
+```
+
+이렇게 만든 맵은 셋의 테스트 코드처럼 출석부를 구현할 수 있습니다.
+맵은 직접적으로 출석 여부를 정할 수 있습니다.
+
+```java
+  @Test
+  public void testSetAndGets() {
+    Map<String, Boolean> map = new ChainingMap<>();
+
+    map.set("John", false);
+    map.set("Jane", true);
+    map.set("Tom", false);
+
+    assertEquals(false, map.get("John"));
+    assertEquals(true, map.get("Jane"));
+    assertEquals(false, map.get("Tom"));
+
+    map.set("John", true);
+
+    assertEquals(true, map.get("John"));
+    assertEquals(true, map.get("Jane"));
+    assertEquals(false, map.get("Tom"));
+
+    map.remove("John");
+
+    assertEquals(null, map.get("John"));
+    assertEquals(true, map.get("Jane"));
+    assertEquals(false, map.get("Tom"));
+  }
+```
+
+
+
+# 마치며
+
+키로 값을 찾는 딕셔너리 데이터 구조를 구현하기 위해, 링크드 리스트로 연관 리스트와 체이닝 해시 테이블을 만들어보았습니다.
+특히 체이닝 해시 테이블은 리사이징을 통해 모든 연산에 상수 시간이 걸리도록 만들 수 있었습니다.
+나아가 자바의 이터러블 클래스를 구현함으로써, 딕셔너리의 값을 가져오는 기능 또한 만들어 보았습니다.
+그리고 마지막으로, 많은 언어의 라이브러리에서 지원하는 맵과 셋 데이터 타입을 해시 테이블로 직접 구현할 수 있었습니다.
+
+본문의 자바 코드는 생략된 부분을 포함해 [깃허브][gh-jal]<L>GitHub</L>에서 확인할 수 있습니다.
+
+[gh-jal]: https://github.com/wcho21/jal
+
+
+## 레퍼런스
+
+- *Introduction to Algorithms* (3rd ed., Thomas Cormen et al., 2009)
+
+- *Algorithms* (4th ed., Robert Sedgewick, 2011), 또는 *알고리즘* (길벗, 2018)
+
+- *Introduction to Probability with Statistical Applications* (2nd ed., Géza Schay, 2016): 확률론.
+
+- [ConcurrentModificationException][java-cme]: 페일 패스트 이터레이터.
+
+- [Java Microbenchmark Harness (JMH)][jmh]: 자바 코드의 소요 시간 측정에 사용한 도구.
+
+[java-cme]: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ConcurrentModificationException.html
+[jmh]: https://github.com/openjdk/jmh

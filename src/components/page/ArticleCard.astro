@@ -11,7 +11,7 @@ interface Props {
 const basePath = "/posts/";
 
 const { article } = Astro.props;
-const { slug, data } = article;
+const { id: slug, data } = article;
 const { title, date, summary, thumbnail } = data;
 ---
 

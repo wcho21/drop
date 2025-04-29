@@ -1,0 +1,236 @@
+---
+title: "UTF-16과 UTF-32 구현하기"
+date: 2023-06-10T21:00:00+09:00
+summary: "구현으로 알아보는 UTF-16과 UTF-32"
+thumbnail: "/src/assets/thumbnails/2023/06/10/01/thumbnail.webp"
+series: "UTF 인코딩 구현하기"
+---
+
+import L from "@/components/post/AltLang.astro";
+import Figure from "@/components/post/FigureV2.astro";
+import FigureCaption from "@/components/post/FigureCaption.astro";
+import PostLink from "@/components/post/PostLink.astro";
+import Alg from "@/components/post/algorithm/Algorithm.astro";
+import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
+import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
+import AC from "@/components/post/algorithm/AlgorithmComment.astro";
+import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
+import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+
+import fig1 from "@texfigs/2023/06/10/01/fig1.svg";
+import fig2 from "@texfigs/2023/06/10/01/fig2.svg";
+
+
+
+<PostLink href="/2023/06/09/01">이전 글</PostLink>에서 유니코드<L>Unicode</L>와 UTF-8을 살펴봤습니다.
+유니코드는 추상적인 문자와 코드 포인트<L>code point</L> 사이의 매핑으로, UTF-8는 코드 포인트와 코드 유닛 시퀀스<L>code unit sequence</L> 사이의 매핑으로 볼 수 있었습니다.
+또한 유니코드는 내부적으로 플레인<L>plane</L> 단위로 코드 포인트를 관리합니다.
+
+코드 유닛이란 인코딩 시 기본적인 길이로 삼는 비트 길이인데요.
+UTF-8는 8비트의 코드 유닛으로 인코딩 하고, 필요에 따라 하나에서 네 개까지의 코드 유닛을 사용했었습니다.
+
+UTF-16 인코딩은 기본 단위가 16비트일 뿐 전체적인 방식은 UTF-8와 크게 다르지 않습니다.
+UTF-32 또한 그렇고요.
+이번에도 인코딩과 디코딩 함수를 구현해보며 구체적인 인코딩 방식을 알아보겠습니다.
+
+
+
+# 서로게이트 블록
+
+UTF-16 구현에 앞서 언급할 것이 있습니다.
+
+첫 번째 플레인 BMP에는 서로게이트<L>surrogate</L> 블록이라고 불리는 코드 포인트가 있는데요.
+사실 여기에는 문자가 할당되어 있지 않고, 16비트 코드 유닛을 두 개 사용할 것이라는 신호로 사용됩니다.
+
+<Figure src={fig1} alt="Surrogate block in BMP">
+  <FigureCaption slot="caption">그림 1. BMP 내 서로게이트 블록. 특수한 용도로 예약되어 있습니다.</FigureCaption>
+</Figure>
+
+UTF-16 인코딩은 이를 이용합니다.
+16비트를 넘어가는, 즉 `U+FFFF`를 넘어가는 코드 포인트를 인코딩하기 위해서요.
+
+
+
+# UTF-16 인코딩 만들기
+
+이전 글에서, 유니코드를 문자와 코드 포인트 간의 대응 관계로 보았습니다.
+그리고 코드 포인트를 비트 표현으로 매핑하는 방법을 인코딩이라고 부르기로 했습니다.
+
+UTF-16 인코딩은 코드 포인트를 16비트로 표현할 수 있다면, 그 이진 표현<L>binary representation</L>을 그대로 인코딩해 하나의 코드 유닛을 만듭니다.
+그렇지 않고 16비트를 넘어간다면, 두 개의 코드 유닛에 나눠 담습니다.
+UTF-8에서 여러 개의 코드 유닛을 썼던 것처럼요.
+
+<Figure src={fig2} alt="utf-16 encoding">
+  <FigureCaption slot="caption">그림 2. UTF 16 인코딩. 16비트로 표현할 수 있다면, 그 이진 표현을 그대로 사용합니다. 더 많은 비트가 필요하다면, 두 16비트 공간에 나누어 담습니다. 이 두 공간을 서로게이트라고 부릅니다.</FigureCaption>
+</Figure>
+
+두 개의 코드 유닛이 필요한 경우, 코드 포인트의 21비트를 적절히 세 부분으로 나누어 인코딩합니다.
+이 두 코드 유닛을 서로게이트 페어<L>surrogate pair</L>라고도 부릅니다.
+그 중 첫 번째 것을 하이 서로게이트<L>high surrogate</L>, 두 번째를 로우 서로게이트<L>low surrogate</L>라고 합니다.
+
+## 수도코드 및 구현
+
+UTF-16 인코딩을 수도코드로 정리하면 다음과 같습니다.
+
+<Alg>
+  <AK>UTF-16 인코딩</AK> (코드 포인트)
+  <ABlock>
+    <AIf>코드 포인트가 16비트 이하 값</AIf>
+    <ABlock>
+      <ARet>코드 포인트를 그대로 갖는 바이트 시퀀스</ARet>
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <AIf>코드 포인트가 21비트 이하 값</AIf>
+    <ABlock>
+      x xxxx yyyy yyzz zzzz zzzz $\leftarrow$ 코드 포인트의 이진 표현
+
+      <ARet>바이트 시퀀스 1101 10ww wwyy yyyy 1101 11zz zzzz zzzz</ARet>
+    </ABlock>
+
+    <p>&nbsp;</p>
+
+    <ARet>U+FFFD</ARet>
+  </ABlock>
+</Alg>
+
+이는 다음과 같이 C++로 간단한 비트 조작을 통해 구현해볼 수 있습니다.
+
+```cpp
+typedef uint32_t Codepoint;
+
+void encodeUtf16(const Codepoint cp, char16_t *buf) {
+  bool within_16bits = cp < (1 << 16);
+  if (within_16bits) {
+    buf[0] = cp;
+    buf[1] = '\0';
+
+    return;
+  }
+
+  bool within_21bits = cp < (1 << 21);
+  if (within_21bits) {
+    Codepoint x = (cp & 0b1'1111'0000'0000'0000'0000) >> 16;
+    Codepoint y = (cp & 0b0'0000'1111'1100'0000'0000) >> 10;
+    Codepoint z = (cp & 0b0'0000'0000'0011'1111'1111);
+    Codepoint w = x - 1;
+
+    buf[0] = 0b1101'1000'0000'0000 | (w << 6) | y;
+    buf[1] = 0b1101'1100'0000'0000 | z;
+    buf[2] = '\0';
+
+    return;
+  }
+
+  // return U+FFFD in UTF-16
+  buf[0] = 0xFFFD;
+  buf[1] = '\0';
+}
+```
+
+UTF-8 인코딩에서 구현했던 것처럼, 리턴값은 `buf` 매개변수로 전달합니다.
+리턴값 마지막의 널 문자 `\0`는 출력의 편의를 위해 붙였습니다.
+
+반대로 UTF-16 인코딩 결과로부터 코드 포인트를 얻는 디코딩 함수는, UTF-8 디코딩과 크게 다르지 않습니다.
+이는 직접 해보는 것으로 남겨두고 넘어가겠습니다.
+
+
+
+# UTF-16의 사용
+
+UTF-16은 대표적으로 자바스크립트<L>JavaScript</L>와 같은 언어에서 사용하고 있습니다.
+실제로 하나의 코드 유닛으로 표현할 수 있는 한글 문자는 `length` 값이 `1`이 되는데요.
+두 개의 코드 유닛이 필요한 이모지는 그 값이 `2`가 됩니다.
+
+```javascript
+"한".length; // === 1
+"😂".length; // === 2
+```
+
+UTF-16 또한 UTF-8 처럼 코드 유닛의 개수가 곧 코드 포인트의 개수와 일치하지는 않게 됩니다.
+즉 `length`는 문자의 개수가 아니라 코드 유닛의 개수를 갖습니다.
+
+## UTF-8 과의 비교
+
+한글 문자를 표현할 때 UTF-16과 UTF-8 중에 어느 것이 메모리에 더 효율적일까요?
+
+한글 문자는 유니코드에서 `U+AC00`부터 `U+D7AF`까지의 코드 포인트에 할당되어 있는데요.
+이는 코드 포인트 표현시 16비트가 필요함을 의미합니다.
+따라서 UTF-8은 16비트의 코드 포인트를 세 개의 코드 유닛, 즉 3바이트로 인코딩하는데요.
+반면 UTF-16은 하나의 코드 유닛, 즉 2바이트로 인코딩합니다.
+
+그러므로 한글 문자는 UTF-16이 더 메모리에 유리하다고 볼 수 있을 것입니다.
+물론 그 차이가 정말 의미가 있는지, 그리고 다른 언어와 함께 사용할 때 어떨지는 다른 문제입니다.
+
+
+
+# UTF-32의 구현
+
+UTF-32는 구현하기가 비교적 간단합니다.
+
+유니코드의 모든 문자는 기껏해야 21비트의 코드 포인트를 가집니다.
+UTF-32는 코드유닛이 32비트이기 때문에, 코드 포인트의 이진 표현을 그대로 코드 유닛에 담아 인코딩할 수 있습니다.
+
+이를 수도코드로 굳이 표현하자면 다음과 같습니다.
+
+<Alg>
+  <AK>UTF-32 인코딩</AK> (코드 포인트)
+  <ABlock>
+    <ARet>코드 포인트를 그대로 갖는 바이트 시퀀스</ARet>
+  </ABlock>
+</Alg>
+
+이는 C++로 다음과 같이 구현할 수 있습니다.
+
+```cpp
+void encodeUtf32(const Codepoint cp, char32_t *buf) {
+  buf[0] = cp;
+  buf[1] = '\0';
+}
+```
+
+반대로 코드 유닛을 받아 코드 포인트를 구하는 디코딩 함수는 직접 해보는 것으로 남겨두겠습니다.
+
+여기까지 모든 코드는 디코딩 함수 구현을 포함해 [지스트][gist]<L>Gist</L>에서 확인할 수 있습니다.
+
+[gist]: https://gist.github.com/wcho21/5bb039c1312cfe2aa0dc3c913d8dee75
+
+
+# UTF-32의 사용
+
+앞서 언급했던 것처럼, 유니코드에서 코드 포인트는 기껏해야 21비트를 갖는데요.
+따라서 32비트의 코드 유닛을 가지면 항상 11비트가 낭비된다는 것을 알 수 있습니다.
+이것은 UTF-32의 단점이라고 할 수 있을 것입니다.
+
+장점은 무엇이 있을까요?
+코드 유닛의 개수가 곧 코드 포인트의 개수가 된다는 점인데요.
+즉 UTF-32로 인코딩한 결과에서는 $n$번째 코드 포인트에 바로 접근이 가능하게 됩니다.
+
+그러면 $n$번째 문자에 바로 접근이 가능할까요?
+문자의 개수가 코드 유닛의 개수와 일치하지 않는 현상은 앞서 본 적이 있는데요.
+UTF-32 인코딩 또한 그렇습니다.
+이전 글에서 봤던 노말라이즈<L>normalize</L> 문제처럼, 하나의 문자가 두 개의 코드 포인트로 표현될 수 있는 경우가 그 원인이 될 수 있습니다.
+
+
+
+# 마치며
+
+여기까지 UTF 인코딩과 유니코드를 알아보았습니다.
+UTF-16 인코딩에서는 서로게이트 블록의 역할이 중요했습니다.
+UTF-32 인코딩은 그저 21개의 비트를 그대로 32비트에 간단히 담는 것으로 구현했습니다.
+
+## 바이트 오더
+
+본문에서 생략한 주제로, 인코딩에서 바이트 오더<L>byte order</L>, 즉 [엔디안][wp-endian]<L>endianness</L> 문제가 있는데요.
+사실 UTF-16 인코딩은 각 엔디안을 위한 UTF-16LE, UTF-16BE 인코딩이 따로 존재합니다.
+아니면 [바이트 오더 마크][wp-bom]<L>byte order mark</L>, 즉 BOM 문자를 맨 앞에 둬서 바이트 순서를 나타내는 방법도 있습니다.
+이 모든 얘기는 UTF-32 인코딩도 마찬가지고요.
+따라서 실제로 UTF 인코딩을 처리하는 일은 이런 케이스를 고려할 필요가 있습니다.
+
+[wp-endian]: https://ko.wikipedia.org/wiki/%EC%97%94%EB%94%94%EC%96%B8
+[wp-bom]: https://ko.wikipedia.org/wiki/%EB%B0%94%EC%9D%B4%ED%8A%B8_%EC%88%9C%EC%84%9C_%ED%91%9C%EC%8B%9D
+
+## 레퍼런스
+
+- *Unicode Explained* (Jukka Korpela, 2006)
