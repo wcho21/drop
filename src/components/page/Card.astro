@@ -12,7 +12,7 @@ interface Props {
 
 const { title, date, summary, thumbnail } = Astro.props;
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  "src/content/blog/**/_figs/*.webp",
+  "src/blog/**/_figs/*.webp",
 );
 ---
 

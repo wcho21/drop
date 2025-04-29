@@ -47,7 +47,7 @@ const { title, summary, date } = entry.data;
 const { Content } = await render(entry);
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  "src/content/blog/**/_figs/*.webp",
+  "src/blog/**/_figs/*.webp",
 );
 const image = await images[entry.data.thumbnail]();
 ---
