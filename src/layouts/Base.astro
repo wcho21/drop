@@ -15,9 +15,8 @@ interface Props {
     width: number;
     height: number;
   };
-  url: string;
 }
-const { pageTitle, desc, image, url } = Astro.props;
+const { pageTitle, desc, image } = Astro.props;
 
 const siteTitle = config.app.title;
 const titleSep = config.app.titleSep;
@@ -29,7 +28,7 @@ const title = makeTitle(pageTitle, siteTitle, titleSep);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <OpenGraph title={title} desc={desc} image={image} url={url} />
+    <OpenGraph title={title} desc={desc} image={image} />
     <Favicons />
     <Fonts />
     <Katex />
