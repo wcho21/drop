@@ -4,6 +4,9 @@ import { groupBy, reverse, sortBy } from "lodash-es";
 type BlogEntry = CollectionEntry<"blog">;
 type SeriesEntry = { name: string; articles: BlogEntry[]; latestDate: Date };
 
+/**
+ * @deprecated
+ */
 export const getSeries = (entries: BlogEntry[]) => {
   // construct series array
   const grouped: [string, BlogEntry[]][] = Object.entries(
@@ -22,6 +25,9 @@ export const getSeries = (entries: BlogEntry[]) => {
   return sortedByDate;
 };
 
+/**
+ * @deprecated
+ */
 export const sortCollection = (
   entries: BlogEntry[],
   reversed = true,
