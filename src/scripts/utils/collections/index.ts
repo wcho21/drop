@@ -1,5 +1,11 @@
 import type { CollectionEntry } from "astro:content";
+import { groupBy, toPairs } from "lodash-es";
 import { createDateComparator } from "../comparators";
+
+interface Series {
+  name: string;
+  articles: CollectionEntry<"blog">[];
+}
 
 export function sortBlogCollectionByDate(
   entries: CollectionEntry<"blog">[],
@@ -28,4 +34,14 @@ export function selectSeries(
   entries: CollectionEntry<"blog">[],
 ): CollectionEntry<"blog">[] {
   return entries.filter(entry => entry.data.series !== undefined);
+}
+
+export function groupSeries(entries: CollectionEntry<"blog">[]): Series[] {
+  const groupedAsObject = groupBy(entries, ({ data }) => data.series ?? "");
+  const groupedSeries = toPairs(groupedAsObject).map(([name, articles]) => ({
+    name,
+    articles,
+  }));
+
+  return groupedSeries;
 }

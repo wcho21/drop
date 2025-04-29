@@ -10,7 +10,7 @@ import {
   selectSeries,
   sortBlogCollectionByDate,
 } from "@/scripts/utils/collections";
-import { getSeries } from "@/scripts/utils/pages";
+import { groupSeries } from "@/scripts/utils/collections";
 
 const articles = sortBlogCollectionByDate(await getCollection("blog"));
 const featured = selectFeatured(articles);
@@ -32,7 +32,7 @@ const series = selectSeries(articles);
       </div>
 
       <div class="mt-12">
-        <SeriesList heading="Series." series={getSeries(series)} />
+        <SeriesList heading="Series." series={groupSeries(series)} />
       </div>
     </div>
   </main>
