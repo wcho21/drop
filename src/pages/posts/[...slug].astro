@@ -11,18 +11,10 @@ import Share from "@/components/post/ShareButton.astro";
 import Base from "@/layouts/Base.astro";
 import { formatDate } from "@/scripts/utils/formatters";
 
-import { dirname, join } from "node:path";
 type BlogEntry = CollectionEntry<"blog">;
 
 export async function getStaticPaths() {
   const articles = await getCollection("blog");
-  for (const article of articles) {
-    article.data.thumbnail = join(
-      "/",
-      dirname(article.filePath ?? "./"),
-      article.data.thumbnail,
-    );
-  }
   const staticPaths = articles.map((entry, i) => ({
     params: { slug: entry.id },
     props: {
@@ -47,7 +39,7 @@ const { title, summary, date } = entry.data;
 const { Content } = await render(entry);
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  "src/blog/**/_figs/*.webp",
+  "src/assets/**/*.webp",
 );
 const image = await images[entry.data.thumbnail]();
 ---

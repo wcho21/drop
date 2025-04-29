@@ -12,20 +12,22 @@ interface Props {
 
 const { title, date, summary, thumbnail } = Astro.props;
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  "src/blog/**/_figs/*.webp",
+  "src/assets/**/*.webp",
 );
 ---
 
 <div class="flex items-center gap-4">
   <div class="flex-0 w-[100px] mb-auto sm:w-[150px]">
-    <Image
-      src={images[thumbnail]()}
-      alt="Thumbnail"
-      quality="80"
-      width="300"
-      height="200"
-      class="w-full h-full object-contain"
-    />
+    { images[thumbnail] !== undefined && (
+      <Image
+        src={images[thumbnail]()}
+        alt="Thumbnail"
+        quality="80"
+        width="300"
+        height="200"
+        class="w-full h-full object-contain"
+      />
+    )}
   </div>
 
   <div class="flex-1 w-full h-full text-gray-800">

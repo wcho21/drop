@@ -5,20 +5,12 @@ import SeriesList from "@/components/page/SeriesList.astro";
 import Base from "@/layouts/Base.astro";
 import { getSeries } from "@/scripts/utils/pages";
 
-import { dirname, join } from "node:path";
 import { getCollection } from "astro:content";
 const articles = await getCollection("blog");
 const decOrderDateComparator = createDateComparator("decreasing");
 articles.sort((item1, item2) =>
   decOrderDateComparator(item1.data.date, item2.data.date),
 );
-for (const article of articles) {
-  article.data.thumbnail = join(
-    "/",
-    dirname(article.filePath ?? "./"),
-    article.data.thumbnail,
-  );
-}
 
 function createDateComparator(
   order: "increasing" | "decreasing" = "increasing",
