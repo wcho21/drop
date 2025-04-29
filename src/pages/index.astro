@@ -3,15 +3,11 @@ import Footer from "@/components/layout/Footer.astro";
 import ArticleList from "@/components/page/ArticleList.astro";
 import SeriesList from "@/components/page/SeriesList.astro";
 import Base from "@/layouts/Base.astro";
+import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { getSeries } from "@/scripts/utils/pages";
-import { createDateComparator } from "@/scripts/utils/comparators";
 
 import { getCollection } from "astro:content";
-const articles = await getCollection("blog");
-const decOrderDateComparator = createDateComparator("decreasing");
-articles.sort((item1, item2) =>
-  decOrderDateComparator(item1.data.date, item2.data.date),
-);
+const articles = sortBlogCollectionByDate(await getCollection("blog"));
 
 const featuredArticles = articles.filter(
   article => (article.data.featured ?? false) === true,
