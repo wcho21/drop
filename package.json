@@ -6,7 +6,8 @@
     "dev": "astro dev --port 3000 --host 0.0.0.0",
     "build": "astro build",
     "preview": "astro preview --port 3000 --host 0.0.0.0",
-    "format": "biome check --write"
+    "format": "biome check --write",
+    "format:check": "biome check"
   },
   "dependencies": {
     "@astrojs/mdx": "4.2.4",
