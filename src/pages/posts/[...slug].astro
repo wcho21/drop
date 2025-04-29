@@ -1,5 +1,4 @@
 ---
-import type { ImageMetadata } from "astro";
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
 import Heading1 from "@/components/core/Heading1.astro";
@@ -9,6 +8,7 @@ import ArticleCard from "@/components/page/ArticleCard.astro";
 import Giscus from "@/components/post/Giscus.astro";
 import Share from "@/components/post/ShareButton.astro";
 import Base from "@/layouts/Base.astro";
+import { getThumbnails } from "@/scripts/utils/assets";
 import { formatDate } from "@/scripts/utils/formatters";
 
 type BlogEntry = CollectionEntry<"blog">;
@@ -38,10 +38,8 @@ const { href } = Astro.url;
 const { title, summary, date } = entry.data;
 const { Content } = await render(entry);
 
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  "src/assets/**/*.webp",
-);
-const image = await images[entry.data.thumbnail]();
+const images = getThumbnails();
+const image = images[entry.data.thumbnail];
 ---
 
 <Base pageTitle={title} desc={summary} image={image.default}>
