@@ -1,5 +1,7 @@
 ---
+import type { ImageMetadata } from "astro";
 import type { CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Heading1 from "@/components/core/Heading1.astro";
 import Home from "@/components/icon/Home.astro";
 import Footer from "@/components/layout/Footer.astro";
@@ -7,14 +9,22 @@ import ArticleCard from "@/components/page/ArticleCard.astro";
 import Giscus from "@/components/post/Giscus.astro";
 import Share from "@/components/post/ShareButton.astro";
 import Base from "@/layouts/Base.astro";
-import { articles } from "@/scripts/collections";
 import { formatDate } from "@/scripts/utils/formatters";
 
+import { dirname, join } from "node:path";
 type BlogEntry = CollectionEntry<"blog">;
 
 export async function getStaticPaths() {
+  const articles = await getCollection("blog");
+  for (const article of articles) {
+    article.data.thumbnail = join(
+      "/",
+      dirname(article.filePath ?? "./"),
+      article.data.thumbnail,
+    );
+  }
   const staticPaths = articles.map((entry, i) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: {
       nextEntry: i > 0 ? articles[i - 1] : undefined,
       prevEntry: i < articles.length - 1 ? articles[i + 1] : undefined,
@@ -34,10 +44,15 @@ interface Props {
 const { entry, prevEntry, nextEntry } = Astro.props;
 const { href } = Astro.url;
 const { title, summary, date } = entry.data;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "src/content/blog/**/_figs/*.webp",
+);
+const image = await images[entry.data.thumbnail]();
 ---
 
-<Base pageTitle={title} desc={summary} image={entry.data.thumbnail}>
+<Base pageTitle={title} desc={summary} image={image.default}>
   <div class="text-gray-800">
     <div>
       <header class="mb-12 pt-12 font-serif border-t-8 border-gray-800">
