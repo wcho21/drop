@@ -6,7 +6,7 @@ const { display = true } = Astro.props;
   <div class="mb-1.5">
     <slot />
   </div>
-  <div class="text-[13.25px] md:text-[14.5px] font-light shown-on-hover-component">
+  <div class="text-[13.25px] md:text-[14.5px] font-light unfold-on-hover-component" data-status="folded">
     <div class="pb-1.5">
       <slot name="detail" />
     </div>
@@ -18,41 +18,46 @@ const { display = true } = Astro.props;
 
 <script>
   const quotes = document.querySelectorAll(".quote-component");
-  const shownOnHovers = document.querySelectorAll(".shown-on-hover-component");
+  const unfoldOnHovers = document.querySelectorAll(".unfold-on-hover-component");
   quotes.forEach((quote, i) => {
-    const shownOnHover = shownOnHovers[i];
-    const hasContent = shownOnHover.textContent.length > 0;
+    const unfoldOnHover = unfoldOnHovers[i];
+    if (!(unfoldOnHover instanceof HTMLElement)) {
+      throw new Error(`Expected 'HTMLElement', but received ${unfoldOnHover.className}`);
+    }
+    const hasContent = unfoldOnHover.textContent === null || unfoldOnHover.textContent.length > 0;
     if (!hasContent) {
-      return;
+      return; // ignore silently; no need to unfold
     }
 
     quote.addEventListener("mouseenter", () => {
-      shownOnHover.classList.add("shown-on-hover-component-shown");
+      unfoldOnHover.dataset.status = "unfolded";
+      unfoldOnHover.style.maxHeight = `${unfoldOnHover.scrollHeight}px`;
     });
     quote.addEventListener("mouseleave", () => {
-      shownOnHover.classList.remove("shown-on-hover-component-shown");
+      unfoldOnHover.dataset.status = "folded";
+      unfoldOnHover.style.maxHeight = "0px";
     });
   });
 </script>
 
 <style>
-  .shown-on-hover-component {
+  .unfold-on-hover-component {
     max-height: 0;
-    transform: scaleY(0);
     transform-origin: top;
-    opacity: 0;
     transition-property: opacity, max-height, transform;
     transition-duration: 0.3s;
     transition-timing-function: ease;
   }
 
-  .shown-on-hover-component-shown {
-    max-height: 100vh;
+  .unfold-on-hover-component[data-status="folded"] {
+    transform: scaleY(0);
+    opacity: 0;
+    transition-delay: 0s;
+  }
+
+  .unfold-on-hover-component[data-status="unfolded"] {
     transform: scaleY(1);
     opacity: 1;
-    transition-property: opacity, max-height, transform;
-    transition-delay: 800ms;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
+    transition-delay: 0.8s;
   }
 </style>
