@@ -18,11 +18,14 @@
     \begin{scope}
       \begin{semilogxaxis}[
         title style={align=center},
-        title={Resizing Chaining Hash Table\\Successful \texttt{get()}},
-        xlabel={slot size $n$},
+        title={Chaining Hash Table\\Successful \texttt{get()}},
+        xlabel={$n$ elements},
         ylabel={elapsed time $t$},
         ymin=20,
-        ymax=50,
+        ymax=120,
+        legend pos=north west,
+        legend columns=-1,
+        legend entries={\small Resizing,\small Fixed-size},
       ]
         \addplot[markplot] table [x=n,y=t]{
                n      t
@@ -38,16 +41,26 @@
            65536 31.790
           131072 45.228
         };
+        \addplot[markplotx] table [x=n,y=t]{
+               n         t
+             128    34.786
+             256    42.846
+             512    60.416
+            1024    91.794
+        };
       \end{semilogxaxis}
     \end{scope}
 
     \begin{scope}[xshift=75mm]
       \begin{semilogxaxis}[
         title style={align=center},
-        title={Resizing Chaining Hash Table\\$n$ \texttt{set()}},
+        title={Chaining Hash Table\\$n$ \texttt{set()}},
         xlabel={$n$ elements},
         ylabel={elapsed time $t$},
         ymax=10^6.75,
+        legend pos=north west,
+        legend columns=-1,
+        legend entries={\small Resizing,\small Fixed-size},
       ]
         \addplot[markplot] table [x=n,y=t]{
                n           t
@@ -63,8 +76,18 @@
            65536 1661174.533
           131072 3755545.324
         };
+        \addplot[markplotx] table [x=n,y=t]{
+               n              t
+             128       2245.501
+             256       7461.650
+             512      32496.109
+            1024     143192.942
+            2048     577619.505
+            4096    2857839.673
+            8192    9422427.704
+        };
         \addplot[domain=64:262144] { 28.2 * x - 50700 }
-          node[pos=0.675,left=1mm] { \small$t \sim 28.2 n$ };
+          node[pos=0.575,left=1mm] { \small$t \sim 28.2 n$ };
       \end{semilogxaxis}
     \end{scope}
   \end{tikzpicture}
