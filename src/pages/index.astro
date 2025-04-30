@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-import Footer from "@/components/layout/Footer.astro";
 import ArticleList from "@/components/page/ArticleList.astro";
 import SeriesList from "@/components/page/SeriesList.astro";
 import Base from "@/layouts/Base.astro";
@@ -36,10 +35,6 @@ const series = selectSeries(articles);
       </div>
     </div>
   </main>
-
-  <div class="my-12 pt-12 border-t border-gray-800">
-    <Footer />
-  </div>
 </Base>
 
 <style>
