@@ -4,7 +4,7 @@
 <div class="drop-down-component-button">
   <slot name="button" />
 </div>
-<div class="drop-down-component-body border-t border-gray-100">
+<div class="drop-down-component-body border-t border-gray-100" data-status="folded">
   <slot />
 </div>
 
@@ -13,7 +13,26 @@
   const bodies = document.querySelectorAll(".drop-down-component-body");
   buttons.forEach((button, i) => {
     button.addEventListener("click", () => {
-      bodies[i].classList.toggle("drop-down-component-body-open");
+      // validation
+      const body = bodies[i];
+      if (!(body instanceof HTMLElement)) {
+        throw new Error(`Expected HTMLElement, but received '${body.className}'`);
+      }
+      const { dataset } = body;
+      if (dataset.status === undefined || dataset.status !== "folded" && dataset.status !== "unfolded") {
+        throw new Error(`Expected 'status' to be 'folded' or 'unfolded', but received '${dataset.status}'`);
+      }
+
+      if (dataset.status === "folded") {
+        dataset.status = "unfolded";
+        body.style.maxHeight = `${body.scrollHeight}px`;
+        return;
+      }
+      if (dataset.status === "unfolded") {
+        dataset.status = "folded";
+        body.style.maxHeight = "0px";
+        return;
+      }
     });
   });
 </script>
@@ -21,19 +40,17 @@
 <style>
   .drop-down-component-body {
     max-height: 0;
-    transform: scaleY(0);
     transform-origin: top;
-    opacity: 0;
     transition-property: opacity, max-height, transform;
     transition-duration: 0.3s;
     transition-timing-function: ease;
   }
- .drop-down-component-body-open {
-    max-height: 100vh;
+  .drop-down-component-body[data-status="folded"] {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  .drop-down-component-body[data-status="unfolded"] {
     transform: scaleY(1);
     opacity: 1;
-    transition-property: opacity, max-height, transform;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
   }
 </style>
