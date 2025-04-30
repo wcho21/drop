@@ -36,8 +36,7 @@ const { href } = Astro.url;
 const { title, summary, date } = entry.data;
 const { Content } = await render(entry);
 
-const images = getThumbnails();
-const image = images[entry.data.thumbnail];
+const image = getThumbnails()[entry.data.thumbnail];
 ---
 
 <Base pageTitle={title} desc={summary} image={image}>

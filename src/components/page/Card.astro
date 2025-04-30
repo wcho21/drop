@@ -11,22 +11,20 @@ interface Props {
 }
 
 const { title, date, summary, thumbnail } = Astro.props;
-const images = getThumbnails();
+const image = getThumbnails()[thumbnail];
 ---
 
 <div class="flex items-center gap-4">
   <div class="flex-0 w-[100px] mb-auto sm:w-[150px]">
     { 
-      images[thumbnail] !== undefined && (
-        <Image
-          src={images[thumbnail]}
-          alt="Thumbnail"
-          quality="80"
-          width="300"
-          height="200"
-          class="w-full h-full object-contain"
-        />
-      )
+      <Image
+        src={image}
+        alt="Thumbnail"
+        quality="80"
+        width="300"
+        height="200"
+        class="w-full h-full object-contain"
+      />
     }
   </div>
 
