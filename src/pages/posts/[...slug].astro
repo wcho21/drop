@@ -41,47 +41,45 @@ const image = images[entry.data.thumbnail];
 ---
 
 <Base pageTitle={title} desc={summary} image={image.default}>
-  <div class="text-gray-800">
-    <div>
-      <header class="mb-12 pt-12 font-serif border-t-8 border-gray-800">
-        <div class="font-semibold">
-          <Heading>{title}</Heading>
-        </div>
-        <p>{summary}</p>
-        <p class="mt-2 text-[14px] font-light"><time>{formatDate(date)}</time></p>
-      </header>
-
-      <main id="post-main" class="my-12 pt-12 border-t border-gray-800">
-        <Content />
-      </main>
-    </div>
-
-    <div class="my-12 flex">
-      <div class="mx-auto">
-        <Share url={href} title={title} />
+  <div>
+    <header class="mb-12 pt-12 font-serif border-t-8 border-gray-800">
+      <div class="font-semibold">
+        <Heading>{title}</Heading>
       </div>
-    </div>
+      <p>{summary}</p>
+      <p class="mt-2 text-[14px] font-light"><time>{formatDate(date)}</time></p>
+    </header>
 
-    <div class="my-12 pt-12 border-t border-gray-800">
-      {import.meta.env.PROD ? (
-        <Giscus />
-      ) : (<p style='text-align: center'>(Giscus will be rendered here on production mode)</p>)}
-    </div>
-
-    <nav id="post-nav" class="my-12 pt-12 border-t border-gray-800">
-      {
-        nextEntry && <ArticleCard article={nextEntry} />
-      }
-      {
-        prevEntry && <ArticleCard article={prevEntry} />
-      }
-      <div class="mt-4">
-        <a href="/" class="block py-1.5 px-3 mx-auto w-fit">
-          <Home />
-        </a>
-      </div>
-    </nav>
+    <main id="post-main" class="my-12 pt-12 border-t border-gray-800">
+      <Content />
+    </main>
   </div>
+
+  <div class="my-12 flex">
+    <div class="mx-auto">
+      <Share url={href} title={title} />
+    </div>
+  </div>
+
+  <div class="my-12 pt-12 border-t border-gray-800">
+    {import.meta.env.PROD ? (
+      <Giscus />
+    ) : (<p style='text-align: center'>(Giscus will be rendered here on production mode)</p>)}
+  </div>
+
+  <nav id="post-nav" class="my-12 pt-12 border-t border-gray-800">
+    {
+      nextEntry && <ArticleCard article={nextEntry} />
+    }
+    {
+      prevEntry && <ArticleCard article={prevEntry} />
+    }
+    <div class="mt-4">
+      <a href="/" class="block py-1.5 px-3 mx-auto w-fit">
+        <Home />
+      </a>
+    </div>
+  </nav>
 </Base>
 
 <style is:global>

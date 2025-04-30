@@ -18,23 +18,21 @@ const series = selectSeries(articles);
 ---
 
 <Base pageTitle="Home">
-  <main class="text-gray-800">
-    <div class="mb-12 pt-12 border-t-8 border-gray-800">
-      {
-        featured.length > 0 && (
-          <ArticleList heading="Featured." articles={featured} />
-        )
-      }
+  <div class="mb-12 pt-12 border-t-8 border-gray-800">
+    {
+      featured.length > 0 && (
+        <ArticleList heading="Featured." articles={featured} />
+      )
+    }
 
-      <div class="mt-12">
-        <ArticleList heading="Articles." articles={nonfeatured} />
-      </div>
-
-      <div class="mt-12">
-        <SeriesList heading="Series." series={groupSeries(series)} />
-      </div>
+    <div class="mt-12">
+      <ArticleList heading="Articles." articles={nonfeatured} />
     </div>
-  </main>
+
+    <div class="mt-12">
+      <SeriesList heading="Series." series={groupSeries(series)} />
+    </div>
+  </div>
 </Base>
 
 <style>
