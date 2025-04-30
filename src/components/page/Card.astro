@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
+import { getThumbnails } from "@/scripts/utils/assets";
 import { formatDate } from "@/scripts/utils/formatters";
-import type { ImageMetadata } from "astro";
 
 interface Props {
   title: string;
@@ -11,27 +11,25 @@ interface Props {
 }
 
 const { title, date, summary, thumbnail } = Astro.props;
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  "src/assets/**/*.webp",
-);
+const image = getThumbnails()[thumbnail];
 ---
 
 <div class="flex items-center gap-4">
   <div class="flex-0 w-[100px] mb-auto sm:w-[150px]">
-    { images[thumbnail] !== undefined && (
+    { 
       <Image
-        src={images[thumbnail]()}
+        src={image}
         alt="Thumbnail"
         quality="80"
         width="300"
         height="200"
         class="w-full h-full object-contain"
       />
-    )}
+    }
   </div>
 
-  <div class="flex-1 w-full h-full text-gray-800">
-    <p class="text-gray-800 text-base font-bold sm:text-lg">{title}</p>
+  <div class="flex-1 w-full h-full">
+    <p class="text-gray-800 text-base font-semibold sm:text-lg">{title}</p>
       <div>
         <p class="text-gray-600 font-regular font-light text-sm sm:text-base">{summary}</p>
       </div>

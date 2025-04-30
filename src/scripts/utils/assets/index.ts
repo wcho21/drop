@@ -1,10 +1,10 @@
 import type { ImageMetadata } from "astro";
 
-export function getThumbnails() {
-  const images = import.meta.glob<{ default: ImageMetadata }>(
+export function getThumbnails(): Record<string, ImageMetadata> {
+  const thumbnails = import.meta.glob<ImageMetadata>(
     "src/assets/**/thumbnail.webp",
-    { eager: true },
+    { eager: true, import: "default" },
   );
 
-  return images;
+  return thumbnails;
 }

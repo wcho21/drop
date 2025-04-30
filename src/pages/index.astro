@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-import Footer from "@/components/layout/Footer.astro";
 import ArticleList from "@/components/page/ArticleList.astro";
 import SeriesList from "@/components/page/SeriesList.astro";
 import Base from "@/layouts/Base.astro";
@@ -19,26 +18,20 @@ const series = selectSeries(articles);
 ---
 
 <Base pageTitle="Home">
-  <main class="text-gray-800">
-    <div class="mb-12 pt-12 border-t-8 border-gray-800">
-      {
-        featured.length > 0 && (
-          <ArticleList heading="Featured." articles={featured} />
-        )
-      }
+  <div class="mb-12 pt-12 border-t-8 border-gray-800">
+    {
+      featured.length > 0 && (
+        <ArticleList heading="Featured." articles={featured} />
+      )
+    }
 
-      <div class="mt-12">
-        <ArticleList heading="Articles." articles={nonfeatured} />
-      </div>
-
-      <div class="mt-12">
-        <SeriesList heading="Series." series={groupSeries(series)} />
-      </div>
+    <div class="mt-12">
+      <ArticleList heading="Articles." articles={nonfeatured} />
     </div>
-  </main>
 
-  <div class="my-12 pt-12 border-t border-gray-800">
-    <Footer />
+    <div class="mt-12">
+      <SeriesList heading="Series." series={groupSeries(series)} />
+    </div>
   </div>
 </Base>
 

@@ -25,7 +25,7 @@ const { heading, series } = Astro.props;
         <ListItem>
           <DropDown>
             <p slot="button" class="font-light text-[14pt] cursor-pointer py-4" list-heading>{name}<span class="text-[12pt] ml-1.5">({articles.length})</span></p>
-            <ul class="block series-drop-down-list" list-body>
+            <ul class="block series-drop-down-list">
               {
                 articles.map(article => (
                   <ListItem><ArticleCard article={article} /></ListItem>

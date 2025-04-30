@@ -1,9 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
-import Heading1 from "@/components/core/Heading1.astro";
+import Heading from "@/components/core/Heading.astro";
 import Home from "@/components/icon/Home.astro";
-import Footer from "@/components/layout/Footer.astro";
 import ArticleCard from "@/components/page/ArticleCard.astro";
 import Giscus from "@/components/post/Giscus.astro";
 import Share from "@/components/post/ShareButton.astro";
@@ -37,54 +36,49 @@ const { href } = Astro.url;
 const { title, summary, date } = entry.data;
 const { Content } = await render(entry);
 
-const images = getThumbnails();
-const image = images[entry.data.thumbnail];
+const image = getThumbnails()[entry.data.thumbnail];
 ---
 
-<Base pageTitle={title} desc={summary} image={image.default}>
-  <div class="text-gray-800">
-    <div>
-      <header class="mb-12 pt-12 font-serif border-t-8 border-gray-800">
-        <Heading1>{title}</Heading1>
-        <p>{summary}</p>
-        <p class="mt-2 text-[14px] font-light"><time>{formatDate(date)}</time></p>
-      </header>
-
-      <main id="post-main" class="my-12 pt-12 border-t border-gray-800">
-        <Content />
-      </main>
-    </div>
-
-    <div class="my-12 flex">
-      <div class="mx-auto">
-        <Share url={href} title={title} />
+<Base pageTitle={title} desc={summary} image={image}>
+  <div>
+    <header class="mb-12 pt-12 font-serif border-t-8 border-gray-800">
+      <div class="font-semibold">
+        <Heading>{title}</Heading>
       </div>
-    </div>
+      <p>{summary}</p>
+      <p class="mt-2 text-[14px] font-light"><time>{formatDate(date)}</time></p>
+    </header>
 
-    <div class="my-12 pt-12 border-t border-gray-800">
-      {import.meta.env.PROD ? (
-        <Giscus />
-      ) : (<p style='text-align: center'>(Giscus will be rendered here on production mode)</p>)}
-    </div>
+    <main id="post-main" class="my-12 pt-12 border-t border-gray-800">
+      <Content />
+    </main>
+  </div>
 
-    <nav id="post-nav" class="my-12 pt-12 border-t border-gray-800">
-      {
-        nextEntry && <ArticleCard article={nextEntry} />
-      }
-      {
-        prevEntry && <ArticleCard article={prevEntry} />
-      }
-      <div class="mt-4">
-        <a href="/" class="block py-1.5 px-3 mx-auto w-fit">
-          <Home />
-        </a>
-      </div>
-    </nav>
-
-    <div class="my-12 pt-12 border-t border-gray-800">
-      <Footer />
+  <div class="my-12 flex">
+    <div class="mx-auto">
+      <Share url={href} title={title} />
     </div>
   </div>
+
+  <div class="my-12 pt-12 border-t border-gray-800">
+    {import.meta.env.PROD ? (
+      <Giscus />
+    ) : (<p style='text-align: center'>(Giscus will be rendered here on production mode)</p>)}
+  </div>
+
+  <nav id="post-nav" class="my-12 pt-12 border-t border-gray-800">
+    {
+      nextEntry && <ArticleCard article={nextEntry} />
+    }
+    {
+      prevEntry && <ArticleCard article={prevEntry} />
+    }
+    <div class="mt-4">
+      <a href="/" class="block py-1.5 px-3 mx-auto w-fit">
+        <Home />
+      </a>
+    </div>
+  </nav>
 </Base>
 
 <style is:global>
