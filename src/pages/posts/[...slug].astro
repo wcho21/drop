@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
-import Heading1 from "@/components/core/Heading1.astro";
+import Heading from "@/components/core/Heading.astro";
 import Home from "@/components/icon/Home.astro";
 import ArticleCard from "@/components/page/ArticleCard.astro";
 import Giscus from "@/components/post/Giscus.astro";
@@ -44,7 +44,9 @@ const image = images[entry.data.thumbnail];
   <div class="text-gray-800">
     <div>
       <header class="mb-12 pt-12 font-serif border-t-8 border-gray-800">
-        <Heading1>{title}</Heading1>
+        <div class="font-semibold">
+          <Heading>{title}</Heading>
+        </div>
         <p>{summary}</p>
         <p class="mt-2 text-[14px] font-light"><time>{formatDate(date)}</time></p>
       </header>
