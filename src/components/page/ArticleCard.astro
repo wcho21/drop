@@ -1,8 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import Card from "./Card.astro";
-import { join } from "@/scripts/utils/paths";
 import config from "@/config";
+import { join } from "@/scripts/utils/paths";
+import Card from "./Card.astro";
 
 interface Props {
   article: CollectionEntry<"blog">;
