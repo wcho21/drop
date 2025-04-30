@@ -1,7 +1,7 @@
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
-import { transformerMetaWordHighlight } from "@shikijs/transformers";
+import { transformerMetaWordHighlight, transformerNotationDiff, transformerNotationHighlight, transformerNotationErrorLevel } from "@shikijs/transformers";
 import { defineConfig } from "astro/config";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
@@ -13,7 +13,7 @@ export default defineConfig({
   markdown: {
     shikiConfig: {
       theme: "github-light",
-      transformers: [transformerMetaWordHighlight()],
+      transformers: [transformerMetaWordHighlight(), transformerNotationDiff(), transformerNotationHighlight(), transformerNotationErrorLevel()],
     },
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],

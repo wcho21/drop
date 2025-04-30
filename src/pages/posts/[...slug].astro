@@ -107,7 +107,50 @@ const image = getThumbnails()[entry.data.thumbnail];
   }
 
   #post-main > .astro-code {
-    @apply my-2 text-[0.875em] pl-4 border-l border-gray-500 text-left whitespace-pre-wrap;
+    @apply my-2 text-[0.875em] border-l border-gray-500 text-left whitespace-pre-wrap pl-[1.25em];
+  }
+
+  #post-main > .astro-code.has-diff {
+    position: relative;
+  }
+
+  #post-main > .astro-code span.line {
+    @apply inline-block ml-[-1.25em] pl-[1.25em];
+  }
+
+  #post-main > .astro-code span.line.highlighted {
+    @apply bg-gray-100;
+    width: calc(100% + 1.25em)
+  }
+
+  #post-main > .astro-code span.line.highlighted.warning {
+    @apply bg-amber-100;
+    width: calc(100% + 1.25em)
+  }
+
+  #post-main > .astro-code span.line.highlighted.error {
+    @apply bg-rose-100;
+    width: calc(100% + 1.25em)
+  }
+
+  #post-main > .astro-code span.line.diff.add {
+    @apply bg-emerald-100;
+    width: calc(100% + 1.25em)
+  }
+
+  #post-main > .astro-code span.line.diff.add::before {
+    @apply text-emerald-400 absolute left-0 w-[1.25em] inline-block text-center;
+    content: "+";
+  }
+
+  #post-main > .astro-code span.line.diff.remove {
+    @apply bg-rose-100;
+    width: calc(100% + 1.25em)
+  }
+
+  #post-main > .astro-code span.line.diff.remove::before {
+    @apply text-rose-400 absolute left-0 w-[1.25em] inline-block text-center;
+    content: "-";
   }
 
   #post-main > .astro-code .highlighted-word {
