@@ -1,19 +1,20 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Card from "./Card.astro";
+import { join } from "@/scripts/utils/paths";
+import config from "@/config";
 
 interface Props {
   article: CollectionEntry<"blog">;
 }
 
-const basePath = "/posts/";
-
 const { article } = Astro.props;
-const { id: slug, data } = article;
+const { id, data } = article;
 const { title, date, summary, thumbnail } = data;
+const url = join(config.paths.posts, id);
 ---
 
-<a href={`${basePath}${slug}/`} class="block py-4">
+<a href={url} class="block py-4">
   <Card
     title={title}
     date={date}
