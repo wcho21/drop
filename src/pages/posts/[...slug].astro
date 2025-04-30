@@ -8,8 +8,8 @@ import Giscus from "@/components/post/Giscus.astro";
 import Share from "@/components/post/ShareButton.astro";
 import Base from "@/layouts/Base.astro";
 import { getThumbnails } from "@/scripts/utils/assets";
-import { formatDate } from "@/scripts/utils/formatters";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
+import { formatDate } from "@/scripts/utils/formatters";
 
 export async function getStaticPaths() {
   const articles = sortBlogCollectionByDate(await getCollection("blog"));
