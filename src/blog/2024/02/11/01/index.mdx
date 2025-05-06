@@ -10,7 +10,6 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/FigureV2.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro"
-import CalloutKal from "@/components/post/CalloutKal.astro";
 import Alg from "@/components/post/algorithm/Algorithm.astro";
 import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
 import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
@@ -25,11 +24,8 @@ import fig5 from "@texfigs/2024/02/11/01/fig5.svg";
 
 
 <PostLink href="/2024/02/10/01">이전 글</PostLink>에서 간단한 프로그래밍 언어를 위한 파서<L>parser</L>를 구현했습니다.
-파서는 소스 코드를 문법적으로 해석한 결과로 추상 문법 트리<L>abstract syntax tree</L>를 만들어냅니다.
-
-여기서는 이 트리를 받아 값으로 평가<L>evaluate</L>하는 이밸류에이터<L>evaluator</L>를 만들 것입니다.
-이것으로 간단한 프로그래밍 언어를 위한 인터프리터<L>interpreter</L>가 완성됩니다.
-즉 다음과 같은 코드를 실행시킬 수 있게 됩니다.
+여기서는 파서의 파싱 결과인 추상 문법 트리를 값으로 평가하는 인터프리터<L>interpreter</L>를 만들 것입니다.
+이것으로 다음과 같은 코드를 실행시키는 인터프리터가 완성됩니다.
 
 ```
 g = 98/10
@@ -37,30 +33,27 @@ y = t -> y0 -> g*t*t/2 + y0
 y(10)(5)
 ```
 
-이는 <PostLink href="/2024/02/08/01">첫 글</PostLink>에서 목표로 했던 간단한 함수형 프로그래밍 언어 코드입니다.
-다시 말해, 위 문법을 따르는 프로그래밍 언어를 새로 만들어낸 것입니다.
+이것은 <PostLink href="/2024/02/08/01">첫 글</PostLink>에서 목표로 했던 간단한 함수형 프로그래밍 언어 코드입니다.
+다시 말해, 처음에 말뿐이었던 문법을 실제로 따르는 언어를 새로 만들어낸 것입니다.
 
-위와 같은 코드를 평가하는 단계에서, 변수의 할당과 함수의 호출을 구현하게 되는데요.
-이와 함께 클로저<L>closure</L> 또한 실제로 만들어볼 것입니다.
-이를 통해 `y(10)(5)`와 같은 함수의 커링<L>currying</L>을 지원할 수 있게 됩니다.
-
-그럼 본격적으로 인터프리터를 완성해보겠습니다.
+앞으로의 내용을 통해, 변수의 할당과 함수의 호출이 어떻게 동작하는지 구현을 통해 알아보게 될 것입니다.
+그 과정에서 클로저<L>closure</L> 또한 직접 만들게 될 것이고, 이를 통해 `y(10)(5)`와 같은 함수의 커링<L>currying</L>을 지원할 수 있게 됩니다.
 
 
 
 # 숫자 값 평가
 
-숫자만 있는 코드를 실행해봅시다.
-다음과 같이 아주 간단한 코드를 실행하는 것이 목표입니다.
+처음에는 다음과 같이 아주 간단한 코드를 실행하는 것이 목표입니다.
+숫자만 있을 뿐이지만 이것도 소스 코드이긴 합니다.
 
 ```
 1
 ```
 
-그러면 입력한대로 숫자 값이 나오게끔 만들어야 합니다.
+인터프리터는 입력한 숫자 값이 나오게끔 만들어야 합니다.
 
-실제로 그런 값을 평가하기 전에, 내부적으로 쓸 값 클래스를 먼저 준비해봅시다.
-다음 파이썬 코드처럼 만들 수 있습니다.
+먼저, 평가한 값의 타입을 내부적으로 관리하기 위한 일종의 래퍼<L>wrapper</L> 클래스를 준비합니다.
+여기서는 `kind`가 그 타입을 가질 것입니다.
 
 ```python
 class Value:
@@ -72,27 +65,14 @@ class Value:
         return f"[Value: {self.kind}, {self.value}]"
 ```
 
-이 클래스는 평가한 값의 타입을 내부적으로 관리하기 위한 일종의 래퍼<L>wrapper</L> 클래스입니다.
-여기서는 `kind` 값이 그 타입을 가질 것입니다.
 
 물론 여기서 만들 프로그래밍 언어는 변수가 명시적인 타입을 가지지는 않습니다.
-하지만 나중에 `a+b`와 같은 코드가 실제로는 숫자끼리의 덧셈이 아닌 다른 동작을 할 수 있는데요.
-여기서는 이를 원치 않는 동작으로 볼 것입니다.
+하지만 `a+b`와 같은 코드가 숫자끼리의 덧셈이 아닌 경우, 오류로 처리하기 위한 준비입니다.
+다시 말해, 각 값의 `kind`를 검사함으로써 '올바른' 덧셈 외의 코드를 막으려는 것입니다.
+이런 오류를 파서가 문법적으로<L>syntactically</L> 확인하기보다는, 값을 평가하는 시점에서 의미적으로<L>semantically</L> 파악하도록 만듭니다.
 
-이를 파서가 문법적으로 확인하기보다는, 값을 평가하는 지금 시점에서 의미<L>semantics</L>적으로 파악할 것입니다.
-이는 `a+b` 같은 덧셈을 평가할 때, 각 변수의 `kind` 값을 검사함으로써 '올바른' 덧셈 외의 코드를 막을 수 있습니다.
-이 부분은 곧 실제로 구현할 것입니다.
-
-부가적으로, 스트링 표현을 위한 메소드 `__repr__()`는 나중에 `print()`로 확인할 용도로 만든 것입니다.
-앞으로의 경우도 그렇습니다.
-
-이는 다음과 같이 사용할 것입니다.
-
-```python
-Value("number", 1)
-```
-
-이번엔 노드를 값으로 평가하는 `Evaluator` 클래스를 만들 차례입니다.
+이번엔 노드를 값으로 평가하는 클래스를 만들 차례입니다.
+이것을 만들면 인터프리터가 완성됩니다.
 
 ```python
 class Evaluator:
@@ -109,11 +89,10 @@ class Evaluator:
         raise Exception(f"bad node '{node.kind}'")
 ```
 
-평가할 트리로 인스턴스가 만들어집니다.
-하지만 일단 첫 노드만 평가하도록 간단히 만들었는데요.
-이후 모든 노드로 확장할 것입니다.
+이 클래스는 평가할 트리로 인스턴스를 만듭니다.
+지금은 첫 노드만 평가하도록 만들었지만, 곧 모든 노드로 확장할 것입니다.
 
-이제 숫자 값을 평가할 수 있습니다.
+이 간단한 인터프리터는 처음에 목표한대로 숫자 값을 평가합니다.
 
 ```python
 input = "1"
@@ -121,12 +100,8 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate()
 print(evaluated)
-```
-
-결과는 다음과 같습니다.
-
-```
-[Value: number, 1]
+# [!code highlight:1]
+# result: [Value: number, 1]
 ```
 
 
@@ -140,19 +115,14 @@ print(evaluated)
 a = 1
 ```
 
-그러면 대입을 실행하고, 평가 값은 다음처럼 됩니다.
+그러면 대입을 실행하고, 평가 값은 `1`이 됩니다.
 
-```
-1
-```
-
-즉 연산 결과는 `1`과 같이 되지만, 부수 효과<L>side effect</L>로서 `a`와 같은 식별자는 변수가 되는데요.
-이를 변수 바인딩<L>variable binding</L>이라고도 부릅니다.
+즉 연산 결과는 `1`과 같이 되지만, 부수 효과<L>side effect</L>로서 `a`와 같은 식별자는 변수가 되는 것입니다.
+이를 변수 바인딩<L>variable binding</L>이라고 부릅니다.
 
 이 변수 바인딩은 소스 코드를 실행하는 도중에 일어납니다.
 그래서 어떤 변수 이름이 어떤 값으로 존재하는지 관리할 필요가 있습니다.
 이를 위한 자료 구조를 인바이런먼트<L>environment</L>라고 부를 것입니다.
-변수 대입을 구현하기 위해 이를 준비합시다.
 
 ## 인바이런먼트
 
@@ -181,19 +151,23 @@ class Environment:
         self.bindings[name] = value
 ```
 
-이제 변수 바인딩을 구현할 수 있습니다.
+변수 바인딩을 위한 준비가 끝났습니다.
 
 ## 변수 대입 구현
 
-이제 아까 만들었던 `Evaluator` 클래스에서 대입 연산을 구현해봅시다.
-`evaluate()` 메소드가 인바이런먼트를 받도록, 그리고 모든 노드를 평가하도록 확장합니다.
+이제 대입 연산을 구현해봅시다.
+값을 평가하는 메소드가 인바이런먼트를 받도록, 그리고 모든 노드를 평가하도록 고칩니다.
 
 ```python
+    # [!code --:2]
+    def evaluate(self) -> Value:
+        return self.evaluateNode(self.nodes[0])
+    # [!code ++:6]
     def evaluate(self, env: Environment) -> Value:
         lastEvaluated = Value("null", None)
         for node in self.nodes:
             lastEvaluated = self.evaluateNode(node, env)
-
+        
         return lastEvaluated
 ```
 
@@ -203,6 +177,11 @@ class Environment:
 그리고 식별자와 대입 연산을 평가하기 위해 조건문을 다음과 같이 추가합니다.
 
 ```python
+    # [!code --:3]
+    def evaluateNode(self, node) -> Value:
+        if node.kind == "number":
+            return Value("number", node.children[0])
+    # [!code ++:7]
     def evaluateNode(self, node: Node, env: Environment) -> Value:
         if node.kind == "number":
             return Value("number", node.children[0])
@@ -211,10 +190,11 @@ class Environment:
         if node.kind == "infix":
             return self.evaluateInfix(node, env)
 
-        # ...
+        raise Exception(f"bad node '{node.kind}'")
 ```
 
 식별자 평가를 구현하는 `evaluateIdentifier()` 메소드는 인바이런먼트에서 변수 값을 가져옵니다.
+이 메소드 덕분에 변수 값이 얼마인지 평가할 수 있게 됩니다.
 
 ```python
     def evaluateIdentifier(self, node: Node, env: Environment) -> Value:
@@ -228,7 +208,7 @@ class Environment:
 ```
 
 `evaluateInfix()` 메소드는 대입 연산을 평가하는 `evaluateAssignment()` 메소드를 부릅니다.
-이 메소드는 인바이런먼트에 변수 값을 넣어둡니다.
+이렇게 분리하는 이유는 사칙연산을 비롯한 다른 것도 나중에 추가할 것이기 때문입니다.
 
 ```python
     def evaluateInfix(self, node: Node, env: Environment) -> Value:
@@ -240,7 +220,12 @@ class Environment:
             return self.evaluateAssignment(left, right, env)
 
         raise Exception(f"bad infix '{infix}'")
+```
 
+다음 메소드는 인바이런먼트에 변수 값을 넣어둡니다.
+이 메소드 덕분에 변수 바인딩이 일어나게 됩니다.
+
+```python
     def evaluateAssignment(self, left: Node, right: Node, env: Environment) -> Value:
         value = self.evaluateNode(right, env)
 
@@ -250,8 +235,8 @@ class Environment:
         return value
 ```
 
-이제 변수를 대입하고 사용할 수 있게 됩니다.
-이 때 인바이런먼트를 만들어 `evaluate()` 메소드에 넘겨줍니다.
+이제 변수를 대입하고 사용할 수 있게 됐습니다.
+실행 결과는 `a+2`의 값인 `3`이 됩니다.
 
 ```python
 input = "a=1 a+2"
@@ -259,19 +244,15 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
-```
-
-실행 결과는 변수 `a`의 값이 됩니다.
-
-```
-[Value: number, 3]
+# [!code highlight:1]
+# result: [Value: number, 3]
 ```
 
 
 
 # 사칙 연산 평가
 
-여기서 사칙 연산은 간단히 구현할 수 있는데요.
+여기서 사칙 연산은 간단히 구현할 수 있습니다.
 트리의 노드를 재귀적으로 방문해 값을 계산하면 되기 때문입니다.
 
 <Figure src={fig2} alt="evaluating arithmetic expression">
@@ -286,14 +267,13 @@ print(evaluated)
 
         if infix == "=":
             return self.evaluateAssignment(left, right, env)
-        if infix in "+-*/":
-            return self.evaluateArithmetic(infix, left, right, env)
+        if infix in "+-*/": # [!code ++]
+            return self.evaluateArithmetic(infix, left, right, env) # [!code ++]
 
         # ...
 ```
 
-실제로 사칙 연산을 수행하는 부분에서는 자식 노드를 재귀적으로 평가해 값을 가져옵니다.
-그리고 계산 결과를 값 인스턴스로 만듭니다.
+사칙 연산을 실제로 수행하는 부분에서는 자식 노드를 재귀적으로 평가해 값을 가져옵니다.
 
 ```python
     def evaluateArithmetic(self, infix: str, left: Node, right: Node, env: Environment) -> Value:
@@ -317,7 +297,7 @@ print(evaluated)
         raise Exception(f"bad infix '{infix}'")
 ```
 
-이제 사칙 연산을 평가할 수 있게 됩니다.
+이를 통해 인터프리터는 사칙 연산도 가능해졌습니다.
 
 ```python
 input = "1+2*3/4-5"
@@ -325,32 +305,33 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
-```
-
-결과는 다음과 같습니다.
-
-```
-[Value: number, -2.5]
+# [!code highlight:1]
+# result: [Value: number, -2.5]
 ```
 
 
 
 # 함수 정의 평가
 
-이제 `f = b -> a+b`와 같은 함수 정의 표현식을 평가할 차례입니다.
-여기서 만드는 언어는 함수도 값이므로, 함수 값을 구현할 필요가 있는데요.
-나중에 `f(2)`와 같은 함수 호출이 이 함수 값을 사용할 것입니다.
+함수 정의 표현식은 다음과 같은 문법이었습니다.
+
+```
+f = b -> a+b
+```
+
+여기서 만드는 언어는 함수도 값이므로, 함수 값을 구현할 필요가 있습니다.
+이 함수 값은 나중에 `f(2)`와 같은 함수 호출이 사용할 것입니다.
 
 <Figure src={fig3} alt="function definition and call">
   <FigureCaption slot="caption">그림 3. 함수의 정의와 호출 구현. `b -> a+b`와 같은 함수 정의는 매개변수와 본문, 인바이런먼트를 가지는 함수 값으로 평가됩니다. `f(2)`와 같은 함수 호출은 이 함수 값에 있는 매개변수 식별자 `b`에 호출 인자 `2`를 바인딩하여 함수 인바이런먼트를 만들고, 기존 함수의 인바이런먼트를 상위로 둡니다. 이를 바탕으로 함수 본문 `a+b`가 평가됩니다.</FigureCaption>
 </Figure>
 
-즉 예시의 `a+b`와 같은 함수 본문은 호출 시에 평가될 것입니다.
-그리고 `b`와 같은 함수의 매개변수<L>parameter</L> 또한, 함수 호출 시 `2`와 같은 호출 인자<L>argument</L>의 값으로 바인딩시킬 것입니다.
-여기서 매개변수와 인자를 구분해 부르고 있다는 점을 참고하세요.
+예시의 `a+b`와 같은 함수 본문은 호출 시에 평가됩니다.
+그리고 `b`와 같은 함수의 매개변수<L>parameter</L> 또한, 함수 호출 시 `2`와 같은 호출 인자<L>argument</L>의 값으로 바인딩이 일어날 것입니다.
+여기서 매개변수와 호출 인자를 구분해 부르고 있다는 점을 참고하세요.
 
-한편 이후 구현할 클로저를 위해, 함수가 현재의 인바이런먼트를 기억해야할 필요가 있습니다.
-정리하면 함수 값은 매개변수와 본문, 그리고 인바이런먼트를 가지도록 구현합니다.
+한편, 이후 구현할 클로저를 위해, 함수가 현재의 인바이런먼트를 기억해야할 필요가 있습니다.
+정리하면, 함수 값은 매개변수와 본문, 그리고 인바이런먼트를 가지는 것입니다.
 
 ```python
 class FunctionValue:
@@ -363,7 +344,8 @@ class FunctionValue:
         return f"[Function: {self.param} -> ...]"
 ```
 
-이번엔 `Evaluator` 클래스가 함수 정의를 함수 값으로 평가하도록 만들 차례입니다.
+이번엔 함수 정의를 함수 값으로 평가하도록 만들 차례입니다.
+먼저 함수 정의도 사칙연산과 같은 연산자로 처리합니다.
 
 ```python
     def evaluateInfix(self, node: Node, env: Environment) -> Value:
@@ -371,11 +353,15 @@ class FunctionValue:
 
         if infix in "+-*/":
             return self.evaluateArithmetic(infix, left, right, env)
-        if infix == "->":
-            return self.evaluateFunction(left, right, env)
+        if infix == "->": # [!code ++]
+            return self.evaluateFunction(left, right, env) # [!code ++]
 
         # ...
+```
 
+실제 함수 값을 평가하는 메소드는 방금 만들었던 함수 값 인스턴스를 리턴합니다.
+
+```python
     def evaluateFunction(self, left, right, env):
         param = left.value
         body = right
@@ -383,20 +369,16 @@ class FunctionValue:
         return Value("function", FunctionValue(param, body, env))
 ```
 
-이제 인터프리터가 함수 정의에서 함수 값을 얻습니다.
+이제 인터프리터가 함수 값을 평가할 수 있게 됐습니다.
 
 ```python
-    input = "a->b"
-    tokens = Tokenizer(input).getTokens()
-    nodes = Parser(tokens).parse()
-    evaluated = Evaluator(nodes).evaluate(Environment())
-    print(evaluated)
-```
-
-결과는 다음과 같습니다.
-
-```
-[Value: function, [Function: a -> ...]]
+input = "a->b"
+tokens = Tokenizer(input).getTokens()
+nodes = Parser(tokens).parse()
+evaluated = Evaluator(nodes).evaluate(Environment())
+print(evaluated)
+# [!code highlight]
+# result: [Value: function, [Function: a -> ...]]
 ```
 
 
@@ -404,52 +386,49 @@ class FunctionValue:
 # 함수 호출 평가
 
 함수 호출은 호출 인자로 넘긴 값으로 새로운 인바이런먼트를 만들고, 함수 호출이 끝나면 버릴 것입니다.
-즉 새로운 스코프<L>scope</L>를 만든다고 할 수 있는데요.
+새로운 인바이런먼트란 곧 변수를 기억하는 새로운 공간이므로, 변수의 새로운 스코프<L>scope</L>를 만든다고 할 수 있습니다.
 여기서 만드는 언어는 함수 단위로 스코프가 생깁니다.
 
-그러면 기존의 `Environment` 클래스를 고쳐서, 기존 인바이런먼트를 확장할 수 있도록 만들어봅시다.
-이런 확장은 인바이런먼트의 단방향 링크드 리스트<L>singly linked list</L>를 만들 것입니다.
+그러면 `Environment` 클래스를 고쳐서, 기존 인바이런먼트를 확장할 수 있도록 만들어봅시다.
+이를 통해 인바이런먼트는 단방향 링크드 리스트<L>singly linked list</L>로 연결될 것입니다.
+이 중에 시작 노드에 가까울 수록 더 중첩된 스코프 역할을 맡게 됩니다.
 
 ```python
-    def __init__(self, super = None):
-        self.super = super
-        self.bindings = dict()
+class Environment:
+    def __init__(self): # [!code --]
+        self.bindings = dict() # [!code --]
+    def __init__(self, super = None): # [!code ++]
+        self.super = super # [!code ++]
+        self.bindings = dict() # [!code ++]
 
     def getVar(self, name: str):
         if name in self.bindings:
             # ...
 
-        if self.super is not None:
-            return self.super.getVar(name)
+        if self.super is not None: # [!code ++]
+            return self.super.getVar(name) # [!code ++]
 
         # ...
 ```
 
-즉 `getVar()` 메소드는 현재 인바이런먼트에서 값을 찾고, 없으면 상위 인바이런먼트에서 시도합니다.
-이는 재귀적으로 호출되어 맨 위에 있는 인바이런먼트까지 탐색합니다.
+`getVar()` 메소드는 현재 인바이런먼트에서 값을 찾고, 없으면 상위 인바이런먼트에서 시도합니다.
+다시 말해, 바깥쪽 스코프에서 찾아보는 것입니다.
+이 메소드는 재귀적으로 호출되어 맨 위에 있는 인바이런먼트까지 탐색합니다.
 
-그러면 이를 이용해 함수 호출 평가를 구현해봅시다.
+이를 통해 함수 호출 평가를 구현해봅시다.
 
 ```python
     def evaluateNode(self, node: Node, env: Environment) -> Value:
         # ...
         if node.kind == "identifier":
             return self.evaluateIdentifier(node, env)
-        if node.kind == "call":
-            return self.evaluateCall(node, env)
+        if node.kind == "call": # [!code ++]
+            return self.evaluateCall(node, env) # [!code ++]
 
         raise Exception(f"bad node '{node.kind}'")
 ```
 
-실제로 평가를 맡는 메소드 `evaluateCall()`은 기존 인바이런먼트에서 함수 매개변수의 바인딩을 추가한 새 인바이런먼트를 만듭니다.
-즉 '그림 3'에서 보았던 것처럼, `b`를 매개변수로 갖는 함수를 `f(2)`로 호출하면, 변수 `b`에 호출 인자 `2`를 바인딩한 인바이런먼트를 새로 만들고, 기존의 것을 상위 인바이런먼트로 가집니다.
-
-<Figure src={fig3} alt="function definition and call">
-  <FigureCaption slot="caption">그림 3. 함수의 정의와 호출 구현. (이전과 같음)</FigureCaption>
-</Figure>
-
-
-함수 호출은 이렇게 만든 인바이런먼트를 바탕으로 함수 본문을 평가하도록 구현합니다.
+실제로 평가를 맡는 메소드 `evaluateCall()`은 기존 인바이런먼트에서 함수 매개변수의 바인딩을 추가한 새 인바이런먼트를 만들 것입니다.
 
 ```python
     def evaluateCall(self, node: Node, env: Environment) -> Value:
@@ -467,7 +446,13 @@ class FunctionValue:
         return value
 ```
 
-이제 인터프리터는 함수 호출을 할 수 있게 됩니다.
+즉 '그림 3'에서 보았던 것처럼, `b`를 매개변수로 갖는 함수를 `f(2)`로 호출하면, 변수 `b`에 호출 인자 `2`를 바인딩한 인바이런먼트를 새로 만듭니다.
+
+<Figure src={fig3} alt="function definition and call">
+  <FigureCaption slot="caption">그림 3. 함수의 정의와 호출 구현. (이전과 같음)</FigureCaption>
+</Figure>
+
+인터프리터가 함수 호출을 할 수 있게 됐습니다.
 
 ```python
 input = "f = a -> a+1 f(2)"
@@ -475,20 +460,15 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
-```
-
-결과는 `1+2`의 값이 됩니다.
-
-```
-[Value: number, 3]
+# [!code highlight:1]
+# result: [Value: number, 3]
 ```
 
 ## 변수 섀도잉
 
-위에서 구현한 대로, 식별자를 평가할 때 변수 값을 찾기 위해 먼저 현재 인바이런먼트에서 찾아보고, 없으면 상위 인바이런먼트에서 찾아봅니다.
+앞서 구현한 대로, 식별자를 평가할 때 변수 값을 찾기 위해 먼저 현재 인바이런먼트에서 찾아보고, 없으면 상위 인바이런먼트에서 찾아봅니다.
 
-그런데 동일한 식별자가 여러 레벨의 인바이런먼트에 걸쳐 존재할 수 있는데요.
-예를 들어 다음과 같은 코드가 그렇습니다.
+그런데 동일한 식별자가 다음 코드처럼 여러 레벨의 인바이런먼트에 걸쳐 존재할 수 있습니다.
 
 ```
 a = 1
@@ -496,19 +476,18 @@ f = a -> a+1
 ```
 
 여기서 함수 `f`의 매개변수 `a`와 기존에 만든 변수 `a`는 이름은 같지만 다른 변수로 만들어집니다.
-즉 함수의 매개변수 `a`가 기존의 변수 `a`를 '가린다'고 생각할 수 있는데요.
-이는 변수 섀도잉<L>variable shadowing</L>이라고 불립니다.
+함수의 매개변수 `a`가 기존의 변수 `a`를 '가린다'고 볼 수 있기 때문에 변수 섀도잉<L>variable shadowing</L>이라고 부릅니다.
+이 특징은 사실 파이썬을 비롯한 많은 프로그래밍 언어가 갖고 있는 것이기도 합니다.
 
 <Figure src={fig4} alt="variable shadowing">
   <FigureCaption slot="caption">그림 4. 변수 섀도잉 구현. 함수 `f`의 본문에서 변수 `a`의 값은 현재 인바이런먼트에서 먼저 찾습니다. 따라서 상위 인바이런먼트의 변수 `a`는 보이지 않게 됩니다.</FigureCaption>
 </Figure>
 
-정리하면 변수 섀도잉은 변수 값을 인바이런먼트에서 찾는 방식, 즉 상위보다 현재의 인바이런먼트에서 먼저 찾는 순서로 인해 생긴 부수 효과로 볼 수 있습니다.
+정리하면 변수 섀도잉은 변수 값을 인바이런먼트에서 찾는 방식, 즉 상위보다 현재의 인바이런먼트에서 먼저 찾는 순서로 인해 생기는 특징으로 볼 수 있습니다.
 
 ## 커링
 
-자연스럽게 커링도 구현되었습니다.
-즉 다음과 같은 코드를 사용할 수 있는데요.
+여기까지 만들었다면, 자연스럽게 커링도 구현되어있습니다.
 
 ```
 f = a -> b -> a+b
@@ -516,10 +495,10 @@ f(1)(2)
 ```
 
 입력 코드의 함수 정의는 사실상 두 개의 함수를 정의한 것이고, 따라서 호출 또한 두 번 이루어진 것입니다.
-하지만 `f`를 마치 두 개의 매개변수를 쓰는 함수로, 호출 시 두 개의 인자를 넘긴 것처럼 다룰 수 있습니다.
+하지만 마치 두 개의 매개변수를 쓰는 함수로 다룰 수 있습니다.
 이런 함수를 커리된 함수<L>curried function</L>라고 부릅니다.
 
-실제로 다음처럼 실행할 수 있습니다.
+정말로 구현됐는지 확인해보면 다음과 같은 결과가 나옵니다.
 
 ```python
 input = "f = a -> b -> a+b  f(1)(2)"
@@ -527,19 +506,15 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
+# [!code highlight]
+# result: [Value: number, 3]
 ```
 
-결과는 다음과 같습니다.
-
-```
-[Value: number, 3]
-```
-
-이런 커링의 구현은 다음에 소개할 클로저 덕분에 가능한 것입니다.
+이런 커링의 구현은 클로저 덕분에 가능한 것입니다.
 
 ## 클로저
 
-커링의 예시에서 실행했던 코드를 다음과 같이 다르게 표현해볼 수 있는데요.
+커링의 예시 코드에서 함수 호출 `f(1)(2)` 대신 두 부분으로 나눠서 보면, 무슨일이 일어나고 있는지 좀 더 분명하게 볼 수 있습니다.
 
 ```
 f = a -> b -> a+b
@@ -547,25 +522,24 @@ g = f(1)
 g(2)
 ```
 
-원래의 예시에서 함수 호출 `f(1)(2)` 대신 변수 `g`를 사용해 두 부분으로 나눈 것입니다.
+함수 정의 표현식 `a -> b -> a+b`은 호출 시 함수를 만들어줍니다.
+즉 매개변수 `a`로 새 함수 `b -> a+b`를 만드는 것입니다.
+따라서 변수 `g`에는 `f(1)`를 평가한 값으로서, 함수 `b -> 1+b`를 갖게 됩니다.
+다시 말해, 이 함수 값은 본문이 `b -> a+b`이고, `a`는 `1`로 바인딩된 인바이런먼트를 가집니다.
+
+이런식으로 함수의 인바이런먼트에 함수 본문 바깥의 변수 `a`를 담을 수 있게 됩니다.
+그리고 이런 함수를 클로저라고 부릅니다.
+재밌는 점은 함수 외부에서 변수 `a`에 접근할 방법이 없다는 것입니다.
+이렇게 클로저는 일종의 프라이빗<L>private</L> 변수를 가졌다고 볼 수 있습니다.
+이 경우 클로저가 변수 `a`를 캡처<L>capture</L>했다고 말합니다.
 
 <Figure src={fig5} alt="closure">
   <FigureCaption slot="caption">그림 5. 클로저 구현. 변수 `f`에 함수를 만드는 함수를 정의합니다. 따라서 이 함수를 호출하면 새 함수가 만들어집니다. 이 때 새 함수 값은 확장된 인바이런먼트를 가지고, 이는 외부에서 접근할 수 없게 됩니다.</FigureCaption>
 </Figure>
 
-함수 정의 표현식 `a -> b -> a+b`은 호출 시 함수를 만들어줍니다.
-즉 매개변수 `a`로 새 함수 `b -> a+b`를 만드는데요.
-따라서 변수 `g`에는 `f(1)`를 평가한 값, 즉 함수 값이 대입됩니다.
-이 값은 본문이 `b -> a+b`이고, `a`는 `1`로 바인딩된 인바이런먼트를 가집니다.
-
-이렇게 함수의 인바이런먼트에 함수 본문 바깥의 변수 `a`를 담을 수 있습니다.
-이런 함수를 클로저라고 부릅니다.
-여기서 이 변수는 함수 외부에서 접근할 방법이 없게 됩니다.
-따라서 이 함수가 일종의 프라이빗<L>private</L> 변수를 가졌다고 볼 수 있는데요.
-클로저가 변수 `a`를 캡처<L>capture</L>했다고도 표현합니다.
-
 이제 함수 호출 `g(2)`가 함수 본문 `a+b`를 평가할 때, 변수 `a`의 값은 클로저의 인바이런먼트에서 `1`을, 변수 `b`는 호출 인자로 넘긴 값에서 `2`를 가져오게 됩니다.
-실제로 다음과 같이 실행할 수 있습니다.
+
+예시를 인터프리터로 실행해보면 커링의 예시와 똑같은 결과가 나옵니다.
 
 ```python
 input = "f = a -> b -> a+b  g = f(1)  g(2)"
@@ -573,26 +547,21 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
+# [!code highlight]
+# result: [Value: number, 3]
 ```
-
-결과는 커링의 예시와 똑같습니다.
-
-```
-[Value: number, 3]
-```
-
 
 
 
 # REPL 만들기
 
-여기까지 인터프리터는 사실상 완성되었습니다.
-이를 이용해 REPL을 만들 수 있는데요.
+여기까지 인터프리터는 사실상 완성됐습니다.
+그런데 여기서 한단계 더 나아가 REPL을 만들 수 있습니다.
 REPL이란 Read-Evaluate-Print Loop으로, 코드를 그때그때 입력받아 실행하는 프로그램입니다.
-파이썬<L>Python</L>을 비롯한 많은 인터프리터에서 지원하는 것이기도 합니다.
+파이썬을 비롯한 많은 인터프리터에서 지원하는 것이기도 합니다.
 
 REPL에서는 만들어둔 변수를 앞으로도 계속 쓸 수 있어야 합니다.
-따라서 REPL 인스턴스가 다음과 같이 인바이런먼트와 함께 초기화 되도록 만듭니다.
+따라서 REPL이 새 인바이런먼트와 함께 초기화 되도록 만듭니다.
 
 ```python
 class Repl:
@@ -607,8 +576,7 @@ class Repl:
 ```
 
 `execute()` 메소드는 입력받은 코드 `input`을 실행합니다.
-첫 글에서 인터프리터의 수도코드를 다음과 같이 소개했는데요.
-이 메소드는 그 수도코드의 구현이기도 합니다.
+첫 글에서 인터프리터의 수도코드를 다음과 같이 소개했는데, 이 메소드는 그 수도코드의 구현이기도 합니다.
 
 <Alg>
   <AK>인터프리터</AK> (코드)
@@ -623,7 +591,7 @@ class Repl:
   </ABlock>
 </Alg>
 
-이제 REPL의 실행은 다음과 같이 구현합니다.
+이제 REPL은 다음과 같이 구현합니다.
 `quit`을 입력하면 종료를, 아니면 코드를 실행합니다.
 
 ```python
@@ -647,14 +615,14 @@ class Repl:
 
 ```
 
-이 REPL 클래스는 다음과 같이 사용합니다.
+그리고 다음과 같이 인스턴스를 만들어 실행하면 완성입니다.
 
 ```python
 repl = Repl()
 repl.run()
 ```
 
-그러면 첫 글에서 목표로 했던 코드를 이제 실행할 수 있게 됩니다.
+그러면 첫 글에서 목표로 했던 코드를 여기서 실행할 수 있게 됩니다.
 
 ```
 to quit, type 'quit'
@@ -668,24 +636,21 @@ to quit, type 'quit'
 bye
 ```
 
-이렇게 간단한 함수형 프로그래밍 언어가 완성되었습니다.
+드디어 간단한 함수형 프로그래밍 언어가 완성되었습니다.
 
 
 
 # 마치며
 
-여기까지 소스 코드를 토큰화<L>tokenize</L>하는 것부터 시작해, 파서와 이밸류에이터를 구현해 인터프리터를 만들었습니다.
-간단한 사칙 연산과 함수 호출만 구현할 수 있을 정도의 간단한 프로그래밍 언어를 만들었는데요.
-조건문이나 반복문과 같은 기능도 이와 같이 추가할 수 있습니다.
+소스 코드를 토큰화<L>tokenize</L>하는 것부터 시작해, 파서, 그리고 인터프리터를 만들었습니다.
+간단한 사칙 연산과 함수 호출만 구현할 수 있을 정도의 프로그래밍 언어를 만들었지만, 여기에 조건문이나 반복문과 같은 기능도 비슷하게 추가할 수 있습니다.
 
-이 글에서 클로저의 구현이 간단했던 이유는, 구현을 위해 사용한 언어 파이썬에 이미 가비지 콜렉션<L>garbage collection</L>이 구현되어 있기 때문입니다.
-즉 클로저가 인바이런먼트를 새로 만들어 낼 때, 나중에 이를 해제<L>release</L>하는 메모리 관리가 따로 없었습니다.
-이것은 인터프리터의 구현을 쉽게 하기 위해 파이썬을 선택한 이유이기도 합니다.
+클로저를 간단히 만들 수 있었던 이유는, 구현을 위해 사용한 파이썬에 이미 가비지 컬렉션<L>garbage collection</L>이 구현되어 있기 때문입니다.
+구현 과정에서는 인바이런먼트를 새로 만든 뒤 해제<L>release</L>하는 메모리 관리가 따로 없었고, 덕분에 인터프리터의 구현이 간단해졌습니다.
+이것이 파이썬을 선택한 이유이기도 합니다.
 
-본문에서 변수 바인딩의 간단한 구현으로 인바이런먼트를 만들었는데요.
-이것은 다른 인터프리터도 사용하는 자료구조이기도 합니다.
-대표적으로 자바스크립트<L>JavaScript</L>의 렉시컬 인바이런먼트<L>lexical environment</L>가 이런 변수 바인딩의 구현입니다.
-또한 이를 통해 클로저가 구현되어 있기도 합니다.
+인바이런먼트라는 데이터 구조는 자바스크립트<L>JavaScript</L> 언어에서도 렉시컬 인바이런먼트<L>lexical environment</L>라는 이름으로 등장합니다.
+자바스크립트 또한 클로저가 구현되어있는 언어이기도 합니다.
 
 여기까지 생략된 부분을 포함한 코드는 [지스트][gist]<L>Gist</L>에서 볼 수 있습니다.
 
@@ -698,7 +663,5 @@ bye
 - [_Learn You a Haskell for Great Good!_][lyah] (Miran Lipovaca, 2011), 또는 _가장 쉬운 하스켈 책_ (2014):
   함수형 프로그래밍 언어를 사용해봄으로써 커링과 클로저같은 개념을 접해볼 수 있습니다.
   이 책은 그런 대표적인 언어 중 하나인 하스켈<L>Haskell</L>을 소개합니다.
-
-<CalloutKal />
 
 [lyah]: https://learnyouahaskell.github.io/

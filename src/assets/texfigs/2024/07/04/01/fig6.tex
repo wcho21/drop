@@ -71,8 +71,8 @@
             0.7 36.247
           0.725 37.568
         };
-        \addplot[domain=0.35:0.75] { 7.15 * (1 / (1 - x)) + 13.0 }
-          node[pos=0.7,left=2mm] { \small$\displaystyle t \sim 7.15 \frac{1}{1-\alpha}$ };
+        \addplot[domain=0.35:0.75] { 22.6 * (1 / x) * (ln(1 / (1 - x))) - 4.06 }
+          node[pos=0.875,left=8mm] { \small$\displaystyle t \sim 22.6 \frac{1}{\alpha} \ln {\frac{1}{1-\alpha}}$ };
       \end{axis}
     \end{scope}
   \end{tikzpicture}
