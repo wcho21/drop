@@ -83,6 +83,8 @@ const image = getThumbnails()[entry.data.thumbnail];
 </Base>
 
 <style is:global>
+  @reference "tailwindcss";
+  
   #post-main {
     @apply text-[14px] md:text-[16px] text-gray-800 text-justify;
   }
@@ -120,7 +122,7 @@ const image = getThumbnails()[entry.data.thumbnail];
   }
 
   #post-main > .astro-code span.line.highlighted {
-    @apply bg-gray-100;
+    @apply bg-sky-100;
     width: calc(100% + 1.25em)
   }
 
@@ -178,6 +180,11 @@ const image = getThumbnails()[entry.data.thumbnail];
   #post-main > ul > li,
   #post-main > ol > li {
     @apply my-2;
+  }
+
+  #post-main > ul > li > strong,
+  #post-main > ol > li > strong {
+    @apply font-semibold;
   }
 
   #post-main > ol > li {

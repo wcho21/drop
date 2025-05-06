@@ -1,12 +1,15 @@
 ---
+import config from "@/config";
+import { join } from "@/scripts/utils/paths";
+
 interface Props {
   href: string;
 }
 
 const { href } = Astro.props;
 
-const base = "/posts";
-const postHref = `${base}${href}${href.endsWith("/") ? "" : "/"}`;
+const base = config.paths.posts;
+const url = join(base, href);
 ---
 
-<a href={postHref}><slot /></a>
+<a href={url}><slot /></a>

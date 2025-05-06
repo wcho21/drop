@@ -19,6 +19,8 @@ const { url, title } = Astro.props;
 </div>
 
 <style>
+  @reference "tailwindcss";
+  
   .share-button-component-tooltip {
     @apply w-max text-center absolute top-full left-1/2 -translate-x-1/2;
     @apply bg-gray-100 py-1.5 px-3 rounded-md text-gray-600 text-[12px] md:text-[14px];
