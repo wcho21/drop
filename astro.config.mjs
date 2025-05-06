@@ -1,6 +1,6 @@
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import {
   transformerMetaWordHighlight,
   transformerNotationDiff,
@@ -14,7 +14,10 @@ import remarkMath from "remark-math";
 // https://astro.build/config
 export default defineConfig({
   site: "https://drop.rooi.dev",
-  integrations: [tailwind(), mdx(), sitemap()],
+  vite: {
+    plugins: [tailwindcss()],
+  },
+  integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: {
       theme: "github-light",
