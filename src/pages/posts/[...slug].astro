@@ -8,10 +8,7 @@ import Giscus from "@/components/post/Giscus.astro";
 import Share from "@/components/post/ShareButton.astro";
 import Base from "@/layouts/Base.astro";
 import { getThumbnails } from "@/scripts/utils/assets";
-import {
-  sortBlogCollectionByDate,
-  groupSeriesAsMap,
-} from "@/scripts/utils/collections";
+import { groupSeriesAsMap, sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { formatDate } from "@/scripts/utils/formatters";
 
 type Entry = CollectionEntry<"blog">;
@@ -36,7 +33,7 @@ export async function getStaticPaths() {
       return undefined;
     }
 
-    const indexInSeries = series.findIndex((e) => e.id === entry.id);
+    const indexInSeries = series.findIndex(e => e.id === entry.id);
     return getNextEntry(series, indexInSeries);
   };
 
