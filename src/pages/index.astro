@@ -3,12 +3,7 @@ import { getCollection } from "astro:content";
 import ArticleList from "@/components/page/ArticleList.astro";
 import SeriesList from "@/components/page/SeriesList.astro";
 import Base from "@/layouts/Base.astro";
-import {
-  selectFeatured,
-  selectNonfeatured,
-  selectSeries,
-  sortBlogCollectionByDate,
-} from "@/scripts/utils/collections";
+import { selectFeatured, selectNonfeatured, selectSeries, sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { groupSeries } from "@/scripts/utils/collections";
 
 const articles = sortBlogCollectionByDate(await getCollection("blog"));
