@@ -8,31 +8,56 @@ import Giscus from "@/components/post/Giscus.astro";
 import Share from "@/components/post/ShareButton.astro";
 import Base from "@/layouts/Base.astro";
 import { getThumbnails } from "@/scripts/utils/assets";
-import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
+import {
+  sortBlogCollectionByDate,
+  groupSeriesAsMap,
+} from "@/scripts/utils/collections";
 import { formatDate } from "@/scripts/utils/formatters";
 
+type Entry = CollectionEntry<"blog">;
+
 export async function getStaticPaths() {
-  const articles = sortBlogCollectionByDate(await getCollection("blog"));
-  const staticPaths = articles.map((entry, i) => ({
+  const entries = sortBlogCollectionByDate(await getCollection("blog"));
+  const seriesMap = groupSeriesAsMap(entries);
+
+  const getNextEntry = (entries: Entry[], i: number) => {
+    return i > 0 ? entries[i - 1] : undefined;
+  };
+  const getNextEntryInSeries = (entries: Entry[], i: number) => {
+    const entry = entries[i];
+    const seriesName = entry.data.series;
+    if (seriesName === undefined) {
+      return undefined;
+    }
+
+    const series = seriesMap.get(seriesName);
+    if (series === undefined) {
+      console.warn(`Not found series names '${seriesName}'.`);
+      return undefined;
+    }
+
+    const indexInSeries = series.findIndex((e) => e.id === entry.id);
+    return getNextEntry(series, indexInSeries);
+  };
+
+  const staticPaths = entries.map((entry, i) => ({
     params: { slug: entry.id },
     props: {
-      nextEntry: i > 0 ? articles[i - 1] : undefined,
-      prevEntry: i < articles.length - 1 ? articles[i + 1] : undefined,
+      nextEntry: getNextEntry(entries, i),
+      nextEntryInSeries: getNextEntryInSeries(entries, i),
       entry,
     },
   }));
 
   return staticPaths;
 }
-
-type BlogEntry = CollectionEntry<"blog">;
 interface Props {
-  entry: BlogEntry;
-  nextEntry?: BlogEntry;
-  prevEntry?: BlogEntry;
+  entry: Entry;
+  nextEntry?: Entry;
+  nextEntryInSeries?: Entry;
 }
 
-const { entry, prevEntry, nextEntry } = Astro.props;
+const { entry, nextEntry, nextEntryInSeries } = Astro.props;
 const { href } = Astro.url;
 const { title, summary, date } = entry.data;
 const { Content } = await render(entry);
@@ -62,17 +87,37 @@ const image = getThumbnails()[entry.data.thumbnail];
   </div>
 
   <div class="my-12 pt-12 border-t border-gray-800">
-    {import.meta.env.PROD ? (
-      <Giscus />
-    ) : (<p style='text-align: center'>(Giscus will be rendered here on production mode)</p>)}
+    {
+      import.meta.env.PROD ? (
+        <Giscus />
+      ) : (
+        <p style="text-align: center">
+          (Giscus will be rendered here on production mode)
+        </p>
+      )
+    }
   </div>
 
   <nav id="post-nav" class="my-12 pt-12 border-t border-gray-800">
     {
-      nextEntry && <ArticleCard article={nextEntry} />
+      nextEntryInSeries !== undefined && (
+        <p>
+          <span class="px-2 py-1 bg-gray-100 rounded-md text-sm text-gray-400 font-normal">
+            이 시리즈의 다음 글
+          </span>
+        </p>
+        <ArticleCard article={nextEntryInSeries} />
+      )
     }
     {
-      prevEntry && <ArticleCard article={prevEntry} />
+      (nextEntryInSeries === undefined) && (nextEntry !== undefined) && (
+        <p>
+          <span class="px-2 py-1 bg-gray-100 rounded-md text-sm text-gray-400 font-normal">
+            관심 있을 만한 글
+          </span>
+        </p>
+        <ArticleCard article={nextEntry} />
+      )
     }
     <div class="mt-4">
       <a href="/" class="block py-1.5 px-3 mx-auto w-fit">
@@ -84,7 +129,7 @@ const image = getThumbnails()[entry.data.thumbnail];
 
 <style is:global>
   @reference "tailwindcss";
-  
+
   #post-main {
     @apply text-[14px] md:text-[16px] text-gray-800 text-justify;
   }
@@ -123,22 +168,22 @@ const image = getThumbnails()[entry.data.thumbnail];
 
   #post-main > .astro-code span.line.highlighted {
     @apply bg-sky-100;
-    width: calc(100% + 1.25em)
+    width: calc(100% + 1.25em);
   }
 
   #post-main > .astro-code span.line.highlighted.warning {
     @apply bg-amber-100;
-    width: calc(100% + 1.25em)
+    width: calc(100% + 1.25em);
   }
 
   #post-main > .astro-code span.line.highlighted.error {
     @apply bg-rose-100;
-    width: calc(100% + 1.25em)
+    width: calc(100% + 1.25em);
   }
 
   #post-main > .astro-code span.line.diff.add {
     @apply bg-emerald-100;
-    width: calc(100% + 1.25em)
+    width: calc(100% + 1.25em);
   }
 
   #post-main > .astro-code span.line.diff.add::before {
@@ -148,7 +193,7 @@ const image = getThumbnails()[entry.data.thumbnail];
 
   #post-main > .astro-code span.line.diff.remove {
     @apply bg-rose-100;
-    width: calc(100% + 1.25em)
+    width: calc(100% + 1.25em);
   }
 
   #post-main > .astro-code span.line.diff.remove::before {

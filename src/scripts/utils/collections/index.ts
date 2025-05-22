@@ -7,6 +7,9 @@ interface Series {
   articles: CollectionEntry<"blog">[];
 }
 
+export type SeriesMap = Map<string, CollectionEntry<"blog">[]>;
+
+/** Returns entries sorted in decreasing order by date */
 export function sortBlogCollectionByDate(
   entries: CollectionEntry<"blog">[],
 ): CollectionEntry<"blog">[] {
@@ -44,4 +47,11 @@ export function groupSeries(entries: CollectionEntry<"blog">[]): Series[] {
   }));
 
   return groupedSeries;
+}
+
+export function groupSeriesAsMap(entries: CollectionEntry<"blog">[]): SeriesMap {
+  const groupedAsObject = groupBy(entries, ({ data }) => data.series ?? "");
+  const map = new Map(toPairs(groupedAsObject));
+
+  return map;
 }
