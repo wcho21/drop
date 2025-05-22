@@ -14,11 +14,9 @@ const { title, date, summary, thumbnail } = data;
 const url = join(config.paths.posts, id);
 ---
 
-<a href={url} class="block py-4">
-  <Card
-    title={title}
-    date={date}
-    summary={summary}
-    thumbnail={thumbnail}
-  />
+<a
+  href={url}
+  class="block py-4 hover:scale-[1.01875] transition-[scale] ease-out duration-300"
+>
+  <Card title={title} date={date} summary={summary} thumbnail={thumbnail} />
 </a>
