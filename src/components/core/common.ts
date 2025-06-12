@@ -1,0 +1,1 @@
+export const scaleClassNames = "hover:scale-[1.01875] transition-[scale] ease-out duration-300";

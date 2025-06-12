@@ -4,6 +4,7 @@ import DropDown from "../core/DropDown.astro";
 import List from "../core/List.astro";
 import ListItem from "../core/ListItem.astro";
 import ArticleCard from "./ArticleCard.astro";
+import ScaleInline from "@/components/core/ScaleInline.astro";
 
 interface Series {
   name: string;
@@ -20,21 +21,19 @@ const { heading, series } = Astro.props;
 
 <List heading={heading}>
   {
-    series.map(({ name, articles }) => {
-      return (
-        <ListItem>
-          <DropDown>
-            <p slot="button" class="font-light text-[14pt] cursor-pointer py-4" list-heading>{name}<span class="text-[12pt] ml-1.5">({articles.length})</span></p>
-            <ul class="block series-drop-down-list">
-              {
-                articles.map(article => (
-                  <ListItem><ArticleCard article={article} /></ListItem>
-                ))
-              }
-            </ul>
-          </DropDown>
-        </ListItem>
-      )
-    })
+    series.map(({ name, articles }) => (
+      <ListItem>
+        <DropDown>
+          <p slot="button" class="font-light text-[14pt] cursor-pointer py-4"><ScaleInline>{name}<span class="text-[12pt] ml-1.5">({articles.length})</span></ScaleInline></p>
+          <ul class="block series-drop-down-list">
+            {
+              articles.map(article => (
+                <ListItem><ArticleCard article={article} /></ListItem>
+              ))
+            }
+          </ul>
+        </DropDown>
+      </ListItem>
+    ))
   }
 </List>
