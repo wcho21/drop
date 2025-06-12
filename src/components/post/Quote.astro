@@ -1,4 +1,6 @@
 ---
+import { STATUS_FOLDED } from "@/scripts/utils/fold";
+
 const { display = true } = Astro.props;
 ---
 
@@ -6,7 +8,7 @@ const { display = true } = Astro.props;
   <div class="mb-1.5">
     <slot />
   </div>
-  <div class="text-[13.25px] md:text-[14.5px] font-light unfold-on-hover-component" data-status="folded">
+  <div class="text-[13.25px] md:text-[14.5px] font-light quote-component-detail" data-status={STATUS_FOLDED}>
     <div class="pb-1.5">
       <slot name="detail" />
     </div>
@@ -17,31 +19,35 @@ const { display = true } = Astro.props;
 </div>
 
 <script>
-  const quotes = document.querySelectorAll(".quote-component");
-  const unfoldOnHovers = document.querySelectorAll(".unfold-on-hover-component");
-  quotes.forEach((quote, i) => {
-    const unfoldOnHover = unfoldOnHovers[i];
-    if (!(unfoldOnHover instanceof HTMLElement)) {
-      throw new Error(`Expected 'HTMLElement', but received ${unfoldOnHover.className}`);
+  import { fold, unfold } from "@/scripts/utils/fold";
+  import { zip } from "lodash-es";
+
+  const quotes = document.querySelectorAll<HTMLDivElement>(".quote-component");
+  const detail = document.querySelectorAll<HTMLDivElement>(".quote-component-detail");
+  const quoteDetailPairs = zip(quotes, detail);
+  quoteDetailPairs.forEach(([quote, detail]) => {
+    if (quote === undefined) {
+      throw new Error("Expected not undefined 'quote', but received 'undefined'.");
     }
-    const hasContent = unfoldOnHover.textContent === null || unfoldOnHover.textContent.length > 0;
-    if (!hasContent) {
+    if (detail === undefined) {
+      throw new Error("Expected not undefined 'trigger', but received 'undefined'.");
+    }
+
+    if (detail.textContent === null || detail.textContent.length === 0) {
       return; // ignore silently; no need to unfold
     }
 
     quote.addEventListener("mouseenter", () => {
-      unfoldOnHover.dataset.status = "unfolded";
-      unfoldOnHover.style.maxHeight = `${unfoldOnHover.scrollHeight}px`;
+      unfold(detail);
     });
     quote.addEventListener("mouseleave", () => {
-      unfoldOnHover.dataset.status = "folded";
-      unfoldOnHover.style.maxHeight = "0px";
+      fold(detail);
     });
   });
 </script>
 
 <style>
-  .unfold-on-hover-component {
+  .quote-component-detail {
     max-height: 0;
     transform-origin: top;
     transition-property: opacity, max-height, transform;
@@ -49,13 +55,13 @@ const { display = true } = Astro.props;
     transition-timing-function: ease;
   }
 
-  .unfold-on-hover-component[data-status="folded"] {
+  .quote-component-detail[data-status="folded"] {
     transform: scaleY(0);
     opacity: 0;
     transition-delay: 0s;
   }
 
-  .unfold-on-hover-component[data-status="unfolded"] {
+  .quote-component-detail[data-status="unfolded"] {
     transform: scaleY(1);
     opacity: 1;
     transition-delay: 0.8s;
