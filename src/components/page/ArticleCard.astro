@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import config from "@/config";
 import { join } from "@/scripts/utils/paths";
 import Card from "./Card.astro";
+import Scale from "@/components/core/Scale.astro";
 
 interface Props {
   article: CollectionEntry<"blog">;
@@ -14,9 +15,8 @@ const { title, date, summary, thumbnail } = data;
 const url = join(config.paths.posts, id);
 ---
 
-<a
-  href={url}
-  class="block py-4 hover:scale-[1.01875] transition-[scale] ease-out duration-300"
->
-  <Card title={title} date={date} summary={summary} thumbnail={thumbnail} />
+<a href={url} class="block py-4">
+  <Scale>
+    <Card title={title} date={date} summary={summary} thumbnail={thumbnail} />
+  </Scale>
 </a>

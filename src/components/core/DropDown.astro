@@ -1,40 +1,53 @@
 ---
+import { STATUS_FOLDED } from "@/scripts/utils/fold";
 ---
 
 <div class="drop-down-component-button">
   <slot name="button" />
 </div>
-<div class="drop-down-component-body border-t border-gray-100" data-status="folded">
+<div class="drop-down-component-body border-t border-gray-100" data-status={STATUS_FOLDED}>
   <slot />
 </div>
 
 <script>
-  const buttons = document.querySelectorAll(".drop-down-component-button");
-  const bodies = document.querySelectorAll(".drop-down-component-body");
-  buttons.forEach((button, i) => {
-    button.addEventListener("click", () => {
-      // validation
-      const body = bodies[i];
-      if (!(body instanceof HTMLElement)) {
-        throw new Error(`Expected HTMLElement, but received '${body.className}'`);
-      }
-      const { dataset } = body;
-      if (dataset.status === undefined || dataset.status !== "folded" && dataset.status !== "unfolded") {
-        throw new Error(`Expected 'status' to be 'folded' or 'unfolded', but received '${dataset.status}'`);
-      }
+  import { STATUS_FOLDED, STATUS_UNFOLDED, fold, unfold } from "@/scripts/utils/fold";
+  import type { FoldStatus } from "@/scripts/utils/fold";
+  import { zip } from "lodash-es";
 
-      if (dataset.status === "folded") {
-        dataset.status = "unfolded";
-        body.style.maxHeight = `${body.scrollHeight}px`;
+  const buttons = document.querySelectorAll<HTMLDivElement>(".drop-down-component-button");
+  const bodies = document.querySelectorAll<HTMLDivElement>(".drop-down-component-body");
+  const buttonBodyPairs = zip(buttons, bodies);
+
+  buttonBodyPairs.forEach(([button, body]) => {
+    if (button === undefined) {
+      throw new Error("Expected not undefined 'button', but received 'undefined'.");
+    }
+    if (body === undefined) {
+      throw new Error("Expected not undefined 'body', but received 'undefined'.");
+    }
+
+    button.addEventListener("click", () => {
+      const foldedStatus = getFoldedStatus(body);
+
+      if (foldedStatus === STATUS_FOLDED) {
+        unfold(body);
         return;
       }
-      if (dataset.status === "unfolded") {
-        dataset.status = "folded";
-        body.style.maxHeight = "0px";
+      if (foldedStatus === STATUS_UNFOLDED) {
+        fold(body);
         return;
       }
     });
   });
+
+  function getFoldedStatus(body: HTMLDivElement): FoldStatus {
+    const { status } = body.dataset;
+    if (status === undefined || status !== STATUS_FOLDED && status !== STATUS_UNFOLDED) {
+      throw new Error(`Expected 'status' to be '${STATUS_FOLDED}' or '${STATUS_UNFOLDED}', but received '${status}'`);
+    }
+
+    return status;
+  }
 </script>
 
 <style>
@@ -45,10 +58,12 @@
     transition-duration: 0.3s;
     transition-timing-function: ease;
   }
+
   .drop-down-component-body[data-status="folded"] {
     transform: scaleY(0);
     opacity: 0;
   }
+
   .drop-down-component-body[data-status="unfolded"] {
     transform: scaleY(1);
     opacity: 1;

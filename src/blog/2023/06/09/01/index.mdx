@@ -8,7 +8,7 @@ featured: true
 ---
 
 import L from "@/components/post/AltLang.astro";
-import Figure from "@/components/post/FigureV2.astro";
+import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import Alg from "@/components/post/algorithm/Algorithm.astro";
 import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
@@ -443,7 +443,7 @@ $2^{21}$개의 모든 코드 포인트를 항상 32비트 안에 담을 수 있�
 
 [euc-kr]: https://ko.wikipedia.org/wiki/EUC-KR
 
-<Figure src={fig6} shrink={true} alt="wrongly encoded utf-8">
+<Figure src={fig6} alt="wrongly encoded utf-8">
   <FigureCaption slot="caption">그림 6. [오라클 웹사이트][docs-oracle]의 '占쏙옙' 현상.</FigureCaption>
 </Figure>
 
@@ -454,7 +454,7 @@ $2^{21}$개의 모든 코드 포인트를 항상 32비트 안에 담을 수 있�
 
 한편 이 바이트 시퀀스는 UTF-8 인코딩에서 대체 문자 &lsquo;&#65533;&rsquo; 두 개를 연달아 쓴 것과 같은 코드 유닛 시퀀스입니다.
 
-<Figure src={fig7} shrink={true} alt="euc-kr vs utf-8">
+<Figure src={fig7} alt="euc-kr vs utf-8">
   <FigureCaption slot="caption">그림 7. 같은 비트 표현의 다른 디코딩. EUC-KR 상의 '占쏙옙'과 UTF-8 상의 두 개의 대체 문자가 같은 표현을 가집니다.</FigureCaption>
 </Figure>
 

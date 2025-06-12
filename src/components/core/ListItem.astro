@@ -1,17 +1,11 @@
----
----
-
-<li class="block list-item-component">
+<li class="block border-t border-gray-100">
   <slot />
 </li>
 
 <style>
-  @reference "../../styles/global.css";
+  @reference "@/styles/global.css";
 
-  .list-item-component {
-    @apply border-t border-gray-100;
-  }
-  .list-item-component:first-child {
-    @apply border-none;
+  li:first-child {
+    @apply border-t-0;
   }
 </style>

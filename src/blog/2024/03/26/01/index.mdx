@@ -7,7 +7,7 @@ series: "컴퓨터의 역사"
 ---
 
 import L from "@/components/post/AltLang.astro";
-import Figure from "@/components/post/FigureV2.astro";
+import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import FigureDisplay from "@/components/post/FigureDisplay.astro";
 
@@ -40,7 +40,7 @@ import fig3 from "./figs/fig3.png";
 
 
 <FigureDisplay>
-  <Figure src={fig2} shrink={true} alt="CPU">
+  <Figure src={fig2} alt="CPU">
     <FigureCaption slot="caption">컴퓨터의 핵심 부품인 프로세서는 논리 연산을 처리하는 게이트로 구성되어 있습니다. 오늘날 이는 나노 단위의 매우 작은 크기로 모여 있습니다. -- 사진: [Alexandru-Bogdan Ghita][splash-ghita]</FigureCaption>
   </Figure>
 </FigureDisplay>
@@ -239,7 +239,7 @@ $$
 
 
 <FigureDisplay>
-  <Figure src={fig3} shrink={true} alt="logic gates">
+  <Figure src={fig3} alt="logic gates">
     <FigureCaption slot="caption">현미경으로 촬영한 로직 게이트. 불 논리의 물리적 구현입니다. -- 사진: [Nele Mentens][nele] ([CC BY 4.0][cc-by-4-0])</FigureCaption>
   </Figure>
 </FigureDisplay>
