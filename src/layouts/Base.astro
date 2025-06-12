@@ -29,9 +29,7 @@ const title = generateTitle(pageTitle, config.app.title, config.app.titleSep);
     <Favicons />
     <Fonts />
     <Katex />
-    {import.meta.env.PROD && (
-      <GoogleAnalytics />
-    )}
+    {import.meta.env.PROD && <GoogleAnalytics />}
     <link rel="sitemap" href="/sitemap-index.xml" />
     <title>{title}</title>
   </head>
