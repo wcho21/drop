@@ -14,6 +14,7 @@ import remarkMath from "remark-math";
 // https://astro.build/config
 export default defineConfig({
   site: "https://drop.rooi.dev",
+  trailingSlash: "always",
   vite: {
     plugins: [tailwindcss()],
   },
