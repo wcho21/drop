@@ -1,7 +1,6 @@
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import {
-  transformerMetaWordHighlight,
   transformerNotationDiff,
   transformerNotationErrorLevel,
   transformerNotationHighlight,
@@ -22,12 +21,7 @@ export default defineConfig({
   markdown: {
     shikiConfig: {
       theme: "github-light",
-      transformers: [
-        transformerMetaWordHighlight(),
-        transformerNotationDiff(),
-        transformerNotationHighlight(),
-        transformerNotationErrorLevel(),
-      ],
+      transformers: [transformerNotationDiff(), transformerNotationHighlight(), transformerNotationErrorLevel()],
     },
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
