@@ -1,0 +1,7 @@
+---
+import Base from "./Base.astro";
+
+const { prefix = "아니면 만약", postfix = "이면" } = Astro.props;
+---
+
+<Base prefix={prefix} postfix={postfix}><slot /></Base>
