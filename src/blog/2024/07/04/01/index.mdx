@@ -79,14 +79,14 @@ $$
 
       <AIf>$\textit{slot}$이 빈 경우</AIf>
       <ABlock>
-        <ARet>null</ARet>&nbsp;<AC>// 키와 연관된 값 없음</AC>
+        <ARet /> null <AC>// 키와 연관된 값 없음</AC>
       </ABlock>
 
       <ANL />
 
       <AIf>$\textit{slot}$의 값 $\textit{value}$가 $\textit{key}$와 연관된 경우</AIf>
       <ABlock>
-        <ARet>$\textit{value}$</ARet>
+        <ARet /> $\textit{value}$
       </ABlock>
     </ABlock>
 
@@ -167,7 +167,7 @@ $$
       <ABlock>
         $\textit{slot}[i]$ $\leftarrow$ $\textit{value}$
 
-        <ARet asKeyword />
+        <ARet />
       </ABlock>
 
       <ANL />
@@ -176,7 +176,7 @@ $$
       <ABlock>
         $\textit{slot}[i]$ $\leftarrow$ $\textit{value}$
 
-        <ARet asKeyword />
+        <ARet />
       </ABlock>
     </ABlock>
 
@@ -222,7 +222,7 @@ $$
 
       <AIf>$\textit{slot}$이 빈 경우</AIf>
       <ABlock>
-        <ARet asKeyword />&nbsp;<AC>// 아무것도 안 하고 끝냄</AC>
+        <ARet /> <AC>// 아무것도 안 하고 끝냄</AC>
       </ABlock>
 
       <ANL />
@@ -238,7 +238,7 @@ $$
       <ABlock>
         $\textit{slot}[i]$ $\leftarrow$ removed
 
-        <ARet asKeyword />
+        <ARet />
       </ABlock>
     </ABlock>
 
@@ -635,7 +635,7 @@ public class LinearProbingTable<K, V> extends AbstractOpenAddressingTable<K, V> 
       $h$ $\leftarrow$ $31h + n$
     </ABlock>
 
-    <ARet>$h$</ARet>
+    <ARet /> $h$
   </ABlock>
 </Alg>
 

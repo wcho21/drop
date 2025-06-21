@@ -120,7 +120,7 @@ UTF-8는 바이트를 네 개까지 사용하면 $2^{21}$개의 문자를 표현
     <ABlock>
       xxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <ARet>바이트 시퀀스 0xxx xxxx</ARet>
+      <ARet /> 바이트 시퀀스 0xxx xxxx
     </ABlock>
 
     <ANL />
@@ -129,7 +129,7 @@ UTF-8는 바이트를 네 개까지 사용하면 $2^{21}$개의 문자를 표현
     <ABlock>
       yyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <ARet>바이트 시퀀스 110y yyyy 10xx xxxx</ARet>
+      <ARet /> 바이트 시퀀스 110y yyyy 10xx xxxx
     </ABlock>
 
     <ANL />
@@ -138,7 +138,7 @@ UTF-8는 바이트를 네 개까지 사용하면 $2^{21}$개의 문자를 표현
     <ABlock>
       zzzz yyyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <ARet>바이트 시퀀스 1110 zzzz 10yy yyyy 10xx xxxx</ARet>
+      <ARet /> 바이트 시퀀스 1110 zzzz 10yy yyyy 10xx xxxx
     </ABlock>
 
     <ANL />
@@ -147,12 +147,12 @@ UTF-8는 바이트를 네 개까지 사용하면 $2^{21}$개의 문자를 표현
     <ABlock>
       w wwzz zzzz yyyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <ARet>바이트 시퀀스 1111 0www 10zz zzzz 10yy yyyy 10xx xxxx</ARet>
+      <ARet /> 바이트 시퀀스 1111 0www 10zz zzzz 10yy yyyy 10xx xxxx
     </ABlock>
 
     <ANL />
 
-    <ARet>U+FFFD</ARet>
+    <ARet /> U+FFFD
   </ABlock>
 </Alg>
 
@@ -272,33 +272,33 @@ int main() {
   <ABlock>
     <AIf>바이트 시퀀스가 0xxx xxx 꼴</AIf>
     <ABlock>
-      <ARet>코드 포인트 xxx xxxx</ARet>
+      <ARet /> 코드 포인트 xxx xxxx
     </ABlock>
 
     <ANL />
 
     <AIf>바이트 시퀀스가 110x xxxx 10yy yyyy 꼴</AIf>
     <ABlock>
-      <ARet>코드 포인트 xxx xxyy yyyy</ARet>
+      <ARet /> 코드 포인트 xxx xxyy yyyy
     </ABlock>
 
     <ANL />
 
     <AIf>바이트 시퀀스가 1110 xxxx 10yy yyyy 10zz zzzz 꼴</AIf>
     <ABlock>
-      <ARet>코드 포인트 xxxx yyyy yyzz zzzz</ARet>
+      <ARet /> 코드 포인트 xxxx yyyy yyzz zzzz
     </ABlock>
 
     <ANL />
 
     <AIf>바이트 시퀀스가 1111 1xxx 10yy yyyy 10zz zzzz 10ww wwww 꼴</AIf>
     <ABlock>
-      <ARet>코드 포인트 x xxyy yyyy zzzz zzww wwww</ARet>
+      <ARet /> 코드 포인트 x xxyy yyyy zzzz zzww wwww
     </ABlock>
 
     <ANL />
 
-    <ARet>U+FFFD</ARet>
+    <ARet /> U+FFFD
   </ABlock>
 </Alg>
 

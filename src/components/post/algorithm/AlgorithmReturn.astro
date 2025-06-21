@@ -4,4 +4,4 @@ import AK from "./AlgorithmKeyword.astro";
 const { returnKeyword = "리턴", asKeyword = false } = Astro.props;
 ---
 
-<span><AK>{returnKeyword}</AK>{ asKeyword ? "" : (<> <slot /></>)}</span>
+<AK>{returnKeyword}</AK>

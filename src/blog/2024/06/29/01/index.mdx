@@ -138,7 +138,7 @@ $n$ 명의 학생들에게 $1$번부터 $n$번까지 순번을 매긴다면, 순
   <ABlock>
     $\textit{value}$ $\leftarrow$ $\textit{list}$.get($\textit{key}$와 연관된 값)
 
-    <ARet>$\textit{value}$</ARet>
+    <ARet /> $\textit{value}$
   </ABlock>
 </Alg>
 
@@ -241,14 +241,14 @@ $n$ 명의 학생들에게 $1$번부터 $n$번까지 순번을 매긴다면, 순
 
       <AIf>$\textit{node} = \textit{list}$.end </AIf>
       <ABlock>
-        <ARet>null</ARet>
+        <ARet /> null
       </ABlock>
 
       <ANL />
 
       <AIf>$\textit{pred}$를 만족하는 $\textit{node}$ </AIf>
       <ABlock>
-        <ARet>$\textit{prev}$</ARet>
+        <ARet /> $\textit{prev}$
       </ABlock>
 
       <ANL />
@@ -270,7 +270,7 @@ $n$ 명의 학생들에게 $1$번부터 $n$번까지 순번을 매긴다면, 순
 
     <AIf>$\textit{prev} = $ null </AIf>
     <ABlock>
-      <ARet asKeyword />
+      <ARet />
     </ABlock>
 
     <ANL />
@@ -633,7 +633,7 @@ public class AssocList<K, V> implements Dictionary<K, V> {
 
     $\textit{chain} \leftarrow \textit{slots}[\textit{hash}]$ <AC>// 연관 리스트 가져옴</AC>
 
-    <ARet>$\textit{chain}$.get($\textit{key}$)</ARet>
+    <ARet /> $\textit{chain}$.get($\textit{key}$)
   </ABlock>
 </Alg>
 
@@ -1321,7 +1321,7 @@ abstract class AbstractChainingTable<K, V> implements Dictionary<K, V> {
   <AK>has ($\textit{dict}$, $\textit{key}$)</AK>&nbsp;<AC>// 셋의 내부 딕셔너리 $\textit{dict}$에 키 $\textit{key}$가 존재하는지 확인</AC>
 
   <ABlock>
-    <ARet>$\textit{dict}$.get($\textit{key}$) $ \neq $ null</ARet>
+    <ARet /> $\textit{dict}$.get($\textit{key}$) $ \neq $ null
   </ABlock>
 </Alg>
 
@@ -1430,7 +1430,7 @@ public class ChainingSet<K> implements Set<K> {
 
     $\textit{value}$ $\leftarrow$ $\textit{pair}$.second
 
-    <ARet>$\textit{value}$</ARet>
+    <ARet /> $\textit{value}$
   </ABlock>
 </Alg>
 

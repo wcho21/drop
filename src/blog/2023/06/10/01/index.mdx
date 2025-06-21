@@ -81,7 +81,7 @@ UTF-16 인코딩은 코드 포인트를 16비트로 표현할 수 있다면, 그
   <ABlock>
     <AIf>코드 포인트가 16비트 이하 값</AIf>
     <ABlock>
-      <ARet>코드 포인트를 그대로 갖는 바이트 시퀀스</ARet>
+      <ARet /> 코드 포인트를 그대로 갖는 바이트 시퀀스
     </ABlock>
 
     <p>&nbsp;</p>
@@ -90,12 +90,12 @@ UTF-16 인코딩은 코드 포인트를 16비트로 표현할 수 있다면, 그
     <ABlock>
       x xxxx yyyy yyzz zzzz zzzz $\leftarrow$ 코드 포인트의 이진 표현
 
-      <ARet>바이트 시퀀스 1101 10ww wwyy yyyy 1101 11zz zzzz zzzz</ARet>
+      <ARet /> 바이트 시퀀스 1101 10ww wwyy yyyy 1101 11zz zzzz zzzz
     </ABlock>
 
     <p>&nbsp;</p>
 
-    <ARet>U+FFFD</ARet>
+    <ARet /> U+FFFD
   </ABlock>
 </Alg>
 
@@ -178,7 +178,7 @@ UTF-32는 구현하기가 비교적 간단합니다.
 <Alg>
   <AK>UTF-32 인코딩</AK> (코드 포인트)
   <ABlock>
-    <ARet>코드 포인트를 그대로 갖는 바이트 시퀀스</ARet>
+    <ARet /> 코드 포인트를 그대로 갖는 바이트 시퀀스
   </ABlock>
 </Alg>
 
