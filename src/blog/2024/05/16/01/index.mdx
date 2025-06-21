@@ -9,19 +9,10 @@ series: "알고리즘 라이브러리 만들기"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import AC from "@/components/post/algorithm/AlgorithmComment.astro";
-import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
-import AForeach from "@/components/post/algorithm/AlgorithmForeach.astro";
-import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
-import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
-import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
 import Quote from "@/components/post/Quote.astro";
 import PostLink from "@/components/post/PostLink.astro";
 import Callout from "@/components/post/Callout.astro";
+import P from "@/components/post/pseudocode";
 
 import fig1 from "@texfigs/2024/05/16/01/fig1.svg";
 import fig2 from "@texfigs/2024/05/16/01/fig2.svg";
@@ -110,54 +101,54 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 
 배열 상에서 서치를 한다면 이런 수도코드로 정리해볼 수 있습니다.
 
-<Alg>
-  <AK>바이너리 서치</AK> ($\textit{arr}$, $\textit{target}$) <AC>// 배열 $\textit{arr}\,$에서 $\textit{target}\,$을 찾으면 인덱스를, 아니면 $-1$을 리턴</AC>
+<P.Block>
+  <P.Keyword>바이너리 서치</P.Keyword> ($\textit{arr}$, $\textit{target}$) <P.Comment>// 배열 $\textit{arr}\,$에서 $\textit{target}\,$을 찾으면 인덱스를, 아니면 $-1$을 리턴</P.Comment>
 
-  <ABlock>
-    <AC>// $\textit{target}\,$을 찾을 구간을 반열린구간 [$\textit{begin}$, $\textit{end}$)로 표현</AC>
+  <P.Indent>
+    <P.Comment>// $\textit{target}\,$을 찾을 구간을 반열린구간 [$\textit{begin}$, $\textit{end}$)로 표현</P.Comment>
 
     $\textit{begin} \leftarrow 0$
 
     $\textit{end} \leftarrow \textit{arr}\,$의 크기
 
-    <AWhile>$\textit{begin} < \textit{end}$ 인</AWhile>&nbsp;<AC>// 구간 [$\textit{begin}, \textit{end}$)가 비어있지 않는 동안</AC>
+    <P.While>$\textit{begin} < \textit{end}$ 인</P.While>&nbsp;<P.Comment>// 구간 [$\textit{begin}, \textit{end}$)가 비어있지 않는 동안</P.Comment>
 
-    <ABlock>
-      <AC>// 가운데 데이터 선택</AC>
+    <P.Indent>
+      <P.Comment>// 가운데 데이터 선택</P.Comment>
 
       $\textit{mid} \leftarrow \lfloor (\textit{begin} + \textit{end}) / 2 \rfloor$
 
       $\textit{midValue} \leftarrow \textit{arr}[\textit{mid}]$
 
-      <ANL />
+      <P.Newline />
 
-      <p><AC>// 찾은 경우 리턴</AC></p>
+      <p><P.Comment>// 찾은 경우 리턴</P.Comment></p>
 
-      <AIf>$\textit{midValue} = \textit{target}$ </AIf>
+      <P.If>$\textit{midValue} = \textit{target}$ </P.If>
 
-      <ABlock>
-        <ARet /> $\textit{mid}$
-      </ABlock>
+      <P.Indent>
+        <P.Return /> $\textit{mid}$
+      </P.Indent>
 
-      <ANL />
+      <P.Newline />
 
-      <p><AC>// 못 찾았다면, 필요없는 절반을 제외</AC></p>
+      <p><P.Comment>// 못 찾았다면, 필요없는 절반을 제외</P.Comment></p>
 
-      <AIf>$\textit{midValue} < \textit{target}$ </AIf>
-      <ABlock>
+      <P.If>$\textit{midValue} < \textit{target}$ </P.If>
+      <P.Indent>
         $\textit{begin} \leftarrow \textit{mid}+1$
-      </ABlock>
-      <AElse />
-      <ABlock>
+      </P.Indent>
+      <P.Else />
+      <P.Indent>
         $\textit{end} \leftarrow \textit{mid}$
-      </ABlock>
-    </ABlock>
+      </P.Indent>
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <ARet /> $-1$
-  </ABlock>
-</Alg>
+    <P.Return /> $-1$
+  </P.Indent>
+</P.Block>
 
 여기서 $\lfloor x\rfloor$는 [플로어 함수][wp-floor]<L>floor function</L> 혹은 바닥 함수라고 부르는 것인데, 소수점을 버리기 위해 사용했습니다.
 예를 들어 $\lfloor 3.9 \rfloor = 3$이고 $\lfloor 3 \rfloor = 3$입니다.
@@ -188,13 +179,13 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 첫 번째로, 시작 직전을 봅시다.
 이때 수도코드는 $\textit{begin}\,$과 $\textit{end}\,$를 초기화합니다.
 
-<Alg>
-  <ABlock>
+<P.Block>
+  <P.Indent>
     $\textit{begin} \leftarrow 0$
 
     $\textit{end} \leftarrow \textit{arr}\,$의 크기
-  </ABlock>
-</Alg>
+  </P.Indent>
+</P.Block>
 
 처음에 서치 대상이 배열에 있다고 가정한 것은, 그 인덱스 $i$가 $\textit{begin} \leq i < \textit{end}\,$라는 것입니다.
 따라서 루프 인베리언트가 성립합니다.
@@ -205,16 +196,16 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 만약 가운데 데이터가 서치 대상보다 작다면, $i$는 큰 쪽 절반 구간 $[\textit{mid}+1, \textit{end})$에 있는 것입니다.
 이 때 다음 수도코드가 실행되고, 서치 구간이 정확히 $[\textit{mid}+1, \textit{end})$로 줄어듭니다.
 
-<Alg>
-  <ABlock>
-    <ABlock>
-      <AIf>$\textit{midValue} < \textit{target}$ </AIf>
-      <ABlock>
+<P.Block>
+  <P.Indent>
+    <P.Indent>
+      <P.If>$\textit{midValue} < \textit{target}$ </P.If>
+      <P.Indent>
         $\textit{begin} \leftarrow \textit{mid}+1$
-      </ABlock>
-    </ABlock>
-  </ABlock>
-</Alg>
+      </P.Indent>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 따라서 다음 반복의 시작까지 루프 인베리언트가 성립하게 됩니다.
 반대로, $i$가 다른 쪽에 속할 때도 마찬가지입니다. (직접 해보세요.)
@@ -231,26 +222,26 @@ import fig13 from "@texfigs/2024/05/16/01/fig13.svg";
 방금 수도코드가 올바르게 동작한다는 것을 확인했습니다.
 그런데 수도코드 상에서는 보이지 않지만 구현 시 만나게 되는 버그가 있습니다.
 
-<Alg>
-  <ABlock>
-    <ABlock>
+<P.Block>
+  <P.Indent>
+    <P.Indent>
       $\textit{mid} \leftarrow \lfloor (\textit{begin} + \textit{end}) / 2 \rfloor$
-    </ABlock>
-  </ABlock>
-</Alg>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 가운데 인덱스를 구할 때, 숫자가 큰 경우 덧셈에서 정수 오버플로우<L>integer overflow</L>를 일으킬 수 있기 때문입니다.
 [이 글][gr-bs]에 따르면 자바<L>Java</L> 라이브러리의 바이너리 서치에도 9년 가까이 있었던 버그이기도 합니다.
 
 [gr-bs]: https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/
 
-<Alg>
-  <ABlock>
-    <ABlock>
+<P.Block>
+  <P.Indent>
+    <P.Indent>
       $\textit{mid} \leftarrow \textit{begin} + \lfloor (\textit{end} - \textit{begin}) / 2 \rfloor$
-    </ABlock>
-  </ABlock>
-</Alg>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 이 문제를 고치는 방법은 오버플로우가 일어나지 않도록 이렇게 뺄셈으로 대신 표현하는 것입니다.
 
@@ -654,29 +645,29 @@ $$
 
 수도코드로는 이렇게 표현할 수 있습니다.
 
-<Alg>
-  <AK>인서션 소트</AK> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$) <AC>// 배열 $\textit{arr}\,$을 구간 [$\textit{begin},\textit{end}$)에서 소트</AC>
+<P.Block>
+  <P.Keyword>인서션 소트</P.Keyword> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$) <P.Comment>// 배열 $\textit{arr}\,$을 구간 [$\textit{begin},\textit{end}$)에서 소트</P.Comment>
 
-  <ABlock>
-    <AForeach>$\textit{begin}+1$부터 $\textit{end}\,$전까지인 $i$</AForeach>
-    <ABlock>
-      $j \leftarrow i-1$ <AC>// 바로 왼쪽 데이터의 인덱스</AC>
+  <P.Indent>
+    <P.Foreach>$\textit{begin}+1$부터 $\textit{end}\,$전까지인 $i$</P.Foreach>
+    <P.Indent>
+      $j \leftarrow i-1$ <P.Comment>// 바로 왼쪽 데이터의 인덱스</P.Comment>
 
       <p>&nbsp;</p>
 
-      <p><AC>// 오른쪽($j+1$)이 바로 왼쪽($j$)과 자리가 안맞는 동안</AC></p>
+      <p><P.Comment>// 오른쪽($j+1$)이 바로 왼쪽($j$)과 자리가 안맞는 동안</P.Comment></p>
 
-      <AWhile>$j \geq \textit{begin}$ 이고 $arr[j] > arr[j+1]$ 인 </AWhile>
-      <ABlock>
-        <AC>// 오른쪽은 왼쪽과 자리 바꿈</AC>
+      <P.While>$j \geq \textit{begin}$ 이고 $arr[j] > arr[j+1]$ 인 </P.While>
+      <P.Indent>
+        <P.Comment>// 오른쪽은 왼쪽과 자리 바꿈</P.Comment>
 
         $\textit{arr}[j]$와 $\textit{arr}[j+1]$ 스왑
 
         $j \leftarrow j-1$
-      </ABlock>
-    </ABlock>
-  </ABlock>
-</Alg>
+      </P.Indent>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 이 알고리즘이 올바르다는 사실은 이번에도 루프 인베리언트로 확인할 수 있습니다.
 여기서는 왼쪽 부분인 구간$[0, i)$이 반복문 내내 소트되어 있다는 것으로 한다면, 반복문이 끝났을 때 모든 구간이 소트가 되는 것입니다.
@@ -885,21 +876,21 @@ $$
 두 기록을 비교할 때, 한쪽이 강아지면 종에 따라, 둘 다 고양이면 이름순으로 순서를 줍시다.
 종에 따른 오더링은 강아지 $\preceq$ 고양이와 같이 정합시다.
 
-<Alg>
-  <AK>동물 오더링</AK> ($\textit{animal\,}_1, \textit{animal\,}_2$)
+<P.Block>
+  <P.Keyword>동물 오더링</P.Keyword> ($\textit{animal\,}_1, \textit{animal\,}_2$)
 
-  <ABlock>
-    <AIf>$\textit{animal\,}_1$이나 $\textit{animal\,}_2$이 강아지</AIf>
-    <ABlock>
-      <ARet /> 종 오더링($\textit{animal\,}_1$의 종, $\textit{animal\,}_2$의 종)
-    </ABlock>
+  <P.Indent>
+    <P.If>$\textit{animal\,}_1$이나 $\textit{animal\,}_2$이 강아지</P.If>
+    <P.Indent>
+      <P.Return /> 종 오더링($\textit{animal\,}_1$의 종, $\textit{animal\,}_2$의 종)
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <p><AC>// 둘 다 고양이면</AC></p>
-    <ARet /> 이름 오더링($\textit{animal\,}_1$의 이름, $\textit{animal\,}_2$의 이름)
-  </ABlock>
-</Alg>
+    <p><P.Comment>// 둘 다 고양이면</P.Comment></p>
+    <P.Return /> 이름 오더링($\textit{animal\,}_1$의 이름, $\textit{animal\,}_2$의 이름)
+  </P.Indent>
+</P.Block>
 
 이 오더링은 강아지 기록을 전부 같은 것, 즉 이퀴밸런스 클래스로 취급합니다.
 그러면 스테이블 소팅 알고리즘은, 강아지 기록의 순서를 바꾸지 않습니다.
@@ -1059,48 +1050,48 @@ $$
 여기서는 $h = 1, 4, 13, \dotsc, \lfloor n/3 \rfloor$로 하고, 시간 복잡도 계산은 생략하겠습니다.
 그러면 수도코드로는 이렇게 표현할 수 있습니다.
 
-<Alg>
-  <AK>셸 소트</AK> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$) <AC>// 배열 $\textit{arr}\,$에서 구간 [$\textit{begin},\textit{end}$)의 데이터 소트</AC>
+<P.Block>
+  <P.Keyword>셸 소트</P.Keyword> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$) <P.Comment>// 배열 $\textit{arr}\,$에서 구간 [$\textit{begin},\textit{end}$)의 데이터 소트</P.Comment>
 
-  <ABlock>
-    <AC>// 첫 갭 $h = \lfloor n/3 \rfloor$을 구함</AC>
+  <P.Indent>
+    <P.Comment>// 첫 갭 $h = \lfloor n/3 \rfloor$을 구함</P.Comment>
 
     $h \leftarrow 1$
 
-    <AWhile>$h < \lfloor(\textit{end}-\textit{begin})/3\rfloor$ 인 </AWhile>
-    <ABlock>
+    <P.While>$h < \lfloor(\textit{end}-\textit{begin})/3\rfloor$ 인 </P.While>
+    <P.Indent>
       $\textit{h} \leftarrow 3\textit{h} + 1$
-    </ABlock>
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AWhile>$\textit{h} \geq 1$ 인 </AWhile>
-    <ABlock>
-      <p><AC>// $h$-소트, 즉 간격 $\textit{h}\,$으로 서브 배열을 인서션 소트</AC></p>
+    <P.While>$\textit{h} \geq 1$ 인 </P.While>
+    <P.Indent>
+      <p><P.Comment>// $h$-소트, 즉 간격 $\textit{h}\,$으로 서브 배열을 인서션 소트</P.Comment></p>
 
-      <AForeach>$\textit{begin}+\textit{h}\,$부터 $\textit{end}\,$전까지인 $i$</AForeach>
-      <ABlock>
-        $j \leftarrow i-\textit{h}$ <AC>// 서브 배열 상 바로 왼쪽 데이터 인덱스</AC>
+      <P.Foreach>$\textit{begin}+\textit{h}\,$부터 $\textit{end}\,$전까지인 $i$</P.Foreach>
+      <P.Indent>
+        $j \leftarrow i-\textit{h}$ <P.Comment>// 서브 배열 상 바로 왼쪽 데이터 인덱스</P.Comment>
 
-        <ANL />
+        <P.Newline />
 
-        <p><AC>// 오른쪽($j+h$)과 바로 왼쪽($j$)이 인버전인 동안</AC></p>
+        <p><P.Comment>// 오른쪽($j+h$)과 바로 왼쪽($j$)이 인버전인 동안</P.Comment></p>
 
-        <AWhile>$j \geq \textit{begin}$ 이고 $arr[j] > arr[j+\textit{h}]$ 인 </AWhile>
-        <ABlock>
-          <p><AC>// 오른쪽은 왼쪽과 자리 바꿈</AC></p>
+        <P.While>$j \geq \textit{begin}$ 이고 $arr[j] > arr[j+\textit{h}]$ 인 </P.While>
+        <P.Indent>
+          <p><P.Comment>// 오른쪽은 왼쪽과 자리 바꿈</P.Comment></p>
           $\textit{arr}[j]$와 $\textit{arr}[j+\textit{h}]$ 스왑
 
           $j \leftarrow j-\textit{h}$
-        </ABlock>
-      </ABlock>
+        </P.Indent>
+      </P.Indent>
 
-      <ANL />
+      <P.Newline />
 
       $\textit{h} \leftarrow \lfloor\textit{h} / 3\rfloor$
-    </ABlock>
-  </ABlock>
-</Alg>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 셸 소트는 인서션 소트를 일반화한 것으로 생각할 수 있지만, 인서션 소트와는 달리 스테이블하지 않습니다.
 그리고 이미 소트된 배열을 소트하는 최선의 경우엔, 셸 소트는 여러 차례 $h$-소트를 무의미하게 반복하기 때문에, 인서션 소트보다 조금 불리한 시간 복잡도를 가집니다.

@@ -9,14 +9,7 @@ series: "직접 만들어보는 부동소수점"
 import L from "@/components/post/AltLang.astro";
 import PostLink from "@/components/post/PostLink.astro"
 import Quote from "@/components/post/Quote.astro"
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import AC from "@/components/post/algorithm/AlgorithmComment.astro";
-import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
-import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
-import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import P from "@/components/post/pseudocode";
 
 <Quote>
   10.0에 0.1을 곱해서 1.0이 되는 경우는 거의 없다.
@@ -100,29 +93,29 @@ assert(f1 + f2 == f3); // [!code ++]
 
 그러면 파싱 함수를 수도코드로 만들어봅시다.
 
-<Alg>
-  <AK>리터럴 파싱</AK> ($\textit{literal}\,$) <AC>// 부호와 숫자를 리턴</AC>
+<P.Block>
+  <P.Keyword>리터럴 파싱</P.Keyword> ($\textit{literal}\,$) <P.Comment>// 부호와 숫자를 리턴</P.Comment>
 
-  <ABlock>
-    $i$ $\leftarrow$ $0$ <AC>// 스트링 읽기를 위한 시작 인덱스</AC>
+  <P.Indent>
+    $i$ $\leftarrow$ $0$ <P.Comment>// 스트링 읽기를 위한 시작 인덱스</P.Comment>
 
     <p>&nbsp;</p>
 
-    <p><AC>// 부호 읽기</AC></p>
+    <p><P.Comment>// 부호 읽기</P.Comment></p>
 
     $\textit{sign}$ $\leftarrow$ $1$
 
-    <AIf>$\textit{literal}[i]$이 $-$</AIf>
-    <ABlock>
+    <P.If>$\textit{literal}[i]$이 $-$</P.If>
+    <P.Indent>
       $\textit{sign}$ $\leftarrow$ $-1$
-    </ABlock>
+    </P.Indent>
 
-    <AIf>$\textit{literal}[i]$이 $-$이거나 $+$</AIf>
-    <ABlock>
-        $i$ $\leftarrow$ $i+1$ <AC>// 다음 문자로 인덱스 전진</AC>
-    </ABlock>
-  </ABlock>
-</Alg>
+    <P.If>$\textit{literal}[i]$이 $-$이거나 $+$</P.If>
+    <P.Indent>
+        $i$ $\leftarrow$ $i+1$ <P.Comment>// 다음 문자로 인덱스 전진</P.Comment>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 리터럴에서는 부호가 첫 문자로 올 수 있으니, 이를 읽어서 $\textit{sign}$ 변수에 기억해둡니다.
 만약 부호가 없다면 자연스럽게 양수로 파싱합니다.
@@ -136,31 +129,31 @@ assert(f1 + f2 == f3); // [!code ++]
 `12`까지 읽었다가, 그 다음에 `3`을 만난다면, 이전에 읽었던 숫자에 $10$을 곱해 $120$으로 만들고 지금 읽은 숫자 $3$을 더해 $123$으로 파싱합니다.
 다음 수도코드는 이 과정을 각 문자마다 반복해 파싱합니다.
 
-<Alg>
-  <ABlock>
+<P.Block>
+  <P.Indent>
     $\textit{num}$ $\leftarrow$ $0$
 
-    <AWhile>$i < \textit{literal}$.length 이고 $\textit{literal}[i]$이 숫자인</AWhile>
-    <ABlock>
+    <P.While>$i < \textit{literal}$.length 이고 $\textit{literal}[i]$이 숫자인</P.While>
+    <P.Indent>
       $\textit{num}$ $\leftarrow$ $\textit{num} \times 10 + \textit{literal}[i]$ 
 
       $i$ $\leftarrow$ $i+1$
-    </ABlock>
-  </ABlock>
-</Alg>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 여기서 리터럴이 끝난다면, 소수점이 없는 것이므로 바로 리턴하면 됩니다.
 소수점이 아닌 걸 만나도 부동소수점 리터럴이 끝난 것으로 처리하겠습니다.
 
-<Alg>
-  <ABlock>
-    <AIf>$i = \textit{literal}$.length 또는 $\text{literal}[i] \ne$ 소수점</AIf>
+<P.Block>
+  <P.Indent>
+    <P.If>$i = \textit{literal}$.length 또는 $\text{literal}[i] \ne$ 소수점</P.If>
 
-    <ABlock>
-      <ARet /> $\textit{num} \times \textit{sign}$
-    </ABlock>
-  </ABlock>
-</Alg>
+    <P.Indent>
+      <P.Return /> $\textit{num} \times \textit{sign}$
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 이후 소수점 이하를 읽습니다.
 그 과정은 정수 부분을 읽었을 때와 비슷하게 진행하겠지만, 무엇을 읽든 정수 부분은 $0$이어야 할 것입니다.
@@ -169,28 +162,28 @@ assert(f1 + f2 == f3); // [!code ++]
 그런데 $100=10^{2}$이라는 점을 떠올려 본다면, 일반적으로 $n$자리를 읽었을 때 $10^n$으로 나누면 된다는 것을 알 수 있습니다.
 다음 수도코드에서 $\textit{factor}\,$라는 변수가 바로 그 $10^n$을 기억합니다.
 
-<Alg>
-  <ABlock>
-    $i$ $\leftarrow$ $i+1$ <AC>// 소수점 문자 다음으로 인덱스 전진</AC>
+<P.Block>
+  <P.Indent>
+    $i$ $\leftarrow$ $i+1$ <P.Comment>// 소수점 문자 다음으로 인덱스 전진</P.Comment>
 
     $\textit{factor}$ $\leftarrow$ $1$
 
     <p>&nbsp;</p>
 
-    <AWhile>$i < \textit{literal}$.length 이고 $\textit{literal}[i]$이 숫자인</AWhile>
-    <ABlock>
+    <P.While>$i < \textit{literal}$.length 이고 $\textit{literal}[i]$이 숫자인</P.While>
+    <P.Indent>
       $\textit{num}$ $\leftarrow$ $\textit{num} \times 10 + \textit{literal}[i]$ 
 
       $i$ $\leftarrow$ $i+1$
 
       $\textit{factor}$ $\leftarrow$ $\textit{factor} \times 10$
-    </ABlock>
+    </P.Indent>
 
     <p>&nbsp;</p>
     
-    <ARet /> $\textit{num} / \textit{factor} \times \textit{sign}$
-  </ABlock>
-</Alg>
+    <P.Return /> $\textit{num} / \textit{factor} \times \textit{sign}$
+  </P.Indent>
+</P.Block>
 
 이렇게 완성한 수도코드는 파이썬과 같은 언어로 구현할 수 있습니다.
 실제 구현은 직접 해보는 것으로 남기겠습니다.

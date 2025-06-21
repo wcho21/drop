@@ -10,14 +10,8 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import FigureDisplay from "@/components/post/FigureDisplay.astro";
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
-import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import AC from "@/components/post/algorithm/AlgorithmComment.astro";
 import Quote from "@/components/post/Quote.astro";
+import P from "@/components/post/pseudocode";
 
 import fig1 from "./figs/fig1.png";
 import fig2 from "@texfigs/2024/05/07/01/fig2.svg";
@@ -77,22 +71,22 @@ $$
 
 이 절차는 가상의 프로그래밍 언어로 다음과 같이 표현할 수 있습니다.
 
-<Alg>
-  <AK>유클리드 알고리즘</AK> ($m$, $n$) <AC>// 두 수의 최대 공약수를 리턴</AC>
+<P.Block>
+  <P.Keyword>유클리드 알고리즘</P.Keyword> ($m$, $n$) <P.Comment>// 두 수의 최대 공약수를 리턴</P.Comment>
 
-  <ABlock>
+  <P.Indent>
     $r \leftarrow$ $m$을 $n$으로 나눈 나머지
 
-    <AIf>$r = 0$ </AIf>
-    <ABlock>
-      <ARet /> $n$
-    </ABlock>
-    <AElse />
-    <ABlock>
-      <ARet /> 유클리드 알고리즘($n$, $r$)
-    </ABlock>
-  </ABlock>
-</Alg>
+    <P.If>$r = 0$ </P.If>
+    <P.Indent>
+      <P.Return /> $n$
+    </P.Indent>
+    <P.Else />
+    <P.Indent>
+      <P.Return /> 유클리드 알고리즘($n$, $r$)
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 실제 프로그래밍 코드는 아니지만 이에 가깝게 표현했기 때문에 수도코드<L>pseudocode</L>라고 부릅니다.
 
@@ -204,22 +198,22 @@ $$
 
 앞에서 언급한 유클리드 알고리즘을 다시 가져와보겠습니다. 대신 이번에는 각 단계에 순번을 매겨놨습니다.
 
-<Alg>
-  <AK>유클리드 알고리즘</AK> ($m$, $n$) <AC>// 두 수의 최대 공약수를 리턴</AC>
+<P.Block>
+  <P.Keyword>유클리드 알고리즘</P.Keyword> ($m$, $n$) <P.Comment>// 두 수의 최대 공약수를 리턴</P.Comment>
 
-  <ABlock>
+  <P.Indent>
     [단계 1] $r \leftarrow$ $m$을 $n$으로 나눈 나머지
 
-    [단계 2] <AIf>$r = 0$ </AIf>
-    <ABlock>
-      [단계 3] <ARet /> $n$
-    </ABlock>
-    <AElse />
-    <ABlock>
-      [단계 4] <ARet /> 유클리드 알고리즘($n$, $r$)
-    </ABlock>
-  </ABlock>
-</Alg>
+    [단계 2] <P.If>$r = 0$ </P.If>
+    <P.Indent>
+      [단계 3] <P.Return /> $n$
+    </P.Indent>
+    <P.Else />
+    <P.Indent>
+      [단계 4] <P.Return /> 유클리드 알고리즘($n$, $r$)
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 여기서 입력값이 $m = 4$, $n = 2$ 라고 해봅시다.
 그러면 총 몇 개의 단계를 거칠까요? (한번 세보세요.)
@@ -247,11 +241,11 @@ $$
 사실 이 점은 유클리드 알고리즘을 구체적인 문장으로 표현할 때부터 그대로 나타났습니다.
 즉 다음 단계를 '기본적인 동작'으로서 수행하기를 바란 것입니다.
 
-<Alg>
-  <ABlock>
+<P.Block>
+  <P.Indent>
     [단계 1] $r \leftarrow$ $m$을 $n$으로 나눈 나머지
-  </ABlock>
-</Alg>
+  </P.Indent>
+</P.Block>
 
 풀어서 말하면, 나머지 연산과 변수 접근을 계산 모델에서 즉각적으로 수행할 수 있다고 가정한 것입니다.
 하지만 이것은 튜링 머신과는 명백히 다르기 때문에, 다른 계산 모델이 필요하게 됩니다.
@@ -362,22 +356,22 @@ $$
 
 앞에서 예로 들었던 유클리드 알고리즘의 시간 복잡도를 구해봅시다.
 
-<Alg>
-  <AK>유클리드 알고리즘</AK> ($m$, $n$) <AC>// 두 수의 최대 공약수를 리턴</AC>
+<P.Block>
+  <P.Keyword>유클리드 알고리즘</P.Keyword> ($m$, $n$) <P.Comment>// 두 수의 최대 공약수를 리턴</P.Comment>
 
-  <ABlock>
+  <P.Indent>
     $r \leftarrow$ $m$을 $n$으로 나눈 나머지
 
-    <AIf>$r = 0$ </AIf>
-    <ABlock>
-      <ARet /> $n$
-    </ABlock>
-    <AElse />
-    <ABlock>
-      <ARet /> 유클리드 알고리즘($n$, $r$)
-    </ABlock>
-  </ABlock>
-</Alg>
+    <P.If>$r = 0$ </P.If>
+    <P.Indent>
+      <P.Return /> $n$
+    </P.Indent>
+    <P.Else />
+    <P.Indent>
+      <P.Return /> 유클리드 알고리즘($n$, $r$)
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 최선의 경우는 시간 복잡도가 $\Theta(1)$ 임을 쉽게 알 수 있습니다.
 이는 입력값에 상관 없이 항상 일정한 개수의 단계만 거친다는 뜻이기도 합니다.

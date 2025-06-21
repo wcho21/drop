@@ -9,21 +9,10 @@ series: "알고리즘 라이브러리 만들기"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import AC from "@/components/post/algorithm/AlgorithmComment.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
-import AForeach from "@/components/post/algorithm/AlgorithmForeach.astro";
-import AForever from "@/components/post/algorithm/AlgorithmForever.astro";
-import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
-import AElif from "@/components/post/algorithm/AlgorithmElif.astro";
-import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
-import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
 import S from "@/components/post/Serif.astro";
 import Quote from "@/components/post/Quote.astro";
 import PostLink from "@/components/post/PostLink.astro";
+import P from "@/components/post/pseudocode";
 
 import fig1 from "@texfigs/2024/06/29/01/fig1.svg";
 import fig2 from "./figs/fig2.jpg";
@@ -132,33 +121,33 @@ $n$ 명의 학생들에게 $1$번부터 $n$번까지 순번을 매긴다면, 순
 그러면 이것으로 딕셔너리의 ADT를 어떻게 만들 수 있을까요?
 먼저, 딕셔너리의 `get()` 연산은 다음 수도코드처럼 리스트의 `get()` 연산에 맡길 수 있습니다.
 
-<Alg>
-  <AK>get ($\textit{list}$, $\textit{key}$)</AK>&nbsp;<AC>// 링크드 리스트 $\textit{list}$에서 키 $\textit{key}$로 값을 찾아 리턴</AC>
+<P.Block>
+  <P.Keyword>get ($\textit{list}$, $\textit{key}$)</P.Keyword>&nbsp;<P.Comment>// 링크드 리스트 $\textit{list}$에서 키 $\textit{key}$로 값을 찾아 리턴</P.Comment>
 
-  <ABlock>
+  <P.Indent>
     $\textit{value}$ $\leftarrow$ $\textit{list}$.get($\textit{key}$와 연관된 값)
 
-    <ARet /> $\textit{value}$
-  </ABlock>
-</Alg>
+    <P.Return /> $\textit{value}$
+  </P.Indent>
+</P.Block>
 
 `set()`은 다음과 같이 두 가지 역할을 맡습니다.
 이미 키와 연관된 값이 있으면 새 값에 연관시키고, 없으면 새롭게 추가합니다.
 
-<Alg>
-  <AK>set ($\textit{list}$, $\textit{key}$, $\textit{value}$)</AK>&nbsp;<AC>// 링크드 리스트 $\textit{list}$에서 키 $\textit{key}$를 값 $\textit{value}$에 연관시킴</AC>
+<P.Block>
+  <P.Keyword>set ($\textit{list}$, $\textit{key}$, $\textit{value}$)</P.Keyword>&nbsp;<P.Comment>// 링크드 리스트 $\textit{list}$에서 키 $\textit{key}$를 값 $\textit{value}$에 연관시킴</P.Comment>
 
-  <ABlock>
-    <AIf>$\textit{list}$.has($\textit{key}$와 연관된 값) </AIf>
-    <ABlock>
+  <P.Indent>
+    <P.If>$\textit{list}$.has($\textit{key}$와 연관된 값) </P.If>
+    <P.Indent>
       $\textit{list}$.change($\textit{key}$와 연관된 값, $\textit{value}$)
-    </ABlock>
-    <AElse />
-    <ABlock>
+    </P.Indent>
+    <P.Else />
+    <P.Indent>
       $\textit{list}$.prepend($\textit{value}$)
-    </ABlock>
-  </ABlock>
-</Alg>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 `remove()`는 단순히 리스트 조작에 맡깁니다.
 간단하므로 직접 만들어보는 것으로 하고 넘어가겠습니다.
@@ -186,23 +175,23 @@ $n$ 명의 학생들에게 $1$번부터 $n$번까지 순번을 매긴다면, 순
 
 리스트 맨 앞에 값을 추가하는 `prepend()` 연산은, 새 노드를 마지막 노드 다음에 끼워넣는 것으로 만들 수 있습니다.
 
-<Alg>
-  <AK>prepend ($\textit{list}$, $\textit{data}$)</AK>&nbsp;<AC>// 리스트 $\textit{list}$ 맨 앞에 데이터 $\textit{data}$ 추가</AC>
+<P.Block>
+  <P.Keyword>prepend ($\textit{list}$, $\textit{data}$)</P.Keyword>&nbsp;<P.Comment>// 리스트 $\textit{list}$ 맨 앞에 데이터 $\textit{data}$ 추가</P.Comment>
 
-  <ABlock>
-    <p><AC>// $\textit{list}$.<S>end</S>: 더미 노드</AC></p>
+  <P.Indent>
+    <p><P.Comment>// $\textit{list}$.<S>end</S>: 더미 노드</P.Comment></p>
 
-    <p><AC>// <S>노드</S>.<S>data</S>: 노드의 데이터</AC></p>
+    <p><P.Comment>// <S>노드</S>.<S>data</S>: 노드의 데이터</P.Comment></p>
 
-    <p><AC>// <S>노드</S>.<S>next</S>: 노드의 다음 노드</AC></p>
+    <p><P.Comment>// <S>노드</S>.<S>next</S>: 노드의 다음 노드</P.Comment></p>
 
-    <ANL />
+    <P.Newline />
 
-    $\textit{head}$ $\leftarrow$ $\textit{list}$.end.next <AC>// 더미 노드의 다음 노드를 가져옴</AC>
+    $\textit{head}$ $\leftarrow$ $\textit{list}$.end.next <P.Comment>// 더미 노드의 다음 노드를 가져옴</P.Comment>
 
-    <ANL />
+    <P.Newline />
 
-    <AC>// 새 노드를 마지막 다음에 끼워넣음</AC>
+    <P.Comment>// 새 노드를 마지막 다음에 끼워넣음</P.Comment>
 
     $\textit{node}$ $\leftarrow$ 새 노드
 
@@ -211,8 +200,8 @@ $n$ 명의 학생들에게 $1$번부터 $n$번까지 순번을 매긴다면, 순
     $\textit{node}$.next $\leftarrow$ $\textit{head}$
 
     $\textit{list}$.end.next $\leftarrow$ $\textit{node}$
-  </ABlock>
-</Alg>
+  </P.Indent>
+</P.Block>
 
 노드 삭제는 그 이전의 노드를 찾아서, 삭제할 노드의 다음 노드에 연결합니다.
 
@@ -223,65 +212,65 @@ $n$ 명의 학생들에게 $1$번부터 $n$번까지 순번을 매긴다면, 순
 따라서 이전 노드를 찾는 연산을 준비해봅시다.
 다음 수도코드는 조건을 만족하는 노드의 이전 노드를 찾습니다.
 
-<Alg>
-  <AK>findPrev ($\textit{list}$, $\textit{pred}$)</AK>&nbsp;<AC>// 리스트 $\textit{list}$에서 $\textit{pred}$를 만족하는 노드의 이전을 찾고, 없으면 null 리턴</AC>
+<P.Block>
+  <P.Keyword>findPrev ($\textit{list}$, $\textit{pred}$)</P.Keyword>&nbsp;<P.Comment>// 리스트 $\textit{list}$에서 $\textit{pred}$를 만족하는 노드의 이전을 찾고, 없으면 null 리턴</P.Comment>
 
-  <ABlock>
-    <p><AC>// $\textit{prev}$ 노드는 첫 번째 노드의 이전</AC></p>
+  <P.Indent>
+    <p><P.Comment>// $\textit{prev}$ 노드는 첫 번째 노드의 이전</P.Comment></p>
 
     $\textit{prev}$ $\leftarrow$ $\textit{list}$.end
 
-    <ANL />
+    <P.Newline />
 
-    <p><AC>// $\textit{prev}$ 노드가 마지막의 이전일 때까지 탐색</AC></p>
+    <p><P.Comment>// $\textit{prev}$ 노드가 마지막의 이전일 때까지 탐색</P.Comment></p>
 
-    <AForever></AForever>
-    <ABlock>
+    <P.Forever />
+    <P.Indent>
       $\textit{node}$ $\leftarrow$ $\textit{prev}$.next
 
-      <AIf>$\textit{node} = \textit{list}$.end </AIf>
-      <ABlock>
-        <ARet /> null
-      </ABlock>
+      <P.If>$\textit{node} = \textit{list}$.end </P.If>
+      <P.Indent>
+        <P.Return /> null
+      </P.Indent>
 
-      <ANL />
+      <P.Newline />
 
-      <AIf>$\textit{pred}$를 만족하는 $\textit{node}$ </AIf>
-      <ABlock>
-        <ARet /> $\textit{prev}$
-      </ABlock>
+      <P.If>$\textit{pred}$를 만족하는 $\textit{node}$ </P.If>
+      <P.Indent>
+        <P.Return /> $\textit{prev}$
+      </P.Indent>
 
-      <ANL />
+      <P.Newline />
 
       $\textit{prev} \leftarrow \textit{node}$
-    </ABlock>
-  </ABlock>
-</Alg>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 이를 통해 노드 삭제를 만듭니다.
 
-<Alg>
-  <AK>remove ($\textit{list}$, $\textit{pred}$)</AK>&nbsp;<AC>// 리스트 $\textit{list}$에서 $\textit{pred}$를 만족하는 노드 삭제</AC>
+<P.Block>
+  <P.Keyword>remove ($\textit{list}$, $\textit{pred}$)</P.Keyword>&nbsp;<P.Comment>// 리스트 $\textit{list}$에서 $\textit{pred}$를 만족하는 노드 삭제</P.Comment>
 
-  <ABlock>
+  <P.Indent>
     $\textit{prev}$ $\leftarrow$ findPrev($\textit{list, pred}$)
 
-    <p><AC>// 못 찾았으면 아무 것도 하지 않음</AC></p>
+    <p><P.Comment>// 못 찾았으면 아무 것도 하지 않음</P.Comment></p>
 
-    <AIf>$\textit{prev} = $ null </AIf>
-    <ABlock>
-      <ARet />
-    </ABlock>
+    <P.If>$\textit{prev} = $ null </P.If>
+    <P.Indent>
+      <P.Return />
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AC>// $\textit{toRemove}$ 노드를 리스트에서 삭제</AC>
+    <P.Comment>// $\textit{toRemove}$ 노드를 리스트에서 삭제</P.Comment>
 
     $\textit{toRemove}$ $\leftarrow$ $\textit{prev}$.next
 
     $\textit{prev.next}$ $\leftarrow$ $\textit{toRemove}$.next
-  </ABlock>
-</Alg>
+  </P.Indent>
+</P.Block>
 
 이와 비슷한 방식으로 남은 `get()`, `has()`, `change()` 연산 또한 만들 수 있습니다.
 이것은 직접 해보는 것으로 남기고 넘어가겠습니다.
@@ -621,35 +610,35 @@ public class AssocList<K, V> implements Dictionary<K, V> {
 
 예를 들어, 딕셔너리의 `get()` 연산은  연관 리스트의 `get()` 연산에 맡길 수 있습니다.
 
-<Alg>
-  <AK>get ($\textit{slots}$, $\textit{key}$)</AK>&nbsp;<AC>// 슬롯 배열 $\textit{slots}$에서 키 $\textit{key}$로 값을 찾아 리턴</AC>
+<P.Block>
+  <P.Keyword>get ($\textit{slots}$, $\textit{key}$)</P.Keyword>&nbsp;<P.Comment>// 슬롯 배열 $\textit{slots}$에서 키 $\textit{key}$로 값을 찾아 리턴</P.Comment>
 
-  <ABlock>
-    <p><AC>// <S>getHash()</S>: 미리 주어진 해시 함수</AC></p>
+  <P.Indent>
+    <p><P.Comment>// <S>getHash()</S>: 미리 주어진 해시 함수</P.Comment></p>
 
-    <ANL />
+    <P.Newline />
 
     $\textit{hash}$ $\leftarrow$ getHash($\textit{key}$)
 
-    $\textit{chain} \leftarrow \textit{slots}[\textit{hash}]$ <AC>// 연관 리스트 가져옴</AC>
+    $\textit{chain} \leftarrow \textit{slots}[\textit{hash}]$ <P.Comment>// 연관 리스트 가져옴</P.Comment>
 
-    <ARet /> $\textit{chain}$.get($\textit{key}$)
-  </ABlock>
-</Alg>
+    <P.Return /> $\textit{chain}$.get($\textit{key}$)
+  </P.Indent>
+</P.Block>
 
 `set()` 연산도 이와 같습니다.
 
-<Alg>
-  <AK>set ($\textit{slots}$, $\textit{key}$, $\textit{value}$)</AK>&nbsp;<AC>// 슬롯 배열 $\textit{slots}$에서 키 $\textit{key}$를 값 $\textit{value}$에 연관시킴</AC>
+<P.Block>
+  <P.Keyword>set ($\textit{slots}$, $\textit{key}$, $\textit{value}$)</P.Keyword>&nbsp;<P.Comment>// 슬롯 배열 $\textit{slots}$에서 키 $\textit{key}$를 값 $\textit{value}$에 연관시킴</P.Comment>
 
-  <ABlock>
+  <P.Indent>
     $\textit{hash}$ $\leftarrow$ getHash($\textit{key}$)
 
     $\textit{chain} \leftarrow \textit{slots}[\textit{hash}]$
 
     $\textit{chain}$.set($\textit{value}$)
-  </ABlock>
-</Alg>
+  </P.Indent>
+</P.Block>
 
 `remove()` 연산 또한 비슷하므로, 직접 해보는 것으로 남기고 넘어가겠습니다.
 
@@ -1317,23 +1306,23 @@ abstract class AbstractChainingTable<K, V> implements Dictionary<K, V> {
 
 예를 들어, `has()` 연산은 다음과 같이 키로 값을 찾을 수 있는지 여부를 불리언<L>Boolean</L>으로 리턴합니다.
 
-<Alg>
-  <AK>has ($\textit{dict}$, $\textit{key}$)</AK>&nbsp;<AC>// 셋의 내부 딕셔너리 $\textit{dict}$에 키 $\textit{key}$가 존재하는지 확인</AC>
+<P.Block>
+  <P.Keyword>has ($\textit{dict}$, $\textit{key}$)</P.Keyword>&nbsp;<P.Comment>// 셋의 내부 딕셔너리 $\textit{dict}$에 키 $\textit{key}$가 존재하는지 확인</P.Comment>
 
-  <ABlock>
-    <ARet /> $\textit{dict}$.get($\textit{key}$) $ \neq $ null
-  </ABlock>
-</Alg>
+  <P.Indent>
+    <P.Return /> $\textit{dict}$.get($\textit{key}$) $ \neq $ null
+  </P.Indent>
+</P.Block>
 
 `set()` 연산은 단순히 딕셔너리 연산에 맡깁니다.
 
-<Alg>
-  <AK>set ($\textit{dict}$, $\textit{key}$)</AK>&nbsp;<AC>// 셋의 내부 딕셔너리 $\textit{dict}$에 키 $\textit{key}$를 넣음</AC>
+<P.Block>
+  <P.Keyword>set ($\textit{dict}$, $\textit{key}$)</P.Keyword>&nbsp;<P.Comment>// 셋의 내부 딕셔너리 $\textit{dict}$에 키 $\textit{key}$를 넣음</P.Comment>
 
-  <ABlock>
+  <P.Indent>
     $\textit{dict}$.set($\textit{key}$)
-  </ABlock>
-</Alg>
+  </P.Indent>
+</P.Block>
 
 `remove()` 연산도 이와 같이 만들 수 있습니다.
 
@@ -1417,34 +1406,34 @@ public class ChainingSet<K> implements Set<K> {
 이때 키는 페어의 첫 번째 데이터로 정합니다.
 예를 들어, `get()` 연산은 다음과 같습니다.
 
-<Alg>
-  <AK>get ($\textit{dict}$, $\textit{key}$)</AK>&nbsp;<AC>// 맵의 내부 딕셔너리 $\textit{dict}$에서 키 $\textit{key}$로 값을 찾아 리턴</AC>
+<P.Block>
+  <P.Keyword>get ($\textit{dict}$, $\textit{key}$)</P.Keyword>&nbsp;<P.Comment>// 맵의 내부 딕셔너리 $\textit{dict}$에서 키 $\textit{key}$로 값을 찾아 리턴</P.Comment>
 
-  <ABlock>
-    <p><AC>// <S>페어</S>.first: 페어의 첫 번째 데이터</AC></p>
-    <p><AC>// <S>페어</S>.second: 페어의 두 번째 데이터</AC></p>
+  <P.Indent>
+    <p><P.Comment>// <S>페어</S>.first: 페어의 첫 번째 데이터</P.Comment></p>
+    <p><P.Comment>// <S>페어</S>.second: 페어의 두 번째 데이터</P.Comment></p>
 
-    <ANL />
+    <P.Newline />
 
     $\textit{pair}$ $\leftarrow$ $\textit{dict}$.get($\textit{key}$)
 
     $\textit{value}$ $\leftarrow$ $\textit{pair}$.second
 
-    <ARet /> $\textit{value}$
-  </ABlock>
-</Alg>
+    <P.Return /> $\textit{value}$
+  </P.Indent>
+</P.Block>
 
 `set()` 연산은 단순히 딕셔너리에 페어를 넣는 것으로 만들 수 있습니다.
 
-<Alg>
-  <AK>set ($\textit{dict}$, $\textit{key}$, $\textit{value}$)</AK>&nbsp;<AC>// 맵의 내부 딕셔너리 $\textit{dict}$에서 키 $\textit{key}$를 값 $\textit{value}$에 연관시킴</AC>
+<P.Block>
+  <P.Keyword>set ($\textit{dict}$, $\textit{key}$, $\textit{value}$)</P.Keyword>&nbsp;<P.Comment>// 맵의 내부 딕셔너리 $\textit{dict}$에서 키 $\textit{key}$를 값 $\textit{value}$에 연관시킴</P.Comment>
 
-  <ABlock>
+  <P.Indent>
     $\textit{pair}$ $\leftarrow$ 페어($\textit{key}$, $\textit{value}$)
 
     $\textit{dict}$.set($\textit{pair}$)
-  </ABlock>
-</Alg>
+  </P.Indent>
+</P.Block>
 
 `remove()` 연산도 이와 같이 만들 수 있습니다.
 

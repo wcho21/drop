@@ -9,12 +9,7 @@ series: "직접 만들어보는 부동소수점"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import AC from "@/components/post/algorithm/AlgorithmComment.astro";
-import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import P from "@/components/post/pseudocode";
 
 import fig1 from "@texfigs/2023/05/19/01/fig1.svg";
 import fig2 from "@texfigs/2023/05/19/01/fig2.svg";
@@ -248,33 +243,33 @@ $$
 여기 두 수가 같은지 비교하는 수도코드입니다.
 즉 부동소수점을 위한 `==` 연산으로 볼 수 있습니다.
 
-<Alg>
-  <AK>같은지 비교</AK> ($a$, $b$) <AC>// 같으면 true를 리턴하고, 아니면 false를 리턴</AC>
+<P.Block>
+  <P.Keyword>같은지 비교</P.Keyword> ($a$, $b$) <P.Comment>// 같으면 true를 리턴하고, 아니면 false를 리턴</P.Comment>
 
-  <ABlock>
-    <AIf>$a$와 $b$ 둘 다 $0$</AIf>
-    <ABlock>
-      <ARet /> true
-    </ABlock>
+  <P.Indent>
+    <P.If>$a$와 $b$ 둘 다 $0$</P.If>
+    <P.Indent>
+      <P.Return /> true
+    </P.Indent>
 
-    <AIf postfix="면">$a$와 $b$의 `sign`이 다르</AIf>
-    <ABlock>
-      <ARet /> false
-    </ABlock>
+    <P.If postfix="면">$a$와 $b$의 `sign`이 다르</P.If>
+    <P.Indent>
+      <P.Return /> false
+    </P.Indent>
 
-    <AIf postfix="면">$a$와 $b$의 `exponent`가 다르</AIf>
-    <ABlock>
-      <ARet /> false
-    </ABlock>
+    <P.If postfix="면">$a$와 $b$의 `exponent`가 다르</P.If>
+    <P.Indent>
+      <P.Return /> false
+    </P.Indent>
 
-    <AIf postfix="면">$a$와 $b$의 `fraction`이 다르</AIf>
-    <ABlock>
-      <ARet /> false
-    </ABlock>
+    <P.If postfix="면">$a$와 $b$의 `fraction`이 다르</P.If>
+    <P.Indent>
+      <P.Return /> false
+    </P.Indent>
 
-    <ARet /> true
-  </ABlock>
-</Alg>
+    <P.Return /> true
+  </P.Indent>
+</P.Block>
 
 ## 파이썬 구현 예시
 
