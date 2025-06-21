@@ -234,8 +234,7 @@ void encodeUtf8(const Codepoint cp, char8_t *buf) {
 int main() {
   char8_t buf[5];
   encodeUtf8(0x1F602, buf);
-  printf("%s\n", buf);
-  // result: 😂 // [!code highlight]
+  printf("%s\n", buf); // 😂
 }
 ```
 
@@ -358,9 +357,13 @@ Codepoint decodeUtf8(const char8_t *buf) {
 ```cpp
 int main() {
   Codepoint cp = decodeUtf8(u8"😂");
-  printf("%x\n", cp);
-  // result: 1f602 // [!code highlight]
+  printf("%x\n", cp); // 1f602
 }
+```
+
+결과는 다음과 같습니다.
+
+```shellsession
 ```
 
 이제 유니코드와 UTF-8 인코딩 간 변환을 자유자재로 할 수 있게 되었습니다.
