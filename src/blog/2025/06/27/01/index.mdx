@@ -1,0 +1,1484 @@
+---
+title: "Bash 셸 스크립트"
+date: 2025-06-27T01:00:00+09:00
+summary: "셸 스크립트 배우기"
+thumbnail: "/src/assets/thumbnails/2025/06/27/01/thumbnail.webp"
+series: "프로그래밍 언어 산책"
+---
+
+import L from "@/components/post/AltLang.astro";
+import S from "@/components/post/Serif.astro";
+import P from "@/components/post/pseudocode";
+import Quote from "@/components/post/Quote.astro";
+import Figure from "@/components/post/Figure.astro";
+import FigureCaption from "@/components/post/FigureCaption.astro";
+
+import fig1 from "./figs/fig1.png";
+
+<Quote>
+  셸이란 다른 프로그램을 실행하는 프로그램이다.
+
+  <p slot="detail">The shell is a program that runs other programs.</p>
+
+  <p slot="name">-- *UNIX: A History and Memoir* (2019)</p>
+</Quote>
+
+
+
+셸 스크립트<L>shell script</L>는 기존에 있는 프로그램을 이용한 자동화 작업에 주로 쓰이지만, 문법상 여러 특이한 점이 있어서 진입장벽이 있는 것도 사실입니다.
+하지만 셸 스크립트의 문법과 셸의 동작을 이해하고 나면 생각보다 어렵지 않게 사용할 수 있습니다.
+
+여기서의 목표는, 셸 스크립트를 그때그때 필요한 부분만 복사해서 쓰는 대신에 제대로 익혀서 자유자재로 만드는 수준까지 나아가는 것입니다.
+
+언어를 배우는 가장 빠른 방법은 무언가를 직접 만들어보는 것이므로, 간단한 할 일 관리 프로그램을 셸 스크립트로 구현해보려고 합니다.
+그 과정을 통해 변수 대입부터 조건문, 반복문까지의 기본적인 문법을 알 수 있게 됩니다.
+
+또한 셸 스크립트는 셸에서 동작하는 언어이므로, 셸의 동작을 이해하면 셸 스크립트를 한단계 깊이 있게 활용할 수 있습니다.
+이를 통해 셸에서 프로그램의 입출력을 다루는 방법과 프로그램 간 메시지를 주고 받는 방법을 이해할 수 있을 것입니다.
+
+셸 스크립트를 익히기 위해 필요한 것은 Bash 셸 뿐입니다.
+현재 셸이 Bash 셸인지 확인하는 방법은 다음과 같습니다.
+
+```shellsession
+$ echo $BASH_VERSION
+5.2.32(1)-release
+```
+
+위와 같이 버전이 나타나면 Bash 셸인 것입니다.
+
+앞으로 특별한 언급이 없는 한, 셸은 Bash 셸을 의미하는 것으로 하겠습니다.
+그러면 시작해봅시다.
+
+
+
+# 프로그램을 만들며 배워보기
+
+먼저, 앞으로 만들 할 일 관리 프로그램의 동작부터 정해봅시다.
+이 프로그램은 셸에서 다음과 같이 세 개의 옵션을 수행할 것입니다.
+
+첫 번째로, 작업 추가입니다.
+
+```shellsession
+$ todo add foo bar baz
+Added task 'foo'.
+Added task 'bar'.
+Added task 'baz'.
+```
+
+두 번째로, 목록 보기입니다.
+
+```shellsession
+$ todo list
+1: foo
+2: bar
+3: baz
+```
+
+마지막으로, 작업 삭제입니다.
+
+```shellsession
+$ todo remove 1
+Removed task 'foo'.
+```
+
+이걸 어떻게 셸 스크립트로 만들 수 있을까요?
+우선 프로그램을 수도코드로 표현해본 다음, 그것을 셸 스크립트로 옮기는 것으로 시작해봅시다.
+
+프로그램이 실행하는 첫 함수는 옵션을 읽고 적절한 함수를 호출하는 책임만 맡도록 합니다.
+
+<P.Block>
+  <P.Keyword>프로그램</P.Keyword> (<P.Keyword>옵션</P.Keyword>, <P.Keyword>인자</P.Keyword>{"..."})
+
+  <P.Indent>
+    <P.If><P.Keyword>옵션</P.Keyword> == 추가</P.If>
+    <P.Indent>
+      add_tasks(<P.Keyword>인자</P.Keyword>{"..."})
+    </P.Indent>
+    <P.Elif><P.Keyword>옵션</P.Keyword>이 목록</P.Elif>
+    <P.Indent>
+      list_tasks
+    </P.Indent>
+    <P.Elif><P.Keyword>옵션</P.Keyword>이 삭제</P.Elif>
+    <P.Indent>
+      remove_task(<P.Keyword>인자</P.Keyword>{"..."})
+    </P.Indent>
+    <P.Else />
+    <P.Indent>
+      오류 <P.Throw />
+    </P.Indent>
+  </P.Indent>
+</P.Block>
+
+이것을 구현하는 과정에서 조건문과 예외 처리를 배울 것입니다.
+
+각 함수는 구체적인 동작을 처리합니다.
+예를 들어, 작업 추가 함수는 다음 수도코드와 같습니다.
+
+<P.Block>
+  <P.Keyword>add_tasks</P.Keyword> (<P.Keyword>작업들</P.Keyword>{"..."})
+
+  <P.Indent>
+    <P.Foreach><P.Keyword>작업들</P.Keyword>의 <P.Keyword>작업</P.Keyword></P.Foreach>
+    <P.Indent>
+      <P.Keyword>작업</P.Keyword>을 파일에 기록
+    </P.Indent>
+  </P.Indent>
+</P.Block>
+
+프로그램을 다시 실행했을 때 작업을 잃어버리지 않아야 하므로 파일에 기록합니다.
+그러면 목록 보기 함수는 파일의 내용을 보여주는 것으로 만들 수 있습니다.
+
+<P.Block>
+  <P.Keyword>list_tasks</P.Keyword> ()
+
+  <P.Indent>
+    <P.Keyword>작업들</P.Keyword> $\leftarrow$ 파일 내용
+
+    <P.Foreach><P.Keyword>작업들</P.Keyword>의 <P.Keyword>작업</P.Keyword></P.Foreach>
+    <P.Indent>
+      <P.Keyword>작업</P.Keyword> 프린트
+    </P.Indent>
+  </P.Indent>
+</P.Block>
+
+여기서 반복문과 파일 입출력을 배울 것입니다.
+
+작업 삭제 함수는 여기까지 익힌 내용을 통해 구현할 수 있으므로, 직접 해보는 것으로 남기고 넘어가겠습니다.
+그러면 본격적으로 셸 스크립트 프로그래밍을 시작해봅시다.
+
+## 셸 스크립트 준비하기
+
+먼저, 빈 내용의 셸 스크립트를 준비합시다.
+
+```shellsession
+$ touch todo
+```
+
+여기서 `touch` 커맨드는 빈 파일을 생성합니다.
+
+이게 전부입니다.
+아마 가장 간단한 셸 스크립트일 것입니다.
+물론 아무것도 하지 않겠지만요.
+
+그런데 셸에서 이 셸 스크립트를 수행하기가 불가능할 수도 있습니다.
+
+```shellsession
+$ ./todo
+bash: ./todo: Permission denied
+```
+
+왜냐면 실행할 권한이 없기 때문입니다.
+권한은 다음과 같이 `ls` 커맨드로 확인할 수 있습니다.
+이것은 파일 목록을 보여주고, `-l` 옵션은 더 자세한 메타데이터까지 포함합니다.
+
+```shellsession
+$ ls -l ./todo
+// [!code word:rw-:1]
+-rw-r--r--. 1 user user 0 Jun 23 00:00 ./todo
+```
+
+여기서 `rw-` 부분을 주목해봅시다.
+이것은 차례로 읽기, 쓰기, 실행 권한을 나타냅니다.
+즉 `rw-`는 읽기과 쓰기 권한이 있지만, 실행 권한은 없다는 뜻입니다.
+
+따라서 `chmod` 커맨드로 사용자에게 실행 권한을 부여합니다.
+
+```shellsession
+$ chmod u+x ./todo
+```
+
+여기서 `u`와 `x`는 각각 사용자와 실행 권한을 나타냅니다.
+아까와 같이 `ls`를 통해, 권한이 `rwx`로 바뀌었는지 확인해보세요.
+
+이제 셸 스크립트를 실행할 수 있습니다.
+
+```shellsession
+$ ./todo
+```
+
+물론 아직 아무것도 하지 않습니다.
+
+## 첫 프로그램: 변수 다루기
+
+실제로 무언가 하는 것을 만들어볼 차례입니다.
+
+우선 간단하게 인사하는 셸 스크립트부터 만들어봅시다.
+
+```bash
+NAME=foo
+
+echo "Hello, $NAME!"
+```
+
+변수는 등호 기호 `=`로 만듭니다.
+이 기호 양 옆에 공백이 없어야 한다는 점을 유의하세요.
+
+이렇게 만든 변수는 앞에 달러 기호 `$`를 붙여 사용합니다.
+이것은 파라미터 익스팬션<L>parameter expansion</L>이라고 부르는데, 사실 변수 값의 사용 그 이상의 역할이 있습니다.
+하지만 지금은 변수 값으로 대체한다는 정도로 이해하고, 자세한 내용은 앞으로의 내용을 통해 살펴봅시다.
+
+마지막 줄의 `echo` 커맨드는 문자열을 화면에 보여줍니다.
+따라서 실행 결과는 다음과 같습니다.
+
+```shellsession
+$ ./todo
+Hello, foo!
+```
+
+변수의 값이 나타난 것을 볼 수 있습니다.
+
+## 커맨드라인 인자 받기: 특별한 변수의 사용
+
+앞서 프로그램을 구상할 때, 다음과 같이 `todo` 커맨드 뒤에 값을 부가적으로 받기로 했습니다.
+
+```shellsession
+$ todo add foo bar
+```
+
+이것은 커맨드라인 인자<L>command line arguments</L>라고 부르는데, 셸 스크립트 뿐만 아니라 커맨드라인 인터페이스에서 일반적으로 사용되는 용어이자 개념입니다.
+그래서 여러 프로그래밍 언어에서는 이것을 읽는 방법을 제공하지만, 셸 스크립트의 경우는 특히 더 간단합니다.
+바로 `$1`과 같은 특별한 변수 덕분입니다.
+
+인자를 받아 인사하도록 다음과 같이 수정해봅시다.
+
+```bash
+NAME=foo # [!code --]
+NAME=$1 # [!code ++]
+
+echo "Hello, $NAME!"
+```
+
+그러면 다음과 같이 이름을 전달할 수 있고, 그 결과가 나타납니다.
+
+```shellsession
+$ ./todo foo
+Hello, foo!
+```
+
+그렇다면 두 번째 인자는 어떻게 받을까요?
+쉽게 예상할 수 있듯이, `$2`에 그 값이 들어있습니다.
+세 번째, 네 번째 등도 이와 같습니다.
+(직접 확인해보세요.)
+
+## 헤더: 해시뱅
+
+잠깐 셸 스크립트의 호환성 문제를 언급할 차례입니다.
+
+지금까지의 셸 스크립트는 사실 다른 셸에서도 동작합니다.
+실제로 다음과 같이, 본 셸<L>Bourne shell</L>이라고도 부르는 셸에서도 문제없이 동작합니다.
+
+```shellsession
+$ sh todo foo
+Hello, foo!
+```
+
+본 셸의 기능은 Bash 셸에 포함됩니다.
+Bash는 그 이름이 본 어게인 셸<L>Bourne again shell</L>이라는 뜻이며, 본 셸에서 여러 기능을 추가한 것이기 때문입니다.
+
+여기서는 실행 환경으로 Bash 셸을 가정하지만, 현실에서는 어떤 셸이 스크립트를 실행할지 모릅니다.
+그래서 실행할 인터프리터를 다음과 같이 첫 줄에 명시할 수 있습니다.
+
+```bash
+# [!code ++:1]
+#!/usr/bin/env bash
+NAME=$1
+
+echo "Hello, $NAME!"
+```
+
+이 줄은 해시와 뱅, 즉 `#!`로 시작하기에 해시뱅이라고도 부르고, 그 외에 다양한 이름이 있습니다.
+
+여기서 셸의 종류가 아니라 인터프리터라고 한 것은, 정말로 아무 인터프리터나 가능하기 때문입니다.
+예를 들어 다음과 같이 파이썬<L>Python</L> 인터프리터를 명시하면, 이 파일은 파이썬이 실행하게 됩니다.
+
+```python
+#!/usr/bin/env python
+print("Hello, I'm Python!")
+```
+
+셸 스크립트처럼 실행해보면, 파이썬 실행 결과가 나타납니다.
+
+```shellsession
+$ ./todo
+Hello, I'm Python!
+```
+
+한편, 다른 셸 스크립트를 읽다보면 다음과 같이 쓰는 경우도 볼 수 있습니다.
+
+```bash
+#!/bin/bash
+```
+
+이것은 Bash 셸이 `/bin/bash` 경로에 있다고 가정한 것입니다.
+그렇지 않은 환경에도 호환성을 보장하고 싶다면, 앞서 설명한대로 다음과 같이 작성합니다.
+
+```bash
+#!/usr/bin/env bash
+```
+
+여기서는 이 방법으로 진행합니다.
+
+## 옵션 처리하기: case 조건문
+
+이제 할 일 관리 프로그램의 옵션을 하나씩 처리해봅시다.
+
+첫 번째로, 작업을 추가하는 `add` 옵션을 구현해보겠습니다.
+그 동작은 다음과 같았습니다.
+
+```shellsession
+$ todo add foo
+Added task 'foo'.
+```
+
+기존의 코드를 지우고 다시 작성해서, 메시지를 출력하는 부분까지 한번 만들어봅시다.
+다음 코드는 인자가 `add`인 경우를 처리합니다.
+
+```bash
+#!/usr/bin/env bash
+COMMAND=$1
+
+case $COMMAND in
+  "add")
+    echo "Added task '$2'."
+    ;;
+esac
+```
+
+각 케이스는 두 개의 세미 콜론으로 마칩니다.
+이 문법을 이용해 오류 케이스를 다음과 같이 추가해봅시다.
+
+```bash
+case $COMMAND in
+  "add")
+    echo "Added task '$2'."
+    ;;
+  # [!code ++:3]
+  *)
+    echo "Error: unknown command '$COMMAND'."
+    ;;
+esac
+```
+
+이 케이스는 위에서 대응되지 않는 모든 경우를 나타냅니다.
+
+실행 결과는 다음과 같습니다.
+
+```shellsession
+$ ./todo add foo
+Added task 'foo'.
+$ ./todo bar
+Error: unknown command 'bar'.
+```
+
+여기서 케이스 조건문을 간단히 알아보았습니다.
+`esac`과 같이 단어를 뒤집어 끝을 나타내는 독특한 문법은, 본 셸을 만든 스티브 본<L>Steve Bourne</L>이 좋아했던 언어인 Algol 68에서 가져온 요소라고 합니다.
+
+## 작업 추가하기: 리다이렉션
+
+아직 작업이 추가됐다는 메시지만 보여줄 뿐, 실제로 동작하지는 않습니다.
+그러니 작업을 파일에 실제로 기록해봅시다.
+
+셸 스크립트에서 파일 입출력은 다음과 같이 아주 간단합니다.
+
+```bash
+  "add")
+    echo "$2" >> $HOME/.todo # [!code ++]
+    echo "Added task '$2'."
+    ;;
+```
+
+여기서 두 개의 부등호 기호 `>>`는 <L>redirection</L>이라고 부르고, 왼쪽의 출력 결과를 오른쪽 파일의 마지막 줄로 추가합니다.
+따라서 추가한 작업이 홈 디렉토리의 `.todo` 파일에 기록됩니다.
+
+이것은 다음과 같이 셸에서도 확인해볼 수 있습니다.
+
+```shellsession
+$ ./todo add foo
+$ cat $HOME/.todo
+foo
+```
+
+여기서 `cat` 커맨드는 파일의 내용을 보여줍니다.
+한 번 더 반복하면 마지막 줄에 또 추가됩니다.
+
+```shellsession
+$ ./todo add bar
+$ cat $HOME/.todo
+foo
+bar
+```
+
+그러면 하나의 부등호 기호 `>`는 무엇을 할까요?
+이것은 파일의 내용을 새로 씁니다.
+
+```shellsession
+$ echo baz > $HOME/.todo
+$ cat $HOME/.todo
+baz
+```
+
+기존에 있던 내용이 지워진다는 큰 차이점이 있으니 상황에 맞게 사용해야 합니다.
+
+## 리팩토링: 함수 다루기
+
+방금 만든 작업 추가 부분을 함수로 분리하겠습니다.
+그러면 앞서 만든 수도코드처럼, 케이스 조건문은 함수를 부르는 책임만 맡을 수 있게 됩니다.
+
+함수는 다음과 같이 만들 수 있습니다.
+
+```bash
+COMMAND=$1
+
+# [!code ++:4]
+add_task() {
+  echo "$1" >> $HOME/.todo
+  echo "Added task '$1'."
+}
+```
+
+함수 또한 파라미터를 `$1`와 같은 변수로 받습니다.
+
+이제 조건문에서는 함수 호출로 대신합니다.
+
+```bash
+  "add")
+    echo "$2" >> $HOME/.todo # [!code --]
+    echo "Added task '$2'." # [!code --]
+    add_task $2 # [!code ++]
+    ;;
+```
+
+그러면 이전과 똑같이 동작합니다.
+
+```shellsession
+$ ./todo add foo
+Added task 'foo'.
+```
+
+시험삼아 추가했던 작업들을 지우기 위해, `rm` 커맨드로 파일을 삭제합시다.
+
+```shellsession
+$ rm $HOME/.todo
+```
+
+이 커맨드로 파일을 지우면 복구할 수 없으니 주의하세요.
+
+## 디버깅: Bash 설정
+
+사실 이 프로그램에는 버그가 있습니다.
+다음과 같이 띄어쓰기를 잘 처리하지 못한다는 것입니다.
+
+```shellsession
+$ ./todo add "foo bar"
+Added task 'foo'.
+$ cat $HOME/.todo
+foo
+```
+
+이상하게 첫 단어인 `foo`만 기록됐습니다.
+
+무엇이 문제일까요?
+원인을 파악해보기 위해 다음과 같은 코드를 추가해봅시다.
+
+```bash
+  "add")
+    set -x # [!code ++]
+    add_task $2
+    set +x # [!code ++]
+    ;;
+```
+
+이 `set` 커맨드는 Bash의 동작을 바꾸는데, `-x` 옵션은 한 줄씩 실행할 때마다 그 결과를 프린트합니다.
+(약간 직관적이지 않을 수도 있지만, `-x`가 켜는 것이고, `+x`가 끄는 것입니다.)
+
+```shellsession
+$ ./todo add "foo bar"
+// [!code highlight:1]
++ add_task foo bar
++ echo foo
++ echo 'Added task '\''foo'\''.'
+Added task 'foo'.
++ set +x
+```
+
+문제점을 찾으셨나요?
+`add_task` 함수를 호출할 때, 문자열이 두 개의 인자로서 `foo`와 `bar`가 전달됐습니다.
+다음과 같이 따옴표를 써서 하나의 인자로 취급하도록 고치면 문제가 해결됩니다.
+
+```bash
+  "add")
+    set -x
+    add_task $2 # [!code --]
+    add_task "$2" # [!code ++]
+    set +x
+    ;;
+```
+
+정말로 잘 동작하는지 확인해보세요.
+이제 버깅이 끝났으니 `set` 명령을 지우고 계속해봅시다.
+
+```bash
+  "add")
+    set -x # [!code --]
+    add_task "$2"
+    set +x # [!code --]
+    ;;
+```
+
+이 외에도 간단히 `echo` 커맨드로 결과를 확인하는 방법도 있을 것입니다.
+상황에 따라 적절한 방법을 선택해보시기 바랍니다.
+
+## 예외 처리 1: if 조건문과 종료 코드
+
+지금까지 성공적인 경우를 처리했는데, 여기서 두 가지 예외를 처리해볼 것입니다.
+
+먼저, 작업 자체가 인자로 주어지지 않은 경우입니다.
+지금의 프로그램은 빈 문자열을 그대로 추가합니다.
+
+```shellsession
+$ ./todo add
+Added task ''.
+```
+
+이렇게 하는 대신, 인자가 주어지지 않았다고 사용자에게 알려주도록 고쳐보겠습니다.
+
+```bash
+  "add")
+    # [!code --:1]
+    add_task "$2"
+    # [!code ++:5]
+    if [ $# -eq 1 ]; then
+      echo "Error: no arguments."
+    else
+      add_task "$2"
+    fi
+    ;;
+```
+
+원래 `if`와 `then`는 다른 줄에 있어야 하기에, 한 줄에 쓰려면 세미콜론(`;`)을 이용합니다.
+여기서 `$#` 변수는 인자의 개수를 가집니다.
+실행해보면 다음과 같은 메시지를 보여줍니다.
+
+```shellsession
+$ ./todo add
+Error: no arguments.
+```
+
+위 조건문에서 쓰인 `-eq`는 두 값이 같은 숫자인지 비교하는 연산자입니다.
+다른 프로그래밍 언어에서 쓰이는 `==` 연산자는 셸에서 문자열로 비교하기 때문에 다른 의미라는 점을 참고하세요.
+
+조건문에서 쓰인 `[...]` 표현 또한 사실 하나의 커맨드입니다.
+이것은 조건을 검사하고 종료 코드를 리턴합니다.
+
+```shellsession
+$ [ 1 -eq 1 ]
+$ echo $?
+0
+```
+
+변수 `$?`는 마지막에 실행한 커맨드의 종료 코드이며, `0`은 성공이라는 뜻의 종료 코드입니다.
+다음과 같은 `0` 이외의 값은 전부 실패를 의미합니다.
+(이것이 C와 같은 언어에서 `0`을 리턴하는 이유입니다.)
+
+```shellsession
+$ [ 1 -eq 2 ]
+$ echo $?
+1
+```
+
+`if` 조건문은 종료 코드에 따라 케이스를 나누는 것입니다.
+즉 조건에는 `[...]` 커맨드 뿐만 아니라, 종료 코드를 리턴하는 모든 표현이 올 수 있습니다.
+
+```shellsession
+$ if true; then echo "It's true!"; fi
+It's true!
+```
+
+`true` 커맨드는 단순히 종료 코드 `0`을 리턴합니다.
+`0`을 거짓 값으로 취급하는 다른 프로그래밍 언어와는 반대라는 점을 유의하세요.
+
+그렇다면, 우리의 프로그램 또한 적절한 종료 코드를 리턴하는 것이 좋을 것입니다.
+
+```bash
+  "add")
+    if [ $# -eq 1 ]; then
+      echo "Error: no arguments."
+    # [!code --:2]
+    else
+      add_task "$2"
+    # [!code ++:1]
+      exit 1
+    fi
+
+    # [!code ++:1]
+    add_test "$2"
+    ;;
+```
+
+여기서 `exit` 커맨드는 종료 코드를 리턴하고 프로그램을 끝냅니다.
+
+이제 우리의 프로그램도 조건문에 활용될 수 있게 됐습니다.
+
+```shellsession
+$ if ! ./todo add; then echo "My to-do app failed."; fi
+Error: no arguments.
+My to-do app failed.
+```
+
+여기서 느낌표 기호 `!`는 결과를 부정하는 논리 연산자입니다.
+
+여기까지 정리하자면 크게 두 가지를 배웠습니다.
+하나는 두 값을 숫자로서 비교하는 조건문입니다.
+또 하나는 종료 코드는 셸에서 프로그램이 갖춰야 할 중요한 인터페이스라는 사실입니다.
+
+## 예외 처리 2: 문자열 비교
+
+두 번째 예외 처리로, 빈 문자열을 추가하는 경우에도 오류 메시지를 보여주도록 고쳐볼 것입니다.
+지금의 프로그램은 다음과 같이 빈 작업을 허용합니다.
+
+```shellsession
+$ ./todo add ""
+Added task ''.
+```
+
+이렇게 하는 대신, 다음과 같이 오류 메시지를 보여줍시다.
+
+```bash
+add_task() {
+  # [!code ++:5]
+  if [ "$1" = "" ]; then
+    echo "Error: no task name."
+    exit 1
+  fi
+ 
+  echo "$1" >> $HOME/.todo
+  echo "Added task '$1'."
+}
+```
+
+실행 결과는 다음과 같습니다.
+
+```shellsession
+$ ./todo add ""
+Error: no task name.
+```
+
+사실 조건문에서 쓰인 비교 연산자는 등호를 두 개 쓴 것과 그 의미가 똑같습니다.
+
+```bash
+  # [!code --:1]
+  if [ "$1" = "" ]; then
+  # [!code ++:1]
+  if [ "$1" == "" ]; then
+    echo "Error: no task name."
+    exit 1
+  fi
+```
+
+작은 차이점이 있다면, `==` 연산자는 Bash 셸에서만 동작하고, 본 셸에서는 동작하지 않는다는 것입니다.
+한번 다음과 같이 실행해보세요.
+
+```shellsession
+$ sh todo add ""
+todo: 5: [: unexpected operator
+Added task ''.
+```
+
+문자열이 비어있는지 검사해야 하는 특별한 경우, `-z` 연산자도 쓸 수 있습니다.
+
+```bash
+  # [!code --:1]
+  if [ "$1" == "" ]; then
+  # [!code ++:1]
+  if [ -z "$1" ]; then
+    echo "Error: no task name."
+    exit 1
+  fi
+```
+
+어느 것이든 동작은 똑같습니다.
+여기서는 마지막 경우를 이용하겠습니다.
+
+## 여러 작업 추가하기: 반복문
+
+지금은 작업을 하나씩 추가할 수 있지만, 한꺼번에 여러 개를 추가할 수 있도록 완성해봅시다.
+즉 다음과 같은 동작이 목표입니다.
+
+```shellsession
+$ todo add foo bar baz
+Added task 'foo'.
+Added task 'bar'.
+Added task 'baz'.
+```
+
+우선 `shift` 커맨드를 다음과 같이 추가합니다.
+
+```bash
+COMMAND=$1
+shift # [!code ++]
+```
+
+이것은 두 번째 인자부터 하나씩 앞당기도록 만듭니다.
+즉 이제 두 번째 인자가 `$1` 변수에 있는 것입니다.
+이렇게 하는 이유는, 셸 스크립트가 마치 두 번째 인자부터 받았던 것처럼 생각할 수 있기 때문입니다.
+
+앞으로의 인자에는 추가할 작업만 존재합니다.
+따라서 예외 처리를 다음과 같이 고칩니다.
+
+```bash
+    if [ $# -eq 1 ]; then # [!code --]
+    if [ $# -eq 0 ]; then # [!code ++]
+      echo "Error: no arguments."
+      exit 1
+    fi
+```
+
+그리고 반복문으로 여러개의 작업을 추가합니다.
+
+```bash
+    # [!code --:1]
+    add_task "$2"
+    # [!code ++:3]
+    for TASK in "$@"; do
+      add_task "$TASK"
+    done
+```
+
+여기서 변수 `$@`는 모든 인자를 가집니다.
+
+실제로 실행해보면 목표한 것과 같습니다.
+
+```shellsession
+$ ./todo add foo bar baz
+Added task 'foo'.
+Added task 'bar'.
+Added task 'baz'.
+```
+
+동작을 확인했으니, 함수로 분리해봅시다.
+`add_task` 함수 아래에 새 함수를 만들겠습니다.
+
+```bash
+add_tasks() {
+  for TASK in "$@"; do
+    add_task "$TASK"
+  done
+}
+```
+
+그리고 `case` 조건문에서는 함수 호출로 대신합니다.
+
+```bash
+    # [!code --:3]
+    for TASK in "$@"; do
+      add_task "$TASK"
+    done
+    # [!code ++:1]
+    add_tasks "$@"
+```
+
+이로서 작업 추가 함수의 구현을 끝났습니다.
+
+잠시 문법을 짚고 넘어가자면, `for` 반복문이 반복하는 대상은 문자열의 나열입니다.
+다음 예시에서 `in` 뒤에 오는 것을 주목해보세요.
+
+```shellsession
+// [!code word:foo bar:1]
+$ for ITEM in foo bar; do echo $ITEM; done
+foo
+bar
+```
+
+즉 우리의 프로그램에서는, `"$@"`의 값이 인자의 나열이었기 때문에 인자마다 반복했던 것입니다.
+
+## 목록 프린트: 파이프와 반복문
+
+이제 작업 목록을 보여주는 옵션을 처리할 차례입니다.
+즉 다음과 같은 동작이 목표입니다.
+
+```shellsession
+$ todo list
+1: foo
+2: bar
+3: baz
+```
+
+목록을 보여주는 함수를 가짜로 만들어두겠습니다.
+
+```bash
+list_tasks() {
+  :
+}
+```
+
+여기서 콜론 기호 `:`는 아무것도 하지 않는다는 뜻입니다.
+(파이썬의 `pass` 키워드와 비슷한 역할입니다.)
+
+`case` 조건문에서 `list` 옵션을 처리합시다.
+
+```bash
+  # [!code ++:3]
+  "list")
+    list_tasks
+    ;;
+  *)
+    echo "Error: unknown command '$COMMAND'."
+    ;;
+```
+
+이어서 방금 가짜로 만들어둔 함수를 구현해봅시다.
+
+```bash
+list_tasks() {
+  # [!code --:1]
+  :
+  # [!code ++:3]
+  cat $HOME/.todo | while read TASK; do
+    echo $TASK
+  done
+}
+```
+
+여기서 수직선 기호 `|`는 파이프<L>pipe</L>라고 부르며, 왼쪽 출력 결과를 오른쪽의 입력으로 전달합니다.
+오른쪽의 `read` 커맨드는 입력을 한 줄 읽어서 변수 `TASK`의 값으로 둡니다.
+
+여기까지는 그냥 파일 내용을 출력하는 것과 다를바 없습니다.
+앞에 번호를 붙이도록 다음과 같이 완성합니다.
+
+```bash
+list_tasks() {
+  # [!code ++:2]
+  local i=0
+
+  cat $HOME/.todo | while read TASK; do
+    # [!code ++:1]
+    let i+=1
+    # [!code --:1]
+    echo $TASK
+    # [!code ++:1]
+    echo "$i: $TASK"
+  done
+}
+```
+
+셸에서 변수는 기본적으로 전역 변수처럼 동작하는데, `local` 키워드는 이 함수에서만 변수가 보이도록 만듭니다.
+그리고 `let` 커맨드는 연산을 숫자에 대한 것으로 취급하게끔 만듭니다.
+셸에서 단순히 `i+=1`와 같은 표현은 `1`을 문자열로서 더할 뿐입니다. (직접 확인해보세요.)
+
+같은 표현으로 `let` 대신 `(( ))`을 사용할 수도 있습니다.
+이 구문에서는 C언어와 같은 프로그래밍 언어에서 사용되는 연산자를 지원합니다.
+
+```bash
+    # [!code --:1]
+    let i+=1
+    # [!code ++:1]
+    (( i++ ))
+```
+
+실행 결과를 확인해보면, 목표한대로 행마다 숫자가 나타나게 됩니다. (확인해보세요.)
+
+## 중간 정리
+
+여기까지 셀 스크립트에 필요한 문법을 대부분 익혔습니다.
+배운것을 잠깐 정리해보자면 다음과 같습니다.
+
+- `if`와 `case` 조건문, 그리고 `for`와 `while` 반복문
+- 숫자 비교 `-eq`, 그리고 문자열 비교 `==`, `-z`
+- 리다이렉션 `>`, `>>` 및 파이프 `|`
+
+더 많은 종류의 비교 연산자가 궁금하다면, [치트 시트][cheatsheet]와 같이 정리된 자료를 찾아보시길 권해드립니다.
+
+마지막으로 코드를 정리해보겠습니다.
+공통적으로 쓰이는 파일 경로를 바깥에 변수로 만들어봅시다.
+
+```bash
+COMMAND=$1
+shift
+
+# [!code ++:1]
+TODO_PATH=$HOME/.todo
+```
+
+그리고 다음과 같이 고칩니다.
+
+```bash
+add_task() {
+  if [ -z "$1" ]; then
+    echo "Error: no task name."
+    exit 1
+  fi
+
+  # [!code --:1]
+  echo "$1" >> $HOME/.todo
+  # [!code ++:1]
+  echo "$1" >> $TODO_PATH
+  echo "Added task '$1'."
+}
+```
+
+나머지 부분도 위와 같이 고쳐보시기 바랍니다.
+
+여태까지 배운 것을 응용해서 작업 삭제 옵션도 마저 구현해보세요.
+이후에는 참고하면 도움이 될 문법적 요소를 살펴봅니다.
+
+[cheatsheet]: https://devhints.io/bash#conditionals
+
+## 문법 1: 쿼팅과 워드 스플리팅
+
+여태까지 별다른 설명 없이 사용해온 따옴표에 어떤 역할이 있었는지 잠시 짚고 넘어가보겠습니다.
+대표적인 역할로는, 다음과 같이 공백으로 구분된 여러 단어를 하나의 값으로 취급하게끔 만듭니다.
+
+```shellsession
+$ ./todo add "foo bar"
+Added task 'foo bar'.
+```
+
+이런 식으로 따옴표로 감싸는 것을 쿼팅<L>quoting</L>이라고 부릅니다.
+쿼팅은 특수 문자들이 다른 식으로 해석되지 않도록 방지하기도 합니다.
+특수 문자 `*`를 예로 들어봅시다.
+
+```shellsession
+$ echo *
+todo
+```
+
+특수 문자가 프린트되는 대신, 현재 디렉토리의 모든 파일이 나열될 것입니다.
+왜냐면 셸에는 글로빙<L>globbing</L>이라고 부르는, 특수 문자를 파일명으로 대체하는 기능이 내장되어 있기 때문입니다.
+따라서 문자 그대로 프린트하기 위해서 쿼팅이 필요하기도 합니다.
+
+```shellsession
+$ echo "*"
+*
+```
+
+그런데 달러와 같은 특수 문자는 어떨까요?
+이 경우에는 문자 그대로 해석하지 않기 때문에, 다음과 같이 변수 값이 출력되었던 것입니다.
+
+```shellsession
+$ FOO="bar baz"
+$ echo "$FOO"
+bar baz
+```
+
+만약 모든 특수 문자를 문자 그대로 취급하고 싶다면, 작은 따옴표로 대신합니다.
+
+```shellsession
+$ echo '$FOO'
+$FOO
+```
+
+달러 기호로 변수 값을 대체하는 것은, 앞서 언급했듯이 파라미터 익스팬션이라고도 부릅니다.
+그리고 그 결과는 공백 문자로 나뉘어 여러 개의 값으로 취급되는데, 이것을 워드 스플리팅<L>word splitting</L>이라고 부릅니다.
+예를 들어, 다음 반복문을 봅시다.
+
+```shellsession
+$ for ITEM in $FOO; do echo "$ITEM"; done
+bar
+baz
+```
+
+비록 `FOO` 변수의 값은 하나의 문자열이었지만, 반복문에서 여러 개로 나뉘었습니다.
+왜냐면 `$FOO`라는 표현이 공백으로 문자열을 나눴기 때문입니다.
+쿼팅은 이런 워드 스플리팅을 방지합니다.
+
+```shellsession
+$ for ITEM in "$FOO"; do echo "$ITEM"; done
+bar baz
+```
+
+따라서 상황에 따라 적절한 쿼팅이 필요합니다.
+
+그렇다면 우리의 셸 스크립트에서 한 가지 의문이 들 수도 있습니다.
+다음 반복문은 왜 `$@` 변수의 값을 하나로 취급하지 않고, 각 문자열마다 반복을 했던 것일까요?
+
+```bash
+add_tasks() {
+  for TASK in "$@"; do # [!code highlight]
+    add_task "$TASK"
+  done
+}
+```
+
+이 `$@` 변수만큼은 특이하게도, 쿼팅 시 각 인자로 나뉘게 됩니다.
+다음과 같이 실제 동작을 확인해보기 위해 디버깅을 해봅시다.
+
+```bash
+  "add")
+    if [ $# -eq 0 ]; then
+      echo "Error: no arguments."
+      exit 1
+    fi
+
+    set -x # [!code ++]
+    add_tasks "$@"
+    set +x # [!code ++]
+    ;;
+```
+
+다음과 같이 작업 추가를 실행해보면 실제 동작이 나타납니다.
+여기서 함수가 어떤식으로 호출되는지 주목해보세요.
+
+```shellsession
+$ ./todo add foo "bar baz"
+// [!code highlight:1]
++ add_tasks foo 'bar baz'
++ for TASK in "$@"
+// [!code highlight:1]
++ add_task foo
++ '[' -z foo ']'
++ echo foo
++ echo 'Added task '\''foo'\''.'
+Added task 'foo'.
++ for TASK in "$@"
+// [!code highlight:1]
++ add_task 'bar baz'
++ '[' -z 'bar baz' ']'
++ echo 'bar baz'
++ echo 'Added task '\''bar baz'\''.'
+Added task 'bar baz'.
++ set +x
+```
+
+처음에 `add_tasks` 함수가 호출될 때를 봅시다.
+이 부분은 다음 코드를 실행한 것입니다.
+
+```bash
+    add_tasks "$@"
+```
+
+그리고 실제 동작은 다음과 같았던 것입니다.
+
+```bash
+    add_tasks foo 'bar baz'
+```
+
+반복문에서 쓰인 `"$@"` 또한 쿼팅 때문에 `add_task` 함수가 인자마다 호출됐던 것입니다.
+(쿼팅이 없다면 어떤지 직접 확인해보세요.)
+
+이제 디버깅 코드를 정리합니다.
+
+```bash
+    set -x # [!code --]
+    add_tasks "$@"
+    set +x # [!code --]
+```
+
+내용을 정리하면 다음과 같습니다.
+
+- 쿼팅은 문자열을 따옴표로 감싼 것이며 하나의 값이 된다.
+- 작은따옴표에서는 모든 특수 문자가 문자 그대로 해석되는 반면, 큰따옴표에서 달러 기호는 예외가 된다.
+- 변수의 쿼팅은 워드 스플리팅을 막으며, `$@`와 같은 변수는 각 인자로 나눈다.
+
+## 문법 2: Bash의 확장된 테스트 커맨드
+
+앞서 조건문에 사용한 `[...]` 커맨드는 사실 `test` 커맨드와 같습니다.
+이것은 본 셸에 내장된 기능이며 테스트 커맨드라고도 부릅니다.
+
+```shellsession
+$ if [ 1 -eq 1 ]; then echo "It's true!"; fi  
+It's true!
+$ if test 1 -eq 1; then echo "It's true!"; fi  
+It's true!
+````
+
+그런데 Bash 셸에는 이것을 확장한 `[[...]]` 문법이 있습니다.
+확장된 테스트 커맨드<L>extended test command</L>라고도 부르는데, 기본적으로 기존과 유사해서 대부분의 경우 서로 바꿔서 쓸 수 있습니다.
+대표적인 차이점이 있다면, 이 확장된 커맨드는 논리 연산자 `&&`와 `||`를 지원한다는 것입니다.
+
+```shellsession
+$ [[ 1 -eq 1 && 0 -ne 42 ]] && echo "It's true!"
+It's true!
+$ [ 1 -eq 1 && 0 -ne 42 ] && echo "It's true!"
+bash: [: missing `]'
+```
+
+또 다른 차이점으로는, `[[...]]`에서는 워드 스플리팅이 일어나지 않는다는 것입니다.
+
+```shellsession
+$ FOO="bar baz"
+$ [[ $FOO == "bar baz" ]] && echo "It's true!"
+It's true!
+$ [ $FOO == "bar baz" ] && echo "It's true!"
+bash: [: too many arguments
+```
+
+오류가 나타나는 원인은 사실상 다음을 실행하는 것과 같기 때문입니다.
+
+```shellsession
+$ [ bar baz == "bar baz" ] && echo "It's true"
+```
+
+이 둘은 문법적인 차이가 다소 있지만 거의 유사하며, 다른 셸 스크립트에서 모두 사용됩니다.
+
+## 경로 없이 실행하기: PATH 변수
+
+지금까지 만든 것과 맨 처음에 계획했던 바에 차이점이 있다면, 프로그램을 `todo`가 아닌 `./todo`로 실행한다는 것입니다.
+경로 표현 없이 사용하면 다음과 같은 오류 메시지가 나타날 수도 있습니다.
+
+```shellsession
+$ todo list
+bash: todo: command not found
+```
+
+그런데 경로 표현 없이 쓸 수 있었던 `ls` 또한 하나의 프로그램입니다.
+그리고 그 경로는 다음과 같이 알아낼 수 있습니다.
+
+```shellsession
+$ which ls
+/usr/bin/ls
+```
+
+이 경로 표현을 사용해도 똑같이 프로그램을 실행합니다.
+
+`ls`를 그대로 사용할 수 있는 것은, 그 프로그램의 위치가 `PATH` 변수에 있기 때문입니다.
+다음과 같이 값을 확인해보면, `/usr/bin` 디렉토리가 포함되어 있을 것입니다.
+
+```shellsession
+$ echo $PATH
+```
+
+이 변수에는 디렉토리가 콜론 기호 `:`로 구분되어 나열되어 있습니다.
+한눈에 보기가 어렵다면, `tr` 커맨드를 이용해 콜론 기호를 줄바꿈으로 대체해봅시다.
+
+```shellsession
+$ echo $PATH | tr ':' '\n' | grep $(dirname $(which ls))
+/usr/bin
+```
+
+여기서 `grep` 커맨드는 문자열을 찾아 그 줄을 프린트합니다.
+즉, `ls` 프로그램이 위치한 디렉토리를 `PATH` 변수가 포함하고 있는 것입니다.
+
+따라서 `todo` 프로그램이 위치한 디렉토리를 `PATH` 변수에 추가한다면, `todo` 또한 이름 그대로 실행할 수 있게 됩니다.
+
+```shellsession
+$ PATH="$PATH:$(pwd)"
+$ todo add foo
+Added task 'foo'.
+```
+
+여기서 `pwd` 커맨드는 현재 경로를 프린트하고, `$(...)` 표현은 실행 결과를 문자열 값으로 만듭니다.
+따라서 현재 경로가 `PATH` 변수에 추가됩니다.
+
+이 방법은 현재 디렉토리의 모든 파일이 대상이 된다는 단점이 있기 때문에, 셸 스크립트를 위한 적절한 디렉토리를 따로 마련해두는 편이 좋을 것입니다.
+
+또한 매번 셸에서 `PATH` 변수를 수정하는 일은 번거울 수 있습니다.
+권장되는 방법은 `$HOME/.bashrc`와 같은 파일로 미리 실행할 셸 스크립트를 작성하는 것입니다.
+예를 들어, 셸 스크립트를 `$HOME/bin` 디렉토리에 위치시켰다고 해봅시다.
+
+```shellsession
+echo 'PATH="$PATH:$HOME/bin"' >> $HOME/.bashrc
+```
+
+그러면 셸이 실행될 때마다 위 셸 스크립트가 자동적으로 먼저 실행됩니다.
+이 수정 사항은 셸을 다시 실행할 때부터 적용됩니다.
+
+
+
+# 셸
+
+셸 스크립트는 셸에서 동작하는 언어이자 셸의 명령어를 수행하기 때문에, 셸에 대해 알아보면 셸 스크립트를 더 잘 이해할 수 있습니다.
+
+셸이란 구체적으로 말하자면 다른 프로그램을 실행하는 프로그램입니다.
+즉 `ls` 같은 프로그램의 실행이 셸의 기본적인 역할입니다.
+
+이 외에도 셸 스크립트 작성에 필수적인 기능을 살펴보겠습니다.
+
+## 글로빙
+
+셸이 가진 문법에는 파일과 디렉토리에 특화된 부분이 많습니다.
+그 중에 글로빙이라고 하는 기능은, 마치 정규 표현식처럼, 특수 문자를 이용해 여러 경로를 한번에 표현할 수 있습니다.
+와일드카드<L>wildcard</L>라고도 불리는 이런 문자는 다음과 같이 사용할 수 있습니다.
+
+먼저, 다음과 같은 파일을 준비해봅시다.
+
+```shellsession
+$ touch foo bar baz
+```
+
+와일드카드 문자인 `*`은 아무 길이의 아무 문자를 의미합니다.
+
+```shellsession
+$ ls b*
+bar  baz
+```
+
+여기에는 길이가 0인 문자, 즉 빈 문자 또한 포함한다는 점을 참고하세요.
+
+```shellsession
+$ ls bar*
+bar
+```
+
+또다른 와일드카드 문자인 `?`는 하나의 아무 문자를 의미합니다.
+
+```shellsession
+$ ls ba?
+bar  baz
+```
+
+셸은 이 와일드카드를 만나면 이것을 먼저 전개합니다.
+즉 방금의 경우는, 와일드카드가 보이지 않는 곳에서 다음과 같이 대체된 것입니다.
+
+```shellsession
+$ ls bar baz
+bar  baz
+```
+
+실제로 그런지는 `set -x` 커맨드를 이용하면 확인해볼 수 있습니다.
+(한번 해보세요.)
+
+## 파이프
+
+프로그램을 다른 프로그램에 연결하기 위한 기능으로, 유닉스의 탄생에 기여했던 켄 톰슨<L>Ken Thompson</L>은 어느날 파이프라는 개념을 떠올리게 되었습니다.
+
+파이프는 기본적으로 문자열을 모든 프로그램의 인터페이스로 취급합니다.
+그리고 앞서 본 것처럼, 다음과 같이 이전의 출력을 다음의 입력으로 전달합니다.
+
+```shellsession
+$ ls ba? | wc -w
+2
+```
+
+위 예시는 찾고자 하는 파일이 몇 개인지 알아내는 한 방법입니다.
+여기서 `wc` 커맨드는 단어의 개수를 세기 때문입니다.
+
+이와 같이 유닉스에서는 하나의 프로그램이 한 가지만 잘 하도록 만들고, 이를 파이프로 연결해 문제를 해결하는 방법이 부각되었습니다.
+이는 오늘날 유닉스 철학<L>Unix philosophy</L>라고도 불리는, 다음과 같은 문구에 잘 드러납니다.
+
+1. 프로그램이 하나의 일을 잘 하도록 만들어라.
+1. 모든 프로그램의 출력이 (아직은 알 수 없는) 다른 프로그램의 입력이 될 것이라고 생각해라.
+
+## 입출력 리다이렉션
+
+파이프가 없다면, 프로그램의 출력은 화면에 나타났을 것입니다.
+그런데 그 출력이 어디로 갔던 것일까요?
+유닉스에서는 표준 출력<L>standard output</L>, 또는 `stdout`으로 향했다고 부릅니다.
+
+```shellsession
+$ ls ba?
+bar  baz
+```
+
+즉 위와 같은 결과는 표준 출력에 쓰기 작업이 이루어졌을 뿐이고, 그것이 적절히 처리되어 쉘에 나타난 것입니다.
+표준 출력 대신에 파일에 쓰기 작업을 하고 싶다면, 리다이렉션이라고 부르는 `>` 기호를 이용합니다.
+
+```shellsession
+$ ls ba? > output
+```
+
+그러면 `output` 파일에 결과가 기록됩니다.
+
+사실 표준 출력 또한 파일에 불과합니다. 유닉스에서 모든 장치는 파일로 취급되기 때문입니다.
+그래서 다음과 같은 방법으로도 표준 출력에 쓸 수 있습니다.
+
+```shellsession
+$ ls ba? > /dev/stdout
+bar  baz
+```
+
+가끔 프로그램의 출력을 보이지 않게 만들고 싶을 때가 있는데, 그런 경우에는 다음과 같은 표현이 흔하게 쓰입니다.
+
+```shellsession
+$ ls ba? > /dev/null
+```
+
+입력 또한 `<` 기호로 리다이렉션이 존재합니다.
+예를 들어, 방금 만들었던 `output` 파일의 내용을 어떤 프로그램의 입력으로 만들 수 있습니다.
+
+```shellsession
+$ grep ar < words
+bar
+```
+
+종합해서 다음과 같이 동시에 쓸 수도 있습니다.
+
+```shellsession
+$ grep ar < words > found
+```
+
+`found` 파일의 내용을 확인해보세요.
+
+## 파일 디스크립터 리다이렉션
+
+파일 디스크립터<L>file descriptor</L>란, 운영체제가 열어둔 파일을 관리하기 위해 각 파일에 부여해놓은 어떤 값입니다.
+
+일반적으로 그 값이 구체적으로 무엇인지 알 필요는 없습니다.
+그러나 표준 입출력에 할당된 값은 항상 같으며, 리다이렉션에서 빈번하게 사용됩니다.
+그 값은 다음과 같이 알아낼 수 있습니다.
+
+```shellsession
+$ ls -l /dev/std{in,out}
+lrwxrwxrwx. 1 user user 15 Jun 23 00:00 /dev/stdin -> /proc/self/fd/0
+lrwxrwxrwx. 1 user user 15 Jun 23 00:00 /dev/stdout -> /proc/self/fd/1
+```
+
+여기서 쓰인 `{in,out}`은 앞서 봤던 와일드카드처럼 여러 문자열로 전개됩니다.
+
+이 결과가 알려주는 것은, 각 장치 파일이 다른 파일을 가리키는 심볼릭 링크<L>symbolic link</L>라는 사실도 있지만, 표준 입력에는 `0`이, 표준 출력에는 `1`이 부여됐다는 것입니다.
+
+사실 리다이렉션은 파일 디스크립터를 이용할 수도 있습니다.
+
+```shellsession
+$ ls ba? >&1
+bar  baz
+```
+
+이처럼 `>&`는 뒤에 파일 디스크립터를 이용합니다.
+`1`은 `stdout`과 같기 때문에, 여기서 `>&1`는 있으나 마나한 부분이기도 합니다.
+
+그런데 셸에는 표준 출력 뿐만 아니라, 표준 오류 `stderr` 또한 존재합니다.
+
+```shellsession
+$ ls -l /dev/stderr
+lrwxrwxrwx. 1 user user 15 Jun 23 00:00 /dev/stderr -> /proc/self/fd/2
+```
+
+위와 같이 `2`가 부여된 이 표준 오류는, 오류 메시지를 정상적인 동작에서 비롯된 메시지와 구분하기 위해 만들어졌습니다.
+
+```shellsession
+$ echo "Something wrong!" >&2
+Something wrong!
+```
+
+표준 오류 또한 표준 출력과 똑같이 셸에서 보입니다.
+하지만 다음과 같은 예시에서 그 차이점이 드러납니다.
+
+```shellsession
+$ echo "Something wrong!" 2>log 1>&2
+$ cat log
+Something wrong!
+```
+
+위 예시 처럼 `>` 앞에도 파일 디스크립터가 올 수 있습니다.
+왼쪽부터 오른쪽으로 실행되기 때문에 순서가 중요하며, 먼저 `2>log`는 표준 오류를 `log` 파일로, 그 다음 `1>&2`는 표준 출력을 표준 오류로 보내는 리다이렉션입니다.
+따라서 메시지는 표준 출력에서 표준 오류로, 그리고 최종적으로 파일로 향하게 됩니다.
+
+## 예외 처리 개선해보기: 표준 오류 리다이렉션
+
+잘 만들어진 셸 스크립트는 오류 메시지를 표준 오류에 쓰는 것이 보통입니다.
+따라서 위에서 만든 셸 스크립트 또한 그렇게 개선해봅시다.
+
+먼저, 에러 메시지를 출력하고 프로그램을 종료하는 함수를 준비합시다.
+
+```bash
+error() {
+  local MESSAGE=$1
+
+  echo "Error: $MESSAGE" >&2
+  exit 1
+}
+```
+
+그리고 기존에 오류 메시지를 표준 출력으로 보냈던 부분을 찾아서 다음과 같이 고칩니다.
+
+```bash
+add_task() {
+  if [ -z "$1" ]; then
+    # [!code --:2]
+    echo "Error: no task name."
+    exit 1
+    # [!code ++:1]
+    error "no task name."
+  fi
+
+  echo "$1" >> $TODO_PATH
+  echo "Added task '$1'."
+}
+```
+
+다른 부분도 직접 수정해보시기 바랍니다.
+
+이제 오류 메시지를 다음과 같이 수집할 수 있습니다.
+
+```shellsession
+$ todo add "" 2> log
+```
+
+`log` 파일의 내용을 확인해보세요.
+
+## 서브셸
+
+앞서 셸은 다른 프로그램을 실행하는 프로그램이라고 소개했습니다.
+
+좀더 풀어서 설명하자면, 그것을 자식 프로세스로 만들어서 실행하는 것입니다.
+즉 셸 스크립트든 빌드된 바이너리 파일이든, 셸은 무엇인지 신경쓰지 않고 그저 새 자식 프로세스를 만들어서 실행할 뿐입니다.
+
+이 사실은 다음과 같은 예시가 보여줍니다.
+
+```shellsession
+$ echo $$
+123
+$ sleep 1 & ps -o pid,ppid,comm | grep sleep
+[1] 456
+    456     123 sleep
+```
+
+여기서 `$$` 변수는 셸의 프로세스 아이디를 보여줍니다.
+1초 동안 아무 것도 하지 않는 `sleep 1` 커맨드를 백그라운드에서 실행하도록 `&`을 붙이고, 프로세스 목록을 보여주는 `ps` 프로그램을 이어서 실행합니다.
+`pid`와 `ppid`는 각각 `sleep`과 부모 프로세스의 아이디를 보여주는 옵션이며, 실제로 `sleep`이 자식 프로세스라는 것을 보여줍니다.
+
+이처럼 셸은 프로세스 생성에 아주 간단한 문법을 지원합니다.
+특히, 다음과 같이 셸에서 바로 자식 프로세스를 만들어 실행할 수 있는데, 이를 서브셸<L>subshell</L>이라고 부릅니다.
+
+```shellsession
+$ FOO=temp
+$ (mkdir $FOO; cd $FOO; touch foo bar baz)
+```
+
+특징으로는 기존의 변수를 이용할 수 있다는 것과, 디렉토리를 변경하는 `cd` 커맨드가 현재 셸에 영향을 미치지 않는다는 것입니다.
+
+또한 다음과 같이, 서브셸의 변수는 현재 셸에서 보이지 않습니다.
+
+```shellsession
+$ (FOO=something_else)
+$ echo $FOO
+temp
+```
+
+만약 서브셸의 출력 결과를 이용하고 싶다면, 다음과 같이 달러 기호를 앞에 붙입니다.
+다음은 방금 만든 파일들의 이름을 정렬한 뒤 가장 먼저 오는 것을 구합니다.
+
+```shellsession
+$ FIRST=$(ls $FOO | sort | head -1)
+```
+
+변수 `FIRST`의 값은 무엇일까요? 한번 실행해보세요.
+
+## 유닉스와 셸
+
+셸은 유닉스<L>Unix</L>라고 부르는 운영 체제에서 등장했습니다.
+이것의 자세한 역사를 소개하려는 것은 아니지만, 유닉스의 구성 요소를 보면 셸의 역할을 이해할 수 있습니다.
+
+여기에는 운영체제의 핵심 기능으로서 각종 리소스를 컨트롤하는 커널<L>kernel</L> 레이어가 있고, 이를 감싸서 운영 체제와 사용자 간의 인터페이스를 맡는 셸 레이어가 있습니다.
+마지막으로 그 위에 유틸리티 레이어로서, 유용한 프로그램이 동작하게 됩니다.
+
+<Figure src={fig1} alt="Unix introduction video screenshot">
+  <FigureCaption slot="caption">그림 1. 유닉스 시스템의 세 레이어 다이어그램. 셸은 커널과 유틸리티 사이에 속하는 레이어입니다. -- 출처: [AT&T (YouTube)][atnt]</FigureCaption>
+</Figure>
+
+[atnt]: https://www.youtube.com/watch?v=tc4ROCJYbm0
+
+셸은 운영체제에 통합된 요소가 아니라 일반적인 프로그램이기 때문에, 얼마든지 다른 종류의 셸을 만들어 대체할 수 있습니다.
+그래서 이후에 Bash 셸을 비롯해, Fish 셸이나 Zsh 셸 등이 등장하게 됩니다. 
+
+이런 셸들은 좀더 사용자 친화적으로 개선하고자 나온 것이며, 이 중에 Zsh 셸은 맥의 기본 셸로 선택되기도 했습니다.
+궁금하다면 다른 셸도 한번 확인해보시기 바랍니다.
+
+
+
+# 마치며
+
+본문의 셸 스크립트는 [지스트][gist]<L>Gist</L>에서 확인할 수 있습다다.
+
+[gist]: https://gist.github.com/wcho21/e0637a8f53002072b65b4cd78be8f79d
+
+## 레퍼런스
+
+- *Unix: UNIX: A History and a Memoir* (Brian Kernighan, 2019), 또는 *유닉스의 탄생* (한빛미디어, 2020)
+- [*The Bell System Technical Journal*][bstj] (1978): 유닉스 철학
+- [*Bash Guide for Beginners*][bgb] (TLDP)
+- [*Advanced Bash-Scripting Guide*][absg] (TLDP)
+
+[bstj]: https://www.tuhs.org/Archive/Documentation/Papers/BSTJ/bstj57-6-1899.pdf
+[bgb]: https://tldp.org/LDP/Bash-Beginners-Guide/html/
+[absg]: https://tldp.org/LDP/abs/html/
