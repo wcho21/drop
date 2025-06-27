@@ -100,8 +100,12 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate()
 print(evaluated)
-# [!code highlight:1]
-# result: [Value: number, 1]
+```
+
+실행 결과는 다음과 같습니다.
+
+```shellsession
+[Value: number, 1]
 ```
 
 
@@ -244,8 +248,12 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
-# [!code highlight:1]
-# result: [Value: number, 3]
+```
+
+결과는 다음과 같습니다.
+
+```shellsession
+[Value: number, 3]
 ```
 
 
@@ -305,8 +313,12 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
-# [!code highlight:1]
-# result: [Value: number, -2.5]
+```
+
+결과는 다음과 같습니다.
+
+```shellsession
+[Value: number, -2.5]
 ```
 
 
@@ -377,8 +389,12 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
-# [!code highlight]
-# result: [Value: function, [Function: a -> ...]]
+```
+
+결과는 다음과 같습니다.
+
+```shellsession
+[Value: function, [Function: a -> ...]]
 ```
 
 
@@ -460,8 +476,12 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
-# [!code highlight:1]
-# result: [Value: number, 3]
+```
+
+결과는 다음과 같습니다.
+
+```shellsession
+[Value: number, 3]
 ```
 
 ## 변수 섀도잉
@@ -498,7 +518,7 @@ f(1)(2)
 하지만 마치 두 개의 매개변수를 쓰는 함수로 다룰 수 있습니다.
 이런 함수를 커리된 함수<L>curried function</L>라고 부릅니다.
 
-정말로 구현됐는지 확인해보면 다음과 같은 결과가 나옵니다.
+정말로 구현됐는지 다음과 같은 코드로 확인해볼 수 있습니다.
 
 ```python
 input = "f = a -> b -> a+b  f(1)(2)"
@@ -506,8 +526,6 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
-# [!code highlight]
-# result: [Value: number, 3]
 ```
 
 이런 커링의 구현은 클로저 덕분에 가능한 것입니다.
@@ -547,8 +565,6 @@ tokens = Tokenizer(input).getTokens()
 nodes = Parser(tokens).parse()
 evaluated = Evaluator(nodes).evaluate(Environment())
 print(evaluated)
-# [!code highlight]
-# result: [Value: number, 3]
 ```
 
 

@@ -159,8 +159,12 @@ class BindingPowers:
 bindingPowers = BindingPowers()
 plus = bindingPowers.get("+")
 print(plus)
-# [!code highlight:1]
-# result: [BindingPower: 30, 31]
+```
+
+실행 결과는 다음과 같습니다.
+
+```shellsession
+[BindingPower: 30, 31]
 ```
 
 
@@ -280,8 +284,12 @@ input = "1"
 tokens = Tokenizer(input).getTokens()
 node = Parser(tokens).parse()
 print(node)
-# [!code highlight:1]
-# result: [Node: number, [1]]
+```
+
+실행 결과는 다음과 같습니다.
+
+```shellsession
+[Node: number, [1]]
 ```
 
 ## 표현식 나머지 부분 파싱
@@ -341,7 +349,7 @@ print(node)
 
 결과를 보기 좋게 정리하면 이런 식입니다.
 
-```
+```shellsession
 [Node: infix, [
   '+',
   [Node: infix, [
@@ -353,7 +361,8 @@ print(node)
 ]]
 ```
 
-이 결과는 앞서 '그림 5'에서 봤던 트리와 일치합니다.
+기대한대로 `1`과 `2`가 먼저 더해집니다.
+즉, 결과가 '그림 5'에서 봤던 트리와 일치합니다.
 
 
 
@@ -400,28 +409,6 @@ node = Parser(tokens).parse()
 print(node)
 ```
 
-결과를 보기 좋게 정리하면 이렇게 됩니다.
-
-```
-[Node: infix, [
-  '=',
-  [Node: identifier, ['a']],
-  [Node: infix, [
-    '=',
-    [Node: identifier, ['b']],
-    [Node: infix, [
-      '+',
-      [Node: number, [1]],
-      [Node: infix, [
-        '*',
-        [Node: number, [2]],
-        [Node: number, [3]]
-      ]]
-    ]]
-  ]]
-]]
-```
-
 먼저 계산할 부분이 자식 노드에 위치한다는 점을 참고하세요.
 즉 곱셈, 덧셈, 대입 순으로 처리 순서가 나타납니다.
 대입 또한 `b` 식별자에 먼저 이루어집니다.
@@ -452,18 +439,7 @@ node = Parser(tokens).parse()
 print(node)
 ```
 
-출력 결과를 정리하면 이렇습니다.
-```
-[Node: infix, [
-  '->',
-  [Node: identifier, ['a']],
-  [Node: infix, [
-    '->',
-    [Node: identifier, ['b']],
-    [Node: identifier, ['c']]
-  ]]
-]]
-```
+실행 결과는 직접 확인해보세요.
 
 ## 함수 호출 파싱
 
@@ -522,8 +498,12 @@ input = "a(1)"
 tokens = Tokenizer(input).getTokens()
 node = Parser(tokens).parse()
 print(node)
-# [!code highlight:1]
-# [Node: call, [[Node: identifier, ['f']], [Node: number, [1]]]]
+```
+
+실행 결과는 다음과 같습니다.
+
+```shellsession
+[Node: call, [[Node: identifier, ['f']], [Node: number, [1]]]]
 ```
 
 ## 소스 코드 파싱
@@ -548,23 +528,6 @@ input = "a+b c*d"
 tokens = Tokenizer(input).getTokens()
 node = Parser(tokens).parse()
 print(node)
-```
-
-결과는 정리하면 다음과 같습니다.
-
-```
-[
-  [Node: infix, [
-    '+',
-    [Node: identifier, ['a']],
-    [Node: identifier, ['b']]
-  ]],
-  [Node: infix, [
-    '*',
-    [Node: identifier, ['c']],
-    [Node: identifier, ['d']]
-  ]]
-]
 ```
 
 왜 갑자기 여러 표현식을 파싱할 수 있게 됐을까요?

@@ -198,16 +198,14 @@ $$
 
 ```c
 int a = 4294967295; // 2^32 - 1
-printf("%d", a);
-// result: -1 // [!code highlight]
+printf("%d", a); // -1
 ```
 
 똑같은 이유로 부호가 없는 `int` 타입에서 `-1`이 반대로 그런 숫자가 됩니다.
 
 ```c
 unsigned int a = -1;
-printf("%u", a);
-// result: 4294967295 // [!code highlight]
+printf("%u", a); // 4294967295
 ```
 
 
