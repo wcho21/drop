@@ -9,21 +9,9 @@ series: "알고리즘 라이브러리 만들기"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import ABreak from "@/components/post/algorithm/AlgorithmBreak.astro";
-import AC from "@/components/post/algorithm/AlgorithmComment.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
-import AForever from "@/components/post/algorithm/AlgorithmForever.astro";
-import AForeach from "@/components/post/algorithm/AlgorithmForeach.astro";
-import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
-import AElif from "@/components/post/algorithm/AlgorithmElif.astro";
-import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
-import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
 import Quote from "@/components/post/Quote.astro";
 import PostLink from "@/components/post/PostLink.astro";
+import P from "@/components/post/pseudocode";
 
 import fig1 from "@texfigs/2024/06/15/01/fig1.svg";
 import fig2 from "@texfigs/2024/06/15/01/fig2.svg";
@@ -83,56 +71,56 @@ import fig12 from "@texfigs/2024/06/15/01/fig12.svg";
 ($k$가 $0$부터 시작한다면, $k$ 번째는 일반적인 의미와는 다르겠지만 어쨌든 이런 표현을 쓰겠습니다.
 정확히 말하면, 소트했을 때 배열에서 인덱스가 $k$인 데이터를 찾는 것입니다.)
 
-<Alg>
-  <AK>퀵셀렉트</AK> ($\textit{arr}$, $k$)&nbsp;<AC>// $\textit{arr}$에서 $\textit{k}$ 번째로 작은 데이터를 리턴</AC>
+<P.Block>
+  <P.Keyword>퀵셀렉트</P.Keyword> ($\textit{arr}$, $k$)&nbsp;<P.Comment>// $\textit{arr}$에서 $\textit{k}$ 번째로 작은 데이터를 리턴</P.Comment>
 
-  <ABlock>
-    [$\textit{begin}$, $\textit{end}$) $\leftarrow$ [$0$, $\textit{arr}$의 크기) <AC>// 서치 구간을 초기화</AC>
+  <P.Indent>
+    [$\textit{begin}$, $\textit{end}$) $\leftarrow$ [$0$, $\textit{arr}$의 크기) <P.Comment>// 서치 구간을 초기화</P.Comment>
 
-    <ANL />
+    <P.Newline />
 
-    <AWhile>$\textit{begin} < \textit{end}\,$인</AWhile>&nbsp;<AC>// 서치 구간이 비어있지 않은 동안</AC>
-    <ABlock>
-      <p><AC>// 파티셔닝: 피벗 $\textit{arr}[i]$를 기준으로 서치 구간을 둘로 나눔</AC></p>
+    <P.While>$\textit{begin} < \textit{end}\,$인</P.While>&nbsp;<P.Comment>// 서치 구간이 비어있지 않은 동안</P.Comment>
+    <P.Indent>
+      <p><P.Comment>// 파티셔닝: 피벗 $\textit{arr}[i]$를 기준으로 서치 구간을 둘로 나눔</P.Comment></p>
 
-      <p><AC>// [$\textit{begin}$, $\textit{i}$)의 데이터는 피벗 이하, [$\textit{i+1}$, $\textit{end}$)는 피벗 이상</AC></p>
+      <p><P.Comment>// [$\textit{begin}$, $\textit{i}$)의 데이터는 피벗 이하, [$\textit{i+1}$, $\textit{end}$)는 피벗 이상</P.Comment></p>
 
-      <p><AC>// 이후 $\textit{arr}[i]$는 소트된 위치에 있음</AC></p>
+      <p><P.Comment>// 이후 $\textit{arr}[i]$는 소트된 위치에 있음</P.Comment></p>
 
       $i \leftarrow$ 파티셔닝($\textit{arr}$, $\textit{begin}$, $\textit{end}$)
 
-      <ANL />
+      <P.Newline />
 
-      <p><AC>// $k$ 번째 데이터를 찾으면 리턴</AC></p>
+      <p><P.Comment>// $k$ 번째 데이터를 찾으면 리턴</P.Comment></p>
 
-      <AIf>$i = k$</AIf>
-      <ABlock>
-        <ABreak />
-      </ABlock>
+      <P.If>$i = k$</P.If>
+      <P.Indent>
+        <P.Break />
+      </P.Indent>
 
-      <ANL />
+      <P.Newline />
 
-      <p><AC>// 찾지 못했으면</AC></p>
+      <p><P.Comment>// 찾지 못했으면</P.Comment></p>
 
-      <AIf>$i < k$</AIf>&nbsp;<AC>// $i$ 번째 데이터가 $k$ 번째보다 작으면</AC>
-      <ABlock>
-        <p><AC>// [$\textit{begin}$, $i+1$)은 $k$ 번째 데이터보다 작으므로 서치 구간에서 제외</AC></p>
+      <P.If>$i < k$</P.If>&nbsp;<P.Comment>// $i$ 번째 데이터가 $k$ 번째보다 작으면</P.Comment>
+      <P.Indent>
+        <p><P.Comment>// [$\textit{begin}$, $i+1$)은 $k$ 번째 데이터보다 작으므로 서치 구간에서 제외</P.Comment></p>
 
         $\textit{begin} \leftarrow i+1$
-      </ABlock>
-      <AElse />&nbsp;<AC>// $i$ 번째 데이터가 $k$ 번째보다 크면</AC>
-      <ABlock>
-        <p><AC>// [$i$, $\textit{end}$)는 $k$ 번째 데이터보다 크므로 제외</AC></p>
+      </P.Indent>
+      <P.Else />&nbsp;<P.Comment>// $i$ 번째 데이터가 $k$ 번째보다 크면</P.Comment>
+      <P.Indent>
+        <p><P.Comment>// [$i$, $\textit{end}$)는 $k$ 번째 데이터보다 크므로 제외</P.Comment></p>
 
         $\textit{end} \leftarrow i$
-      </ABlock>
-    </ABlock>
+      </P.Indent>
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <ARet>$\textit{arr}[k]$</ARet>
-  </ABlock>
-</Alg>
+    <P.Return /> $\textit{arr}[k]$
+  </P.Indent>
+</P.Block>
 
 여기서 구간 [$a$, $b$)는 $a$는 포함하고 $b$는 제외한, $a$부터 $b$까지의 구간을 말합니다.
 
@@ -237,61 +225,61 @@ import fig12 from "@texfigs/2024/06/15/01/fig12.svg";
 
 호어 파티션을 수도코드로 표현하면 이렇습니다.
 
-<Alg>
-  <AK>파티셔닝</AK> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$)&nbsp;<AC>// $\textit{arr}$의 구간 [$\textit{begin}$, $\textit{end}$)을 둘로 나누는 피벗 인덱스를 리턴</AC>
+<P.Block>
+  <P.Keyword>파티셔닝</P.Keyword> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$)&nbsp;<P.Comment>// $\textit{arr}$의 구간 [$\textit{begin}$, $\textit{end}$)을 둘로 나누는 피벗 인덱스를 리턴</P.Comment>
 
-  <ABlock>
-    <p><AC>// 첫 번째 위치를 피벗으로 선택</AC></p>
+  <P.Indent>
+    <p><P.Comment>// 첫 번째 위치를 피벗으로 선택</P.Comment></p>
 
     $\textit{pivot} \leftarrow$ $\textit{arr}[\textit{begin}]$
 
-    <ANL />
+    <P.Newline />
 
-    <p><AC>// 구간 [$\textit{begin}+1$, $l$)은 피벗 이하가 속함</AC></p>
+    <p><P.Comment>// 구간 [$\textit{begin}+1$, $l$)은 피벗 이하가 속함</P.Comment></p>
 
     $l \leftarrow \textit{begin}+1$
 
-    <p><AC>// 구간 [$u$, $end$)는 피벗 이상이 속함</AC></p>
+    <p><P.Comment>// 구간 [$u$, $end$)는 피벗 이상이 속함</P.Comment></p>
 
     $u \leftarrow \textit{end}$
 
-    <ANL />
+    <P.Newline />
 
-    <AForever />
-    <ABlock>
-      <p><AC>// 피벗 이하인 구간 [$\textit{begin}+1$,$l$)을 늘림</AC></p>
+    <P.Forever />
+    <P.Indent>
+      <p><P.Comment>// 피벗 이하인 구간 [$\textit{begin}+1$,$l$)을 늘림</P.Comment></p>
 
-      <AWhile>$l < \textit{end}\,$이고 $\textit{arr}[l] < \textit{pivot}$ 인</AWhile>
-      <ABlock>
+      <P.While>$l < \textit{end}\,$이고 $\textit{arr}[l] < \textit{pivot}$ 인</P.While>
+      <P.Indent>
         $l \leftarrow l + 1$
-      </ABlock>
+      </P.Indent>
 
-      <p><AC>// 피벗 이상인 구간 [$u$,$\textit{end}$)를 늘림</AC></p>
+      <p><P.Comment>// 피벗 이상인 구간 [$u$,$\textit{end}$)를 늘림</P.Comment></p>
 
-      <AWhile>$\textit{arr}[u-1] > \textit{pivot}$ 인</AWhile>
-      <ABlock>
+      <P.While>$\textit{arr}[u-1] > \textit{pivot}$ 인</P.While>
+      <P.Indent>
         $u \leftarrow u - 1$
-      </ABlock>
+      </P.Indent>
 
-      <ANL />
+      <P.Newline />
 
-      <AIf>$l < u$</AIf>&nbsp;<AC>// 파티셔닝이 끝나지 않았다면</AC>
-      <ABlock>
+      <P.If>$l < u$</P.If>&nbsp;<P.Comment>// 파티셔닝이 끝나지 않았다면</P.Comment>
+      <P.Indent>
         $\textit{arr}[l]$과 $\textit{arr}[u-1]$ 스왑
 
         $l \leftarrow l + 1$
 
         $u \leftarrow u - 1$
-      </ABlock>
-      <AElse />&nbsp;<AC>// 파티셔닝이 끝났다면</AC>
-      <ABlock>
+      </P.Indent>
+      <P.Else />&nbsp;<P.Comment>// 파티셔닝이 끝났다면</P.Comment>
+      <P.Indent>
         $\textit{arr}[\textit{begin}]$과 $\textit{arr}[u-1]$ 스왑
 
-        <ARet>$u-1$</ARet>
-      </ABlock>
-    </ABlock>
-  </ABlock>
-</Alg>
+        <P.Return /> $u-1$
+      </P.Indent>
+    </P.Indent>
+  </P.Indent>
+</P.Block>
 
 반복문에서 양쪽 파티션 구간을 늘이는 부분이 $T_1$, $l < u$라서 수행하는 부분이 $T_2$의 시간 복잡도를 갖는다고 해봅시다.
 이 두 부분이 가장 시간 복잡도가 큰 부분이므로 여기에 주목해보겠습니다.
@@ -319,27 +307,27 @@ $$
 랜더마이즈드 알고리즘으로 바꾸는 것은 손쉽게 할 수 있습니다.
 무작위로 고른 피벗을 첫 번째 위치로 옮기고, 기존 파티셔닝을 수행하면 되기 때문입니다.
 
-<Alg>
-  <AK>랜더마이즈드 파티셔닝</AK> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$)&nbsp;<AC>// $\textit{arr}$의 구간 [$\textit{begin}$, $\textit{end}$)을 둘로 나누는 피벗 인덱스를 리턴</AC>
+<P.Block>
+  <P.Keyword>랜더마이즈드 파티셔닝</P.Keyword> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$)&nbsp;<P.Comment>// $\textit{arr}$의 구간 [$\textit{begin}$, $\textit{end}$)을 둘로 나누는 피벗 인덱스를 리턴</P.Comment>
 
-  <ABlock>
-    <p><AC>// 피벗의 인덱스로 무작위 숫자를 선택</AC></p>
+  <P.Indent>
+    <p><P.Comment>// 피벗의 인덱스로 무작위 숫자를 선택</P.Comment></p>
 
     $i \leftarrow$ [$\textit{begin}$, $\textit{end}$) 중 무작위 숫자
 
-    <ANL />
+    <P.Newline />
 
-    <p><AC>// 피벗을 $\textit{begin}$ 위치로 옮김</AC></p>
+    <p><P.Comment>// 피벗을 $\textit{begin}$ 위치로 옮김</P.Comment></p>
 
     $\textit{arr}[\textit{begin}]$과 $\textit{arr}[\textit{i}]$ 스왑
 
-    <ANL />
+    <P.Newline />
 
-    <p><AC>// $\textit{begin}$ 위치를 피벗으로 하는 기존 파티셔닝 사용</AC></p>
+    <p><P.Comment>// $\textit{begin}$ 위치를 피벗으로 하는 기존 파티셔닝 사용</P.Comment></p>
 
-    <ARet>파티셔닝($\textit{arr}$, $\textit{begin}$, $\textit{end}$)</ARet>
-  </ABlock>
-</Alg>
+    <P.Return /> 파티셔닝($\textit{arr}$, $\textit{begin}$, $\textit{end}$)
+  </P.Indent>
+</P.Block>
 
 이 알고리즘의 시간 복잡도 $T_{rp}(n)$은 기존 파티셔닝에서 두 줄의 수도코드를 더 수행하므로 $T_p(n) + 2$가 됩니다.
 따라서 다음 범위를 얻습니다.
@@ -661,24 +649,24 @@ public class QuickSelectArray {
 
 퀵소트의 수도코드는 다음처럼 간단히 만들 수 있습니다.
 
-<Alg>
-  <AK>랜더마이즈드 퀵소트</AK> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$)&nbsp;<AC>// 배열 $\textit{arr}\,$에서 구간 [$\textit{begin}$, $\textit{end}$)을 소트</AC>
+<P.Block>
+  <P.Keyword>랜더마이즈드 퀵소트</P.Keyword> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$)&nbsp;<P.Comment>// 배열 $\textit{arr}\,$에서 구간 [$\textit{begin}$, $\textit{end}$)을 소트</P.Comment>
 
-  <ABlock>
-    <AIf>$\textit{begin} = \textit{end}\,$</AIf>&nbsp;<AC>// 빈 구간이면</AC>
-    <ABlock>
-      <ARet></ARet>
-    </ABlock>
+  <P.Indent>
+    <P.If>$\textit{begin} = \textit{end}\,$</P.If>&nbsp;<P.Comment>// 빈 구간이면</P.Comment>
+    <P.Indent>
+      <P.Return /> 
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    $i \leftarrow$ 랜더마이즈드 파티셔닝($\textit{arr}$, $\textit{begin}$, $\textit{end}$) <AC>// $\textit{arr}[i]$가 소트됨</AC>
+    $i \leftarrow$ 랜더마이즈드 파티셔닝($\textit{arr}$, $\textit{begin}$, $\textit{end}$) <P.Comment>// $\textit{arr}[i]$가 소트됨</P.Comment>
 
     퀵소트($\textit{arr}$, $\textit{begin}$, $\textit{i}$)
 
     퀵소트($\textit{arr}$, $\textit{i+1}$, $\textit{end}$)
-  </ABlock>
-</Alg>
+  </P.Indent>
+</P.Block>
 
 ## 시간 복잡도
 
@@ -872,75 +860,75 @@ public class QuickStrategy<T> implements ArraySortStrategy<T> {
 반복하면 파티셔닝이 끝납니다.
 이것을 수도코드로 표현하면 이렇게 됩니다.
 
-<Alg>
-  <AK>파티셔닝</AK> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$)&nbsp;<AC>// $\textit{arr}$의 구간 [$\textit{begin}$, $\textit{end}$)을 세 부분으로 나누는 피벗 구간을 리턴</AC>
+<P.Block>
+  <P.Keyword>파티셔닝</P.Keyword> ($\textit{arr}$, $\textit{begin}$, $\textit{end}$)&nbsp;<P.Comment>// $\textit{arr}$의 구간 [$\textit{begin}$, $\textit{end}$)을 세 부분으로 나누는 피벗 구간을 리턴</P.Comment>
 
-  <ABlock>
-    <p><AC>// 첫 번째 위치를 피벗으로 선택</AC></p>
+  <P.Indent>
+    <p><P.Comment>// 첫 번째 위치를 피벗으로 선택</P.Comment></p>
 
     $\textit{pivot} \leftarrow$ $\textit{arr}[\textit{begin}]$
 
-    <ANL />
+    <P.Newline />
 
-    <p><AC>// 구간 [$\textit{begin}+1$, $l$)은 피벗보다 작은 것이 속함</AC></p>
+    <p><P.Comment>// 구간 [$\textit{begin}+1$, $l$)은 피벗보다 작은 것이 속함</P.Comment></p>
 
     $l \leftarrow \textit{begin}+1$
 
-    <p><AC>// 구간 [$l$, $m$)은 피벗과 같은 것이 속함</AC></p>
+    <p><P.Comment>// 구간 [$l$, $m$)은 피벗과 같은 것이 속함</P.Comment></p>
 
     $m \leftarrow l$
 
-    <p><AC>// 구간 [$u$, $end$)는 피벗보다 큰 것이 속함</AC></p>
+    <p><P.Comment>// 구간 [$u$, $end$)는 피벗보다 큰 것이 속함</P.Comment></p>
 
     $u \leftarrow \textit{end}$
 
-    <ANL />
+    <P.Newline />
 
-    <AWhile>$m < u$인</AWhile>&nbsp;<AC>// 구간 [$m$, $u$)가 비어있지 않은 동안</AC>
-    <ABlock>
-      <p><AC>// $m$ 위치의 값을 세 파티션 구간 중 한 곳으로 옮김</AC></p>
+    <P.While>$m < u$인</P.While>&nbsp;<P.Comment>// 구간 [$m$, $u$)가 비어있지 않은 동안</P.Comment>
+    <P.Indent>
+      <p><P.Comment>// $m$ 위치의 값을 세 파티션 구간 중 한 곳으로 옮김</P.Comment></p>
 
-      <AIf>$\textit{arr}[m] < \textit{pivot}$ </AIf>
-      <ABlock>
-        <AC>// 구간 [$\textit{begin}+1$, $l$)으로 옮김</AC>
+      <P.If>$\textit{arr}[m] < \textit{pivot}$ </P.If>
+      <P.Indent>
+        <P.Comment>// 구간 [$\textit{begin}+1$, $l$)으로 옮김</P.Comment>
 
         $\textit{arr}[m]$과 $\textit{arr}[l]$ 스왑
 
         $l \leftarrow l + 1$
 
         $m \leftarrow m + 1$
-      </ABlock>
+      </P.Indent>
 
-      <AElif>$\textit{arr}[m] > \textit{pivot}$ </AElif>
-      <ABlock>
-        <AC>// 구간 [$u$, $\textit{end}$)으로 옮김</AC>
+      <P.Elif>$\textit{arr}[m] > \textit{pivot}$ </P.Elif>
+      <P.Indent>
+        <P.Comment>// 구간 [$u$, $\textit{end}$)으로 옮김</P.Comment>
 
         $u \leftarrow u - 1$
 
         $\textit{arr}[m]$과 $\textit{arr}[u]$ 스왑
-      </ABlock>
+      </P.Indent>
 
-      <AElse />&nbsp;<AC>// 피벗과 같은 값인 경우</AC>
-      <ABlock>
-        <AC>// 구간 [$l$, $m$)으로 옮김</AC>
+      <P.Else />&nbsp;<P.Comment>// 피벗과 같은 값인 경우</P.Comment>
+      <P.Indent>
+        <P.Comment>// 구간 [$l$, $m$)으로 옮김</P.Comment>
 
         $m \leftarrow m + 1$
-      </ABlock>
-    </ABlock>
+      </P.Indent>
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <p><AC>// 피벗을 구간 [$l$, $m$)으로 옮김</AC></p>
+    <p><P.Comment>// 피벗을 구간 [$l$, $m$)으로 옮김</P.Comment></p>
 
     $l \leftarrow l - 1$
 
     $\textit{arr}[\textit{begin}]$과 $\textit{arr}[l]$ 스왑
 
-    <ANL />
+    <P.Newline />
 
-    <ARet>$l$, $m$</ARet>&nbsp;<AC>// 피벗과 같은 구간</AC>
-  </ABlock>
-</Alg>
+    <P.Return /> $l$, $m$ <P.Comment>// 피벗과 같은 구간</P.Comment>
+  </P.Indent>
+</P.Block>
 
 이를 바탕으로 파티셔닝부터 퀵소트까지 만들어보겠습니다.
 

@@ -10,10 +10,7 @@ import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
 import PostLink from "@/components/post/PostLink.astro"
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import P from "@/components/post/pseudocode";
 
 import fig1 from "@texfigs/2024/02/11/01/fig1.svg";
 import fig2 from "@texfigs/2024/02/11/01/fig2.svg";
@@ -594,18 +591,18 @@ class Repl:
 `execute()` 메소드는 입력받은 코드 `input`을 실행합니다.
 첫 글에서 인터프리터의 수도코드를 다음과 같이 소개했는데, 이 메소드는 그 수도코드의 구현이기도 합니다.
 
-<Alg>
-  <AK>인터프리터</AK> (코드)
-  <ABlock>
+<P.Block>
+  <P.Keyword>인터프리터</P.Keyword> (코드)
+  <P.Indent>
     토큰 $\leftarrow$ 토큰화(코드)
 
     문법 트리 $\leftarrow$ 파싱(토큰)
 
     값 $\leftarrow$ 평가(문법 트리)
 
-    <ARet>값</ARet>
-  </ABlock>
-</Alg>
+    <P.Return /> 값
+  </P.Indent>
+</P.Block>
 
 이제 REPL은 다음과 같이 구현합니다.
 `quit`을 입력하면 종료를, 아니면 코드를 실행합니다.

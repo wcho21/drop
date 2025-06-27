@@ -9,18 +9,7 @@ series: "프로그래밍 언어 컨셉"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import AC from "@/components/post/algorithm/AlgorithmComment.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
-import AWhile from "@/components/post/algorithm/AlgorithmWhile.astro";
-import AForeach from "@/components/post/algorithm/AlgorithmForeach.astro";
-import AUntil from "@/components/post/algorithm/AlgorithmUntil.astro";
-import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
-import AElif from "@/components/post/algorithm/AlgorithmElif.astro";
-import AElse from "@/components/post/algorithm/AlgorithmElse.astro";
-import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
+import P from "@/components/post/pseudocode";
 
 import fig1 from "@texfigs/2023/05/12/01/fig1.svg";
 import fig2 from "@texfigs/2023/05/12/01/fig2.svg";
@@ -58,24 +47,26 @@ import fig5 from "@texfigs/2023/05/12/01/fig5.svg";
 그런데 여기서는 좀 다른 얘기를 해보려고 합니다.
 이 괄호가 정말 필요할까요?
 
-`2+3` 대신 `23+`을 쓰는 식으로, 덧셈 기호를 뒤에 놓아봅시다.
-이런 식으로 `1*(2+3)`을 다음과 같이 바꿀 수 있습니다.
+여기서 잠깐, 표기법을 바꿔봅시다.
+`2+3` 대신 `23+`을 쓰는 식으로 덧셈 기호를 뒤에 놓아보겠습니다.
+그러면 이런 식으로 `1(23+)*`로 고쳐쓸 수 있습니다.
 
 $$
 \begin{align*}
-                & \texttt{1*(2+3)}        &&\text{\small (infix)} \\
-  \rightarrow{} & \texttt{1*\fbox{(23+)}} &&{} \\
-  \rightarrow{} & \texttt{\fbox{1(23+)*}} &&{} \text{\small (postfix)}\\
+  \texttt{1*(2\colorbox{#fef3c7}{+}3)} &\rightarrow{} \texttt{1*(23\colorbox{#fef3c7}{+})} \\
+  \texttt{1\colorbox{#fef3c7}{*}(23+)} &\rightarrow{} \texttt{1(23+)\colorbox{#fef3c7}{*}}
 \end{align*}
 $$
-
-따라서 고쳐쓴 결과는 `1(23+)*`이 됩니다.
 
 왜 갑자기 이런 이상한 표현을 쓰는지 의문이 들 수도 있습니다.
 하지만 연산자를 뒤에 쓰는 표현 방법을 쓴다면, 괄호가 필요 없다는 걸 알 수 있습니다.
 
-즉 `1(23+)*`에서 괄호를 빼고 `123+*`라고 써도 의미가 전혀 애매해지지 않습니다.
+즉 마지막 결과인 `1(23+)*`에서 괄호를 빼고 `123+*`라고 써도 의미가 전혀 애매해지지 않습니다.
 덧셈이 `2`와 `3`을 위한 것이라는 사실은 변하지 않기 때문입니다.
+
+$$
+  \texttt{1(23+)*} \rightarrow{} \texttt{123+*}
+$$
 
 이러한 계산식은 연산자를 뒤에 쓴다고 해서 후위 표기식<L>postfix expression</L>이라고 부르고, 곧 계산기를 실제 구현할 때 볼 것처럼 스택으로 계산하기가 매우 쉬워집니다.
 한편 `1+2` 처럼 보통 우리가 쓰는 방식은, 연산자를 가운데 둔다고 해서 중위 표기식<L>infix expression</L>이라고 부릅니다.
@@ -111,16 +102,16 @@ $$
 정리하면 이 계산기 프로그램은 입력을 후위 표기식으로 바꾸는 부분과, 실제로 계산을 하는 부분으로 나뉩니다.
 수도코드로 정리하면 이렇게 됩니다.
 
-<Alg>
-  <AK>중위 표기식 계산</AK> (중위 표기식) <AC>// 중위 표기식을 계산해 리턴</AC>
-  <ABlock>
+<P.Block>
+  <P.Keyword>중위 표기식 계산</P.Keyword> (중위 표기식) <P.Comment>// 중위 표기식을 계산해 리턴</P.Comment>
+  <P.Indent>
     후위 표기식 $\leftarrow$ 후위 표기식으로 변환(중위 표기식)
 
     계산 결과 $\leftarrow$ 후위 표기식 계산(후위 표기식)
 
-    <ARet>계산 결과</ARet>
-  </ABlock>
-</Alg>
+    <P.Return /> 계산 결과
+  </P.Indent>
+</P.Block>
 
 계획을 세웠으니 후위 표기식을 계산하는 두 번째 함수부터 만들어봅시다.
 
@@ -150,39 +141,39 @@ $$
 
 여기까지의 아이디어를 수도코드로 정리하면 이렇게 됩니다.
 
-<Alg>
-  <AK>후위 표기식 계산</AK> (후위 표기식)
+<P.Block>
+  <P.Keyword>후위 표기식 계산</P.Keyword> (후위 표기식)
 
-  <ABlock>
+  <P.Indent>
     $\textit{stack} \leftarrow$ 새 스택
 
-    <AForeach>후위 표기식의 토큰</AForeach>
-    <ABlock>
-      <AIf>토큰이 숫자</AIf>
-      <ABlock>
+    <P.Foreach>후위 표기식의 토큰</P.Foreach>
+    <P.Indent>
+      <P.If>토큰이 숫자</P.If>
+      <P.Indent>
         $\textit{stack}$.push(토큰)
-      </ABlock>
+      </P.Indent>
 
-      <AElse />&nbsp;<AC>// 토큰이 연산자이면</AC>
+      <P.Else />&nbsp;<P.Comment>// 토큰이 연산자이면</P.Comment>
 
-      <ABlock>
+      <P.Indent>
         숫자2 $\leftarrow$ $\textit{stack}$.pop()
 
         숫자1 $\leftarrow$ $\textit{stack}$.pop()
 
         &nbsp;
 
-        <AC>// 예를 들어, applyOperator(+, 1, 2)는 3을 리턴</AC>
+        <P.Comment>// 예를 들어, applyOperator(+, 1, 2)는 3을 리턴</P.Comment>
 
         결과 $\leftarrow$ applyOperator(토큰, 숫자1, 숫자2)
 
         $\textit{stack}$.push(결과)
-      </ABlock>
-    </ABlock>
+      </P.Indent>
+    </P.Indent>
 
-    <ARet>$\textit{stack}$.pop()</ARet>
-  </ABlock>
-</Alg>
+    <P.Return /> $\textit{stack}$.pop()
+  </P.Indent>
+</P.Block>
 
 여기서 `applyOperator()` 함수는 숫자와 연산자를 받아 계산한 결과를 돌려줍니다.
 
@@ -343,63 +334,63 @@ def applyOperator(operator, num1, num2):
 
 이 내용을 수도코드로 정리하면 이렇게 됩니다.
 
-<Alg>
-  <AK>후위 표기식으로 변환</AK> (중위 표기식)
+<P.Block>
+  <P.Keyword>후위 표기식으로 변환</P.Keyword> (중위 표기식)
 
-  <ABlock>
+  <P.Indent>
     $\textit{stack} \leftarrow$ 새 스택
 
     $\textit{postfix} \leftarrow$ 새 스트링
 
-    <ANL />
+    <P.Newline />
 
-    <AForeach>중위 표기식의 토큰</AForeach>
-    <ABlock>
-      <AIf>토큰이 숫자</AIf>
-      <ABlock>
+    <P.Foreach>중위 표기식의 토큰</P.Foreach>
+    <P.Indent>
+      <P.If>토큰이 숫자</P.If>
+      <P.Indent>
         $\textit{postfix}$.append(토큰)
-      </ABlock>
+      </P.Indent>
 
-      <AElif>토큰이 연산자</AElif>
-      <ABlock>
-        <AC>// 토큰보다 우선순위가 높지 않은 것들을 스택에서 꺼냄</AC>
+      <P.Elif>토큰이 연산자</P.Elif>
+      <P.Indent>
+        <P.Comment>// 토큰보다 우선순위가 높지 않은 것들을 스택에서 꺼냄</P.Comment>
 
-        <p><AWhile> 토큰의 우선순위 > $\textit{stack}$.peek()의 우선순위인</AWhile></p>
-        <ABlock>
+        <p><P.While> 토큰의 우선순위 > $\textit{stack}$.peek()의 우선순위인</P.While></p>
+        <P.Indent>
           $\textit{postfix}$.append($\text{stack}$.pop())
-        </ABlock>
+        </P.Indent>
 
-        <ANL />
+        <P.Newline />
 
         $\textit{stack}$.push(토큰)
-      </ABlock>
+      </P.Indent>
 
-      <AElif>토큰이 여는 괄호</AElif>
-      <ABlock>
+      <P.Elif>토큰이 여는 괄호</P.Elif>
+      <P.Indent>
         $\textit{stack}$.push(토큰)
-      </ABlock>
+      </P.Indent>
 
-      <AElif>토큰이 닫는 괄호</AElif>
-      <ABlock>
-        <AUntil>스택 맨 위가 여는 괄호일 때</AUntil>
-        <ABlock>
+      <P.Elif>토큰이 닫는 괄호</P.Elif>
+      <P.Indent>
+        <P.Until>스택 맨 위가 여는 괄호일 때</P.Until>
+        <P.Indent>
           $\textit{postfix}$.append(토큰)
-        </ABlock>
-      </ABlock>
-    </ABlock>
+        </P.Indent>
+      </P.Indent>
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AUntil>스택이 빌 때</AUntil>
-    <ABlock>
+    <P.Until>스택이 빌 때</P.Until>
+    <P.Indent>
       $\textit{postfix}$.append($\text{stack}$.pop())
-    </ABlock>
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AK>리턴</AK> $\textit{postfix}$
-  </ABlock>
-</Alg>
+    <P.Keyword>리턴</P.Keyword> $\textit{postfix}$
+  </P.Indent>
+</P.Block>
 
 여기서 스택의 `peek()` 메소드는, `pop()`처럼 값을 가져오되 꺼내지는 않습니다.
 즉 다음에 가져올 값을 미리 보는 것입니다.

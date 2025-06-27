@@ -10,13 +10,7 @@ featured: true
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import AC from "@/components/post/algorithm/AlgorithmComment.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
-import AIf from "@/components/post/algorithm/AlgorithmIf.astro";
-import ANL from "@/components/post/algorithm/AlgorithmNewline.astro";
+import P from "@/components/post/pseudocode";
 
 import fig1 from "@texfigs/2023/06/09/01/fig1.svg";
 import fig2 from "@texfigs/2023/06/09/01/fig2.svg";
@@ -113,48 +107,48 @@ UTF-8는 바이트를 네 개까지 사용하면 $2^{21}$개의 문자를 표현
 앞서 설명한 내용은 수도코드로 다음과 같이 표현할 수있습니다.
 이 함수는 코드 포인트 숫자를 받고 그것을 UTF-8로 인코딩한 바이트 시퀀스를 리턴합니다.
 
-<Alg>
-  <AK>UTF-8 인코딩</AK> (코드 포인트)
-  <ABlock>
-    <AIf>코드 포인트가 7비트 이하 값</AIf>
-    <ABlock>
+<P.Block>
+  <P.Keyword>UTF-8 인코딩</P.Keyword> (코드 포인트)
+  <P.Indent>
+    <P.If>코드 포인트가 7비트 이하 값</P.If>
+    <P.Indent>
       xxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <ARet>바이트 시퀀스 0xxx xxxx</ARet>
-    </ABlock>
+      <P.Return /> 바이트 시퀀스 0xxx xxxx
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AIf>코드 포인트가 11비트 이하 값</AIf>
-    <ABlock>
+    <P.If>코드 포인트가 11비트 이하 값</P.If>
+    <P.Indent>
       yyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <ARet>바이트 시퀀스 110y yyyy 10xx xxxx</ARet>
-    </ABlock>
+      <P.Return /> 바이트 시퀀스 110y yyyy 10xx xxxx
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AIf>코드 포인트가 16비트 이하 값</AIf>
-    <ABlock>
+    <P.If>코드 포인트가 16비트 이하 값</P.If>
+    <P.Indent>
       zzzz yyyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <ARet>바이트 시퀀스 1110 zzzz 10yy yyyy 10xx xxxx</ARet>
-    </ABlock>
+      <P.Return /> 바이트 시퀀스 1110 zzzz 10yy yyyy 10xx xxxx
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AIf>코드 포인트가 21비트 이하 값</AIf>
-    <ABlock>
+    <P.If>코드 포인트가 21비트 이하 값</P.If>
+    <P.Indent>
       w wwzz zzzz yyyy yyxx xxxx $\leftarrow$ 코드 포인트의 이진 표현
 
-      <ARet>바이트 시퀀스 1111 0www 10zz zzzz 10yy yyyy 10xx xxxx</ARet>
-    </ABlock>
+      <P.Return /> 바이트 시퀀스 1111 0www 10zz zzzz 10yy yyyy 10xx xxxx
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <ARet>U+FFFD</ARet>
-  </ABlock>
-</Alg>
+    <P.Return /> U+FFFD
+  </P.Indent>
+</P.Block>
 
 맨 아래에서는 21비트를 넘어가는 코드 포인트를 만나는 예외적인 경우를 처리하는데요.
 특별한 문자인 &lsquo;&#65533;&rsquo;를 리턴합니다.
@@ -267,40 +261,40 @@ int main() {
 
 수도코드는 다음과 같이 간단하게 만들어볼 수 있습니다.
 
-<Alg>
-  <AK>UTF-8 디코딩</AK> (바이트 시퀀스)
-  <ABlock>
-    <AIf>바이트 시퀀스가 0xxx xxx 꼴</AIf>
-    <ABlock>
-      <ARet>코드 포인트 xxx xxxx</ARet>
-    </ABlock>
+<P.Block>
+  <P.Keyword>UTF-8 디코딩</P.Keyword> (바이트 시퀀스)
+  <P.Indent>
+    <P.If>바이트 시퀀스가 0xxx xxx 꼴</P.If>
+    <P.Indent>
+      <P.Return /> 코드 포인트 xxx xxxx
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AIf>바이트 시퀀스가 110x xxxx 10yy yyyy 꼴</AIf>
-    <ABlock>
-      <ARet>코드 포인트 xxx xxyy yyyy</ARet>
-    </ABlock>
+    <P.If>바이트 시퀀스가 110x xxxx 10yy yyyy 꼴</P.If>
+    <P.Indent>
+      <P.Return /> 코드 포인트 xxx xxyy yyyy
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AIf>바이트 시퀀스가 1110 xxxx 10yy yyyy 10zz zzzz 꼴</AIf>
-    <ABlock>
-      <ARet>코드 포인트 xxxx yyyy yyzz zzzz</ARet>
-    </ABlock>
+    <P.If>바이트 시퀀스가 1110 xxxx 10yy yyyy 10zz zzzz 꼴</P.If>
+    <P.Indent>
+      <P.Return /> 코드 포인트 xxxx yyyy yyzz zzzz
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <AIf>바이트 시퀀스가 1111 1xxx 10yy yyyy 10zz zzzz 10ww wwww 꼴</AIf>
-    <ABlock>
-      <ARet>코드 포인트 x xxyy yyyy zzzz zzww wwww</ARet>
-    </ABlock>
+    <P.If>바이트 시퀀스가 1111 1xxx 10yy yyyy 10zz zzzz 10ww wwww 꼴</P.If>
+    <P.Indent>
+      <P.Return /> 코드 포인트 x xxyy yyyy zzzz zzww wwww
+    </P.Indent>
 
-    <ANL />
+    <P.Newline />
 
-    <ARet>U+FFFD</ARet>
-  </ABlock>
-</Alg>
+    <P.Return /> U+FFFD
+  </P.Indent>
+</P.Block>
 
 이 수도코드는 C++로 그대로 옮겨 구현해볼 수 있습니다.
 

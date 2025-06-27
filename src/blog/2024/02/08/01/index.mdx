@@ -9,10 +9,7 @@ series: "직접 만들어보는 인터프리터"
 import L from "@/components/post/AltLang.astro";
 import Figure from "@/components/post/Figure.astro";
 import FigureCaption from "@/components/post/FigureCaption.astro";
-import Alg from "@/components/post/algorithm/Algorithm.astro";
-import ABlock from "@/components/post/algorithm/AlgorithmBlock.astro";
-import AK from "@/components/post/algorithm/AlgorithmKeyword.astro";
-import ARet from "@/components/post/algorithm/AlgorithmReturn.astro";
+import P from "@/components/post/pseudocode";
 
 import fig1 from "@texfigs/2024/02/08/01/fig1.svg";
 import fig2 from "@texfigs/2024/02/08/01/fig2.svg";
@@ -107,18 +104,18 @@ C++ 같은 언어의 컴파일러는, 타겟 기계가 이해하는 코드, 즉 
 
 정리하면 여기서 만들 인터프리터는 아래 수도코드와 같습니다.
 
-<Alg>
-  <AK>인터프리터</AK> (코드)
-  <ABlock>
+<P.Block>
+  <P.Keyword>인터프리터</P.Keyword> (코드)
+  <P.Indent>
     토큰 $\leftarrow$ 토큰화(코드)
 
     문법 트리 $\leftarrow$ 파싱(토큰)
 
     값 $\leftarrow$ 평가(문법 트리)
 
-    <ARet>값</ARet>
-  </ABlock>
-</Alg>
+    <P.Return /> 값
+  </P.Indent>
+</P.Block>
 
 여기서는 토큰화를 본격적으로 만들어보겠습니다.
 

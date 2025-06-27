@@ -1,0 +1,7 @@
+---
+import Keyword from "./../word/Keyword.astro";
+
+const { prefix, postfix } = Astro.props;
+---
+
+<span><Keyword>{prefix}</Keyword> <slot />{postfix}</span>
