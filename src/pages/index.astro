@@ -1,32 +1,104 @@
 ---
 import { getCollection } from "astro:content";
 import ArticleList from "@/components/page/ArticleList.astro";
-import SeriesList from "@/components/page/SeriesList.astro";
 import Base from "@/layouts/Base.astro";
-import {
-  selectFeatured,
-  selectNonfeatured,
-  selectSeries,
-  sortBlogCollectionByDate,
-} from "@/scripts/utils/collections";
-import { groupSeries } from "@/scripts/utils/collections";
+import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
+import Heading from "@/components/core/Heading.astro";
+import ChevronDoubleRight from "@/components/icon/ChevronDoubleRight.svg";
+import config from "@/config";
+
+const { github, email } = config.contacts;
 
 const articles = sortBlogCollectionByDate(await getCollection("blog"));
-const featured = selectFeatured(articles);
-const nonfeatured = selectNonfeatured(articles);
-const series = selectSeries(articles);
+const latest = articles.slice(0, 5);
 ---
 
 <Base pageTitle="Home">
-  <div class="mb-12 pt-12 border-t-8 border-gray-800">
-    {featured.length > 0 && <ArticleList articles={featured} />}
-
-    <div class="mt-12">
-      <ArticleList articles={nonfeatured} />
+  <div>
+    <div class="mt-1 mb-8">
+      <nav class="mt-4 text-[12px] md:text-[14px] font-light list-none">
+        <li class="inline font-semibold">FRONT</li>
+        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
+          ARTICLES
+        </li>
+        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
+          SERIES
+        </li>
+        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
+          INDEX
+        </li>
+      </nav>
     </div>
-
-    <div class="mt-12">
-      <SeriesList series={groupSeries(series)} />
+    <div class="my-8">
+      <Heading>Latest.</Heading>
+      <ArticleList articles={latest} />
+      <div class="flex">
+        <a
+          class="block ml-auto flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
+          href="#"
+        >
+          <p class="py-2">MORE...</p>
+          <ChevronDoubleRight />
+        </a>
+      </div>
+    </div>
+    <div class="my-8">
+      <Heading>Featured.</Heading>
+      <div>Content goes here.</div>
+      <div>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor
+        sapien sed eros luctus, vitae varius mi pellentesque. Nam eu scelerisque
+        sem. Vestibulum ante purus, placerat id sem ut, aliquam pharetra odio.
+        Aliquam sit amet egestas dolor, id luctus nunc. Pellentesque gravida
+        hendrerit leo, lacinia sagittis arcu cursus sed. Aenean vehicula quis
+        sapien eu lobortis. Nulla sed scelerisque ante. Cras vitae volutpat
+        massa, nec efficitur nunc. Nulla sapien felis, placerat non lorem nec,
+        aliquam finibus nulla. Donec sollicitudin interdum fermentum. Cras augue
+        leo, ornare non accumsan at, pulvinar ut ante. Sed quis ornare dui. In
+        ac aliquet nisi. Nunc blandit sodales enim sit amet blandit. Sed rhoncus
+        molestie ante sed imperdiet. Nullam feugiat, justo et lobortis blandit,
+        dui felis commodo sem, quis interdum quam est at nisi. Integer et lacus
+        ut ante porta mollis. Integer laoreet risus quis porttitor suscipit. Sed
+        tincidunt luctus dolor, ac interdum justo finibus eget. Maecenas vel
+        hendrerit lacus. Pellentesque tempus posuere nibh tincidunt aliquet.
+        Praesent eu metus lacinia, consectetur magna vel, dictum neque. Maecenas
+        ut nunc accumsan, suscipit ex lobortis, porta nisl. Sed gravida purus
+        turpis, ut mollis ipsum porttitor eget. Proin euismod porta enim, nec
+        imperdiet orci volutpat nec. Mauris hendrerit aliquam arcu. Donec eget
+        posuere leo. Aenean elementum arcu fringilla justo euismod, vel semper
+        magna aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Donec et tincidunt quam. Sed eget elit feugiat quam consectetur egestas
+        nec vitae nisl. Fusce semper ex non blandit sollicitudin. Mauris rhoncus
+        a mauris non pellentesque. Pellentesque sagittis hendrerit ornare. Duis
+        non ultricies dui. Nam malesuada, felis porttitor congue malesuada,
+        nulla lorem mollis nisi, eu bibendum magna diam ut nunc. Nullam
+        fermentum eleifend nisl. Cras eu suscipit ex, sit amet eleifend purus.
+        Suspendisse vel lacus nec ligula faucibus commodo. Nullam laoreet turpis
+        quis bibendum vulputate. Integer vehicula augue lorem. Ut vel urna eros.
+        Nulla suscipit ullamcorper erat, quis venenatis arcu tincidunt
+        convallis. Fusce ac rhoncus dui. Proin mi nisi, facilisis vitae ligula
+        non, tempor fermentum tellus. Donec ut tellus efficitur, ullamcorper
+        neque id, bibendum metus. Vestibulum commodo ultricies neque, vitae
+        lacinia velit maximus non. Nullam sagittis egestas massa id hendrerit.
+        Pellentesque eget commodo est. Donec quis turpis rhoncus, tincidunt
+        justo sed, pellentesque augue. Nulla blandit laoreet eleifend. Sed
+        eleifend risus ac diam molestie tincidunt. In finibus augue justo, nec
+        euismod urna eleifend at.
+      </div>
+    </div>
+    <div class="my-8">
+      <Heading>Drop.</Heading>
+      <div class="font-light text-[14px]">
+        <p>컴퓨테이션에 대해 이야기합니다.</p>
+      </div>
+      <nav class="mt-4 text-[12px] md:text-[14px] font-light list-none">
+        <li class="inline text-gray-400">
+          <a href={github} class="py-1.5">GITHUB</a>
+        </li>
+        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
+          <a href={email} class="py-1.5">EMAIL</a>
+        </li>
+      </nav>
     </div>
   </div>
 </Base>
