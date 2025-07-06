@@ -5,18 +5,19 @@ import ListItem from "../core/ListItem.astro";
 import ArticleCard from "./ArticleCard.astro";
 
 interface Props {
-  heading: string;
   articles: CollectionEntry<"blog">[];
 }
 
-const { heading, articles } = Astro.props;
+const { articles } = Astro.props;
 ---
 
-<List heading={heading}>
-  <ul class="block my-4">
+<List>
+  <ul class="block">
     {
-      articles.map(article => (
-        <ListItem><ArticleCard article={article} /></ListItem>
+      articles.map((article) => (
+        <ListItem>
+          <ArticleCard article={article} />
+        </ListItem>
       ))
     }
   </ul>

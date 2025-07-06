@@ -16,21 +16,26 @@ interface Props {
   series: Series[];
 }
 
-const { heading, series } = Astro.props;
+const { series } = Astro.props;
 ---
 
-<List heading={heading}>
+<List>
   {
     series.map(({ name, articles }) => (
       <ListItem>
         <DropDown>
-          <p slot="button" class="font-light text-[14pt] cursor-pointer py-4"><ScaleInline>{name}<span class="text-[12pt] ml-1.5">({articles.length})</span></ScaleInline></p>
+          <p slot="button" class="font-light text-[14pt] cursor-pointer py-4">
+            <ScaleInline>
+              {name}
+              <span class="text-[12pt] ml-1.5">({articles.length})</span>
+            </ScaleInline>
+          </p>
           <ul class="block series-drop-down-list">
-            {
-              articles.map(article => (
-                <ListItem><ArticleCard article={article} /></ListItem>
-              ))
-            }
+            {articles.map((article) => (
+              <ListItem>
+                <ArticleCard article={article} />
+              </ListItem>
+            ))}
           </ul>
         </DropDown>
       </ListItem>

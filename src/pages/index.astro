@@ -19,18 +19,14 @@ const series = selectSeries(articles);
 
 <Base pageTitle="Home">
   <div class="mb-12 pt-12 border-t-8 border-gray-800">
-    {
-      featured.length > 0 && (
-        <ArticleList heading="Featured." articles={featured} />
-      )
-    }
+    {featured.length > 0 && <ArticleList articles={featured} />}
 
     <div class="mt-12">
-      <ArticleList heading="Articles." articles={nonfeatured} />
+      <ArticleList articles={nonfeatured} />
     </div>
 
     <div class="mt-12">
-      <SeriesList heading="Series." series={groupSeries(series)} />
+      <SeriesList series={groupSeries(series)} />
     </div>
   </div>
 </Base>
