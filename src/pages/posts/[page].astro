@@ -41,26 +41,34 @@ const { page } = Astro.props;
       <ArticleList articles={page.data} />
       <div class="flex justify-between">
         <div class="flex-0 flex">
-          <a
-            class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
-            href="#"
-          >
-            <ChevronLeft />
-            <p class="py-2 w-auto whitespace-nowrap">
-              Page {page.currentPage - 1}
-            </p>
-          </a>
+          {
+            page.currentPage > 1 && (
+              <a
+                class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
+                href={page.url.prev}
+              >
+                <ChevronLeft />
+                <p class="py-2 w-auto whitespace-nowrap">
+                  Page {page.currentPage - 1}
+                </p>
+              </a>
+            )
+          }
         </div>
         <div class="flex-0 flex">
-          <a
-            class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
-            href="#"
-          >
-            <p class="py-2 w-auto whitespace-nowrap">
-              Page {page.currentPage + 1}
-            </p>
-            <ChevronRight />
-          </a>
+          {
+            page.currentPage < page.lastPage && (
+              <a
+                class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
+                href={page.url.next}
+              >
+                <p class="py-2 w-auto whitespace-nowrap">
+                  Page {page.currentPage + 1}
+                </p>
+                <ChevronRight />
+              </a>
+            )
+          }
         </div>
       </div>
     </div>
