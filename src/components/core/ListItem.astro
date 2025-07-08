@@ -1,4 +1,12 @@
-<li class="block border-t border-gray-100">
+---
+interface Props {
+  class?: string;
+}
+
+const { class: classNames, ...props } = Astro.props;
+---
+
+<li {...props} class:list={["block border-t border-gray-100", classNames]}>
   <slot />
 </li>
 

@@ -30,8 +30,8 @@ const seriesGroups = groupSeriesAsMap(posts);
         const numPosts = entries.length;
 
         return (
-          <ListItem>
-            <a href={`./${seriesEntry.data.slug}/`} class="block py-4">
+          <ListItem class="py-4" data-item>
+            <a href={`./${seriesEntry.data.slug}/`} class="block">
               <Scale>
                 <div class="flex items-center gap-4">
                   <div class="mb-auto w-[100px] sm:w-[150px]">
@@ -66,3 +66,14 @@ const seriesGroups = groupSeriesAsMap(posts);
     }
   </List>
 </ListPage>
+
+<style>
+  @reference "@/styles/global.css";
+
+  li[data-item]:first-child {
+    @apply pt-0;
+  }
+  li[data-item]:last-child {
+    @apply pb-0;
+  }
+</style>
