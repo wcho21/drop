@@ -1,94 +1,68 @@
 ---
-import Base from "@/layouts/Base.astro";
 import {
   sortBlogCollectionByDate,
   groupSeriesAsMap,
 } from "@/scripts/utils/collections";
 import { getCollection } from "astro:content";
 import Heading from "@/components/core/Heading.astro";
-import config from "@/config";
 import { formatDate } from "@/scripts/utils/formatters";
 import { Image } from "astro:assets";
 import List from "@/components/core/List.astro";
 import ListItem from "@/components/core/ListItem.astro";
 import Scale from "@/components/core/Scale.astro";
-import TopNav from "@/components/page/TopNav.astro";
+import ListPage from "@/layouts/ListPage.astro";
 
 const posts = sortBlogCollectionByDate(await getCollection("blog"));
 const series = await getCollection("series");
 const seriesGroups = groupSeriesAsMap(posts);
-
-const { github, email } = config.contacts;
 ---
 
-<Base pageTitle="Home">
+<ListPage pageTitle="Series">
   <div>
-    <div class="mt-4 mb-8">
-      <TopNav />
-    </div>
-    <div class="my-8">
-      <Heading>Series.</Heading>
-      <List>
-        {
-          Array.from(seriesGroups).map(([name, entries]) => {
-            const seriesEntry = series.find((entry) => entry.id === name)!;
-            const latestThumbnail = entries[0].data.thumbnail;
-            const latestDate = entries[0].data.date;
-            const numPosts = entries.length;
+    <Heading>Series.</Heading>
+    <List>
+      {
+        Array.from(seriesGroups).map(([name, entries]) => {
+          const seriesEntry = series.find((entry) => entry.id === name)!;
+          const latestThumbnail = entries[0].data.thumbnail;
+          const latestDate = entries[0].data.date;
+          const numPosts = entries.length;
 
-            return (
-              <ListItem>
-                <a
-                  href={`/series/${seriesEntry.data.slug}/`}
-                  class="block py-4"
-                >
-                  <Scale>
-                    <div class="flex items-center gap-4">
-                      <div class="mb-auto w-[100px] sm:w-[150px]">
-                        <Image
-                          src={latestThumbnail}
-                          alt="Thumbnail"
-                          quality="80"
-                          width="300"
-                          height="200"
-                          class="w-full h-full object-contain"
-                        />
-                      </div>
-                      <div class="flex-1 w-full h-full">
-                        <p class="text-base font-medium sm:text-[14pt] text-[12pt]">
-                          {name}
+          return (
+            <ListItem>
+              <a href={`/series/${seriesEntry.data.slug}/`} class="block py-4">
+                <Scale>
+                  <div class="flex items-center gap-4">
+                    <div class="mb-auto w-[100px] sm:w-[150px]">
+                      <Image
+                        src={latestThumbnail}
+                        alt="Thumbnail"
+                        quality="80"
+                        width="300"
+                        height="200"
+                        class="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div class="flex-1 w-full h-full">
+                      <p class="text-base font-medium sm:text-[14pt] text-[12pt]">
+                        {name}
+                      </p>
+                      <div class="text-xs text-gray-400 mt-2 font-light sm:text-sm whitespace-nowrap flex">
+                        <p class="inline-block pr-2 mr-2 border-r-1 border-gray-300 flex-0">
+                          {numPosts} 개의 글
                         </p>
-                        <div class="text-xs text-gray-400 mt-2 font-light sm:text-sm whitespace-nowrap flex">
-                          <p class="inline-block pr-2 mr-2 border-r-1 border-gray-300 flex-0">
-                            {numPosts} 개의 글
-                          </p>
-                          <p class="inline-block flex-0">
-                            {formatDate(latestDate)}
-                          </p>
-                        </div>
+                        <p class="inline-block flex-0">
+                          {formatDate(latestDate)}
+                        </p>
                       </div>
                     </div>
-                  </Scale>
-                </a>
-              </ListItem>
-            );
-          })
-        }
-      </List>
-    </div>
-    <div class="my-8">
-      <Heading>Drop.</Heading>
-      <div class="font-light text-[14px]">
-        <p>컴퓨테이션에 대해 이야기합니다.</p>
-      </div>
-      <nav class="mt-4 text-[12px] md:text-[14px] font-light list-none">
-        <li class="inline text-gray-400">
-          <a href={github} class="py-1.5">GITHUB</a>
-        </li>
-        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
-          <a href={email} class="py-1.5">EMAIL</a>
-        </li>
-      </nav>
-    </div>
+                  </div>
+                </Scale>
+              </a>
+            </ListItem>
+          );
+        })
+      }
+    </List>
   </div>
-</Base>
+</ListPage>

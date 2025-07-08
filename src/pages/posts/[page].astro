@@ -2,15 +2,11 @@
 import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
 import ArticleList from "@/components/page/ArticleList.astro";
-import Base from "@/layouts/Base.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import Heading from "@/components/core/Heading.astro";
 import ChevronLeft from "@/components/icon/ChevronLeft.svg";
 import ChevronRight from "@/components/icon/ChevronRight.svg";
-import config from "@/config";
-import TopNav from "@/components/page/TopNav.astro";
-
-const { github, email } = config.contacts;
+import ListPage from "@/layouts/ListPage.astro";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const posts = sortBlogCollectionByDate(await getCollection("blog"));
@@ -21,60 +17,41 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 const { page } = Astro.props;
 ---
 
-<Base pageTitle="Home">
+<ListPage pageTitle="Posts">
   <div>
-    <div class="mt-4 mb-8">
-      <TopNav />
-    </div>
-    <div class="my-8">
-      <Heading>Page {page.currentPage}.</Heading>
-      <ArticleList articles={page.data} />
-      <div class="flex justify-between">
-        <div class="flex-0 flex">
-          {
-            page.currentPage > 1 && (
-              <a
-                class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
-                href={page.url.prev}
-              >
-                <ChevronLeft />
-                <p class="py-2 w-auto whitespace-nowrap">
-                  Page {page.currentPage - 1}
-                </p>
-              </a>
-            )
-          }
-        </div>
-        <div class="flex-0 flex">
-          {
-            page.currentPage < page.lastPage && (
-              <a
-                class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
-                href={page.url.next}
-              >
-                <p class="py-2 w-auto whitespace-nowrap">
-                  Page {page.currentPage + 1}
-                </p>
-                <ChevronRight />
-              </a>
-            )
-          }
-        </div>
+    <Heading>Page {page.currentPage}.</Heading>
+    <ArticleList articles={page.data} />
+    <div class="flex justify-between">
+      <div class="flex-0 flex">
+        {
+          page.currentPage > 1 && (
+            <a
+              class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
+              href={page.url.prev}
+            >
+              <ChevronLeft />
+              <p class="py-2 w-auto whitespace-nowrap">
+                Page {page.currentPage - 1}
+              </p>
+            </a>
+          )
+        }
       </div>
-    </div>
-    <div class="my-8">
-      <Heading>Drop.</Heading>
-      <div class="font-light text-[14px]">
-        <p>컴퓨테이션에 대해 이야기합니다.</p>
+      <div class="flex-0 flex">
+        {
+          page.currentPage < page.lastPage && (
+            <a
+              class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
+              href={page.url.next}
+            >
+              <p class="py-2 w-auto whitespace-nowrap">
+                Page {page.currentPage + 1}
+              </p>
+              <ChevronRight />
+            </a>
+          )
+        }
       </div>
-      <nav class="mt-4 text-[12px] md:text-[14px] font-light list-none">
-        <li class="inline text-gray-400">
-          <a href={github} class="py-1.5">GITHUB</a>
-        </li>
-        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
-          <a href={email} class="py-1.5">EMAIL</a>
-        </li>
-      </nav>
     </div>
   </div>
-</Base>
+</ListPage>
