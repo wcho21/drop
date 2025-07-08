@@ -1,0 +1,152 @@
+---
+import Base from "@/layouts/Base.astro";
+import { sortBlogCollectionByTitle } from "@/scripts/utils/collections";
+import { getCollection } from "astro:content";
+import Heading from "@/components/core/Heading.astro";
+import config from "@/config";
+import { range } from "lodash-es";
+
+const posts = sortBlogCollectionByTitle(await getCollection("blog"));
+const series = await getCollection("series");
+
+const getCodePoint = (char: string): number => {
+  const codePoint = char.codePointAt(0);
+  if (codePoint === undefined) {
+    throw new Error(`Undefined codepoint from '${char}'`);
+  }
+  return codePoint;
+};
+
+const getInitialConsonant = (str: string): string => {
+  const first = getCodePoint(str[0]);
+
+  if (first < getCodePoint("가") || getCodePoint("힣") < first) {
+    return str[0];
+  }
+
+  const hangulConsonant = range(getCodePoint("ᄀ"), getCodePoint("ᄒ") + 1).map(
+    (i) => {
+      return String.fromCodePoint(i);
+    },
+  );
+  const consonantIndex = Math.floor(
+    (getCodePoint(str[0]) - getCodePoint("가")) / (21 * 28),
+  );
+
+  return hangulConsonant[consonantIndex];
+};
+
+const postGroups = new Map<string, { title: string; id: string }[]>();
+for (const post of posts) {
+  const consonant = getInitialConsonant(post.data.title);
+  if (!postGroups.has(consonant)) {
+    postGroups.set(consonant, []);
+  }
+  // biome-ignore lint: suppress noNonNullAssertion
+  postGroups.get(consonant)!.push({ title: post.data.title, id: post.id });
+}
+const seriesGroups = new Map<string, { title: string; id: string }[]>();
+for (const entry of series) {
+  const consonant = getInitialConsonant(entry.id);
+  if (!seriesGroups.has(consonant)) {
+    seriesGroups.set(consonant, []);
+  }
+  // biome-ignore lint: suppress noNonNullAssertion
+  seriesGroups.get(consonant)!.push({ title: entry.id, id: entry.data.slug });
+}
+
+const { github, email } = config.contacts;
+---
+
+<Base pageTitle="Home">
+  <div>
+    <div class="mt-1 mb-8">
+      <nav class="mt-4 text-[12px] md:text-[14px] font-light list-none">
+        <li class="inline text-gray-400"><a href="/">FRONT</a></li>
+        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
+          <a href="/posts/1/">POSTS</a>
+        </li>
+        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
+          SERIES
+        </li>
+        <li class="inline font-semibold pl-4 ml-4 border-l border-gray-300">
+          INDEX
+        </li>
+      </nav>
+    </div>
+    <div class="my-8">
+      <Heading>Posts.</Heading>
+      <div class="grid grid-cols-2 gap-x-1 gap-y-2">
+        {
+          Array.from(postGroups.entries()).map(([name, entries]) => {
+            return (
+              <div>
+                <p class="sm:text-[16pt] text-[14pt] font-semibold">{name}</p>
+                <div>
+                  {entries.map((entry) => (
+                    <a
+                      href={`/posts/${entry.id}/`}
+                      class="block my-1 text-gray-400"
+                    >
+                      <div class="flex items-center gap-4">
+                        <div class="flex-1 w-full h-full">
+                          <p class="text-base font-light sm:text-[12pt] text-[10.5pt] text-gray-600 hover:text-gray-900">
+                            {entry.title}
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+    <div class="my-8">
+      <Heading>Series.</Heading>
+      <div class="grid grid-cols-2 gap-x-1 gap-y-2">
+        {
+          Array.from(seriesGroups.entries()).map(([name, entries]) => {
+            return (
+              <div>
+                <p class="sm:text-[16pt] text-[14pt] font-semibold">{name}</p>
+                <div>
+                  {entries.map((entry) => (
+                    <a
+                      href={`/series/${entry.id}/`}
+                      class="block my-1 text-gray-400"
+                    >
+                      <div class="flex items-center gap-4">
+                        <div class="flex-1 w-full h-full">
+                          <p class="text-base font-light sm:text-[12pt] text-[10.5pt] text-gray-600 hover:text-gray-900">
+                            {entry.title}
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+    <div class="my-8">
+      <Heading>Drop.</Heading>
+      <div class="font-light text-[14px]">
+        <p>컴퓨테이션에 대해 이야기합니다.</p>
+      </div>
+      <nav class="mt-4 text-[12px] md:text-[14px] font-light list-none">
+        <li class="inline text-gray-400">
+          <a href={github} class="py-1.5">GITHUB</a>
+        </li>
+        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
+          <a href={email} class="py-1.5">EMAIL</a>
+        </li>
+      </nav>
+    </div>
+  </div>
+</Base>

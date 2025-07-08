@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import { groupBy, toPairs } from "lodash-es";
-import { createDateComparator } from "../comparators";
+import { createDateComparator, createTitleComparator } from "../comparators";
 
 interface Series {
   name: string;
@@ -13,6 +13,13 @@ export type SeriesMap = Map<string, CollectionEntry<"blog">[]>;
 export function sortBlogCollectionByDate(entries: CollectionEntry<"blog">[]): CollectionEntry<"blog">[] {
   const decOrderDateComparator = createDateComparator("decreasing");
   const sorted = entries.toSorted((entry1, entry2) => decOrderDateComparator(entry1.data.date, entry2.data.date));
+
+  return sorted;
+}
+
+export function sortBlogCollectionByTitle(entries: CollectionEntry<"blog">[]): CollectionEntry<"blog">[] {
+  const decOrderDateComparator = createTitleComparator("increasing");
+  const sorted = entries.toSorted((entry1, entry2) => decOrderDateComparator(entry1.data.title, entry2.data.title));
 
   return sorted;
 }
