@@ -5,23 +5,28 @@ import ListPage from "@/layouts/ListPage.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import Heading from "@/components/core/Heading.astro";
 import ChevronDoubleRight from "@/components/icon/ChevronDoubleRight.svg";
+import GrayLink from "@/components/page/GrayLink.astro";
+import config from "@/config";
 
 const articles = sortBlogCollectionByDate(await getCollection("blog"));
 const latest = articles.slice(0, 5);
 ---
 
 <ListPage pageTitle="Front">
-  <div>
+  <div class="mb-2">
     <Heading>Latest.</Heading>
+  </div>
+  <div>
     <ArticleList articles={latest} />
-    <div class="flex">
-      <a
-        class="block ml-auto flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
-        href="#"
-      >
-        <p class="py-2">MORE...</p>
-        <ChevronDoubleRight />
-      </a>
+    <div class="mt-4 flex flex-row-reverse">
+      <div class="flex-0">
+        <GrayLink href=`${config.paths.posts}/`>
+          <div class="block flex gap-1 items-center text-[14px] font-light">
+            <p class="whitespace-nowrap">MORE...</p>
+            <ChevronDoubleRight />
+          </div>
+        </GrayLink>
+      </div>
     </div>
   </div>
   <div class="mt-8">
