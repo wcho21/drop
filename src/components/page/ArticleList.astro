@@ -15,10 +15,21 @@ const { articles } = Astro.props;
   <ul class="block">
     {
       articles.map((article) => (
-        <ListItem>
+        <ListItem class="py-4" data-item>
           <ArticleCard article={article} />
         </ListItem>
       ))
     }
   </ul>
 </List>
+
+<style>
+  @reference "@/styles/global.css";
+
+  li[data-item]:first-child {
+    @apply pt-0;
+  }
+  li[data-item]:last-child {
+    @apply pb-0;
+  }
+</style>
