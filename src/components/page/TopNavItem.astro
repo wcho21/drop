@@ -1,0 +1,14 @@
+<li class="flex-0 px-5 border-l-1 border-gray-300 whitespace-nowrap">
+  <slot />
+</li>
+
+<style>
+  @reference "@/styles/global.css";
+
+  li:first-child {
+    @apply border-l-0 pl-0;
+  }
+  li:last-child {
+    @apply pr-0;
+  }
+</style>

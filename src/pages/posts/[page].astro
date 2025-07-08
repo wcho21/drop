@@ -8,6 +8,7 @@ import Heading from "@/components/core/Heading.astro";
 import ChevronLeft from "@/components/icon/ChevronLeft.svg";
 import ChevronRight from "@/components/icon/ChevronRight.svg";
 import config from "@/config";
+import TopNav from "@/components/page/TopNav.astro";
 
 const { github, email } = config.contacts;
 
@@ -22,19 +23,8 @@ const { page } = Astro.props;
 
 <Base pageTitle="Home">
   <div>
-    <div class="mt-1 mb-8">
-      <nav class="mt-4 text-[12px] md:text-[14px] font-light list-none">
-        <li class="inline text-gray-400"><a href="/">FRONT</a></li>
-        <li class="inline font-semibold pl-4 ml-4 border-l border-gray-300">
-          POSTS
-        </li>
-        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
-          <a href="/series/">SERIES</a>
-        </li>
-        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
-          INDEX
-        </li>
-      </nav>
+    <div class="mt-4 mb-8">
+      <TopNav />
     </div>
     <div class="my-8">
       <Heading>Page {page.currentPage}.</Heading>

@@ -12,6 +12,7 @@ import { Image } from "astro:assets";
 import List from "@/components/core/List.astro";
 import ListItem from "@/components/core/ListItem.astro";
 import Scale from "@/components/core/Scale.astro";
+import TopNav from "@/components/page/TopNav.astro";
 
 const posts = sortBlogCollectionByDate(await getCollection("blog"));
 const series = await getCollection("series");
@@ -22,19 +23,8 @@ const { github, email } = config.contacts;
 
 <Base pageTitle="Home">
   <div>
-    <div class="mt-1 mb-8">
-      <nav class="mt-4 text-[12px] md:text-[14px] font-light list-none">
-        <li class="inline text-gray-400"><a href="/">FRONT</a></li>
-        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
-          <a href="/posts/1/">POSTS</a>
-        </li>
-        <li class="inline font-semibold pl-4 ml-4 border-l border-gray-300">
-          SERIES
-        </li>
-        <li class="inline pl-4 ml-4 border-l border-gray-300 text-gray-400">
-          INDEX
-        </li>
-      </nav>
+    <div class="mt-4 mb-8">
+      <TopNav />
     </div>
     <div class="my-8">
       <Heading>Series.</Heading>
