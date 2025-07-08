@@ -4,6 +4,8 @@ import { getCollection } from "astro:content";
 import Heading from "@/components/core/Heading.astro";
 import { range } from "lodash-es";
 import ListPage from "@/layouts/ListPage.astro";
+import GrayLink from "@/components/page/GrayLink.astro";
+import config from "@/config";
 
 const posts = sortBlogCollectionByTitle(await getCollection("blog"));
 
@@ -54,34 +56,26 @@ for (const post of posts) {
 ---
 
 <ListPage pageTitle="Index">
-  <div>
+  <div class="mb-2">
     <Heading>Posts.</Heading>
-    <div class="grid grid-cols-2 gap-x-1 gap-y-2">
-      {
-        Array.from(postGroups.entries()).map(([name, entries]) => {
-          return (
-            <div>
-              <p class="sm:text-[16pt] text-[14pt] font-semibold">{name}</p>
-              <div>
-                {entries.map((entry) => (
-                  <a
-                    href={`/posts/${entry.id}/`}
-                    class="block my-1 text-gray-400"
-                  >
-                    <div class="flex items-center gap-4">
-                      <div class="flex-1 w-full h-full">
-                        <p class="text-base font-light sm:text-[12pt] text-[10.5pt] text-gray-600 hover:text-gray-900">
-                          {entry.title}
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          );
-        })
-      }
-    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-x-2 gap-y-4">
+    {
+      Array.from(postGroups.entries()).map(([name, entries]) => (
+        <div class="flex flex-col gap-y-2">
+          <p class="flex-0 sm:text-[16pt] text-[14pt] font-semibold">{name}</p>
+          <div class="flex-0 flex flex-col gap-y-1 font-light">
+            {entries.map((entry) => (
+              <GrayLink
+                href={`${config.paths.posts}/${entry.id}/`}
+                grayLevel="dark"
+              >
+                {entry.title}
+              </GrayLink>
+            ))}
+          </div>
+        </div>
+      ))
+    }
   </div>
 </ListPage>
