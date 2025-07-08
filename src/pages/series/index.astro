@@ -18,51 +18,51 @@ const seriesGroups = groupSeriesAsMap(posts);
 ---
 
 <ListPage pageTitle="Series">
-  <div>
+  <div class="mb-2">
     <Heading>Series.</Heading>
-    <List>
-      {
-        Array.from(seriesGroups).map(([name, entries]) => {
-          const seriesEntry = series.find((entry) => entry.id === name)!;
-          const latestThumbnail = entries[0].data.thumbnail;
-          const latestDate = entries[0].data.date;
-          const numPosts = entries.length;
+  </div>
+  <List>
+    {
+      Array.from(seriesGroups).map(([name, entries]) => {
+        const seriesEntry = series.find((entry) => entry.id === name)!;
+        const latestThumbnail = entries[0].data.thumbnail;
+        const latestDate = entries[0].data.date;
+        const numPosts = entries.length;
 
-          return (
-            <ListItem>
-              <a href={`/series/${seriesEntry.data.slug}/`} class="block py-4">
-                <Scale>
-                  <div class="flex items-center gap-4">
-                    <div class="mb-auto w-[100px] sm:w-[150px]">
-                      <Image
-                        src={latestThumbnail}
-                        alt="Thumbnail"
-                        quality="80"
-                        width="300"
-                        height="200"
-                        class="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div class="flex-1 w-full h-full">
-                      <p class="text-base font-medium sm:text-[14pt] text-[12pt]">
-                        {name}
+        return (
+          <ListItem>
+            <a href={`./${seriesEntry.data.slug}/`} class="block py-4">
+              <Scale>
+                <div class="flex items-center gap-4">
+                  <div class="mb-auto w-[100px] sm:w-[150px]">
+                    <Image
+                      src={latestThumbnail}
+                      alt="Thumbnail"
+                      quality="80"
+                      width="300"
+                      height="200"
+                      class="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div class="flex-1 w-full h-full">
+                    <p class="text-base font-medium sm:text-[14pt] text-[12pt]">
+                      {name}
+                    </p>
+                    <div class="text-xs text-gray-400 mt-3 font-light sm:text-sm whitespace-nowrap flex">
+                      <p class="inline-block pr-3 mr-3 border-r-1 border-gray-300 flex-0">
+                        {numPosts} 개의 글
                       </p>
-                      <div class="text-xs text-gray-400 mt-2 font-light sm:text-sm whitespace-nowrap flex">
-                        <p class="inline-block pr-2 mr-2 border-r-1 border-gray-300 flex-0">
-                          {numPosts} 개의 글
-                        </p>
-                        <p class="inline-block flex-0">
-                          {formatDate(latestDate)}
-                        </p>
-                      </div>
+                      <p class="inline-block flex-0">
+                        {formatDate(latestDate)}
+                      </p>
                     </div>
                   </div>
-                </Scale>
-              </a>
-            </ListItem>
-          );
-        })
-      }
-    </List>
-  </div>
+                </div>
+              </Scale>
+            </a>
+          </ListItem>
+        );
+      })
+    }
+  </List>
 </ListPage>
