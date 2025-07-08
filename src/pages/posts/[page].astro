@@ -18,40 +18,40 @@ const { page } = Astro.props;
 ---
 
 <ListPage pageTitle="Posts">
-  <div>
+  <div class="mb-2">
     <Heading>Page {page.currentPage}.</Heading>
-    <ArticleList articles={page.data} />
-    <div class="flex justify-between">
-      <div class="flex-0 flex">
-        {
-          page.currentPage > 1 && (
-            <a
-              class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
-              href={page.url.prev}
-            >
-              <ChevronLeft />
-              <p class="py-2 w-auto whitespace-nowrap">
-                Page {page.currentPage - 1}
-              </p>
-            </a>
-          )
-        }
-      </div>
-      <div class="flex-0 flex">
-        {
-          page.currentPage < page.lastPage && (
-            <a
-              class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
-              href={page.url.next}
-            >
-              <p class="py-2 w-auto whitespace-nowrap">
-                Page {page.currentPage + 1}
-              </p>
-              <ChevronRight />
-            </a>
-          )
-        }
-      </div>
+  </div>
+  <ArticleList articles={page.data} />
+  <div class="mt-4 flex justify-between">
+    <div class="flex-0 flex">
+      {
+        page.currentPage > 1 && (
+          <a
+            class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
+            href={page.url.prev}
+          >
+            <ChevronLeft />
+            <p class="py-2 w-auto whitespace-nowrap">
+              Page {page.currentPage - 1}
+            </p>
+          </a>
+        )
+      }
+    </div>
+    <div class="flex-0 flex">
+      {
+        page.currentPage < page.lastPage && (
+          <a
+            class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
+            href={page.url.next}
+          >
+            <p class="py-2 w-auto whitespace-nowrap">
+              Page {page.currentPage + 1}
+            </p>
+            <ChevronRight />
+          </a>
+        )
+      }
     </div>
   </div>
 </ListPage>
