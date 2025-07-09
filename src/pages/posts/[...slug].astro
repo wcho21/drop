@@ -17,10 +17,10 @@ export async function getStaticPaths() {
   const entries = sortBlogCollectionByDate(await getCollection("blog"));
   const seriesMap = groupSeriesAsMap(entries);
 
-  const getNextEntry = (entries: Entry[], i: number) => {
+  const getNextEntry = (entries: Entry[], i: number): Entry | undefined => {
     return i > 0 ? entries[i - 1] : undefined;
   };
-  const getNextEntryInSeries = (entries: Entry[], i: number) => {
+  const getNextEntryInSeries = (entries: Entry[], i: number): Entry | undefined => {
     const entry = entries[i];
     const seriesName = entry.data.series;
     if (seriesName === undefined) {
@@ -37,11 +37,28 @@ export async function getStaticPaths() {
     return getNextEntry(series, indexInSeries);
   };
 
+  const getRecommendedPosts = (entries: Entry[], i: number): Entry[] | undefined => {
+    const nextInSeries = getNextEntryInSeries(entries, i);
+    if (nextInSeries !== undefined) {
+      return [nextInSeries];
+    }
+
+    const next = getNextEntry(entries, i);
+    if (next !== undefined) {
+      return [next];
+    }
+
+    const prev = i > 0 ? entries[i-1] : undefined;
+    if (prev !== undefined) {
+      return [prev];
+    }
+    return undefined;
+  };
+
   const staticPaths = entries.map((entry, i) => ({
     params: { slug: entry.id },
     props: {
-      nextEntry: getNextEntry(entries, i),
-      nextEntryInSeries: getNextEntryInSeries(entries, i),
+      recommended: getRecommendedPosts(entries, i),
       entry,
     },
   }));
@@ -50,11 +67,10 @@ export async function getStaticPaths() {
 }
 interface Props {
   entry: Entry;
-  nextEntry?: Entry;
-  nextEntryInSeries?: Entry;
+  recommended?: Entry[];
 }
 
-const { entry, nextEntry, nextEntryInSeries } = Astro.props;
+const { entry, recommended} = Astro.props;
 const { href } = Astro.url;
 const { title, summary, date } = entry.data;
 const { Content } = await render(entry);
@@ -95,23 +111,13 @@ const image = getThumbnails()[entry.data.thumbnail];
 
   <nav id="post-nav" class="my-10 pt-10 border-t border-gray-800">
     {
-      nextEntryInSeries !== undefined && (
-        <p>
-          <span class="px-2 py-1 bg-gray-100 rounded-md text-sm text-gray-400 font-normal">
-            이 시리즈의 다음 글
-          </span>
-        </p>
-        <ArticleCard article={nextEntryInSeries} />
-      )
-    }
-    {
-      (nextEntryInSeries === undefined) && (nextEntry !== undefined) && (
-        <p>
-          <span class="px-2 py-1 bg-gray-100 rounded-md text-sm text-gray-400 font-normal">
+      recommended !== undefined && (
+        <p class="mb-2">
+          <span class="sm:px-2 sm:py-1 px-1.5 py-0.5 bg-gray-100 rounded-md sm:text-[11pt] text-[10pt] text-gray-400 font-normal">
             관심 있을 만한 글
           </span>
         </p>
-        <ArticleCard article={nextEntry} />
+        <ArticleCard article={recommended[0]} />
       )
     }
     <div class="mt-4">
