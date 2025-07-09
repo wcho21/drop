@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
-import Home from "@/components/icon/Home.astro";
 import ArticleCard from "@/components/page/ArticleCard.astro";
 import Giscus from "@/components/post/Giscus.astro";
 import Share from "@/components/post/ShareButton.astro";
@@ -10,6 +9,10 @@ import { getThumbnails } from "@/scripts/utils/assets";
 import { groupSeriesAsMap, sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { formatDate } from "@/scripts/utils/formatters";
 import Footer from "@/components/page/Footer.astro";
+import ChevronBlock from "@/components/page/ChevronBlock.astro";
+import ChevronLink from "@/components/page/ChevronLink.astro";
+import ChevronDoubleLeft from "@/components/icon/ChevronDoubleLeft.svg";
+import config from "@/config";
 
 type Entry = CollectionEntry<"blog">;
 
@@ -48,7 +51,7 @@ export async function getStaticPaths() {
       return [next];
     }
 
-    const prev = i > 0 ? entries[i-1] : undefined;
+    const prev = i < entries.length-1 ? entries[i+1] : undefined;
     if (prev !== undefined) {
       return [prev];
     }
@@ -70,7 +73,7 @@ interface Props {
   recommended?: Entry[];
 }
 
-const { entry, recommended} = Astro.props;
+const { entry, recommended } = Astro.props;
 const { href } = Astro.url;
 const { title, summary, date } = entry.data;
 const { Content } = await render(entry);
@@ -120,11 +123,14 @@ const image = getThumbnails()[entry.data.thumbnail];
         <ArticleCard article={recommended[0]} />
       )
     }
-    <div class="mt-4">
-      <a href="/" class="block py-1.5 px-3 mx-auto w-fit">
-        <Home />
-      </a>
-    </div>
+    <ChevronBlock class="mt-6">
+      <ChevronLink href=`${config.paths.posts}/` direction="left">
+        POSTS...
+        <div slot="icon">
+          <ChevronDoubleLeft />
+        </div>
+      </ChevronLink>
+    </ChevronBlock>
   </nav>
 
   <div class="my-8">
