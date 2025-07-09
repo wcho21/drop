@@ -9,6 +9,7 @@ import Base from "@/layouts/Base.astro";
 import { getThumbnails } from "@/scripts/utils/assets";
 import { groupSeriesAsMap, sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { formatDate } from "@/scripts/utils/formatters";
+import Footer from "@/components/page/Footer.astro";
 
 type Entry = CollectionEntry<"blog">;
 
@@ -119,6 +120,10 @@ const image = getThumbnails()[entry.data.thumbnail];
       </a>
     </div>
   </nav>
+
+  <div class="my-8">
+    <Footer />
+  </div>
 </Base>
 
 <style is:global>
