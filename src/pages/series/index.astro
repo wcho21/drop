@@ -4,6 +4,7 @@ import {
   groupSeriesAsMap,
 } from "@/scripts/utils/collections";
 import { getCollection } from "astro:content";
+import { getThumbnails } from "@/scripts/utils/assets";
 import { formatDate } from "@/scripts/utils/formatters";
 import { Image } from "astro:assets";
 import List from "@/components/core/List.astro";
@@ -15,6 +16,7 @@ import Section from "@/components/page/Section.astro";
 const posts = sortBlogCollectionByDate(await getCollection("blog"));
 const series = await getCollection("series");
 const seriesGroups = groupSeriesAsMap(posts);
+const thumbnails = getThumbnails();
 ---
 
 <ListPage title="Series">
@@ -23,7 +25,7 @@ const seriesGroups = groupSeriesAsMap(posts);
       {
         Array.from(seriesGroups).map(([name, entries]) => {
           const seriesEntry = series.find((entry) => entry.id === name)!;
-          const latestThumbnail = entries[0].data.thumbnail;
+          const latestThumbnail = thumbnails[entries[0].data.thumbnail];
           const latestDate = entries[0].data.date;
           const numPosts = entries.length;
 
