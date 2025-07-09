@@ -19,7 +19,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 const { page } = Astro.props;
 ---
 
-<ListPage pageTitle="Posts">
+<ListPage title="Posts">
   <Section heading={`Page ${page.currentPage}`}>
     <ArticleList articles={page.data} />
     <ChevronBlock class="mt-4">

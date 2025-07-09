@@ -4,20 +4,20 @@ import Fonts from "@/components/head/Fonts.astro";
 import GoogleAnalytics from "@/components/head/GoogleAnalytics.astro";
 import Katex from "@/components/head/Katex.astro";
 import OpenGraph from "@/components/head/OpenGraph.astro";
-import Footer from "@/components/layout/Footer.astro";
 import config from "@/config";
 import type { ImageMetadata } from "astro";
 import { generateTitle } from "./Base";
 import "../styles/global.css";
 
 interface Props {
-  pageTitle: string;
+  title: string;
   desc?: string;
   image?: ImageMetadata;
 }
-const { pageTitle, desc, image } = Astro.props;
+const { title: pageTitle, desc, image } = Astro.props;
+const { title: siteTitle, titleSep } = config.app;
 
-const title = generateTitle(pageTitle, config.app.title, config.app.titleSep);
+const title = generateTitle(pageTitle, siteTitle, titleSep);
 ---
 
 <!doctype html>

@@ -13,7 +13,7 @@ const articles = sortBlogCollectionByDate(await getCollection("blog"));
 const latest = articles.slice(0, 5);
 ---
 
-<ListPage pageTitle="Front">
+<ListPage title="Front">
   <Section heading="Latest.">
     <ArticleList articles={latest} />
     <ChevronBlock class="flex-row-reverse mt-4">
