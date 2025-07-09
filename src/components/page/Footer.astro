@@ -3,6 +3,7 @@ import Heading from "@/components/core/Heading.astro";
 import TopNavBlock from "./TopNavBlock.astro";
 import TopNavItem from "./TopNavItem.astro";
 import GrayLink from "./GrayLink.astro";
+import Section from "./Section.astro";
 import config from "@/config";
 
 const links = [
@@ -12,17 +13,20 @@ const links = [
 ---
 
 <footer>
-  <Heading>Drop.</Heading>
-  <div class="font-light text-[14px]">
-    <p>컴퓨테이션에 대해 이야기합니다.</p>
-  </div>
-  <TopNavBlock class="mt-4">
-    {
-      links.map((link) => (
-        <TopNavItem>
-          <GrayLink href={link.url}>{link.label}</GrayLink>
-        </TopNavItem>
-      ))
-    }
-  </TopNavBlock>
+  <Section heading="Drop.">
+    <div>
+      <div class="font-light text-[14px]">
+        <p>컴퓨테이션에 대해 이야기합니다.</p>
+      </div>
+      <TopNavBlock class="mt-4">
+        {
+          links.map((link) => (
+            <TopNavItem>
+              <GrayLink href={link.url}>{link.label}</GrayLink>
+            </TopNavItem>
+          ))
+        }
+      </TopNavBlock>
+    </div>
+  </Section>
 </footer>
