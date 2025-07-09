@@ -9,15 +9,9 @@ const links = [
   { label: "GITHUB", url: config.contacts.github },
   { label: "EMAIL", url: config.contacts.email },
 ] as const;
-
-interface Props {
-  class: string;
-}
-
-const classNames = Astro.props.class;
 ---
 
-<footer class={classNames}>
+<footer>
   <Heading>Drop.</Heading>
   <div class="font-light text-[14px]">
     <p>컴퓨테이션에 대해 이야기합니다.</p>
