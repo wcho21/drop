@@ -9,14 +9,14 @@ import ChevronLeft from "@/components/icon/ChevronLeft.svg";
 import Section from "@/components/page/Section.astro";
 
 export async function getStaticPaths() {
-  const blog = sortBlogCollectionByDate(await getCollection("posts"));
+  const posts = sortBlogCollectionByDate(await getCollection("posts"));
   const series = await getCollection("series");
 
   return series.map((seriesEntry) => ({
     params: { slug: seriesEntry.data.slug },
     props: {
       description: seriesEntry.data.description,
-      posts: blog.filter((post) => post.data.series === seriesEntry.id),
+      posts: posts.filter((post) => post.data.series === seriesEntry.id),
       name: seriesEntry.id,
     },
   }));
