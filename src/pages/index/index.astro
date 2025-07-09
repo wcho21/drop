@@ -7,7 +7,7 @@ import GrayLink from "@/components/page/GrayLink.astro";
 import Section from "@/components/page/Section.astro";
 import config from "@/config";
 
-const posts = sortBlogCollectionByTitle(await getCollection("blog"));
+const posts = sortBlogCollectionByTitle(await getCollection("posts"));
 
 const getCodePoint = (char: string): number => {
   const codePoint = char.codePointAt(0);

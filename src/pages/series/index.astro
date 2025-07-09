@@ -13,7 +13,7 @@ import Scale from "@/components/core/Scale.astro";
 import ListPage from "@/layouts/ListPage.astro";
 import Section from "@/components/page/Section.astro";
 
-const posts = sortBlogCollectionByDate(await getCollection("blog"));
+const posts = sortBlogCollectionByDate(await getCollection("posts"));
 const series = await getCollection("series");
 const seriesGroups = groupSeriesAsMap(posts);
 const thumbnails = getThumbnails();

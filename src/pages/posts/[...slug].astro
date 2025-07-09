@@ -14,10 +14,10 @@ import ChevronLink from "@/components/page/ChevronLink.astro";
 import ChevronDoubleLeft from "@/components/icon/ChevronDoubleLeft.svg";
 import config from "@/config";
 
-type Entry = CollectionEntry<"blog">;
+type Entry = CollectionEntry<"posts">;
 
 export async function getStaticPaths() {
-  const entries = sortBlogCollectionByDate(await getCollection("blog"));
+  const entries = sortBlogCollectionByDate(await getCollection("posts"));
   const seriesMap = groupSeriesAsMap(entries);
 
   const getNextEntry = (entries: Entry[], i: number): Entry | undefined => {

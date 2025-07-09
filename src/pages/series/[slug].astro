@@ -9,7 +9,7 @@ import ChevronLeft from "@/components/icon/ChevronLeft.svg";
 import Section from "@/components/page/Section.astro";
 
 export async function getStaticPaths() {
-  const blog = sortBlogCollectionByDate(await getCollection("blog"));
+  const blog = sortBlogCollectionByDate(await getCollection("posts"));
   const series = await getCollection("series");
 
   return series.map((seriesEntry) => ({

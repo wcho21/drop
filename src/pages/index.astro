@@ -9,7 +9,7 @@ import ChevronDoubleRight from "@/components/icon/ChevronDoubleRight.svg";
 import config from "@/config";
 import Section from "@/components/page/Section.astro";
 
-const articles = sortBlogCollectionByDate(await getCollection("blog"));
+const articles = sortBlogCollectionByDate(await getCollection("posts"));
 const series = await getCollection("series");
 const featured = (await getCollection("featured"))
   .map((obj) => obj.id)

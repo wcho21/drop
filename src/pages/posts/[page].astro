@@ -11,7 +11,7 @@ import ListPage from "@/layouts/ListPage.astro";
 import Section from "@/components/page/Section.astro";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const posts = sortBlogCollectionByDate(await getCollection("blog"));
+  const posts = sortBlogCollectionByDate(await getCollection("posts"));
 
   return paginate(posts, { pageSize: 8 });
 }
