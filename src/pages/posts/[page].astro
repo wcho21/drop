@@ -3,12 +3,12 @@ import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
 import ArticleList from "@/components/page/ArticleList.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
-import Heading from "@/components/core/Heading.astro";
 import ChevronBlock from "@/components/page/ChevronBlock.astro";
 import ChevronLink from "@/components/page/ChevronLink.astro";
 import ChevronLeft from "@/components/icon/ChevronLeft.svg";
 import ChevronRight from "@/components/icon/ChevronRight.svg";
 import ListPage from "@/layouts/ListPage.astro";
+import Section from "@/components/page/Section.astro";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const posts = sortBlogCollectionByDate(await getCollection("blog"));
@@ -20,34 +20,33 @@ const { page } = Astro.props;
 ---
 
 <ListPage pageTitle="Posts">
-  <div class="mb-2">
-    <Heading>Page {page.currentPage}.</Heading>
-  </div>
-  <ArticleList articles={page.data} />
-  <ChevronBlock class="mt-4">
-    {
-      page.url.prev !== undefined ? (
-        <ChevronLink href={page.url.prev} direction="left">
-          Page {page.currentPage - 1}
-          <div slot="icon">
-            <ChevronLeft />
-          </div>
-        </ChevronLink>
-      ) : (
-        <div />
-      )
-    }
-    {
-      page.url.next !== undefined ? (
-        <ChevronLink href={page.url.next} direction="right">
-          Page {page.currentPage + 1}
-          <div slot="icon">
-            <ChevronRight />
-          </div>
-        </ChevronLink>
-      ) : (
-        <div />
-      )
-    }
-  </ChevronBlock>
+  <Section heading={`Page ${page.currentPage}`}>
+    <ArticleList articles={page.data} />
+    <ChevronBlock class="mt-4">
+      {
+        page.url.prev !== undefined ? (
+          <ChevronLink href={page.url.prev} direction="left">
+            Page {page.currentPage - 1}
+            <div slot="icon">
+              <ChevronLeft />
+            </div>
+          </ChevronLink>
+        ) : (
+          <div />
+        )
+      }
+      {
+        page.url.next !== undefined ? (
+          <ChevronLink href={page.url.next} direction="right">
+            Page {page.currentPage + 1}
+            <div slot="icon">
+              <ChevronRight />
+            </div>
+          </ChevronLink>
+        ) : (
+          <div />
+        )
+      }
+    </ChevronBlock>
+  </Section>
 </ListPage>

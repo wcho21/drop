@@ -3,7 +3,6 @@ import { getCollection } from "astro:content";
 import ArticleList from "@/components/page/ArticleList.astro";
 import ListPage from "@/layouts/ListPage.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
-import Heading from "@/components/core/Heading.astro";
 import ChevronBlock from "@/components/page/ChevronBlock.astro";
 import ChevronLink from "@/components/page/ChevronLink.astro";
 import ChevronDoubleRight from "@/components/icon/ChevronDoubleRight.svg";
@@ -16,20 +15,17 @@ const latest = articles.slice(0, 5);
 
 <ListPage pageTitle="Front">
   <Section heading="Latest.">
-    <div>
-      <ArticleList articles={latest} />
-      <ChevronBlock class="flex-row-reverse mt-4">
-        <ChevronLink href=`${config.paths.posts}/` direction="right">
-          MORE...
-          <div slot="icon">
-            <ChevronDoubleRight />
-          </div>
-        </ChevronLink>
-      </ChevronBlock>
-    </div>
+    <ArticleList articles={latest} />
+    <ChevronBlock class="flex-row-reverse mt-4">
+      <ChevronLink href=`${config.paths.posts}/` direction="right">
+        MORE...
+        <div slot="icon">
+          <ChevronDoubleRight />
+        </div>
+      </ChevronLink>
+    </ChevronBlock>
   </Section>
-  <div class="mt-8">
-    <Heading>Featured.</Heading>
+  <Section heading="Featured.">
     <div>Content goes here.</div>
     <div>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor
@@ -70,5 +66,5 @@ const latest = articles.slice(0, 5);
       blandit laoreet eleifend. Sed eleifend risus ac diam molestie tincidunt.
       In finibus augue justo, nec euismod urna eleifend at.
     </div>
-  </div>
+  </Section>
 </ListPage>
