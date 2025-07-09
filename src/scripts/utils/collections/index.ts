@@ -24,14 +24,6 @@ export function sortBlogCollectionByTitle(entries: CollectionEntry<"blog">[]): C
   return sorted;
 }
 
-export function selectFeatured(entries: CollectionEntry<"blog">[]): CollectionEntry<"blog">[] {
-  return entries.filter(entry => (entry.data.featured ?? false) === true);
-}
-
-export function selectNonfeatured(entries: CollectionEntry<"blog">[]): CollectionEntry<"blog">[] {
-  return entries.filter(entry => (entry.data.featured ?? false) === false);
-}
-
 export function selectSeries(entries: CollectionEntry<"blog">[]): CollectionEntry<"blog">[] {
   return entries.filter(entry => entry.data.series !== undefined);
 }
