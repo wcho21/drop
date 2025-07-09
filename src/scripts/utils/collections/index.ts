@@ -39,7 +39,8 @@ export function groupSeries(entries: CollectionEntry<"blog">[]): Series[] {
 }
 
 export function groupSeriesAsMap(entries: CollectionEntry<"blog">[]): SeriesMap {
-  const groupedAsObject = groupBy(entries, ({ data }) => data.series ?? "");
+  const seriesPosts = entries.filter(entry => entry.data.series !== undefined);
+  const groupedAsObject = groupBy(seriesPosts, ({ data }) => data.series);
   const map = new Map(toPairs(groupedAsObject));
 
   return map;
