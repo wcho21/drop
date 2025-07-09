@@ -22,4 +22,9 @@ const series = defineCollection({
   }),
 });
 
-export const collections = { blog, series };
+const featured = defineCollection({
+  loader: file("src/featured.json"),
+  schema: z.object({}),
+});
+
+export const collections = { blog, series, featured };
