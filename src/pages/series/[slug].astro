@@ -1,0 +1,46 @@
+---
+import ArticleList from "@/components/page/ArticleList.astro";
+import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
+import { getCollection } from "astro:content";
+import ListPage from "@/layouts/ListPage.astro";
+import ChevronBlock from "@/components/page/ChevronBlock.astro";
+import ChevronLink from "@/components/page/ChevronLink.astro";
+import ChevronLeft from "@/components/icon/ChevronLeft.svg";
+import Section from "@/components/page/Section.astro";
+
+export async function getStaticPaths() {
+  const blog = sortBlogCollectionByDate(await getCollection("blog"));
+  const series = await getCollection("series");
+
+  return series.map((seriesEntry) => ({
+    params: { slug: seriesEntry.data.slug },
+    props: {
+      description: seriesEntry.data.description,
+      posts: blog.filter((post) => post.data.series === seriesEntry.id),
+      name: seriesEntry.id,
+    },
+  }));
+}
+
+const { description, posts, name } = Astro.props;
+---
+
+<ListPage title="Series">
+  <Section heading="List.">
+    <div class="mb-6">
+      <p class="sm:text-[16pt] text-[13.5pt] font-semibold mb-1">{name}</p>
+      <p class="sm:text-[11.5pt] text-[10.5pt] font-light text-gray-600">
+        {description}
+      </p>
+    </div>
+    <ArticleList articles={posts} />
+    <ChevronBlock class="mt-4">
+      <ChevronLink href="./../" direction="left">
+        RETURN
+        <div slot="icon">
+          <ChevronLeft />
+        </div>
+      </ChevronLink>
+    </ChevronBlock>
+  </Section>
+</ListPage>

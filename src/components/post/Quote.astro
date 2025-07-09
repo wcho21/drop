@@ -4,16 +4,21 @@ import { STATUS_FOLDED } from "@/scripts/utils/fold";
 const { display = true } = Astro.props;
 ---
 
-<div class={`pl-4 border-l border-l-gray-700 quote-component ${display ? "my-10" : "my-2"}`}>
+<div
+  class={`pl-4 border-l border-l-gray-700 quote-component ${display ? "my-10" : "my-2"}`}
+>
   <div class="mb-1.5">
     <slot />
   </div>
-  <div class="text-[13.25px] md:text-[14.5px] font-light quote-component-detail" data-status={STATUS_FOLDED}>
+  <div
+    class="text-[13.25px] sm:text-[14.5px] font-light quote-component-detail"
+    data-status={STATUS_FOLDED}
+  >
     <div class="pb-1.5">
       <slot name="detail" />
     </div>
   </div>
-  <div class="text-[13.25px] md:text-[14.5px] font-light">
+  <div class="text-[13.25px] sm:text-[14.5px] font-light">
     <slot name="name" />
   </div>
 </div>
@@ -23,14 +28,20 @@ const { display = true } = Astro.props;
   import { zip } from "lodash-es";
 
   const quotes = document.querySelectorAll<HTMLDivElement>(".quote-component");
-  const detail = document.querySelectorAll<HTMLDivElement>(".quote-component-detail");
+  const detail = document.querySelectorAll<HTMLDivElement>(
+    ".quote-component-detail",
+  );
   const quoteDetailPairs = zip(quotes, detail);
   quoteDetailPairs.forEach(([quote, detail]) => {
     if (quote === undefined) {
-      throw new Error("Expected not undefined 'quote', but received 'undefined'.");
+      throw new Error(
+        "Expected not undefined 'quote', but received 'undefined'.",
+      );
     }
     if (detail === undefined) {
-      throw new Error("Expected not undefined 'trigger', but received 'undefined'.");
+      throw new Error(
+        "Expected not undefined 'trigger', but received 'undefined'.",
+      );
     }
 
     if (detail.textContent === null || detail.textContent.length === 0) {

@@ -15,6 +15,9 @@ import remarkMath from "remark-math";
 export default defineConfig({
   site: "https://drop.rooi.dev",
   trailingSlash: "always",
+  redirects: {
+    "/posts/": "/posts/1/",
+  },
   vite: {
     plugins: [tailwindcss()],
   },

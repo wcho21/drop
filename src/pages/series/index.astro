@@ -1,0 +1,78 @@
+---
+import {
+  sortBlogCollectionByDate,
+  groupSeriesAsMap,
+} from "@/scripts/utils/collections";
+import { getCollection } from "astro:content";
+import { formatDate } from "@/scripts/utils/formatters";
+import { Image } from "astro:assets";
+import List from "@/components/core/List.astro";
+import ListItem from "@/components/core/ListItem.astro";
+import Scale from "@/components/core/Scale.astro";
+import ListPage from "@/layouts/ListPage.astro";
+import Section from "@/components/page/Section.astro";
+
+const posts = sortBlogCollectionByDate(await getCollection("blog"));
+const series = await getCollection("series");
+const seriesGroups = groupSeriesAsMap(posts);
+---
+
+<ListPage title="Series">
+  <Section heading="List.">
+    <List>
+      {
+        Array.from(seriesGroups).map(([name, entries]) => {
+          const seriesEntry = series.find((entry) => entry.id === name)!;
+          const latestThumbnail = entries[0].data.thumbnail;
+          const latestDate = entries[0].data.date;
+          const numPosts = entries.length;
+
+          return (
+            <ListItem class="py-4" data-item>
+              <a href={`./${seriesEntry.data.slug}/`} class="block">
+                <Scale>
+                  <div class="flex items-center gap-4">
+                    <div class="mb-auto w-[100px] sm:w-[150px]">
+                      <Image
+                        src={latestThumbnail}
+                        alt="Thumbnail"
+                        quality="80"
+                        width="300"
+                        height="200"
+                        class="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div class="flex-1 w-full h-full">
+                      <p class="text-base font-medium sm:text-[14pt] text-[12pt]">
+                        {name}
+                      </p>
+                      <div class="text-xs text-gray-400 mt-3 font-light sm:text-sm whitespace-nowrap flex">
+                        <p class="inline-block pr-3 mr-3 border-r-1 border-gray-300 flex-0">
+                          {numPosts} 개의 글
+                        </p>
+                        <p class="inline-block flex-0">
+                          {formatDate(latestDate)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </Scale>
+              </a>
+            </ListItem>
+          );
+        })
+      }
+    </List>
+  </Section>
+</ListPage>
+
+<style>
+  @reference "@/styles/global.css";
+
+  li[data-item]:first-child {
+    @apply pt-0;
+  }
+  li[data-item]:last-child {
+    @apply pb-0;
+  }
+</style>

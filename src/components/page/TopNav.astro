@@ -1,0 +1,36 @@
+---
+import TopNavBlock from "./TopNavBlock.astro";
+import TopNavItem from "./TopNavItem.astro";
+import GrayLink from "./GrayLink.astro";
+
+const pages = [
+  { label: "FRONT", url: "/" },
+  { label: "POSTS", url: "/posts/" },
+  { label: "SERIES", url: "/series/" },
+  { label: "INDEX", url: "/index/" },
+] as const;
+
+const url = Astro.url.pathname;
+
+const matchUrl = (sourceUrl: string, targetUrl: string): boolean => {
+  if (targetUrl === "/") {
+    return sourceUrl === targetUrl;
+  }
+
+  return sourceUrl.startsWith(targetUrl);
+};
+---
+
+<TopNavBlock>
+  {
+    pages.map((page) => (
+      <TopNavItem>
+        {matchUrl(url, page.url) ? (
+          <span class="font-semibold cursor-default">{page.label}</span>
+        ) : (
+          <GrayLink href={page.url}>{page.label}</GrayLink>
+        )}
+      </TopNavItem>
+    ))
+  }
+</TopNavBlock>

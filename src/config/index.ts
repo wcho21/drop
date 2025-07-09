@@ -6,6 +6,8 @@ const config = {
   },
   paths: {
     posts: "/posts",
+    series: "/series",
+    index: "/index",
   },
   contacts: {
     github: "https://github.com/wcho21",

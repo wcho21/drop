@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import { groupBy, toPairs } from "lodash-es";
-import { createDateComparator } from "../comparators";
+import { createDateComparator, createTitleComparator } from "../comparators";
 
 interface Series {
   name: string;
@@ -17,12 +17,11 @@ export function sortBlogCollectionByDate(entries: CollectionEntry<"blog">[]): Co
   return sorted;
 }
 
-export function selectFeatured(entries: CollectionEntry<"blog">[]): CollectionEntry<"blog">[] {
-  return entries.filter(entry => (entry.data.featured ?? false) === true);
-}
+export function sortBlogCollectionByTitle(entries: CollectionEntry<"blog">[]): CollectionEntry<"blog">[] {
+  const decOrderDateComparator = createTitleComparator("increasing");
+  const sorted = entries.toSorted((entry1, entry2) => decOrderDateComparator(entry1.data.title, entry2.data.title));
 
-export function selectNonfeatured(entries: CollectionEntry<"blog">[]): CollectionEntry<"blog">[] {
-  return entries.filter(entry => (entry.data.featured ?? false) === false);
+  return sorted;
 }
 
 export function selectSeries(entries: CollectionEntry<"blog">[]): CollectionEntry<"blog">[] {
@@ -40,7 +39,8 @@ export function groupSeries(entries: CollectionEntry<"blog">[]): Series[] {
 }
 
 export function groupSeriesAsMap(entries: CollectionEntry<"blog">[]): SeriesMap {
-  const groupedAsObject = groupBy(entries, ({ data }) => data.series ?? "");
+  const seriesPosts = entries.filter(entry => entry.data.series !== undefined);
+  const groupedAsObject = groupBy(seriesPosts, ({ data }) => data.series);
   const map = new Map(toPairs(groupedAsObject));
 
   return map;

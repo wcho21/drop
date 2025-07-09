@@ -1,0 +1,15 @@
+---
+interface Props {
+  href: string;
+  grayLevel?: "light" | "dark";
+}
+
+const { href } = Astro.props;
+const grayLevel = Astro.props.grayLevel ?? "light";
+---
+
+<a
+  href={href}
+  class={`${grayLevel === "light" ? "text-gray-400" : "text-gray-600"} hover:text-gray-800 transition-[color] duration-150 ease-out`}
+  ><slot /></a
+>

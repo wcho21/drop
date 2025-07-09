@@ -1,36 +1,60 @@
 ---
 import { getCollection } from "astro:content";
 import ArticleList from "@/components/page/ArticleList.astro";
-import SeriesList from "@/components/page/SeriesList.astro";
-import Base from "@/layouts/Base.astro";
-import {
-  selectFeatured,
-  selectNonfeatured,
-  selectSeries,
-  sortBlogCollectionByDate,
-} from "@/scripts/utils/collections";
-import { groupSeries } from "@/scripts/utils/collections";
+import ListPage from "@/layouts/ListPage.astro";
+import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
+import ChevronBlock from "@/components/page/ChevronBlock.astro";
+import ChevronLink from "@/components/page/ChevronLink.astro";
+import ChevronDoubleRight from "@/components/icon/ChevronDoubleRight.svg";
+import config from "@/config";
+import Section from "@/components/page/Section.astro";
 
 const articles = sortBlogCollectionByDate(await getCollection("blog"));
-const featured = selectFeatured(articles);
-const nonfeatured = selectNonfeatured(articles);
-const series = selectSeries(articles);
+const series = await getCollection("series");
+const featured = (await getCollection("featured"))
+  .map((obj) => obj.id)
+  .map((id) => {
+    const seriesEntry = series.find((entry) => entry.id === id);
+    if (seriesEntry === undefined) {
+      throw new Error(`Series entry not found for id '${id}'`);
+    }
+    return {
+      name: id,
+      description: seriesEntry.data.description,
+      slug: seriesEntry.data.slug,
+      posts: articles.filter((post) => post.data.series === seriesEntry.id),
+    };
+  });
+const latest = articles.slice(0, 5);
 ---
 
-<Base pageTitle="Home">
-  <div class="mb-12 pt-12 border-t-8 border-gray-800">
-    {
-      featured.length > 0 && (
-        <ArticleList heading="Featured." articles={featured} />
-      )
-    }
-
-    <div class="mt-12">
-      <ArticleList heading="Articles." articles={nonfeatured} />
+<ListPage title="Front">
+  <Section heading="Latest.">
+    <ArticleList articles={latest} />
+    <ChevronBlock class="flex-row-reverse mt-4">
+      <ChevronLink href=`${config.paths.posts}/` direction="right">
+        MORE...
+        <div slot="icon">
+          <ChevronDoubleRight />
+        </div>
+      </ChevronLink>
+    </ChevronBlock>
+  </Section>
+  <Section heading="Featured.">
+    <div class="flex flex-col gap-6">
+      {
+        featured.map((entry) => (
+          <div>
+            <p class="sm:text-[16pt] text-[13.5pt] font-semibold mb-1">
+              {entry.name}
+            </p>
+            <p class="sm:text-[11.5pt] text-[10.5pt] font-light text-gray-600 mb-6">
+              {entry.description}
+            </p>
+            <ArticleList articles={entry.posts} />
+          </div>
+        ))
+      }
     </div>
-
-    <div class="mt-12">
-      <SeriesList heading="Series." series={groupSeries(series)} />
-    </div>
-  </div>
-</Base>
+  </Section>
+</ListPage>

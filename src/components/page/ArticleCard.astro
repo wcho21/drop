@@ -15,7 +15,7 @@ const { title, date, summary, thumbnail } = data;
 const url = join(config.paths.posts, id);
 ---
 
-<a href={url} class="block py-4">
+<a href={url} class="block">
   <Scale>
     <Card title={title} date={date} summary={summary} thumbnail={thumbnail} />
   </Scale>
