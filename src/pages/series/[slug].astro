@@ -4,8 +4,9 @@ import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { getCollection } from "astro:content";
 import Heading from "@/components/core/Heading.astro";
 import ListPage from "@/layouts/ListPage.astro";
+import ChevronBlock from "@/components/page/ChevronBlock.astro";
+import ChevronLink from "@/components/page/ChevronLink.astro";
 import ChevronLeft from "@/components/icon/ChevronLeft.svg";
-import GrayLink from "@/components/page/GrayLink.astro";
 
 export async function getStaticPaths() {
   const blog = sortBlogCollectionByDate(await getCollection("blog"));
@@ -33,14 +34,12 @@ const { description, posts, name } = Astro.props;
     </div>
   </div>
   <ArticleList articles={posts} />
-  <div class="mt-4 flex">
-    <div class="flex-0">
-      <GrayLink href="./../">
-        <div class="block flex gap-1 items-center text-[14px] font-light">
-          <ChevronLeft />
-          <p class="whitespace-nowrap">RETURN</p>
-        </div>
-      </GrayLink>
-    </div>
-  </div>
+  <ChevronBlock class="mt-4">
+    <ChevronLink href="./../" direction="left">
+      RETURN
+      <div slot="icon">
+        <ChevronLeft />
+      </div>
+    </ChevronLink>
+  </ChevronBlock>
 </ListPage>

@@ -4,6 +4,8 @@ import type { GetStaticPathsOptions } from "astro";
 import ArticleList from "@/components/page/ArticleList.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import Heading from "@/components/core/Heading.astro";
+import ChevronBlock from "@/components/page/ChevronBlock.astro";
+import ChevronLink from "@/components/page/ChevronLink.astro";
 import ChevronLeft from "@/components/icon/ChevronLeft.svg";
 import ChevronRight from "@/components/icon/ChevronRight.svg";
 import ListPage from "@/layouts/ListPage.astro";
@@ -22,36 +24,30 @@ const { page } = Astro.props;
     <Heading>Page {page.currentPage}.</Heading>
   </div>
   <ArticleList articles={page.data} />
-  <div class="mt-4 flex justify-between">
-    <div class="flex-0 flex">
-      {
-        page.currentPage > 1 && (
-          <a
-            class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
-            href={page.url.prev}
-          >
+  <ChevronBlock class="mt-4">
+    {
+      page.url.prev !== undefined ? (
+        <ChevronLink href={page.url.prev} direction="left">
+          Page {page.currentPage - 1}
+          <div slot="icon">
             <ChevronLeft />
-            <p class="py-2 w-auto whitespace-nowrap">
-              Page {page.currentPage - 1}
-            </p>
-          </a>
-        )
-      }
-    </div>
-    <div class="flex-0 flex">
-      {
-        page.currentPage < page.lastPage && (
-          <a
-            class="block flex-0 flex gap-1 items-center text-[14px] text-gray-400 font-light hover:text-gray-800 transition-[color]"
-            href={page.url.next}
-          >
-            <p class="py-2 w-auto whitespace-nowrap">
-              Page {page.currentPage + 1}
-            </p>
+          </div>
+        </ChevronLink>
+      ) : (
+        <div />
+      )
+    }
+    {
+      page.url.next !== undefined ? (
+        <ChevronLink href={page.url.next} direction="right">
+          Page {page.currentPage + 1}
+          <div slot="icon">
             <ChevronRight />
-          </a>
-        )
-      }
-    </div>
-  </div>
+          </div>
+        </ChevronLink>
+      ) : (
+        <div />
+      )
+    }
+  </ChevronBlock>
 </ListPage>

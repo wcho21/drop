@@ -4,8 +4,9 @@ import ArticleList from "@/components/page/ArticleList.astro";
 import ListPage from "@/layouts/ListPage.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import Heading from "@/components/core/Heading.astro";
+import ChevronBlock from "@/components/page/ChevronBlock.astro";
+import ChevronLink from "@/components/page/ChevronLink.astro";
 import ChevronDoubleRight from "@/components/icon/ChevronDoubleRight.svg";
-import GrayLink from "@/components/page/GrayLink.astro";
 import config from "@/config";
 
 const articles = sortBlogCollectionByDate(await getCollection("blog"));
@@ -18,16 +19,14 @@ const latest = articles.slice(0, 5);
   </div>
   <div>
     <ArticleList articles={latest} />
-    <div class="mt-4 flex flex-row-reverse">
-      <div class="flex-0">
-        <GrayLink href=`${config.paths.posts}/`>
-          <div class="block flex gap-1 items-center text-[14px] font-light">
-            <p class="whitespace-nowrap">MORE...</p>
-            <ChevronDoubleRight />
-          </div>
-        </GrayLink>
-      </div>
-    </div>
+    <ChevronBlock class="flex-row-reverse mt-4">
+      <ChevronLink href=`${config.paths.posts}/` direction="right">
+        MORE...
+        <div slot="icon">
+          <ChevronDoubleRight />
+        </div>
+      </ChevronLink>
+    </ChevronBlock>
   </div>
   <div class="mt-8">
     <Heading>Featured.</Heading>

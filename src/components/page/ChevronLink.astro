@@ -1,0 +1,20 @@
+---
+import GrayLink from "@/components/page/GrayLink.astro";
+
+interface Props {
+  href: string;
+  direction: "left" | "right";
+}
+
+const { href, direction } = Astro.props;
+---
+
+<div class="flex-0">
+  <GrayLink href={href}>
+    <div class="block flex gap-1 items-center text-[14px] font-light">
+      {direction === "left" && <slot name="icon" />}
+      <p class="whitespace-nowrap"><slot /></p>
+      {direction === "right" && <slot name="icon" />}
+    </div>
+  </GrayLink>
+</div>
