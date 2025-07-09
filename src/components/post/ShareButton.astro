@@ -13,17 +13,19 @@ const { url, title } = Astro.props;
   <button class="share-button-component cursor-pointer py-1.5 px-3">
     <Icon />
   </button>
-  <div class="share-button-component-tooltip font-light font-[12px] md:font-[14px]">
+  <div
+    class="share-button-component-tooltip font-light font-[12px] sm:font-[14px]"
+  >
     <p>Copied</p>
   </div>
 </div>
 
 <style>
   @reference "tailwindcss";
-  
+
   .share-button-component-tooltip {
     @apply w-max text-center absolute top-full left-1/2 -translate-x-1/2;
-    @apply bg-gray-100 py-1.5 px-3 rounded-md text-gray-600 text-[12px] md:text-[14px];
+    @apply bg-gray-100 py-1.5 px-3 rounded-md text-gray-600 text-[12px] sm:text-[14px];
     @apply invisible opacity-0;
     transition: all 0.4s;
   }

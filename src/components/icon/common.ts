@@ -1,1 +1,1 @@
-export const classNames = "w-[16px] md:w-[20px] fill-gray-800";
+export const classNames = "w-[16px] sm:w-[20px] fill-gray-800";

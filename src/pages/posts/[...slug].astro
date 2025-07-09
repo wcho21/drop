@@ -64,7 +64,7 @@ const image = getThumbnails()[entry.data.thumbnail];
 <Base title={title} desc={summary} image={image}>
   <div>
     <header class="mt-10">
-      <p class="font-medium text-[22px] md:text-[30px]">{title}</p>
+      <p class="font-medium text-[22px] sm:text-[30px]">{title}</p>
       <p class="text-gray-600">{summary}</p>
       <p class="mt-3 text-[14px] text-gray-400 font-light"><time>{formatDate(date)}</time></p>
     </header>
@@ -125,7 +125,7 @@ const image = getThumbnails()[entry.data.thumbnail];
   @reference "tailwindcss";
 
   #post-main {
-    @apply text-[14px] md:text-[16px] text-gray-800 text-justify;
+    @apply text-[14px] sm:text-[16px] text-gray-800 text-justify;
   }
 
   #post-main .serif {
@@ -133,11 +133,11 @@ const image = getThumbnails()[entry.data.thumbnail];
   }
 
   #post-main > h1 {
-    @apply text-[20px] md:text-[24px] font-bold mt-16 mb-2 font-serif;
+    @apply text-[20px] sm:text-[24px] font-bold mt-16 mb-2 font-serif;
   }
 
   #post-main > h2 {
-    @apply text-[16px] md:text-[18px] font-bold mt-8 mb-2 font-serif;
+    @apply text-[16px] sm:text-[18px] font-bold mt-8 mb-2 font-serif;
   }
 
   #post-main > p {
