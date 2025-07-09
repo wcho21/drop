@@ -28,8 +28,10 @@ const { description, posts, name } = Astro.props;
 <ListPage title="Series">
   <Section heading="List.">
     <div class="mb-6">
-      <p class="text-[17.5pt] font-medium mb-1">{name}</p>
-      <p class="text-[11.5pt] font-light text-gray-600">{description}</p>
+      <p class="sm:text-[16pt] text-[13.5pt] font-semibold mb-1">{name}</p>
+      <p class="sm:text-[11.5pt] text-[10.5pt] font-light text-gray-600">
+        {description}
+      </p>
     </div>
     <ArticleList articles={posts} />
     <ChevronBlock class="mt-4">
