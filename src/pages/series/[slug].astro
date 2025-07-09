@@ -1,10 +1,10 @@
 ---
-import ArticleList from "@/components/page/ArticleList.astro";
+import PostList from "@/components/page/list/PostList.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { getCollection } from "astro:content";
 import ListPage from "@/layouts/ListPage.astro";
-import ChevronBlock from "@/components/page/ChevronBlock.astro";
-import ChevronLink from "@/components/page/ChevronLink.astro";
+import ChevronBlock from "@/components/page/chevron/ChevronBlock.astro";
+import ChevronLink from "@/components/page/chevron/ChevronLink.astro";
 import ChevronLeft from "@/components/icon/ChevronLeft.svg";
 import Section from "@/components/page/Section.astro";
 
@@ -33,7 +33,7 @@ const { description, posts, name } = Astro.props;
         {description}
       </p>
     </div>
-    <ArticleList articles={posts} />
+    <PostList articles={posts} />
     <ChevronBlock class="mt-4">
       <ChevronLink href="./../" direction="left">
         RETURN

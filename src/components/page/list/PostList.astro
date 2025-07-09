@@ -1,8 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import List from "../core/List.astro";
-import ListItem from "../core/ListItem.astro";
-import ArticleCard from "./ArticleCard.astro";
+import List from "@/components/core/List.astro";
+import ListItem from "@/components/core/ListItem.astro";
+import LinkCard from "@/components/page/card/LinkCard.astro";
 
 interface Props {
   articles: CollectionEntry<"posts">[];
@@ -16,7 +16,7 @@ const { articles } = Astro.props;
     {
       articles.map((article) => (
         <ListItem class="py-4" data-item>
-          <ArticleCard article={article} />
+          <LinkCard article={article} />
         </ListItem>
       ))
     }

@@ -1,11 +1,11 @@
 ---
 import { getCollection } from "astro:content";
-import ArticleList from "@/components/page/ArticleList.astro";
+import PostList from "@/components/page/list/PostList.astro";
 import ListPage from "@/layouts/ListPage.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { findOrThrow } from "@/scripts/utils/array";
-import ChevronBlock from "@/components/page/ChevronBlock.astro";
-import ChevronLink from "@/components/page/ChevronLink.astro";
+import ChevronBlock from "@/components/page/chevron/ChevronBlock.astro";
+import ChevronLink from "@/components/page/chevron/ChevronLink.astro";
 import ChevronDoubleRight from "@/components/icon/ChevronDoubleRight.svg";
 import config from "@/config";
 import Section from "@/components/page/Section.astro";
@@ -31,7 +31,7 @@ const latestPosts = posts.slice(0, 5);
 
 <ListPage title="Front">
   <Section heading="Latest.">
-    <ArticleList articles={latestPosts} />
+    <PostList articles={latestPosts} />
     <ChevronBlock class="flex-row-reverse mt-4">
       <ChevronLink href=`${config.paths.posts}/` direction="right">
         MORE...
@@ -52,7 +52,7 @@ const latestPosts = posts.slice(0, 5);
             <p class="sm:text-[11.5pt] text-[10.5pt] font-light text-gray-600 mb-6">
               {entry.description}
             </p>
-            <ArticleList articles={entry.posts} />
+            <PostList articles={entry.posts} />
           </div>
         ))
       }

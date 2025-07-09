@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
-import ArticleCard from "@/components/page/ArticleCard.astro";
+import LinkCard from "@/components/page/card/LinkCard.astro";
 import Giscus from "@/components/post/Giscus.astro";
 import Share from "@/components/post/ShareButton.astro";
 import Base from "@/layouts/Base.astro";
@@ -9,8 +9,8 @@ import { getThumbnails } from "@/scripts/utils/assets";
 import { groupSeriesAsMap, sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { formatDate } from "@/scripts/utils/formatters";
 import Footer from "@/components/page/Footer.astro";
-import ChevronBlock from "@/components/page/ChevronBlock.astro";
-import ChevronLink from "@/components/page/ChevronLink.astro";
+import ChevronBlock from "@/components/page/chevron/ChevronBlock.astro";
+import ChevronLink from "@/components/page/chevron/ChevronLink.astro";
 import ChevronDoubleLeft from "@/components/icon/ChevronDoubleLeft.svg";
 import config from "@/config";
 
@@ -125,7 +125,7 @@ const image = getThumbnails()[post.data.thumbnail];
             관심 있을 만한 글
           </span>
         </p>
-        <ArticleCard article={recommended[0]} />
+        <LinkCard article={recommended[0]} />
       )
     }
     <ChevronBlock class="mt-6">
