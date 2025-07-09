@@ -1,0 +1,14 @@
+---
+import Heading from "@/components/core/Heading.astro";
+
+interface Props {
+  heading: string;
+}
+
+const { heading } = Astro.props;
+---
+
+<div class="flex flex-col gap-2">
+  <Heading>{heading}</Heading>
+  <slot />
+</div>

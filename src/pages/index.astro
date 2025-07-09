@@ -8,26 +8,26 @@ import ChevronBlock from "@/components/page/ChevronBlock.astro";
 import ChevronLink from "@/components/page/ChevronLink.astro";
 import ChevronDoubleRight from "@/components/icon/ChevronDoubleRight.svg";
 import config from "@/config";
+import Section from "@/components/page/Section.astro";
 
 const articles = sortBlogCollectionByDate(await getCollection("blog"));
 const latest = articles.slice(0, 5);
 ---
 
 <ListPage pageTitle="Front">
-  <div class="mb-2">
-    <Heading>Latest.</Heading>
-  </div>
-  <div>
-    <ArticleList articles={latest} />
-    <ChevronBlock class="flex-row-reverse mt-4">
-      <ChevronLink href=`${config.paths.posts}/` direction="right">
-        MORE...
-        <div slot="icon">
-          <ChevronDoubleRight />
-        </div>
-      </ChevronLink>
-    </ChevronBlock>
-  </div>
+  <Section heading="Latest.">
+    <div>
+      <ArticleList articles={latest} />
+      <ChevronBlock class="flex-row-reverse mt-4">
+        <ChevronLink href=`${config.paths.posts}/` direction="right">
+          MORE...
+          <div slot="icon">
+            <ChevronDoubleRight />
+          </div>
+        </ChevronLink>
+      </ChevronBlock>
+    </div>
+  </Section>
   <div class="mt-8">
     <Heading>Featured.</Heading>
     <div>Content goes here.</div>
