@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
-import ArticleCard from "@/components/page/ArticleCard.astro";
+import LinkCard from "@/components/page/card/LinkCard.astro";
 import Giscus from "@/components/post/Giscus.astro";
 import Share from "@/components/post/ShareButton.astro";
 import Base from "@/layouts/Base.astro";
@@ -9,22 +9,22 @@ import { getThumbnails } from "@/scripts/utils/assets";
 import { groupSeriesAsMap, sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { formatDate } from "@/scripts/utils/formatters";
 import Footer from "@/components/page/Footer.astro";
-import ChevronBlock from "@/components/page/ChevronBlock.astro";
-import ChevronLink from "@/components/page/ChevronLink.astro";
+import ChevronBlock from "@/components/page/chevron/ChevronBlock.astro";
+import ChevronLink from "@/components/page/chevron/ChevronLink.astro";
 import ChevronDoubleLeft from "@/components/icon/ChevronDoubleLeft.svg";
 import config from "@/config";
 
-type Entry = CollectionEntry<"blog">;
+type Post = CollectionEntry<"posts">;
 
 export async function getStaticPaths() {
-  const entries = sortBlogCollectionByDate(await getCollection("blog"));
-  const seriesMap = groupSeriesAsMap(entries);
+  const posts = sortBlogCollectionByDate(await getCollection("posts"));
+  const seriesMap = groupSeriesAsMap(posts);
 
-  const getNextEntry = (entries: Entry[], i: number): Entry | undefined => {
-    return i > 0 ? entries[i - 1] : undefined;
+  const getNext = (posts: Post[], i: number): Post | undefined => {
+    return i > 0 ? posts[i - 1] : undefined;
   };
-  const getNextEntryInSeries = (entries: Entry[], i: number): Entry | undefined => {
-    const entry = entries[i];
+  const getNextInSeries = (posts: Post[], i: number): Post | undefined => {
+    const entry = posts[i];
     const seriesName = entry.data.series;
     if (seriesName === undefined) {
       return undefined;
@@ -37,48 +37,53 @@ export async function getStaticPaths() {
     }
 
     const indexInSeries = series.findIndex(e => e.id === entry.id);
-    return getNextEntry(series, indexInSeries);
+    return getNext(series, indexInSeries);
   };
 
-  const getRecommendedPosts = (entries: Entry[], i: number): Entry[] | undefined => {
-    const nextInSeries = getNextEntryInSeries(entries, i);
+  const getRecommendedPosts = (posts: Post[], i: number): Post[] | undefined => {
+    const nextInSeries = getNextInSeries(posts, i);
     if (nextInSeries !== undefined) {
       return [nextInSeries];
     }
 
-    const next = getNextEntry(entries, i);
+    const next = getNext(posts, i);
     if (next !== undefined) {
       return [next];
     }
 
-    const prev = i < entries.length-1 ? entries[i+1] : undefined;
+    const prev = i < posts.length-1 ? posts[i+1] : undefined;
     if (prev !== undefined) {
       return [prev];
     }
     return undefined;
   };
 
-  const staticPaths = entries.map((entry, i) => ({
-    params: { slug: entry.id },
-    props: {
-      recommended: getRecommendedPosts(entries, i),
-      entry,
-    },
-  }));
+  const staticPaths = posts.map((post, i) => {
+    const slug = post.id;
+    const recommended = getRecommendedPosts(posts, i);
+
+    return {
+      params: { slug },
+      props: {
+        recommended,
+        post,
+      },
+    };
+  });
 
   return staticPaths;
 }
 interface Props {
-  entry: Entry;
-  recommended?: Entry[];
+  post: Post;
+  recommended?: Post[];
 }
 
-const { entry, recommended } = Astro.props;
+const { post, recommended } = Astro.props;
 const { href } = Astro.url;
-const { title, summary, date } = entry.data;
-const { Content } = await render(entry);
+const { title, summary, date } = post.data;
+const { Content } = await render(post);
 
-const image = getThumbnails()[entry.data.thumbnail];
+const image = getThumbnails()[post.data.thumbnail];
 ---
 
 <Base title={title} desc={summary} image={image}>
@@ -120,7 +125,7 @@ const image = getThumbnails()[entry.data.thumbnail];
             관심 있을 만한 글
           </span>
         </p>
-        <ArticleCard article={recommended[0]} />
+        <LinkCard article={recommended[0]} />
       )
     }
     <ChevronBlock class="mt-6">

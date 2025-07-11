@@ -1,17 +1,17 @@
 ---
 import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
-import ArticleList from "@/components/page/ArticleList.astro";
+import PostList from "@/components/page/list/PostList.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
-import ChevronBlock from "@/components/page/ChevronBlock.astro";
-import ChevronLink from "@/components/page/ChevronLink.astro";
+import ChevronBlock from "@/components/page/chevron/ChevronBlock.astro";
+import ChevronLink from "@/components/page/chevron/ChevronLink.astro";
 import ChevronLeft from "@/components/icon/ChevronLeft.svg";
 import ChevronRight from "@/components/icon/ChevronRight.svg";
 import ListPage from "@/layouts/ListPage.astro";
 import Section from "@/components/page/Section.astro";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const posts = sortBlogCollectionByDate(await getCollection("blog"));
+  const posts = sortBlogCollectionByDate(await getCollection("posts"));
 
   return paginate(posts, { pageSize: 8 });
 }
@@ -21,7 +21,7 @@ const { page } = Astro.props;
 
 <ListPage title="Posts">
   <Section heading={`Page ${page.currentPage}`}>
-    <ArticleList articles={page.data} />
+    <PostList articles={page.data} />
     <ChevronBlock class="mt-4">
       {
         page.url.prev !== undefined ? (

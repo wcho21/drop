@@ -5,6 +5,7 @@ import {
 } from "@/scripts/utils/collections";
 import { getCollection } from "astro:content";
 import { getThumbnails } from "@/scripts/utils/assets";
+import { findOrThrow } from "@/scripts/utils/array";
 import { formatDate } from "@/scripts/utils/formatters";
 import { Image } from "astro:assets";
 import List from "@/components/core/List.astro";
@@ -13,8 +14,9 @@ import Scale from "@/components/core/Scale.astro";
 import ListPage from "@/layouts/ListPage.astro";
 import Section from "@/components/page/Section.astro";
 
-const posts = sortBlogCollectionByDate(await getCollection("blog"));
+const posts = sortBlogCollectionByDate(await getCollection("posts"));
 const series = await getCollection("series");
+
 const seriesGroups = groupSeriesAsMap(posts);
 const thumbnails = getThumbnails();
 ---
@@ -24,14 +26,15 @@ const thumbnails = getThumbnails();
     <List>
       {
         Array.from(seriesGroups).map(([name, entries]) => {
-          const seriesEntry = series.find((entry) => entry.id === name)!;
+          const seriesEntry = findOrThrow(series, (entry) => entry.id === name);
+          const seriesSlug = seriesEntry.data.slug;
+          const numPosts = entries.length;
           const latestThumbnail = thumbnails[entries[0].data.thumbnail];
           const latestDate = entries[0].data.date;
-          const numPosts = entries.length;
 
           return (
             <ListItem class="py-4" data-item>
-              <a href={`./${seriesEntry.data.slug}/`} class="block">
+              <a href={`./${seriesSlug}/`} class="block">
                 <Scale>
                   <div class="flex items-center gap-4">
                     <div class="mb-auto w-[100px] sm:w-[150px]">

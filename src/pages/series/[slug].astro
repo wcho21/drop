@@ -1,22 +1,22 @@
 ---
-import ArticleList from "@/components/page/ArticleList.astro";
+import PostList from "@/components/page/list/PostList.astro";
 import { sortBlogCollectionByDate } from "@/scripts/utils/collections";
 import { getCollection } from "astro:content";
 import ListPage from "@/layouts/ListPage.astro";
-import ChevronBlock from "@/components/page/ChevronBlock.astro";
-import ChevronLink from "@/components/page/ChevronLink.astro";
+import ChevronBlock from "@/components/page/chevron/ChevronBlock.astro";
+import ChevronLink from "@/components/page/chevron/ChevronLink.astro";
 import ChevronLeft from "@/components/icon/ChevronLeft.svg";
 import Section from "@/components/page/Section.astro";
 
 export async function getStaticPaths() {
-  const blog = sortBlogCollectionByDate(await getCollection("blog"));
+  const posts = sortBlogCollectionByDate(await getCollection("posts"));
   const series = await getCollection("series");
 
   return series.map((seriesEntry) => ({
     params: { slug: seriesEntry.data.slug },
     props: {
       description: seriesEntry.data.description,
-      posts: blog.filter((post) => post.data.series === seriesEntry.id),
+      posts: posts.filter((post) => post.data.series === seriesEntry.id),
       name: seriesEntry.id,
     },
   }));
@@ -33,7 +33,7 @@ const { description, posts, name } = Astro.props;
         {description}
       </p>
     </div>
-    <ArticleList articles={posts} />
+    <PostList articles={posts} />
     <ChevronBlock class="mt-4">
       <ChevronLink href="./../" direction="left">
         RETURN

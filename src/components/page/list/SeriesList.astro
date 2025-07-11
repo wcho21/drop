@@ -1,14 +1,14 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import DropDown from "../core/DropDown.astro";
-import List from "../core/List.astro";
-import ListItem from "../core/ListItem.astro";
-import ArticleCard from "./ArticleCard.astro";
+import DropDown from "@/components/core/DropDown.astro";
+import List from "@/components/core/List.astro";
+import ListItem from "@/components/core/ListItem.astro";
+import LinkCard from "@/components/page/card/LinkCard.astro";
 import ScaleInline from "@/components/core/ScaleInline.astro";
 
 interface Series {
   name: string;
-  articles: CollectionEntry<"blog">[];
+  articles: CollectionEntry<"posts">[];
 }
 
 interface Props {
@@ -33,7 +33,7 @@ const { series } = Astro.props;
           <ul class="block series-drop-down-list">
             {articles.map((article) => (
               <ListItem>
-                <ArticleCard article={article} />
+                <LinkCard article={article} />
               </ListItem>
             ))}
           </ul>
