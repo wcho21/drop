@@ -5,7 +5,7 @@ const { display = true } = Astro.props;
 ---
 
 <div
-  class={`pl-4 border-l border-l-gray-700 quote-component ${display ? "my-10" : "my-2"}`}
+  class={`pl-4 border-l border-l-gray-700 quote-component ${display ? "my-8" : "my-2"}`}
 >
   <div class="mb-1.5">
     <slot />
@@ -58,6 +58,10 @@ const { display = true } = Astro.props;
 </script>
 
 <style>
+  .quote-component:first-child {
+    margin-top: 0px;
+  }
+
   .quote-component-detail {
     max-height: 0;
     transform-origin: top;
