@@ -1,0 +1,25 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+
+\begin{document}
+  \begin{tikzpicture}
+    \draw (-16mm,0) -- ++(16mm,0) -- ++(0,10mm) -- ++(-16mm,0) -- cycle;
+    \draw (+16mm,0) -- ++(16mm,0) -- ++(0,10mm) -- ++(-16mm,0) -- cycle;
+
+    \node at (-16mm-8mm,5mm) {\small$\cdots$};
+    \node at (8mm,5mm) {\small$\cdots$};
+    \node at (2*16mm+8mm,5mm) {\small$\cdots$};
+
+    \node at (-8mm,5mm) {\texttt{100}};
+    \node at (-16mm+5mm-1.5mm,10mm+3mm) {\small\texttt{int*}};
+    \node at (-16mm+5mm-3.5mm,-3mm) {\small\texttt{?}};
+    \node at (-8mm,-8.5mm) {\texttt{p}};
+
+    \node at (2*16mm-8mm,5mm) {\texttt{42}};
+    \node at (2*16mm-16mm+5mm-1.5mm,10mm+3mm) {\small\texttt{int}};
+    \node at (2*16mm-16mm+5mm-1.5mm,-3mm) {\small\texttt{100}};
+    \node at (2*16mm-8mm,-8.5mm) {\texttt{num}};
+
+    \draw[Stlth] (-4mm,5mm) .. controls +(0:12mm) and +(180:12mm) .. (16mm,-3mm);
+  \end{tikzpicture}
+\end{document}
