@@ -174,7 +174,8 @@ const image = getThumbnails()[post.data.thumbnail];
     @apply my-2 text-[0.875em] border-l border-gray-500 text-left whitespace-pre-wrap pl-[1.25em];
   }
 
-  #post-main > .astro-code.has-diff {
+  #post-main > .astro-code.has-diff,
+  #post-main > .astro-code.has-highlighted {
     position: relative;
   }
 
@@ -197,13 +198,23 @@ const image = getThumbnails()[post.data.thumbnail];
     width: calc(100% + 1.25em);
   }
 
+  #post-main > .astro-code span.line.highlighted.warning::before {
+    @apply text-amber-600 absolute left-0 w-[1.25em] inline-block text-center;
+    content: "!";
+  }
+
+  #post-main > .astro-code span.line.highlighted.error::before {
+    @apply text-rose-600 absolute left-0 w-[1.25em] inline-block text-center;
+    content: "!";
+  }
+
   #post-main > .astro-code span.line.diff.add {
     @apply bg-emerald-100;
     width: calc(100% + 1.25em);
   }
 
   #post-main > .astro-code span.line.diff.add::before {
-    @apply text-emerald-400 absolute left-0 w-[1.25em] inline-block text-center;
+    @apply text-emerald-600 absolute left-0 w-[1.25em] inline-block text-center;
     content: "+";
   }
 
@@ -213,7 +224,7 @@ const image = getThumbnails()[post.data.thumbnail];
   }
 
   #post-main > .astro-code span.line.diff.remove::before {
-    @apply text-rose-400 absolute left-0 w-[1.25em] inline-block text-center;
+    @apply text-rose-600 absolute left-0 w-[1.25em] inline-block text-center;
     content: "-";
   }
 
@@ -227,6 +238,10 @@ const image = getThumbnails()[post.data.thumbnail];
 
   #post-main > .katex-display > .katex > .katex-html > .tag {
     right: 0.25ex; /* hackish code; to remove scroll that \tag{} makes */
+  }
+
+  #post-main kbd {
+    @apply text-gray-800 bg-gray-100 border border-gray-200 rounded-md shadow-[0_1px_1px_rgba(0,0,0,0.25)] font-medium text-[0.875em] px-1 py-0;
   }
 
   #post-main a {
