@@ -1,0 +1,40 @@
+\documentclass{cmn}
+
+\def\imm{12}
+\def\rs{5}
+\def\funct{3}
+\def\rd{5}
+\def\opcode{7}
+\def\mag{3}
+
+\begin{document}
+  \begin{tikzpicture}
+    \node at (-22mm,4mm) {\texttt{addiw a0, a0, 99}:};
+
+    \draw (0,0) -- ++(96mm,0) -- ++(0,8mm) -- ++(-96mm,0) -- cycle;
+    \draw ({\imm*\mag*1mm},0) -- ++(0,8mm);
+    \draw ({(\imm+\rs)*\mag*1mm},0) -- ++(0,8mm);
+    \draw ({(\imm+\rs+\funct)*\mag*1mm},0) -- ++(0,8mm);
+    \draw ({(\imm+\rs+\funct+\rd)*\mag*1mm},0) -- ++(0,8mm);
+
+    \node at ({0.5*\imm*\mag*1mm},12mm) {\small immediate};
+    \node at ({(\imm+0.5*\rs)*\mag*1mm},12mm) {\small rs1};
+    \node at ({(\imm+\rs+0.5*\funct)*\mag*1mm},12mm) {\small funct3};
+    \node at ({(\imm+\rs+\funct+0.5*\rd)*\mag*1mm},12mm) {\small rd};
+    \node at ({(\imm+\rs+\funct+\rd+0.5*\opcode)*\mag*1mm},12mm) {\small opcode};
+
+    \node at ({0.5*\imm*\mag*1mm},4mm) {\small\texttt{000001100011}};
+    \node at ({(\imm+0.5*\rs)*\mag*1mm},4mm) {\small\texttt{01010}};
+    \node at ({(\imm+\rs+0.5*\funct)*\mag*1mm},4mm) {\small\texttt{000}};
+    \node at ({(\imm+\rs+\funct+0.5*\rd)*\mag*1mm},4mm) {\small\texttt{01010}};
+    \node at ({(\imm+\rs+\funct+\rd+0.5*\opcode)*\mag*1mm},4mm) {\small\texttt{0011011}};
+
+    \node at ({0.5*\imm*\mag*1mm},-4mm) {\small\texttt{99}};
+    \node at ({(\imm+0.5*\rs)*\mag*1mm},-4mm) {\small\texttt{a0}};
+    \node at ({(\imm+\rs+\funct+0.5*\rd)*\mag*1mm},-4mm) {\small\texttt{a0}};
+
+    \draw (0,-20mm) -- ++(96mm,0) -- ++(0,8mm) -- ++(-96mm,0) -- cycle;
+    \node at ({0.5*(\imm+\rs+\funct+\rd+\opcode)*\mag*1mm},-20mm+4mm) {\small\texttt{0000\,0110\,0011\,0101\,0000\,0101\,0001\,1011}};
+    \node at ({0.5*(\imm+\rs+\funct+\rd+\opcode)*\mag*1mm},-28mm+4mm) {\small\texttt{0635051b}$_{(16)}$\vphantom{\strut}};
+  \end{tikzpicture}
+\end{document}

@@ -1,0 +1,20 @@
+\documentclass{cmn}
+
+\begin{document}
+  \begin{tikzpicture}
+    \draw (0,0) -- ++(0,40mm) -- ++(20mm,0) -- ++(0,-40mm) -- cycle;
+    \draw (0,16mm) -- ++(20mm,0);
+    \draw (0,24mm) -- ++(20mm,0);
+    \draw (0,32mm) -- ++(20mm,0);
+
+    \node[text width=10mm,align=right] at (-7mm,0mm) {\small\texttt{0}};
+    \node[text width=10mm,align=right] at (-7mm,32mm) {\small\texttt{sp-16}};
+    \node[text width=10mm,align=right] at (-7mm,16mm) {\small\texttt{sp}};
+
+    \node at (10mm,28mm) {\texttt{ra}};
+
+    \node at (10mm,6mm) {$\vdots$};
+    \node at (10mm,12mm) {$\downarrow$};
+    \node at (10mm,37mm) {$\vdots$};
+  \end{tikzpicture}
+\end{document}
