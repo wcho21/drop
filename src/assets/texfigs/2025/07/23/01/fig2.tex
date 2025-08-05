@@ -1,0 +1,16 @@
+\documentclass{cmn}
+
+\begin{document}
+  \begin{tikzpicture}
+    \draw (-16mm,0) -- ++(3*16mm,0) -- ++(0,10mm) -- ++(-3*16mm,0) -- cycle;
+    \draw (0,0) -- ++(0,10mm);
+    \draw (16mm,0) -- ++(0,10mm);
+
+    \node at (-16mm-8mm,5mm) {\small$\cdots$};
+    \node at (2*16mm+8mm,5mm) {\small$\cdots$};
+
+    \node at (8mm,5mm) {\texttt{1}};
+    \node at (5mm-1.5mm,10mm+3mm) {\small\texttt{int}};
+    \node at (8mm,-5.5mm) {\texttt{id}};
+  \end{tikzpicture}
+\end{document}

@@ -388,7 +388,7 @@ add_task() {
     ;;
 ```
 
-이제 조건문은 할 일을 추가하는데 구체적인 동작을 알 필요가 없으며, 대신 `add_task` 함수가 맡게 됩니다.
+이제 조건문은 할 일을 추가하는데 구체적인 동작을 알 필요가 없으며, 대신 `add_task()` 함수가 맡게 됩니다.
 
 그러면 이전과 똑같이 동작합니다.
 
@@ -444,7 +444,7 @@ Added task 'foo'.
 ```
 
 문제점을 찾으셨나요?
-`add_task` 함수를 호출할 때, 문자열이 두 개의 인자로서 `foo`와 `bar`가 전달됐습니다.
+`add_task()` 함수를 호출할 때, 문자열이 두 개의 인자로서 `foo`와 `bar`가 전달됐습니다.
 따라서 하나의 인자로 취급하도록 따옴표로 감싸면 문제가 해결됩니다.
 
 ```bash
@@ -718,7 +718,7 @@ Added task 'baz'.
 
 
 동작을 확인했으니, 함수로 분리해봅시다.
-`add_task` 함수 아래에 새 함수를 만들겠습니다.
+`add_task()` 함수 아래에 새 함수를 만들겠습니다.
 
 ```bash
 add_tasks() {
@@ -1005,7 +1005,7 @@ add_tasks() {
 ```
 
 다음과 같이 작업 추가를 실행해보면 실제 동작이 나타납니다.
-여기서 `add_task` 함수가 어떤식으로 호출되는지 주목해보세요.
+여기서 `add_task()` 함수가 어떤식으로 호출되는지 주목해보세요.
 
 ```shellsession
 $ ./todo add foo "bar baz"
@@ -1028,7 +1028,7 @@ Added task 'bar baz'.
 + set +x
 ```
 
-처음에 `add_tasks` 함수가 호출될 때를 봅시다.
+처음에 `add_tasks()` 함수가 호출될 때를 봅시다.
 이 부분은 다음 코드를 실행한 것입니다.
 
 ```bash
@@ -1041,7 +1041,7 @@ Added task 'bar baz'.
     add_tasks foo 'bar baz'
 ```
 
-반복문에서 쓰인 `"$@"` 또한 쿼팅 때문에 `add_task` 함수가 인자마다 호출됐던 것입니다.
+반복문에서 쓰인 `"$@"` 또한 쿼팅 때문에 `add_task()` 함수가 인자마다 호출됐던 것입니다.
 (쿼팅이 없다면 어떤지 직접 확인해보세요.)
 
 이제 디버깅 코드를 정리합니다.
@@ -1464,9 +1464,11 @@ $ FIRST=$(ls $FOO | sort | head -1)
 
 - *Unix: UNIX: A History and a Memoir* (Brian Kernighan, 2019), 또는 *유닉스의 탄생* (한빛미디어, 2020)
 - [*The Bell System Technical Journal*][bstj] (1978): 유닉스 철학
+- [*Bash Reference Manual*][brm]
 - [*Bash Guide for Beginners*][bgb] (TLDP)
 - [*Advanced Bash-Scripting Guide*][absg] (TLDP)
 
+[brm]: https://www.gnu.org/software/bash/manual/bash.html
 [bstj]: https://www.tuhs.org/Archive/Documentation/Papers/BSTJ/bstj57-6-1899.pdf
 [bgb]: https://tldp.org/LDP/Bash-Beginners-Guide/html/
 [absg]: https://tldp.org/LDP/abs/html/
