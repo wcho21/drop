@@ -1,0 +1,26 @@
+\documentclass{cmn}
+
+\begin{document}
+  \begin{tikzpicture}
+    \draw (0,0) -- ++(0,50mm) -- ++(20mm,0) -- ++(0,-50mm) -- cycle;
+    \draw (0,8mm) -- ++(20mm,0);
+    \draw (0,8mm+6mm) -- ++(20mm,0);
+    \draw (0,16mm) -- ++(20mm,0);
+    \draw (0,16mm+6mm) -- ++(20mm,0);
+    \draw (0,24mm) -- ++(20mm,0);
+    \draw (0,24mm+6mm) -- ++(20mm,0);
+    \draw (0,42mm) -- ++(20mm,0);
+    \draw (0,42mm+6mm) -- ++(20mm,0);
+
+    \node[text width=2mm,align=right] at (-2mm,0mm) {\small\texttt{0}};
+
+    \node at (10mm,11mm) {\texttt{.text}};
+    \node at (10mm,19mm) {\texttt{.data}};
+    \node at (10mm,27mm) {Heap};
+    \node at (10mm,45mm) {Stack};
+
+    \node at (10mm,5mm) {$\vdots$};
+    \node at (10mm,33mm) {$\uparrow$};
+    \node at (10mm,39mm) {$\downarrow$};
+  \end{tikzpicture}
+\end{document}

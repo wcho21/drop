@@ -1,0 +1,35 @@
+\documentclass{cmn}
+\usepackage{ts-arrow}
+
+\begin{document}
+  \begin{tikzpicture}
+    \draw (0,0) -- ++(0,16mm) -- ++(24mm,0) -- ++(0,-16mm) -- cycle;
+    \node at (12mm,8mm) {Processor};
+
+    \draw (0,-8mm) -- ++(0,6mm) -- ++(8mm+14mm,0) -- ++(0,-6mm) -- cycle;
+    \draw (8mm,-8mm) -- ++(0,6mm);
+    \node at (4mm,-8mm+3mm) {\texttt{pc\vphantom{\strut}}};
+    \node at (8mm+7mm,-8mm+3mm) {\texttt{10120\vphantom{\strut}}};
+
+    \draw ({(8mm+14mm)/2},0) -- ++(0,-2mm);
+
+    \draw (36mm,-10mm) -- ++(0,42mm) -- ++(32mm,0) -- ++(0,-42mm) -- cycle;
+    \draw (36mm,24mm) -- ++(32mm,0);
+    \draw (36mm,24mm-6mm) -- ++(32mm,0);
+    \draw (36mm,24mm-12mm) -- ++(32mm,0);
+    \draw (36mm,24mm-18mm) -- ++(32mm,0);
+
+    \node at (36mm+16mm,24mm-12mm-3mm) {\texttt{li a0, 1}};
+    \node at (36mm+16mm,24mm-6mm-3mm) {\texttt{auipc a1, 0x2}};
+    \node at (36mm+16mm,24mm-3mm) {\texttt{ld a1, 316(a1)}};
+    \node at (36mm+16mm,32mm-3mm) {$\vdots$};
+    \node at (36mm+16mm,24mm-18mm-7mm) {$\vdots$};
+
+    \node[text width=8mm,align=left] at (36mm+32mm+5.5mm,-10mm) {\small\texttt{0}};
+    \node[text width=8mm,align=left] at (36mm+32mm+5.5mm,24mm-18mm) {\small\texttt{10120}};
+    \node[text width=8mm,align=left] at (36mm+32mm+5.5mm,24mm-12mm) {\small\texttt{10124}};
+    \node[text width=8mm,align=left] at (36mm+32mm+5.5mm,24mm-6mm) {\small\texttt{10128}};
+
+    \draw[StlthBase] (24mm,9mm) -- ++(12mm,0);
+  \end{tikzpicture}
+\end{document}
