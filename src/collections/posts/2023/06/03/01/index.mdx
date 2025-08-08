@@ -38,14 +38,14 @@ $$
 앞으로 소개할 문제는 이런 식으로 해결할 것입니다.
 그러면 관련 없어 보이는 문제들이 신기하게도 본질적으로는 똑같은 문제임을 이해할 수 있게 됩니다.
 
-[wolfram-dyck-path]: https://mathworld.wolfram.com/DyckPath.html
-
 
 
 # 격자에서 최소 경로 세기
 
 우선 카탈란 넘버가 나타나는 대표적인 문제인 [딕 패스][wolfram-dyck-path]<L>Dyck path</L> 문제를 보겠습니다.
 딕 패스란 격자 위에서 대각선 위를 넘지 않고 반대편에 도달하는 최소 경로를 말합니다.
+
+[wolfram-dyck-path]: https://mathworld.wolfram.com/DyckPath.html
 
 <Figure src={fig1} alt="Dyck path">
   <FigureCaption slot="caption">그림 1. 딕 패스 규칙. 경로가 대각선을 넘어가면 안 됩니다.</FigureCaption>
@@ -76,6 +76,8 @@ $$
 
 여기 [투표 문제][wolfram-ballot-prob]<L>ballot problem</L>가 있습니다.
 
+[wolfram-ballot-prob]: https://mathworld.wolfram.com/BallotProblem.html
+
 <Callout>
   후보는 A, B가 있고 방금 투표를 마쳤다.
   투표함에는 짝수 개의 표, 즉 $2n$개의 표가 들어있다.
@@ -104,8 +106,6 @@ A의 표가 나올 때마다 오른쪽으로, B의 표는 위로 한 칸 움직�
 성공하는 경우도 마찬가지고요.
 따라서 투표 문제는 딕 패스 문제로 바꿔서 해결할 수 있고, 결국 투표 문제의 답은 카탈란 넘버가 됩니다.
 (앞서 약속한대로 직접 풀지 않았습니다.)
-
-[wolfram-ballot-prob]: https://mathworld.wolfram.com/BallotProblem.html
 
 ## 괄호 짝 맞추기
 
@@ -146,6 +146,8 @@ $i$번째 숫자는 $i$보다 크면 안됩니다.
 다른 문제로, [스택 소터블 퍼뮤테이션][wiki-ssp]<L>stack-sortable permutation</L>이 있습니다.
 즉 스택 하나를 이용해 정렬할 수 있는 퍼뮤테이션의 개수를 구하는 문제인데요.
 
+[wiki-ssp]: https://en.wikipedia.org/wiki/Stack-sortable_permutation
+
 예를 들어 $n=3$인 경우, 퍼뮤테이션은 $123$을 섞은 $3!=6$개의 숫자들이 있습니다.
 
 $$
@@ -162,8 +164,6 @@ $$
 
 그러면 $1$부터 $n$까지의 숫자로 만든 퍼뮤테이션 중에 몇 개가 스택 소터블 퍼뮤테이션일까요?
 (힌트: 스택에 푸시할 때와 팝할 때 각각을 여는 괄호와 닫는 괄호에 대응시켜보세요.)
-
-[wiki-ssp]: https://en.wikipedia.org/wiki/Stack-sortable_permutation
 
 
 # 마치며
