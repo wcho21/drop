@@ -23,11 +23,11 @@ import fig5 from "@texfigs/2023/06/03/02/fig5.svg";
 [볼록 다각형 트라이앵귤레이션][wp-poly-tri]<L>triangulation</L>이라고 부르는 이 문제는 볼록 다각형을 삼각형으로 나누는 방법이 몇 가지인지 물어봅니다.
 예를 들어, 오각형은 다음과 같이 다섯 가지 방법이 있습니다.
 
+[wp-poly-tri]: https://en.wikipedia.org/wiki/Polygon_triangulation
+
 <Figure src={fig1} alt="Pentagon triangulation">
   <FigureCaption slot="caption">그림 1. 오각형 트라이앵귤레이션. 삼각형으로 나누는 방법이 다섯 가지 존재합니다.</FigureCaption>
 </Figure>
-
-[wp-poly-tri]: https://en.wikipedia.org/wiki/Polygon_triangulation
 
 나아가 $n$각형에 대해 풀면 여지없이 카탈란 넘버를 발견하게 됩니다.
 나중에 보겠지만 여기서 다음 카탈란 점화식을 이끌어낼 수 있습니다.
@@ -179,13 +179,13 @@ $$
 
 먼저, 계수가 카탈란 넘버 $C_n$인, [제너레이팅 함수][wp-gen]<L>generating function</L>라고도 부르는 다음 함수를 생각합니다.
 
+[wp-gen]: https://ko.wikipedia.org/wiki/%EC%83%9D%EC%84%B1%ED%95%A8%EC%88%98_(%EC%88%98%ED%95%99)
+
 $$
 C(x) = \sum_{n=0}^{\infty} C_n x^n
 $$
 
 그러면 다음과 같이 이차방정식으로부터 이 함수의 다른 표현을 얻게 됩니다.
-
-[wp-gen]: https://ko.wikipedia.org/wiki/%EC%83%9D%EC%84%B1%ED%95%A8%EC%88%98_(%EC%88%98%ED%95%99)
 
 $$
 \begin{align*}
@@ -291,7 +291,6 @@ $$
 
 - *Catalan Numbers with Applications* (Thomas Koshy, 2008)
 
-- [oeis.org/A000108/list][oeis]:
-  미리 계산된 카탈란 넘버입니다.
+- [oeis.org/A000108/list][oeis]: 미리 계산된 카탈란 넘버.
 
 [oeis]: https://oeis.org/A000108/list
