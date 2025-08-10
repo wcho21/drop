@@ -1,18 +1,19 @@
 \documentclass{cmnp}
+\usetikzlibrary{decorations.text}
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
 \begin{document}
   \begin{tikzpicture}
     \begin{scope}
-      \begin{semilogxaxis}[
+      \begin{loglogaxis}[
         width=80mm,
         title style={align=center},
         title={Randomized Quickselect \\($k=0$)},
         log basis x=2,
         xmin=2^6,
         xmax=2^18,
-        ymax=10^6.125,
+        ymin=10^1.9,
         xtick distance=2^2,
         xlabel={array size $n$},
         ylabel={elapsed time $t$},
@@ -34,9 +35,11 @@
            65536  593985.908
           131072 1209886.180
         };
-        \addplot[domain=64:262144] { 9.237 * x - 5090 }
-          node[pos=0.5,left=1mm] { \small$t \sim 9.237 n$ };
-      \end{semilogxaxis}
+        \addplot[domain=64:262144] { 6.05 * x ^ 1.03 };
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=-5.5mm,text={|\footnotesize| {$t = 6.05 n^{1.03}\:(R^2 \geq 0.999)$}}
+        }] { 6.05 * x ^ 1.03 };
+      \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}
 \end{document}

@@ -12,16 +12,18 @@
     log basis x=2,
     xmin=2^6,
     xmax=2^18,
+    ymin=10^2.9,
+    ymax=10^7.3,
     xtick distance=2^2,
     y unit=s,
     y unit prefix=n,
     axis y line*=left,
     title style={align=center},
-    legend entries={\small w\!/ Ins.,\small Merge},
+    legend entries={\small Merge+Ins.,\small Merge},
   },
   percentaxis/.style={
     width=70mm,
-    ylabel={$\textrm{reduced time}/\textrm{Merge}$},
+    ylabel={$\textrm{reduced time}/\textrm{Merge }t$},
     log basis x=2,
     xmin=2^6,
     xmax=2^18,
@@ -37,37 +39,35 @@
     \begin{scope}
       \begin{loglogaxis}[
         timeandsizeaxis,
-        title={Merge w\!/ Ins. vs. Merge\\ (Sorted)},
-        ymin=0.8,
-        ymax=10^(4.25),
+        title={Merge+Ins. vs. Merge\\ (Sorted)},
       ]
         \addplot[markplot] table [x=n,y=t]{
                n        t
-             128    1.979
-             256    4.729
-             512   10.365
-            1024   23.717
-            2048   51.678
-            4096  113.840
-            8192  248.030
-           16384  542.785
-           32768 1135.054
-           65536 2452.124
-          131072 6032.887
+             128    1979
+             256    4729
+             512   10365
+            1024   23717
+            2048   51678
+            4096  113840
+            8192  248030
+           16384  542785
+           32768 1135054
+           65536 2452124
+          131072 6032887
         };
         \addplot[markploto] table [x=n,y=t]{
                n        t
-             128    3.384
-             256    7.465
-             512   15.666
-            1024   35.110
-            2048   75.537
-            4096  159.563
-            8192  339.642
-           16384  728.562
-           32768 1509.518
-           65536 3268.032
-          131072 7544.924
+             128    3384
+             256    7465
+             512   15666
+            1024   35110
+            2048   75537
+            4096  159563
+            8192  339642
+           16384  728562
+           32768 1509518
+           65536 3268032
+          131072 7544924
         };
       \end{loglogaxis}
 
@@ -97,37 +97,35 @@
     \begin{scope}[xshift=90mm]
       \begin{loglogaxis}[
         timeandsizeaxis,
-        title={Merge w\!/ Ins. vs. Merge\\ (Reversed)},
-        ymin=0.8,
-        ymax=10^(4.25),
+        title={Merge+Ins. vs. Merge\\ (Reversed)},
       ]
         \addplot[markplot] table [x=n,y=t]{
                n        t
-             128    2.596
-             256    5.917
-             512   13.157
-            1024   28.144
-            2048   64.028
-            4096  141.827
-            8192  294.040
-           16384  626.597
-           32768 1337.781
-           65536 2790.782
-          131072 7428.002
+             128    2596
+             256    5917
+             512   13157
+            1024   28144
+            2048   64028
+            4096  141827
+            8192  294040
+           16384  626597
+           32768 1337781
+           65536 2790782
+          131072 7428002
         };
         \addplot[markploto] table [x=n,y=t]{
                n        t
-             128    3.339
-             256    7.647
-             512   16.422
-            1024   36.621
-            2048   76.350
-            4096  167.422
-            8192  339.917
-           16384  744.971
-           32768 1568.347
-           65536 3340.317
-          131072 8296.393
+             128    3339
+             256    7647
+             512   16422
+            1024   36621
+            2048   76350
+            4096  167422
+            8192  339917
+           16384  744971
+           32768 1568347
+           65536 3340317
+          131072 8296393
         };
       \end{loglogaxis}
 

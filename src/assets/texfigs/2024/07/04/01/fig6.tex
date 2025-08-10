@@ -1,4 +1,5 @@
 \documentclass{cmnp}
+\usetikzlibrary{decorations.text}
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
@@ -71,8 +72,10 @@
             0.7 36.247
           0.725 37.568
         };
-        \addplot[domain=0.35:0.75] { 22.6 * (1 / x) * (ln(1 / (1 - x))) - 4.06 }
-          node[pos=0.875,left=8mm] { \small$\displaystyle t \sim 22.6 \frac{1}{\alpha} \ln {\frac{1}{1-\alpha}}$ };
+        \addplot[domain=0.35:0.75,samples=25] { 27.5 * (1 / x) * ln(1 / (1 - x)) - 10.7 };
+        \addplot[domain=0.35:0.75,samples=25,draw=none,decorate,decoration={
+          text along path,text align={left indent=4.25mm},raise=5.5mm,text={|\footnotesize| {$\displaystyle t \sim 27.5 \alpha^{-1} \ln (1-\alpha)^{-1}\:(R^2=0.985)$ }}
+        }] { 27.5 * (1 / x) * ln(1 / (1 - x)) - 10.7 };
       \end{axis}
     \end{scope}
   \end{tikzpicture}

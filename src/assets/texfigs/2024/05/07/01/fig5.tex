@@ -1,4 +1,5 @@
 \documentclass{cmnp}
+\usetikzlibrary{decorations.text}
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
@@ -28,8 +29,10 @@
          102334155 74.427
         1134903170 91.376
       } coordinate[pos=0.99] (A);
-      \addplot[domain=100:10000000000] { 3.68*log2(x) - 22.5 };
-      \node[left=1mm] at (A) { \small$t \sim 3.68 \log_2 \min (m, n)$ };
+      \addplot[domain=100:10000000000,samples=25] { 3.68*log2(x) - 22.5 };
+      \addplot[domain=100:10000000000,samples=25,draw=none,decorate,decoration={
+        text along path,text align={left indent=20mm},raise=-5.5mm,text={|\footnotesize| {$t \sim 3.68 \log_2 \min (m, n)\:(R^2=0.995)$}}
+      }] { 3.68*log2(x) - 22.5 };
     \end{semilogxaxis}
   \end{tikzpicture}
 \end{document}
