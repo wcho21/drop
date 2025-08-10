@@ -1,4 +1,5 @@
 \documentclass{cmnp}
+\usetikzlibrary{decorations.text}
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
@@ -16,12 +17,11 @@
 \begin{document}
   \begin{tikzpicture}
     \begin{scope}
-      \begin{semilogxaxis}[
+      \begin{loglogaxis}[
         title style={align=center},
         title={Fixed-size Chaining Hash Table\\Successful \texttt{get()}},
         xlabel={$n$ elements},
         ylabel={elapsed time $t$},
-        ymax=10^4.5,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n         t
@@ -37,18 +37,19 @@
            65536 12974.841
           131072 26659.197
         };
-        \addplot[domain=64:262144,samples=50] { 0.203 * x - 191 }
-          node[pos=0.5,left=2mm] { \small$t \sim 0.203 n$ };
-      \end{semilogxaxis}
+        \addplot[domain=64:262144,samples=25] { 0.120 * x ^ 1.03 };
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=-7.5mm,text={|\footnotesize| {$t = 0.120 n^{1.03}\:(R^2 = 0.982)$}}
+        }] { 0.120 * x ^ 1.03 };
+      \end{loglogaxis}
     \end{scope}
 
     \begin{scope}[xshift=80mm]
-      \begin{semilogxaxis}[
+      \begin{loglogaxis}[
         title style={align=center},
         title={Fixed-size Chaining Hash Table\\$n$ \texttt{set()}},
         xlabel={$n$ elements},
         ylabel={elapsed time $t$},
-        ymax=10^9.82,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n              t
@@ -64,9 +65,11 @@
            65536 1763542921.333
           131072 6039339958.333
         };
-        \addplot[domain=64:262144,samples=50] { 0.354 * x ^ 2 + 1.1900000 * 10^7 }
-          node[pos=0.23,left=1mm] { \small$t \sim 0.354 n ^ 2$ };
-      \end{semilogxaxis}
+        \addplot[domain=64:262144,samples=50] { 0.0413 * x ^ 2.18 };
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=-6.0mm,text={|\footnotesize| {$t = 0.0413 n^{2.18}\:(R^2 = 0.998)$}}
+        }] { 0.0413 * x ^ 2.18 };
+      \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}
 \end{document}

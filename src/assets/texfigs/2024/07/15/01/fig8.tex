@@ -1,4 +1,5 @@
 \documentclass{cmnp}
+\usetikzlibrary{decorations.text}
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
@@ -10,7 +11,7 @@
   xmin=2^6,
   xmax=2^18,
   y unit=s,
-  y unit prefix=\mu,
+  y unit prefix=n,
   log basis x=2,
   xtick distance=2^2,
 }
@@ -18,55 +19,55 @@
 \begin{document}
   \begin{tikzpicture}
     \begin{scope}
-      \begin{semilogxaxis}[
+      \begin{loglogaxis}[
         title style={align=center},
         title={Heap Priority Queue\\\texttt{add()}},
-        ymin=-5000,
-        ymax=60000,
       ]
         \addplot[markplot] table [x=n,y=t]{
-               n         t
-             128     4.903
-             256    25.779
-             512    67.162
-            1024   150.690
-            2048   318.774
-            4096   706.567
-            8192  1552.314
-           16384  3421.817
-           32768  7584.630
-           65536 17629.830
-          131072 52156.152
+               n        t
+             128     4903
+             256    25779
+             512    67162
+            1024   150690
+            2048   318774
+            4096   706567
+            8192  1552314
+           16384  3421817
+           32768  7584630
+           65536 17629830
+          131072 52156152
         };
-        \addplot[domain=2^5:2^19] { 0.0225 * x * log2(x) - 986 }
-          node[pos=0.235,left=2mm] { \small$t \sim 0.0225 n \log_2 n$ };
-      \end{semilogxaxis}
+        \addplot[domain=2^5:2^19,samples=25] { 4.69 * (x * log2(x)) ^ 1.10 };
+        \addplot[domain=2^5:2^19,samples=25,draw=none,decorate,decoration={
+          text along path,text align=center,raise=-5.5mm,text={|\footnotesize| {$t = 4.69 (n \log_2 (n))^{1.10}\:(R^2=0.994)$}}
+        }] { 4.69 * (x * log2(x)) ^ 1.10 };
+      \end{loglogaxis}
     \end{scope}
 
     \begin{scope}[xshift=75mm]
-      \begin{semilogxaxis}[
+      \begin{loglogaxis}[
         title style={align=center},
         title={Heap Priority Queue\\\texttt{add()} and \texttt{poll()}},
-        ymin=-10000,
-        ymax=155000,
       ]
         \addplot[markplot] table [x=n,y=t]{
-               n          t
-             128     11.871
-             256     59.539
-             512    146.746
-            1024    349.182
-            2048    811.062
-            4096   1803.634
-            8192   3901.024
-           16384   8702.189
-           32768  19850.160
-           65536  43868.287
-          131072 126896.377
+               n         t
+             128     11871
+             256     59539
+             512    146746
+            1024    349182
+            2048    811062
+            4096   1803634
+            8192   3901024
+           16384   8702189
+           32768  19850160
+           65536  43868287
+          131072 126896377
         };
-        \addplot[domain=2^5:2^19] { 0.0550 * x * log2(x) - 2190 }
-          node[pos=0.25,left=2mm] { \small$t \sim 0.0550 n \log_2 n$ };
-      \end{semilogxaxis}
+        \addplot[domain=2^5:2^19,samples=25] { 10.1 * (x * log2(x)) ^ 1.11 };
+        \addplot[domain=2^5:2^19,samples=25,draw=none,decorate,decoration={
+          text along path,text align=center,raise=-5.5mm,text={|\footnotesize| {$t = 10.1 (n \log_2 (n))^{1.11}\:(R^2=0.995)$}}
+        }] { 10.1 * (x * log2(x)) ^ 1.11 };
+      \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}
 \end{document}

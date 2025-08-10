@@ -1,4 +1,5 @@
 \documentclass{cmnp}
+\usetikzlibrary{decorations.text}
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
@@ -41,7 +42,7 @@
            65536 31.790
           131072 45.228
         };
-        \addplot[markplotx] table [x=n,y=t]{
+        \addplot[markploto] table [x=n,y=t]{
                n         t
              128    34.786
              256    42.846
@@ -52,12 +53,11 @@
     \end{scope}
 
     \begin{scope}[xshift=75mm]
-      \begin{semilogxaxis}[
+      \begin{loglogaxis}[
         title style={align=center},
         title={Chaining Hash Table\\$n$ \texttt{set()}},
         xlabel={$n$ elements},
         ylabel={elapsed time $t$},
-        ymax=10^6.75,
         legend pos=north west,
         legend columns=-1,
         legend entries={\small Resizing,\small Fixed-size},
@@ -76,7 +76,7 @@
            65536 1661174.533
           131072 3755545.324
         };
-        \addplot[markplotx] table [x=n,y=t]{
+        \addplot[markploto] table [x=n,y=t]{
                n              t
              128       2245.501
              256       7461.650
@@ -85,10 +85,16 @@
             2048     577619.505
             4096    2857839.673
             8192    9422427.704
+           16384   55867059.015
+           32768  369972003.049
+           65536 1763542921.333
+          131072 6039339958.333
         };
-        \addplot[domain=64:262144] { 28.2 * x - 50700 }
-          node[pos=0.575,left=1mm] { \small$t \sim 28.2 n$ };
-      \end{semilogxaxis}
+        \addplot[domain=64:262144,samples=25] { 3.97 * x ^ 1.17 };
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=-5.5mm,text={|\footnotesize| {$t = 3.97 n^{1.17}\:(R^2 \geq 0.999)$}}
+        }] { 3.97 * x ^ 1.17 };
+      \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}
 \end{document}

@@ -1,4 +1,5 @@
 \documentclass{cmnp}
+\usetikzlibrary{decorations.text}
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
@@ -19,8 +20,10 @@
         title={Insertion Sort (Best-case)},
         xmin=2^6,
         xmax=2^18,
+        ymin=10^0.95,
+        ymax=10^11,
         y unit prefix=n,
-        ytick distance=10^1,
+        ytick distance=10^2,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n         t
@@ -36,8 +39,10 @@
            65536 25985.574
           131072 59708.181
         };
-        \addplot[domain=64:262144] { 0.248 * x^1.04 }
-          node[below=1mm,left=3mm] { \small$t = 0.248 n^{1.04}$ };
+        \addplot[domain=64:262144,samples=25] { 0.249 * x^1.04 };
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=3.5mm,text={|\footnotesize| {$t = 0.249 n^{1.04}\:(R^2 \geq 0.999)$}}
+        }] { 0.249 * x^1.04 };
       \end{loglogaxis}
     \end{scope}
 
@@ -46,26 +51,29 @@
         title={Insertion Sort (Worst-case)},
         xmin=2^6,
         xmax=2^18,
-        ymin=1.1,
-        y unit prefix=\mu,
+        ymin=10^0.95,
+        ymax=10^11,
+        y unit prefix=n,
         ytick distance=10^2,
       ]
         \addplot[markplot] table [x=n,y=t]{
-               n            t
-             128       15.193
-             256       72.249
-             512      262.639
-            1024     1322.160
-            2048     5873.502
-            4096    23125.643
-            8192    92194.907
-           16384   375706.650
-           32768  1556346.381
-           65536  6601758.459
-          131072 29108835.833
+               n           t
+             128       15193
+             256       72249
+             512      262639
+            1024     1322160
+            2048     5873502
+            4096    23125643
+            8192    92194907
+           16384   375706650
+           32768  1556346381
+           65536  6601758459
+          131072 29108835833
         };
-        \addplot[domain=64:262144] { 7.05 * 10^(-4) * x^2.07 }
-          node[below=1mm,left=3mm] { \small$t = 7.05 {\cdot} 10^{-4} n^{2.07}$ };
+        \addplot[domain=64:262144,samples=25] { 7.03 * 10^(-1) * x^2.07 };
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=-5.5mm,text={|\footnotesize| {$t = 0.703 n^{2.07}\:(R^2 \geq 0.999)$}}
+        }] { 7.05 * 10^(-1) * x^2.07 };
       \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}

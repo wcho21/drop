@@ -1,73 +1,75 @@
 \documentclass{cmnp}
+\usetikzlibrary{decorations.text}
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
 \pgfplotsset{
   width=70mm,
-  scaled y ticks=base 10:-3,
   log basis x=2,
   xmin=2^6,
   xmax=2^18,
   xtick distance=2^2,
   use units,
   y unit=s,
-  y unit prefix=\mu,
+  y unit prefix=n,
 }
 
 \begin{document}
   \begin{tikzpicture}
     \begin{scope}
-      \begin{semilogxaxis}[
+      \begin{loglogaxis}[
         title style={align=center},
         title={Randomized Quicksort \\(Sorted)},
         xlabel={array size $n$},
         ylabel={elapsed time $t$},
-        ymax=10^3.8125,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n        t
-             128    3.959
-             256    8.088
-             512   16.220
-            1024   32.390
-            2048   66.245
-            4096  135.959
-            8192  311.171
-           16384  582.379
-           32768 1201.429
-           65536 2431.310
-          131072 5038.508
+             128    3959
+             256    8088
+             512   16220
+            1024   32390
+            2048   66245
+            4096  135959
+            8192  311171
+           16384  582379
+           32768 1201429
+           65536 2431310
+          131072 5038508
         };
-        \addplot[domain=64:262144] { 0.00226 * x * log2(x) + 31.4 }
-          node[pos=0.5,left=1mm] { \small$t \sim 0.00226 n \log_2 n$ };
-      \end{semilogxaxis}
+        \addplot[domain=64:262144] { 7.14 * (x * log2 x) ^ 0.920};
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=-5.5mm,text={|\footnotesize| {$t = 7.14 (n \log_2 n)^{0.920}\:(R^2\geq 0.999)$}}
+        }] { 7.14 * (x * log2 x) ^ 0.920};
+      \end{loglogaxis}
     \end{scope}
 
     \begin{scope}[xshift=75mm]
-      \begin{semilogxaxis}[
+      \begin{loglogaxis}[
         title style={align=center},
         title={Randomized Quicksort \\(Reversed)},
         xlabel={array size $n$},
         ylabel={elapsed time $t$},
-        ymax=10^3.8125,
       ]
         \addplot[markplot] table [x=n,y=t]{
                n        t
-             128    4.669
-             256    9.693
-             512   19.734
-            1024   38.475
-            2048   79.165
-            4096  151.617
-            8192  319.466
-           16384  655.723
-           32768 1338.451
-           65536 2624.543
-          131072 5646.977
+             128    4669
+             256    9693
+             512   19734
+            1024   38475
+            2048   79165
+            4096  151617
+            8192  319466
+           16384  655723
+           32768 1338451
+           65536 2624543
+          131072 5646977
         };
-        \addplot[domain=64:262144] { 0.00252 * x * log2(x) + 28.8 }
-          node[pos=0.4375,left=1mm] { \small$t \sim 0.00252 n \log_2 n$ };
-      \end{semilogxaxis}
+        \addplot[domain=64:262144] { 9.47 * (x * log2 x) ^ 0.904};
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=-5.5mm,text={|\footnotesize| {$t = 9.47 (n \log_2 n)^{0.904}\:(R^2\geq 0.999)$}}
+        }] { 9.47 * (x * log2 x) ^ 0.904};
+      \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}
 \end{document}

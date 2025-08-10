@@ -1,4 +1,5 @@
 \documentclass{cmnp}
+\usetikzlibrary{decorations.text}
 \usepgfplotslibrary{units}
 \usepackage{ts-plot}
 
@@ -36,8 +37,10 @@
            65536 144527.763
           131072 290323.052
         };
-        \addplot[domain=64:242144] { 2.13*x^(1.00) }
-          node[left=2mm] { \small$t = 2.13 n^{1.00}$ };
+        \addplot[domain=64:242144,samples=25] { 2.13*x^(1.00) };
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=-5.5mm,text={|\footnotesize| {$t = 2.13n^{1.00}\:(R^2\geq 0.999)$}}
+        }] { 2.13*x^(1.00) };
       \end{loglogaxis}
     \end{scope}
 
@@ -61,8 +64,10 @@
            65536 350461.804
           131072 705365.199
         };
-        \addplot[domain=64:242144] { 4.38*x^(1.01) }
-          node[left=2mm] { \small$t = 4.38 n^{1.01}$ };
+        \addplot[domain=64:242144,samples=25] { 4.38*x^(1.01) };
+        \addplot[domain=64:242144,samples=25,draw=none,decorate,decoration={
+          text along path,text align={center},raise=-5.5mm,text={|\footnotesize| {$t = 4.38n^{1.01}\:(R^2\geq 0.999)$}}
+        }] { 4.38*x^(1.01) };
       \end{loglogaxis}
     \end{scope}
   \end{tikzpicture}
